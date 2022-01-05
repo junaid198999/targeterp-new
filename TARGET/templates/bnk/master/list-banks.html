@@ -1,0 +1,224 @@
+{% extends "auth_base.html" %}
+{% load i18n %}
+{% load widget_tweaks %}
+{% load django_tables2 %}
+{% block content %}
+    <div class="container-fluid" >
+        <!-- start page title -->
+        <div class="row">
+            <div class="col-12"  style="height: 45px;">
+                <div class="page-title-box">
+                    <div class="page-title-right" style="margin-top: 11px;margin-right: 32px;">
+                        <ol class="breadcrumb m-0" style="padding-top: 1px;">
+                            <li class="breadcrumb-item"><a href="/">TARGET</a></li>
+                            <li class="breadcrumb-item active">{% trans "Banks" %}</li>
+                        </ol>
+                    </div>
+                    <h4 class="page-title" style="font-size: 2rem;color: red;line-height: 45px;">{% trans "Banks" %}</h4>
+                </div>
+            </div>
+        </div>
+        <!-- end page title -->
+        {% if perms.bnk.banks %}
+        <div class="row" >
+            <div class="col-xl-12">
+                <div class="card" style="margin-bottom: 10px;">
+                    <div class="card-body" style="padding:0.5rem;padding-bottom: 0px;">
+                        <div class="row">
+                            <div class="col-sm-6">
+                                <div id="controlPanel" {% if LANGUAGE_CODE == 'ar' %} align="right" {% else %} align="left" {% endif %}></div>
+                            </div>
+
+                            {% if perms.bnk.add_banks %}
+                            <div {% if LANGUAGE_CODE == 'ar' %} align="left" {% else %} align="right" {% endif %} class="col-sm-6">
+
+                                    {% if perms.bnk.add_banks %}
+                                    <div {% if LANGUAGE_CODE == 'ar' %} align="left" {% else %} align="right" {% endif %} class="col-sm-6">
+                                            <button class="btn btn-blue waves-effect waves-light mb-2"  onclick="location.href='{% url 'bnk:create_banks' %}'" type="button" name="button" data-overlayColor="#38414a">
+                                                <i class="mdi mdi-plus-circle mr-1"></i>  {% trans "Add" %}
+                                            </button>
+                                    </div>
+                                    {% endif %}
+
+
+                            </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+
+        <div class="row">
+            <div class="col-xl-12">
+                <div class="card">
+                    <div class="card-body" >
+                        <div class="row mb-2">
+                            <div class="col-sm-12">
+                                <div class="text-sm-right">
+                                    <div class="modal fade" tabindex="-1" role="dialog" id="modal">
+                                          <div id="myModal" class="modal-dialog modal-xl modal-dialog-centered" role="document">
+                                                <div class="modal-content"></div>
+                                          </div>
+                                    </div>
+                                    <!-- Create doctor button -->
+                                </div><!-- end col-->
+                            </div>
+                        </div>
+
+
+                            <table id="table_id" class="table activate-select table-striped table-hover  nowrap" style="width:100%">
+
+                                <thead>
+                                    <tr>
+                                        <th>{% trans "Code" %}</th>
+                                        <th>{% trans "Eng. Name" %}</th>
+                                        <th>{% trans "Arb. Name" %}</th>
+                                        <th width="30px">{% trans "Action" %}</th>
+                                    </tr>
+                                </thead>
+
+                                <tbody>
+                                    {% for Type in banks %}
+                                    <tr>
+                                            <td>
+                                                {{ Type.code }}
+                                            </td>
+                                            <td>
+                                                {{ Type.engname }}
+                                            </td>
+                                            <td>
+                                                {{ Type.arbname }}
+                                            </td>
+
+                                            <td>
+                                                {% if perms.bnk.change_banks %}
+                                                <a href={% url "bnk:edit_banks" Type.pk %} class="btn btn-outline-danger effect waves-light btn-xs" title="{% trans "Edit" %}"><i class="mdi mdi-square-edit-outline"></i></a>
+                                                <a href={% url "bnk:edit_banks" Type.pk %} class="btn btn-outline-warning effect waves-light btn-xs" title="{% trans "View" %}"><i class="far fa-eye"></i></a>
+                                                {% endif %}
+
+                                            </td>
+
+                                    </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+
+                    </div> <!-- end card-->
+                </div> <!-- end col -->
+
+            </div>
+        <!-- end row -->
+
+        </div> <!-- container -->
+        {% else %}
+        <div class="row" >
+            <div class="col-xl-12">
+                <div class="card">
+                    <div class="card-body">
+                            <STRONG> {% trans "You Don't have a permission to access this page." %} </STRONG>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endif %}
+
+
+    </div>
+{% endblock %}
+
+
+{% block extra_javascript %}
+
+    <script type="text/javascript">
+      $(function () {
+        // Create banks button
+        $(".create-banks").modalForm({formURL: "{% url 'bnk:create_banks' %}"});
+        // Update banks buttons
+            $(".edit-banks").each(function () {
+              $(this).modalForm({formURL: $(this).data('id')});
+            });
+                // Delete banks button
+            $(".delete-banks").each(function () {
+              $(this).modalForm({formURL: $(this).data('id')});
+            });
+            $(".read-banks").each(function () {
+                $(this).modalForm({
+                    formURL: $(this).data('id')
+                });
+            });
+            var table = $('#table_id').DataTable( {
+                language: {
+                    buttons: {
+                        "collection": "{% trans "Columns" %}",
+				        "copy": "{% trans "Copy" %}",
+				        "csv": "{% trans "CSV" %}",
+				        "pdf": "{% trans "PDF" %}",
+				        "print": "{% trans "Print" %}",
+                        copyTitle: '{% trans "Copy to clipboard" %}',
+                        copySuccess: {
+                            _: '{% trans "Copied %d rows to clipboard" %}',
+                            1: '{% trans "Copied one row to clipboard" %}'
+                        }
+                    },
+                    "sEmptyTable":     "{% trans "No data available in table" %}",
+                    "sInfo":           "{% trans "Showing _START_ to _END_ of _TOTAL_ entries" %}",
+                    "sInfoEmpty":      "{% trans "Showing 0 to 0 of 0 entries" %}",
+                    "sInfoFiltered":   "{% trans "(filtered from _MAX_ total entries)" %}",
+                    "sInfoPostFix":    "",
+                    "sInfoThousands":  ",",
+                    "sLengthMenu":     "{% trans "Show _MENU_ entries" %}",
+                    "sLoadingRecords": "{% trans "Loading..." %}",
+                    "sProcessing":     "{% trans "Processing..." %}",
+                    "sSearch":         "{% trans "Search:" %}",
+                    "sZeroRecords":    "{% trans "No matching records found" %}",
+                    "oPaginate": {
+                        "sFirst":    "{% trans "First" %}",
+                        "sLast":     "{% trans "Last" %}",
+                        "sNext":     "{% trans "Next" %}",
+                        "sPrevious": "{% trans "Previous" %}"
+                    },
+                    "oAria": {
+                        "sSortAscending":  "{% trans ": activate to sort column ascending" %}",
+                        "sSortDescending": "{% trans ": activate to sort column descending" %}"
+                    }
+                },
+                buttons: [
+                    {
+                        extend: 'collection',
+                        buttons: [ 'columnsToggle' ]
+                    },
+                    {% if perms.bnk.can_copy %}
+                        'copy',
+                    {% endif %}
+                    {% if perms.bnk.can_csv %}
+                        'csv',
+                    {% endif %}
+                    {% if perms.bnk.can_pdf %}
+                        'pdf',
+                    {% endif %}
+                    {% if perms.bnk.can_print %}
+                        'print',
+                    {% endif %}
+                ],
+                stateSave: true,
+                "pagingType": "full_numbers",
+                responsive: true,
+                columnDefs: [
+                    { responsivePriority: 1, targets: 0 },
+                    { responsivePriority: 2, targets: 3 },
+
+                ]
+            } );
+
+            new $.fn.dataTable.ColReorder( table, {
+                colReorder: true,
+            } );
+
+            table
+                .buttons()
+                .container()
+                .appendTo( '#controlPanel' );
+        });
+
+    </script>
+
+{% endblock %}

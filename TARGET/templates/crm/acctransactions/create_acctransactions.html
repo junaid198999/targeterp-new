@@ -1,0 +1,593 @@
+{% extends "auth_base.html" %}
+{% load i18n %}
+{% load django_tables2 %}
+{% load widget_tweaks %}
+{% load crispy_forms_tags %}
+{% block content %}
+{% load humanize %}
+
+<link href="/static/libs/select2/select2.min.css" rel="stylesheet" />
+<link href="/static/libs/sweetalert2/sweetalert2.min.css" rel="stylesheet" type="text/css" />
+<div class="container-fluid">
+    <!-- start page title -->
+    <div class="row">
+        <div class="col-12">
+            <div class="page-title-box">
+                <h4 class="page-title">{% trans "Create Transaction" %}</h4>
+            </div>
+        </div>
+    </div>
+    <head>
+        <meta charset="utf-8" />
+        <title>acctransactions_form</title>
+    </head>
+    <div class="row">
+        <div class="col-xl-12">
+            <div class="card">
+                <div class="card-body">
+                    <form data-customers-url="{% url 'crm:ajax_load_customers' %}" id="SOForm" action="" method="post" >
+                        {{ acctransactionsdetails.management_form }}
+                        {% csrf_token %}
+                        {{ form.id }}
+                        <div class="row">
+                            <div class="col-12">
+                                <div class="sub-header">
+                                    <h5 class="page-title">{% trans "Transaction Details" %}</h5>
+                                </div>
+                            </div>
+                        </div>
+
+                        <table class="table table-bordered ">
+                            <div class="{% if form.non_field_errors %}invalid{% endif %} mb-2">
+                              {% if form.non_field_errors %}
+                                {{ error }}
+                                {% endif %}
+                            </div>
+                            <tbody style="">
+                                <tr>
+                                    <td  width="70%" colspan = "7">
+                                        <div class="input-group">
+                                            <div class="col-2" style="padding-right:0px; padding-left:0px">
+                                                    <label class="col-form-label" >{% trans "Description" %}</label>
+                                            </div>
+
+                                            <div class="col-10">
+                                                <INPUT type="text" id="id_description" NAME="description" class="form-control" data-value="{{form.description}}
+                                            </div>
+                                        </div>
+                                        <div class="input-group">
+                                            <div class="col-2" style="padding-right:0px; padding-left:0px">
+                                                    <label class="col-form-label" >{% trans "note" %}</label>
+                                            </div>
+
+                                            <div class="col-10">
+                                                <INPUT type="text" id="id_note" NAME="note" class="form-control" data-value="{{form.note}}
+                                            </div>
+                                        </div>
+                                        <div class="input-group" style="margin-top: 4%">
+                                            <div class="col-2" style="padding-right:0px; padding-left:0px">
+                                                    <label class="col-form-label" >{% trans "user" %}</label>
+                                            </div>
+                                            <div class="col-4">
+                                                <select type="text" name="user" id="id_user" class="form-control" value="{{ form.user }}
+                                                </select>
+                                            </div>
+                                            <div class="col-2" style="padding-right:0px; padding-left:0px">
+                                                    <label class="col-form-label" id="">{% trans "reviewd" %}</label>
+                                            </div>
+                                            <div  class="col-4">
+                                                <input type="checkbox" class="form-control" id="id_reviewd" name="reviewd" >
+
+                                            </div>
+                                        </div>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        <div class="row">
+                            <div class="col-12">
+                                <div class="sub-header">
+                                    <h5 class="page-title">{% trans "Transaction Details" %}</h5>
+                                    <a hidden style="float:right" href="javascript:void(0)" class="buttonHolder" id="add-row"></a>
+                                    <a style="float:right" class="btn btn-primary waves-effect waves-light" id="add-debit">Add Debit</a>
+                                    <a style="float:right" class="btn btn-primary waves-effect waves-light" id="add-credit">Add Credit</a>
+                               </div>
+                            </div>
+                        </div>
+                        <table id="table_id" class="table table-bordered table-hover table-sm mb-0">
+                                <thead class="thead-light">
+                                    <tr>
+                                        <th style="text-align: center;">{% trans "Debit" %}</th>
+                                        <th style="text-align: center;">{% trans "Credit" %}</th>
+                                        <th hidden>{% trans "Customer" %}</th>
+                                        <th hidden>{% trans "Vendor" %}</th>
+                                        <th>{% trans "Actions" %}</th>
+                                    </tr>
+                                </thead>
+                                <tbody class="formset_row">
+                                    {% for form in acctransactionsdetails %}
+                                        {{ form.id }}
+                                        <tr style="padding: 0px !important;" class="rowclass">
+
+                                                <td style="padding: 0rem !important;width:300px;" >
+                                                    <div>{{ form.d_acc|as_crispy_field }}</div>
+                                                    <div>{{ form.debits|as_crispy_field }}</div>
+                                                    <details id="d_aacc_d-0" name="d_aacc_d-0">
+                                                      <summary>Show Description</summary>
+                                                      <p>{{ form.d_desc|as_crispy_field }}</p>
+                                                    </details>
+                                                </td>
+                                                <td style="padding: 0rem !important;width:300px;" >
+                                                    <div>{{ form.c_acc|as_crispy_field }}</div>
+                                                    <div>{{ form.credits|as_crispy_field }}</div>
+                                                    <details id="c_aacc_d-0" name="c_aacc_d-0">
+                                                      <summary>Show Description</summary>
+                                                      <p>{{ form.c_desc|as_crispy_field }}</p>
+                                                    </details>
+                                                </td>
+                                                <td hidden style="padding: 0rem !important;width:100px;">{{ form.customer|as_crispy_field }}</td>
+                                                <td hidden style="padding: 0rem !important;width:100px;">{{ form.vendor|as_crispy_field }}</td>
+                                                <td style="padding: 0rem !important;width:10px; text-align: center;"></td>
+                                        </tr>
+                                    {% endfor %}
+                                </tbody>
+                                <tr>
+                                    <td style="padding: 0rem" colspan="1"><INPUT TYPE="number" id="id_so_tax" NAME="so_tax" placeholder="Tax" class="form-control" readonly></td>
+                                    <td style="padding: 0rem" colspan="1"><INPUT TYPE="number" id="id_subtotal" NAME="subtotal" placeholder="Sub Total" class="form-control"></td>
+                                </tr>
+                        </table>
+
+                        <br><br>
+                        <div class="modal-footer">
+                            <a class="btn btn-secondary waves-effect" href="{% url 'crm:salesorder' %}">{% trans "Cancel" %}</a>
+                            <input type="submit" class="submit-btn btn-danger btn btn-primary" value="{% trans "Create" %}"/>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    <button hidden type="button" class="btn btn-info btn-xs" id="sa-error">Click me</button>
+</div>
+{% endblock %}
+
+{% block extra_javascript %}
+
+<script src="/static/dynamic_formsets/jquery.formset.js"></script>
+<script src="/static/libs/select2/select2.min.js"></script>
+<script src="/static/django_select2/django_select2.js"></script>
+<script src="/static/libs/sweetalert2/sweetalert2.min.js"></script>
+
+<script type="text/javascript">
+$('#id_total').attr('readonly', true);
+$('#id_subtotal').attr('readonly', true);
+
+$('input[name*="-discount"]').prop('max',{{allowed_discount}});
+
+
+var subtotalval = 0;
+    var dayss = 30;
+        $("#sa-error").click(function() {
+            Swal.fire({
+                type: "error",
+                title: "Oops...",
+                text: "{% trans 'Customer has Exceed his credit limit! with:' %} {{creditlimit|intcomma:False}}",
+                confirmButtonClass: "btn btn-confirm mt-2",
+            })
+            var subtotalfield = 'id_acctransactionsdetails_set-0-subtotal';
+            var taxfield = 'id_acctransactionsdetails_set-0-tax';
+            $("#id_customer").val({{customerid}}).trigger('change');
+
+          var url = $("#SOForm").attr("data-customers-url");
+          var customerId = $("#id_customer").val();
+
+          $.ajax({
+                url: url,
+                data: {
+                    'customer': customerId
+                    },
+                    success: function (data) {
+                        $("#id_payment_terms").html(data);
+                        $("#id_payment_terms1").html(data);
+                }
+          });
+
+
+          var urldd = $("#SOForm").attr("data-duedate-url");
+          $.ajax({
+                url: urldd,
+                data: {
+                    'customer': customerId
+                    },
+                    success: function (data) {
+                        $("#id_dueddate").val(data);
+                }
+          });
+
+          var url1 = $("#SOForm").attr("data-days-url");
+          $.ajax({
+                url: url1,
+                data: {
+                    'customer': customerId
+                    },
+                    success: function (data) {
+                        $("#id_payment_days").val(data);
+                }
+          });
+
+          var url2 = $("#SOForm").attr("data-salesman-url");
+          $.ajax({
+                url: url2,
+                data: {
+                    'customer': customerId
+                    },
+                    success: function (data) {
+                        $("#id_salesman1").html(data);
+                        $("#id_salesman").html(data);
+                }
+          });
+
+            get_total(subtotalfield, taxfield);
+        })
+
+    {% if creditlimit > 0 %}
+        $("#sa-error").click()
+        $(`select[name="customer"]`).val({{customerid}});
+        $(`select[name="uoom"]`).val({{uomid}});
+    {% endif %}
+    $("#id_customer").change(function () {
+          var url = $("#SOForm").attr("data-customers-url");
+          var customerId = $(this).val();
+
+          $.ajax({
+                url: url,
+                data: {
+                    'customer': customerId
+                    },
+                    success: function (data) {
+                        $("#id_payment_terms").html(data);
+                        $("#id_payment_terms1").html(data);
+                }
+          });
+
+
+          var urldd = $("#SOForm").attr("data-duedate-url");
+          $.ajax({
+                url: urldd,
+                data: {
+                    'customer': customerId
+                    },
+                    success: function (data) {
+                        $("#id_dueddate").val(data);
+                }
+          });
+
+          var url1 = $("#SOForm").attr("data-days-url");
+          $.ajax({
+                url: url1,
+                data: {
+                    'customer': customerId
+                    },
+                    success: function (data) {
+                        $("#id_payment_days").val(data);
+                }
+          });
+
+          var url2 = $("#SOForm").attr("data-salesman-url");
+          $.ajax({
+                url: url2,
+                data: {
+                    'customer': customerId
+                    },
+                    success: function (data) {
+                        $("#id_salesman1").html(data);
+                        $("#id_salesman").html(data);
+                }
+          });
+
+    });
+$('#id_payment_days').attr('readonly', true);
+$( "#id_salesman1" ).prop( "disabled", true );
+$( "#id_payment_terms1" ).prop( "disabled", true );
+$('#id_total').attr('readonly', true);
+$('#id_dueddate').attr('readonly', true);
+
+var subtotalval = 0;
+var taxlval = 0;
+function get_total(subtotid, taxid){
+        var subtotalfield1 = $(`input[name=${subtotid}]`).attr("id");
+        var taxfield = $(`input[name=${taxid}]`).attr("id");
+
+        subtotalval = parseFloat(subtotalval) + parseFloat($("#id_"+subtotalfield1).val(),1);
+        taxval = parseFloat(taxlval) + parseFloat($("#id_"+taxfield).val(),1);
+
+        var id = parseInt($('#id_acctransactionsdetails_set-TOTAL_FORMS').val());
+        var TaxV = {{taxv}}
+        var total = 0;
+        var bttotal = 0;
+        var tax = 0;
+        var subtotal = 0;
+        for (i = 0; i <= parseInt(id); i++){
+            if($("input[name=acctransactionsdetails_set-" + i + "-subtotal]").val()){
+                total += parseFloat($("input[name=acctransactionsdetails_set-" + i + "-subtotal]").val(),1);
+                bttotal += parseFloat($("input[name=acctransactionsdetails_set-" + i + "-bt_total]").val(),1);
+                tax += parseFloat($("input[name=acctransactionsdetails_set-" + i + "-tax]").val(),1);
+            }
+            else{
+                total += 0;
+                bttotal += 0;
+                tax += 0;
+            }
+        }
+        subtotal = total - tax;
+        $("#id_subtotal").val(bttotal.toFixed(1));
+        $("#id_so_tax").val(tax.toFixed(1));
+        $("#id_total").val(total.toFixed(1));
+
+};
+
+    $("input[name*='qty']").change(function () {
+        var newElement = $('formset_row').clone(true);
+        var subtotalfield = $(this).attr('name').replace('-qty', '-subtotal');
+        var bttotalfield = $(this).attr('name').replace('-qty', '-bt_total');
+        var uom1field = $(this).attr('name').replace('-qty', '-uoom');
+        var uomfield = $(this).attr('name').replace('-qty', '-uom');
+        var pricefield = $(this).attr('name').replace('-qty', '-price');
+        var taxfield = $(this).attr('name').replace('-qty', '-tax');
+        var discountfield = $(this).attr('name').replace('-qty', '-discount');
+        var subtotalsum = 0;
+        var bttotalsum = 0;
+        var netsubtotalsum = 0;
+        var tax = 0;
+            bttotalsum = subtotalsum + parseFloat( ($("#id_"+pricefield).val() * $(this).val()) - ($("#id_"+pricefield).val() * $(this).val() * $("#id_"+discountfield).val())/100,1);
+
+        if (parseInt({{taxv}}) > 0) {
+            tax = parseFloat((bttotalsum * {{taxv}} / 100))
+            subtotalsum = bttotalsum + tax
+            $("#id_"+taxfield).val(tax.toFixed(1));
+        }
+        $("#id_"+uomfield).val($("#id_"+uom1field).val());
+
+
+        $("#id_"+bttotalfield).val(bttotalsum.toFixed(1));
+        $("#id_"+subtotalfield).val(subtotalsum.toFixed(1));
+        get_total(subtotalfield, taxfield)
+    });
+    $("input[name*='price']").change(function () {
+        var newElement = $('formset_row').clone(true);
+        var uom1field = $(this).attr('name').replace('-price', '-uoom');
+        var uomfield = $(this).attr('name').replace('-price', '-uom');
+        var subtotalfield = $(this).attr('name').replace('-price', '-subtotal');
+        var bttotalfield = $(this).attr('name').replace('-price', '-bt_total');
+        var discountfield = $(this).attr('name').replace('-price', '-discount');
+        var qtyfield = $(this).attr('name').replace('-price', '-qty');
+        var taxfield = $(this).attr('name').replace('-price', '-tax');
+
+        $("#id_"+uomfield).val($("#id_"+uom1field).val());
+        var subtotalsum = 0;
+        var bttotalsum = 0;
+        var netsubtotalsum = 0;
+            bttotalsum = subtotalsum + parseFloat( ($(this).val() * $("#id_"+qtyfield).val()) - ($(this).val() * $("#id_"+qtyfield).val() * $("#id_"+discountfield).val())/100,1);
+
+        var tax = 0;
+        if (parseInt({{taxv}}) > 0) {
+            tax = parseFloat((bttotalsum * {{taxv}} / 100),1)
+            subtotalsum = bttotalsum + tax
+            $("#id_"+taxfield).val(tax.toFixed(1));
+        }
+        $("#id_"+bttotalfield).val(bttotalsum.toFixed(1));
+        $("#id_"+subtotalfield).val(subtotalsum.toFixed(1));
+        get_total(subtotalfield, taxfield)
+    });
+    $("input[name*='discount']").change(function () {
+        var newElement = $('formset_row').clone(true);
+        var subtotalfield = $(this).attr('name').replace('-discount', '-subtotal');
+        var bttotalfield = $(this).attr('name').replace('-discount', '-bt_total');
+        var pricefield = $(this).attr('name').replace('-discount', '-price');
+        var qtyfield = $(this).attr('name').replace('-discount', '-qty');
+        var taxfield = $(this).attr('name').replace('-discount', '-tax');
+        var uomfield = $(this).attr('name').replace('-discount', '-uom');
+        var uom1field = $(this).attr('name').replace('-discount', '-uoom');
+        $("#id_"+uomfield).val($("#id_"+uom1field).val());
+        var subtotalsum = 0;
+        var bttotalsum = 0;
+        var netsubtotalsum = 0;
+            bttotalsum = subtotalsum + parseFloat( ($("#id_"+pricefield).val() * $("#id_"+qtyfield).val()) - ($("#id_"+pricefield).val() * $("#id_"+qtyfield).val() * $(this).val())/100,1);
+
+        var tax = 0;
+        if (parseInt({{taxv}}) > 0) {
+            tax = parseFloat((bttotalsum * {{taxv}} / 100),1)
+            subtotalsum = bttotalsum + tax
+            $("#id_"+taxfield).val(tax.toFixed(1));
+        }
+        $("#id_"+bttotalfield).val(bttotalsum.toFixed(1));
+        $("#id_"+subtotalfield).val(subtotalsum.toFixed(1));
+        get_total(subtotalfield, taxfield)
+    });
+    $("select[name*='-product']").change(function () {
+        var name = $(this).attr('name').replace('-product', '-price');
+        var uomfield = $(this).attr('name').replace('-product', '-uom');
+
+        var id = $(this).attr('id');
+        price_value = $(this).val();
+        $("#id_"+subtotalfield).val(subtotalsum);
+
+        var pricefield = $(this).attr('name').replace('-product', '-price');
+        var uomfield = $(this).attr('name').replace('-product', '-uom');
+        var uoomfield = $(this).attr('id').replace('-product', '-uoom');
+        uom_value = $("#"+uoomfield).val();
+          var productId = $(this).val();
+          var urlup = $("#SOForm").attr("data-unitprice-url");
+          $.ajax({
+                url: urlup,
+                async: false,
+                data: {
+                    'product': productId,
+                    'unit': uom_value,
+                    },
+                    success: function (data) {
+                        $("#id_"+pricefield).val(parseInt(data));
+               }
+          });
+
+        var subtotalfield = $(this).attr('name').replace('-product', '-subtotal');
+        var bttotalfield = $(this).attr('name').replace('-product', '-bt_total');
+        var pricefield = $(this).attr('name').replace('-product', '-price');
+        var discountfield = $(this).attr('name').replace('-product', '-discount');
+        var qtyfield = $(this).attr('name').replace('-product', '-qty');
+        var taxfield = $(this).attr('name').replace('-product', '-tax');
+        var subtotalsum = 0;
+        var bttotalsum = 0;
+        var netsubtotalsum = 0;
+            bttotalsum = subtotalsum + parseFloat( ($("#id_"+pricefield).val() * $("#id_"+qtyfield).val()) - ($("#id_"+pricefield).val() * $("#id_"+qtyfield).val() * $("#id_"+discountfield).val())/100,1);
+
+        var tax = 0;
+        if (parseInt({{taxv}}) > 0) {
+
+            tax = parseFloat((bttotalsum * {{taxv}} / 100),1)
+            subtotalsum = bttotalsum + tax
+            $("#id_"+taxfield).val(tax.toFixed(1));
+        }
+        $("#id_"+bttotalfield).val(bttotalsum.toFixed(1));
+        $("#id_"+subtotalfield).val(subtotalsum.toFixed(1));
+        var id = parseInt($('#id_acctransactionsdetails_set-TOTAL_FORMS').val());
+        get_total(subtotalfield, taxfield)
+    });
+
+    $("[id*=-uoom]").change(function () {
+        var uomfield = $(this).attr('id').replace('-uoom', '-uom');
+        var productfield = $(this).attr('id').replace('-uoom', '-product');
+        var pricefield = $(this).attr('id').replace('-uoom', '-price');
+
+        var id = $(this).attr('id');
+        uom_value = $(this).val();
+        product_value = $("#"+productfield).val();
+        $("#"+uomfield).val(uom_value);
+          var urlup = $("#SOForm").attr("data-unitprice-url");
+          var productId = $(this).val();
+          $.ajax({
+                async: false,
+                url: urlup,
+                data: {
+                    'product': product_value,
+                    'unit': uom_value,
+                    },
+                    success: function (data) {
+                        $("#"+pricefield).val(parseInt(data));
+                }
+          });
+
+
+        var taxfield = $(this).attr('id').replace('-uoom', '-tax');
+        $("#id_"+uomfield).val(parseInt($(this).val()));
+        var subtotalfield = $(this).attr('id').replace('-uoom', '-subtotal');
+        var bttotalfield = $(this).attr('id').replace('-uoom', '-bt_total');
+        var discountfield = $(this).attr('id').replace('-uoom', '-discount');
+        var qtyfield = $(this).attr('id').replace('-uoom', '-qty');
+        var subtotalsum = 0;
+        var bttotalsum = 0;
+        var netsubtotalsum = 0;
+            bttotalsum = subtotalsum + parseFloat( $("#"+pricefield).val() * $("#"+qtyfield).val() - $("#"+discountfield).val(),1);
+        var tax = 0;
+        if (parseInt({{taxv}}) > 0) {
+            tax = parseFloat((bttotalsum * {{taxv}} / 100),1)
+            subtotalsum = bttotalsum + tax
+            $("#"+taxfield).val(tax.toFixed(1));
+        }
+        $("#"+bttotalfield).val(bttotalsum.toFixed(1));
+        $("#"+subtotalfield).val(subtotalsum.toFixed(1));
+        get_total(subtotalfield, taxfield)
+
+
+    });
+
+let addb = 0
+
+   $('.delete-row').on("click", function(){
+        get_total()
+    });
+
+    $('.formset_row').formset({
+        animateForms: true,
+        uiText: {
+            addPrompt: 'Add Debit',         // Text used on the 'add a new form' control.
+            removePrompt: '',        // Text used on the 'delete this existing form' control.
+        },
+        addButtonHolder:'.buttonHolder',
+        addCssClass: "add-row btn btn-primary waves-effect waves-light",
+        deleteCssClass: "delete-row btn btn-danger waves-effect mdi mdi-close",
+        prefix: '{{ acctransactionsdetails.prefix }}',
+        callbacks: {
+            onAdd: function () {
+                 $("[name*=-vendor]").select2();
+                 $("[name*=customer]").select2();
+                 $("[name*=-c_acc]").select2();
+                 $("[name*=d_acc]").select2();
+            },
+            onRemove: function () {
+                 get_total();
+            }
+        },
+    });
+ $("[name*=-vendor]").select2();
+ $("[name*=customer]").select2();
+ $("[name*=-c_acc]").select2();
+ $("[name*=d_acc]").select2();
+
+
+var debit_field = "id_acctransactionsdetails_set-0" + "-debits"
+var debit_acc_field = "div_id_acctransactionsdetails_set-0-d_acc"
+var debit_desc_field = "id_acctransactionsdetails_set-0" + "-d_desc"
+var credit_field = "id_acctransactionsdetails_set-0" + "-credits"
+var credit_acc_field = "div_id_acctransactionsdetails_set-0" + "-c_acc"
+var credit_desc_field = "id_acctransactionsdetails_set-0" + "-c_desc"
+document.getElementById(debit_field).style.visibility = "hidden";
+document.getElementById(debit_acc_field).style.visibility = "hidden";
+document.getElementById(debit_desc_field).style.visibility = "hidden";
+document.getElementById("d_aacc_d-0").style.visibility = "hidden";
+document.getElementById("c_aacc_d-0").style.visibility = "";
+
+$("#add-debit").click(function() {
+    var id = parseInt($('#id_acctransactionsdetails_set-TOTAL_FORMS').val());
+    var debit_field = "id_acctransactionsdetails_set-" + id + "-debits"
+    var debit_acc_field = "div_id_acctransactionsdetails_set-" + id + "-d_acc"
+    var debit_desc_field = "id_acctransactionsdetails_set-" + id + "-d_desc"
+    var credit_field = "id_acctransactionsdetails_set-" + id + "-credits"
+    var credit_acc_field = "div_id_acctransactionsdetails_set-" + id + "-c_acc"
+    var credit_desc_field = "id_acctransactionsdetails_set-" + id + "-c_desc"
+
+    $('.add-row').click();
+
+    document.getElementById(debit_field).style.visibility = "";
+    document.getElementById(debit_acc_field).style.visibility = "";
+    document.getElementById(debit_desc_field).style.visibility = "";
+
+    document.getElementById(credit_field).style.visibility = "hidden";
+    document.getElementById(credit_acc_field).style.visibility = "hidden";
+    document.getElementById(credit_desc_field).style.visibility = "hidden";
+});
+$("#add-credit").click(function() {
+    var id = parseInt($('#id_acctransactionsdetails_set-TOTAL_FORMS').val());
+    var debit_field = "id_acctransactionsdetails_set-" + id + "-debits"
+    var debit_acc_field = "div_id_acctransactionsdetails_set-" + id + "-d_acc"
+    var debit_desc_field = "id_acctransactionsdetails_set-" + id + "-d_desc"
+    var credit_field = "id_acctransactionsdetails_set-" + id + "-credits"
+    var credit_acc_field = "div_id_acctransactionsdetails_set-" + id + "-c_acc"
+    var credit_desc_field = "id_acctransactionsdetails_set-" + id + "-c_desc"
+    $('.add-row').click();
+    document.getElementById(debit_field).style.visibility = "hidden";
+    document.getElementById(debit_acc_field).style.visibility = "hidden";
+    document.getElementById(debit_desc_field).style.visibility = "hidden";
+
+    document.getElementById(credit_field).style.visibility = "";
+    document.getElementById(credit_acc_field).style.visibility = "";
+    document.getElementById(credit_desc_field).style.visibility = "";
+});
+
+</script>
+
+{% endblock %}
+.rowclass {
+  padding-top: 0px !important;
+  padding-bottom: 0px !important;
+};

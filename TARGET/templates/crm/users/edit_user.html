@@ -1,0 +1,98 @@
+{% load i18n %}
+
+{% load widget_tweaks %}
+{% load crispy_forms_tags %}
+{% block content %}
+
+    <form  align="left" method="POST" action="#" enctype="multipart/form-data">
+        <link href="/static/libs/dropify/dropify.min.css" rel="stylesheet" type="text/css" />
+        <link href="/static/libs/multiselect/multi-select.css" media="screen" rel="stylesheet" type="text/css">
+        {% csrf_token %}
+
+        <div class="modal-header" style="background: #f7b84b;">
+          <h3 class="modal-title" style="color: white;">{% trans "Edit User" %}</h3>
+          <button style="color:white; font-size: 2rem;" type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+
+
+        <div class="modal-body">
+            <table>
+                <div class="{% if form.non_field_errors %}invalid{% endif %} mb-2">
+                  {% if form.non_field_errors %}
+                    {{ error }}
+                    {% endif %}
+                </div>
+                <div class="form-row">
+                      <div class="form-group col-md-10 mb-0">
+                            <div class="form-row">
+                                <div class="form-group col-11 mb-0">
+                                    {{ form.username|as_crispy_field }}
+                                    <div class="{% if form.username.errors %} invalid{% endif %}">
+                                        {% if error in form.username.errors %}
+                                            <p class="help-block">{{ error }}</p>
+                                            {% endif %}
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-row">
+                                <div class="form-group col-md-11 mb-0">
+                                    {{ form.email|as_crispy_field }}
+                                    <div class="{% if form.email.errors %} invalid{% endif %}">
+                                        {% if error in form.email.errors %}
+                                            <p class="help-block">{{ error }}</p>
+                                            {% endif %}
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-row">
+                                <div class="form-group col-md-6 mb-0">
+                                    {{ form.first_name|as_crispy_field }}
+                                        <div class="{% if form.first_name.errors %} invalid{% endif %}">
+                                            {% if error in form.first_name.errors %}
+                                                <p class="help-block">{{ error }}</p>
+                                                {% endif %}
+                                        </div>
+                                </div>
+                                <div class="form-group col-md-5 mb-0">
+                                    {{ form.last_name|as_crispy_field }}
+                                        <div class="{% if form.last_name.errors %} invalid{% endif %}">
+                                            {% if error in form.last_name.errors %}
+                                                <p class="help-block">{{ error }}</p>
+                                                {% endif %}
+                                        </div>
+                                </div>
+                            </div>
+                      </div>
+                      <div class="form-group col-md-2 mb-0">
+                            <div class="input-group">
+                                <label class="col-form-label">{% trans "Photo" %}</label>
+
+                                <input type="file" id="id_picture" name="picture" class="dropify" data-height="120" data-default-file="{% if form.instance.picture %}{{ form.instance.picture.url }}{% endif%}" data-allowed-file-extensions="jpg png gif"/>
+
+                            </div>
+                      </div>
+                </div>
+            </table>
+
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-secondary waves-effect" data-dismiss="modal">{% trans "Cancel" %}</button>
+            <button type="button" class="submit-btn btn-danger btn btn-primary">{% trans "Update" %}</button>
+        </div>
+
+
+    </form>
+
+    <script src="/static/libs/dropify/dropify.min.js"></script>
+    <script src="/static/libs/select2/select2.min.js"></script>
+    <script>
+            $(document).ready(function(){
+                // Basic
+                $('.dropify').dropify();
+            });
+    </script>
+
+
+{% endblock %}

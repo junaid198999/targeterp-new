@@ -1,0 +1,132 @@
+{% extends "auth_base.html" %}
+{% load widgets %}
+{% load i18n %}
+{% load humanize %}
+{% block content %}
+
+                <div class="content">
+
+                    <!-- Start Content-->
+                    <div class="container-fluid">
+                        
+                        <!-- start page title -->
+                        <div class="row">
+                            <div class="col-12">
+                                <div class="page-title-box">
+                                    <div class="page-title-right">
+                                        <ol class="breadcrumb m-0">
+                                            <li class="breadcrumb-item"><a href="/">TARGET</a></li>
+                                            <li class="breadcrumb-item"><a href="javascript: void(0);">{% trans "Visits Plan" %}</a></li>
+                                            <li class="breadcrumb-item active">{% trans "Visits Plan" %}</li>
+                                        </ol>
+                                    </div>
+                                    <h4 class="page-title">{% if sales_auto == 1 %}{% trans "Sales Invoice" %}{% else %}{% trans "Visits Plan" %}{% endif %}</h4>
+                                </div>
+                            </div>
+                        </div>     
+                        <!-- end page title --> 
+
+                        {% for Company in logo %}
+                        <div class="row">
+                            <div class="col-12">
+                                <div class="card-box">
+                                    <!-- Logo & title -->
+                                    <div class="clearfix">
+                                        <div class="float-left">
+                                            {% for Company in logo %}
+                                                {% if  Company.logo %}
+                                                    <img src="{{ Company.logo.url }}" alt="" height="40">
+                                                {% else %}
+                                                    <img src="/static/images/logo-light.png" alt="" height="40">
+                                                {% endif %}
+                                            {% endfor %}
+                                        </div>
+                                        <div class="float-right">
+                                            <h4 class="m-0 ">{% if sales_auto == 1 %}{% trans "Sales Invoice" %}{% else %}{% trans "Visits Plan" %}{% endif %}</h4>
+                                        </div>
+                                    </div>
+        
+                                    <div class="row">
+                                        <div class="col-md-3">
+                                            <div class="mt-3">
+                                                <p><b>{% trans "Hello," %} {{salesman}}</b></p>
+                                            </div>
+        
+                                        </div><!-- end col -->
+                                        <div class="col-md-3 offset-md-2">
+                                            <div class="mt-3 float-right">
+                                                <p class="m-b-10"><strong>{% trans "Month :" %} </strong> <span class="float-right"> &nbsp;&nbsp;&nbsp;&nbsp; {{mon_name}}</span></p>
+                                                <p class="m-b-10"><strong>{% trans "Today Date :" %} </strong> <span class="float-right">{% now "Y-M-d" %}</span></p>
+                                                {% now "Y-m-d" as todays_date %}
+                                            </div>
+                                        </div><!-- end col -->
+                                        <div class="col-md-3 offset-md-1">
+                                            <div class="mt-3 float-right">
+                                                <p class="m-b-10"><strong>{% trans "Country. :" %} </strong> <span class="float-right">&nbsp;&nbsp;&nbsp;&nbsp; {{form.instance.salesorder_number}} </span></p>
+                                                <p class="m-b-10"><strong>{% trans "Area. :" %} </strong> <span class="float-right">&nbsp;&nbsp;&nbsp;&nbsp; {{form.instance.tax_number}} </span></p>
+                                                <p class="m-b-10"><strong>{% trans "City. :" %} </strong> <span class="float-right">&nbsp;&nbsp;&nbsp;&nbsp;{{ hhh }}</span></p>
+                                            </div>
+                                        </div><!-- end col -->
+                                    </div>
+                                    <!-- end row -->
+        
+                                    <!-- end row -->
+        
+                                    <div class="row">
+                                        <div class="col-12">
+                                            <div class="table-responsive">
+                                                <table class="table mt-4 table-centered table-sm">
+                                                    <thead>
+                                                    <tr><th style="width: 20%">{% trans "Date" %}</th>
+                                                        <th>{% trans "Customer" %}</th>
+                                                        <th>{% trans "Salesman" %}</th>
+                                                    </tr></thead>
+                                                    <tbody>
+                                                        {% for Doctor in doctorvisits %}
+                                                            <tr>
+                                                                <td>{{ Doctor.date_p }}</td>
+                                                                {% if Doctor.doctor.name != null %}<td>{% trans "Doctor" %} : {{ Doctor.doctor.name  }}</td>{% endif %}
+                                                                {% if Doctor.doctor.name == null %}<td>{% if Doctor.customer.customer_type == 1 %}{% trans "Customer" %}{% elif Doctor.customer.customer_type == 3 %}{% trans "Pharmacy" %}{% endif %} : {{ Doctor.customer }}</td>{% endif %}
+                                                                <td>{{ Doctor.customer.salesman }}</td>
+                                                            </tr>
+                                                        {% endfor %}
+                                                   </tbody>
+                                                </table>
+                                            </div> <!-- end table-responsive -->
+                                        </div> <!-- end col -->
+                                    </div>
+                                    <!-- end row -->
+                                    <div class="row">
+                                        <div class="col-sm-12">
+                                            <div class="clearfix pt-5">
+                                                <h6 class="text-muted">{% trans "Signature:" %}</h6>
+                                            </div>
+                                        </div> <!-- end col -->
+                                    </div>
+                                    <br>
+                                    <br>
+                                    <br>
+                                    <br>
+                                    <div class="mt-4 mb-1">
+                                        <div class="text-right d-print-none">
+                                            <a href="javascript:window.print()" class="btn btn-blue waves-effect waves-light"><i class="mdi mdi-printer mr-1"></i> {% trans "Print" %}</a>
+                                            <a class="btn btn-secondary waves-effect" href="{% url 'crm:calendar_visit' %}">{% trans "Close" %}</a>
+                                        </div>
+                                    </div>
+                                </div> <!-- end card-box -->
+                            </div> <!-- end col -->
+                        </div>
+                        {% endfor %}
+                        <!-- end row -->
+                        
+                    </div> <!-- container -->
+
+                </div> <!-- content -->
+
+
+
+{% endblock %}
+
+
+{% block extra_javascript %}
+{% endblock %}

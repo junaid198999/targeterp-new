@@ -1,0 +1,46 @@
+{% load i18n %}
+{% load widget_tweaks %}
+{% load crispy_forms_tags %}
+{% block content %}
+
+<form id="ProductForm" align="left" method="post" action="">
+    {% if LANGUAGE_CODE == 'ar' %}
+        <link href="/static/libs/select2/select2-rtl.min.css" rel="stylesheet" />
+    {% else %}
+        <link href="/static/libs/select2/select2.min.css" rel="stylesheet" />
+    {% endif %}
+  {% csrf_token %}
+    <div class="modal-header" style="background: #f7b84b;">
+      <h3 class="modal-title" style="color: white;">{% trans "Update Product Units Name" %}</h3>
+      <button style="color:white; font-size: 2rem;" type="button" class="close" data-dismiss="modal" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+
+        <div class="row">
+            <div class="modal-body">
+                 <table>
+                      <div class="form-row">
+                            <div class="form-group col-md-12 mb-0">
+                                {{ form.unit_1|as_crispy_field }}
+                            </div>
+                            <div class="form-group col-md-12 mb-0">
+                                {{ form.unit_2|as_crispy_field }}
+                            </div>
+                      </div>
+                 </table>
+            </div>
+  </div>
+
+  <div class="modal-footer">
+    <button type="button" class="btn btn-secondary waves-effect" data-dismiss="modal">{% trans "Cancel" %}</button>
+    <button type="button" class="submit-btn btn-danger btn btn-primary">{% trans "Save" %}</button>
+  </div>
+
+</form>
+    <script src="/static/libs/select2/select2.min.js"></script>
+
+<script type="text/javascript">
+</script>
+
+{% endblock %}

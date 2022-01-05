@@ -1,0 +1,1640 @@
+{% extends "auth_base.html" %}
+{% load i18n %}
+{% load widgets %}
+{% load humanize %}
+{% load static i18n %}
+
+{% block extra_css %}
+    <link href="{% static 'libs/sweetalert2/sweetalert2.min.css' %}" rel="stylesheet" />
+    <link href="{% static 'charts/Chart.min.css' %}" rel="stylesheet" />
+    <link href="{% static 'charts/morris.css' %}" rel="stylesheet" />
+    <link href="{% static 'libs/flatpickr/flatpickr.min.css' %}" rel="stylesheet" />
+
+    <link href="{% static 'libs/jvectormap/jquery-jvectormap.css' %}" rel="stylesheet" type="text/css" media="screen" />
+    {% if LANGUAGE_CODE == 'ar' %}
+        <link href="{% static 'libs/select2/select2-rtl.min.css' %}" rel="stylesheet" />
+    {% else %}
+        <link href="{% static 'libs/select2/select2.min.css' %}" rel="stylesheet" />
+    {% endif %}
+
+
+{% endblock %}
+
+{% block content %}
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-12">
+                <div class="page-title-box">
+                    <div class="page-title-right">
+                        <form id="DashboardForm" data-date-url="{% url 'dashboard:dashboard' %}" class="form-inline">
+                            <div class="form-group">
+                                <div class="input-group input-group-sm">
+                                    <select name="year" id="id_year" class="form-control" style="">
+                                        {% for Years in yearlist %}
+                                        <option {% if Years.Year == CurrentYY %} selected {% endif %} value="{{Years.Year}}">{{Years.Year}}</option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="input-group input-group-sm">
+                                        <select name="month" class="form-control" id="id_month" style="width:100%">
+                                            <optgroup label="{% trans "Months" %}">
+                                                <option value="1"  {% ifequal thismonth 1 %} selected {% endifequal %}>{% trans "January" %}</option>
+                                                <option value="2"  {% ifequal thismonth 2 %} selected {% endifequal %}>{% trans "February" %}</option>
+                                                <option value="3"  {% ifequal thismonth 3 %} selected {% endifequal %}>{% trans "March" %}</option>
+                                                <option value="4"  {% ifequal thismonth 4 %} selected {% endifequal %}>{% trans "April" %}</option>
+                                                <option value="5"  {% ifequal thismonth 5 %} selected {% endifequal %}>{% trans "May" %}</option>
+                                                <option value="6"  {% ifequal thismonth 6 %} selected {% endifequal %}>{% trans "June" %}</option>
+                                                <option value="7"  {% ifequal thismonth 7 %} selected {% endifequal %}>{% trans "July" %}</option>
+                                                <option value="8"  {% ifequal thismonth 8 %} selected {% endifequal %}>{% trans "August" %}</option>
+                                                <option value="9"  {% ifequal thismonth 9 %} selected {% endifequal %}>{% trans "September" %}</option>
+                                                <option value="10"  {% ifequal thismonth 10 %} selected {% endifequal %}>{% trans "October" %}</option>
+                                                <option value="11" {% ifequal thismonth 11 %} selected {% endifequal  %}>{% trans "November" %}</option>
+                                                <option value="12"  {% ifequal thismonth 12 %} selected {% endifequal %}>{% trans "December" %}</option>
+                                            </optgroup>
+                                            <optgroup label="{% trans "Quarters" %}">
+                                                <option {% if date_id == 44 %} selected {% endif %} value="44">{% trans "Quarter 1" %}</option>
+                                                <option {% if date_id == 55 %} selected {% endif %} value="55">{% trans "Quarter 2" %}</option>
+                                                <option {% if date_id == 66 %} selected {% endif %} value="66">{% trans "Quarter 3" %}</option>
+                                                <option {% if date_id == 77 %} selected {% endif %} value="77">{% trans "Quarter 4" %}</option>
+                                            </optgroup>
+                                            <optgroup label="{% trans "Year" %}">
+                                                <option {% if date_id == 9999999 %} selected {% endif %} value="111">{% trans "Full Year" %}</option>
+                                                <option {% if date_id == 88 %} selected {% endif %} value="88">{% trans "First Half" %}</option>
+                                                <option {% if date_id == 99 %} selected {% endif %} value="99">{% trans "Second Half" %}</option>
+                                            </optgroup>
+                                        </select>
+                                </div>
+                            </div>
+                            <button id="filter_id" class="btn btn-blue btn-sm ml-2" type="button" name="button" data-overlayColor="#38414a">
+                                <i class="mdi mdi-play"></i>
+                            </button>
+                            <button id="clear_filter_id" class="btn btn-blue btn-sm ml-1" type="button" name="button" data-overlayColor="#38414a">
+                                <i class="mdi mdi-filter-variant"></i>
+                            </button>
+                            <a class="btn btn-danger btn-sm ml-1" href="javascript:save()" data-overlayColor="#38414a">
+                                 <i class="fe-save"></i>
+                            </a>
+                            <a class="btn btn-success btn-sm ml-1" href="javascript:reset()" data-overlayColor="#38414a">
+                                 <i class="mdi mdi-autorenew"></i>
+                            </a>
+                        </form>
+                    </div>
+                    <h4 id="dashboard-header" class="page-title">{% trans "Main Dashboard" %}</h4>
+                </div>
+            </div>
+        </div>
+        <div id="main_hidden" style="display: none">
+        </div>
+        <div class="row" id="main">
+            <div class="cardM {% if request.user.is_superuser %} col-md-6 col-xl-3 {% else %} col-md-6 col-xl-6 {% endif %}">
+                <div id="drag1" class="card-box">
+                    <div class="row">
+                        <div class="col-4">
+                            <div class="avatar-sm bg-blue rounded">
+                                <i class="fe-aperture avatar-title font-22 text-white"></i>
+                            </div>
+                        </div>
+                        <div class="col-8">
+                            <div class="text-right">
+                                <h4 class="text-dark my-1"><span>{{ totalmonthlysaless|intcomma:False|currency_no_symbol }}</span></h4>
+                                <p class="text-muted mb-1 text-truncate">{% trans "Total Sales" %}</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div hidden class="mt-3">
+                        <h6 class="text-uppercase">Target <span class="float-right">60%</span></h6>
+                        <div class="progress progress-sm m-0">
+                            <div class="progress-bar bg-blue" role="progressbar" aria-valuenow="60" aria-valuemin="0" aria-valuemax="100" style="width: 60%">
+                                <span class="sr-only">60% Complete</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            {% if request.user.is_superuser %}
+            <div class="cardM col-md-6 col-xl-3">
+                <div id="drag2" class="card-box">
+                    <div class="row">
+                        <div class="col-4">
+                            <div class="avatar-sm bg-success rounded">
+                                <i class="fe-shopping-cart avatar-title font-22 text-white"></i>
+                            </div>
+                        </div>
+                        <div class="col-8">
+                            <div class="text-right">
+                                <h4 class="text-dark my-1"><span>{{ netpurchase|intcomma:False|currency_no_symbol }}</span></h4>
+                                <p class="text-muted mb-1 text-truncate">{% trans "Total Purchase" %}</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div hidden class="mt-3">
+                        <h6 class="text-uppercase">Target <span class="float-right">49%</span></h6>
+                        <div class="progress progress-sm m-0">
+                            <div class="progress-bar bg-success" role="progressbar" aria-valuenow="49" aria-valuemin="0" aria-valuemax="100" style="width: 49%">
+                                <span class="sr-only">49% Complete</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% endif %}
+
+            <div class="cardM {% if request.user.is_superuser %} col-md-6 col-xl-3 {% else %} col-md-6 col-xl-6 {% endif %}">
+                <div id="drag3" class="card-box">
+                    <div class="row">
+                        <div class="col-4">
+                            <div class="avatar-sm bg-warning rounded">
+                                <i class="fas fa-hand-holding-usd avatar-title font-22 text-white"></i>
+                            </div>
+                        </div>
+                        <div class="col-8">
+                            <div class="text-right">
+                                <h4 class="text-dark my-1"><span >{{ collectamount|intcomma:False|currency_no_symbol }}</span></h4>
+                                <p class="text-muted mb-1 text-truncate">{% trans "Collections" %}</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div hidden class="mt-3">
+                        <h6 class="text-uppercase">Target <span class="float-right">18%</span></h6>
+                        <div class="progress progress-sm m-0">
+                            <div class="progress-bar bg-warning" role="progressbar" aria-valuenow="18" aria-valuemin="0" aria-valuemax="100" style="width: 18%">
+                                <span class="sr-only">18% Complete</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            {% if request.user.is_superuser %}
+            <div class="cardM col-md-6 col-xl-3">
+                <div id="drag4" class="card-box">
+                    <div class="row">
+                        <div class="col-4">
+                            <div class="avatar-sm bg-info rounded">
+                                <i class="fas fa-cubes avatar-title font-22 text-white"></i>
+                            </div>
+                        </div>
+                        <div class="col-8">
+                            <div class="text-right">
+                                <h4 class="text-dark my-1"><span data-plugin="counterup">{{ctrqty|intcomma:False}}</span></h4>
+                                <p class="text-muted mb-1 text-truncate">{% trans "Available Stock" %}</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div hidden class="mt-3">
+                        <h6 class="text-uppercase">Target <span class="float-right">74%</span></h6>
+                        <div class="progress progress-sm m-0">
+                            <div class="progress-bar bg-info" role="progressbar" aria-valuenow="74" aria-valuemin="0" aria-valuemax="100" style="width: 74%">
+                                <span class="sr-only">74% Complete</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% endif %}
+            <div class="cardM col-xl-12">
+                 <div id="drag5" class="card">
+                    <div class="card-body">
+                        <div class="card-widgets">
+                            <a data-toggle="collapse" href="#cardCollpase7" role="button" aria-expanded="false" aria-controls="cardCollpase7"><i class="mdi mdi-minus"></i></a>
+                        </div>
+                        <h4 class="header-title mb-0">{% trans "To Do" %}</h4>
+                        <br>
+                        <ul class="nav nav-tabs mr-3 ml-3">
+                            <li class="nav-item">
+                                <a href="#todonotdonetab" data-toggle="tab" aria-expanded="true" class="nav-link active btn-danger btn-xs waves-effect waves-light">
+                                    {% trans "Not Done" %}
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a href="#tododonetab" data-toggle="tab" aria-expanded="false" class="nav-link btn-success btn-xs waves-effect waves-light">
+                                    {% trans "Done" %}
+                                </a>
+                            </li>
+                        </ul>
+
+                        <div id="cardCollpase7" class="collapse pt-1 show">
+                            <div class="table-responsive">
+                                <div class="row ml-0">
+                                    <div class="col-xl-12">
+                                        <div class="tab-content">
+                                            <div class="tab-pane show active" id="todonotdonetab">
+                                                <form data-done-url="{% url 'crm:todo_done' %}" data-add-todo-url="{% url 'crm:todo_add' %}" data-save-todo-url="{% url 'crm:todo_save' %}" data-edit-todo-url="{% url 'crm:todo_edit' %}" id="TODOFORM" action="" >
+                                                    <div class="col-12" style="width:100%">
+                                                        <table id="table3_id" class="table table-borderless table-sm table-hover table-centered m-0 nowrap" width="100%">
+                                                        <thead class="thead-light">
+                                                            <tr>
+                                                                <th style="width:30%">{% trans "Task" %}</th>
+                                                                <th style="width:20%">{% trans "From User" %}</th>
+                                                                <th style="width:20%">{% trans "To User" %}</th>
+                                                                <th class="priority_th" style="width:20%">{% trans "Priority" %}</th>
+                                                                <th style="width:10%">{% trans "Action" %}</th>
+                                                            </tr>
+                                                        </thead>
+                                                    </table>
+                                                    </div>
+                                                </form>
+                                            </div>
+                                            <div class="tab-pane" id="tododonetab">
+                                                <form data-done-url="{% url 'crm:todo_done' %}" data-add-todo-url="{% url 'crm:todo_add' %}" id="TODOFORMDONE" action="" >
+                                                    <div class="col-12" style="width:100%">
+
+                                                    <table id="table5_id" class="table table-borderless table-sm table-hover table-centered m-0 nowrap" width="100%">
+                                                        <thead class="thead-light">
+                                                            <tr>
+                                                                <th style="width:30%">{% trans "Task" %}</th>
+                                                                <th style="width:20%">{% trans "From User" %}</th>
+                                                                <th style="width:20%">{% trans "To User" %}</th>
+                                                                <th style="width:20%">{% trans "Priority" %}</th>
+                                                                <th style="width:10%">{% trans "Action" %}</th>
+                                                            </tr>
+                                                        </thead>
+                                                    </table>
+                                                    </div>
+                                                </form>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div> <!-- end card-body -->
+                    <div class="card-footer" style="background:#e8e8e8">
+                        <table id="table4_id" class="table table-borderless table-sm table-hover table-centered m-0 nowrap">
+                            <tr >
+                                <td style="width:30%">
+                                    <input required type="text" id="todo-input-text" name="todo-input-text" class="form-control" placeholder="Add new todo">
+                                    <input hidden type="text" id="todo_id" name="todo-id" class="form-control">
+                                </td>
+                                <td style="width:20%">
+                                    <select name="user" id="id_user" class="form-control" style="">
+                                            <option value="{{ request.user.id }}">{{ request.user }}</option>
+                                    </select>
+                                </td>
+                                <td style="width:20%">
+                                    <select name="to_user" id="id_to_user" class="form-control" style="">
+                                        {% for User in users %}
+                                            <option value="{{ User.id }}">{{ User }}</option>
+                                        {% endfor %}
+                                    </select>
+                                </td>
+                                <td style="width:20%">
+                                    <select name="priority" id="id_priority" class="form-control" style="">
+                                        <option value="0">{% trans 'Low' %}</option>
+                                        <option value="1">{% trans 'Med' %}</option>
+                                        <option value="2">{% trans 'High' %}</option>
+                                    </select>
+                                </td>
+                                <td id="todoadd_td" style="width:10%">
+                                    <button onclick="todoadd_function()" class="btn-primary btn-md btn-block btn waves-effect waves-light" type="button" id="todo-btn-submit">
+                                        {% trans 'Add' %}</button>
+                                </td>
+                                <td id="todosave_td" style="width:10%">
+                                    <button onclick="todosave_function()" class="btn-danger btn-md btn-block btn waves-effect waves-light" type="button" id="todo-btn-save">
+                                        {% trans 'Save' %}</button>
+                                </td>
+                            </tr>
+                        </table>
+
+                    </div>
+                </div>
+            </div>
+            <div class="cardM col-xl-4">
+                <div id="drag6" class="card">
+                        <div class="card-body" dir="ltr">
+                            <div class="card-widgets">
+                                <a data-toggle="collapse" href="#cardCollpase1" role="button" aria-expanded="false" aria-controls="cardCollpase1"><i class="mdi mdi-minus"></i></a>
+                            </div>
+                            <h4 class="header-title mb-0">{% trans "Sales vs Target" %}</h4>
+
+                            <div id="cardCollpase1" class="collapse pt-3 show" style="height:312px">
+                                <div class="text-center">
+                                    <div class="row mt-2">
+                                        <div class="col-6">
+                                            <h4>{{ totalmonthlysaless|intcomma:False|currency_no_symbol }}</h4>
+                                            <p class="text-muted font-13 mb-0 text-truncate">{% trans "Total Sales" %}</p>
+                                        </div>
+                                        <div class="col-6">
+                                            <h4>{{ totalmonthlytargets|intcomma:False|currency_no_symbol }}</h4>
+                                            <p class="text-muted font-13 mb-0 text-truncate">{% trans "Target" %}</p>
+                                        </div>
+                                    </div> <!-- end row -->
+                                    <div style="height:100%">
+                                        <input class="dial"  data-width="180" data-height="180" data-linecap=round data-fgColor="{% if totalmonthlytargetsperc == 0 %}#0088cc{% else %}#f1556c{% endif %}" value="{% if totalmonthlytargetsperc == 0 %} {{totalmonthlysalessperc}} {% else %} {{totalmonthlytargetsperc}} {% endif %}" data-skin="tron" data-angleOffset="180" data-readOnly=true data-thickness=".2"/>
+                                        {% if totalmonthlytargetsperc == 0 %}
+                                            <h4 style="color: #0088cc!important" class="text-muted font-15 mb-0 text-truncate">{% trans "Over Target" %}</h4>
+                                        {% else %}
+                                            <h4 style="color: #f1556c!important" class="text-muted font-15 mb-0 text-truncate">{% trans "Achievement" %}</h4>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                            </div> <!-- end collapse-->
+                            <div  class="mt-3">
+                                <h6 class="text-uppercase">{% trans "Time Spent" %} <span class="float-right">{{daysspent}}%</span></h6>
+                                <div class="progress progress-sm m-0">
+                                    <div class="progress-bar {% if daysspent <= 50 %} bg-success {% elif daysspent > 25 and daysspent <= 75  %} bg-warning {% else %} bg-danger {% endif %}" role="progressbar" aria-valuenow="{{daysspent}}" aria-valuemin="0" aria-valuemax="100" style="width:{{daysspent}}%">
+                                        <span class="sr-only">{{daysspent}} {% trans "Complete" %}</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div> <!-- end card-body-->
+                    </div>
+            </div> <!-- end col-->
+            <div class="cardM col-xl-8">
+                <div id="drag7" class="card">
+                        <div class="card-body" dir="ltr">
+                            <div class="card-widgets">
+                                <a data-toggle="collapse" href="#cardCollpase36" role="button" aria-expanded="false" aria-controls="cardCollpase36"><i class="mdi mdi-minus"></i></a>
+                            </div>
+                            <h4 class="header-title mb-0">{% trans "Area - Sales vs Target" %}</h4>
+                            <div id="cardCollpase36" class="collapse pt-3 show" >
+                                <div id="myChartArea" ></div>
+                            </div>
+                        </div> <!-- end card-body-->
+                    </div> <!-- end card-->
+            </div> <!-- end col-->
+            <div class="cardM col-xl-8">
+                <div id="drag8" class="card">
+                        <div class="card-body" dir="ltr">
+                            <div class="card-widgets">
+                                <a data-toggle="collapse" href="#cardCollpase34" role="button" aria-expanded="false" aria-controls="cardCollpase34"><i class="mdi mdi-minus"></i></a>
+                            </div>
+                            <h4 class="header-title mb-0">{% trans "Channel - Sales vs Target" %}</h4>
+                            <div id="cardCollpase34" class="collapse pt-3 show" >
+                                <div id="myChartChannel1" ></div>
+                            </div>
+                        </div> <!-- end card-body-->
+                    </div> <!-- end card-->
+            </div> <!-- end col-->
+            <div class="cardM col-xl-4">
+                <div id="drag9" class="card">
+                        <div class="card-body" dir="ltr">
+                            <div class="card-widgets">
+                                <a data-toggle="collapse" href="#cardCollpase35" role="button" aria-expanded="false" aria-controls="cardCollpase35"><i class="mdi mdi-minus"></i></a>
+                            </div>
+                            <h4 class="header-title mb-0">{% trans "Channel Sales" %}</h4>
+                            <div id="cardCollpase35" class="collapse pt-3 show" >
+                                <div id="ChannelsCharsD" style="width: 100%; height: 340px;"></div>
+                                <div hidden class="text-center">
+                                        <div id="sparkline4"></div>
+                                        <div class="row">
+                                            <div class="col-6">
+                                                <p class="text-muted font-15 mb-1 text-truncate">Target</p>
+                                                <h4><i class="fe-arrow-up text-success mr-1"></i>641</h4>
+                                            </div>
+                                            <div class="col-6">
+                                                <p class="text-muted font-15 mb-1 text-truncate">Last week</p>
+                                                <h4><i class="fe-arrow-down text-danger mr-1"></i>234</h4>
+                                            </div>
+                                        </div>
+                                </div>
+                            </div>
+                        </div> <!-- end card-body-->
+                    </div> <!-- end card-->
+            </div> <!-- end col-->
+            <div class="cardM col-xl-4">
+                <div id="drag10" class="card">
+                        <div class="card-body" dir="ltr">
+                            <div class="card-widgets">
+                                <a data-toggle="collapse" href="#cardCollpase42" role="button" aria-expanded="false" aria-controls="cardCollpase42"><i class="mdi mdi-minus"></i></a>
+                            </div>
+                            <h4 class="header-title mb-0">{% trans "Product Categories - Sales vs Target" %}</h4>
+
+                            <div id="cardCollpase42" class="collapse pt-3 show">
+                                <div id="myChartCategory" style="width:100%"></div>
+
+                            </div> <!-- end collapse-->
+                        </div> <!-- end card-body-->
+                    </div> <!-- end card-->
+            </div> <!-- end col-->
+            <div class="cardM col-xl-8">
+                <div id="drag11" class="card">
+                        <div class="card-body" dir="ltr">
+                            <div class="card-widgets">
+                                <a data-toggle="collapse" href="#cardCollpase41" role="button" aria-expanded="false" aria-controls="cardCollpase41"><i class="mdi mdi-minus"></i></a>
+                            </div>
+                            <h4 class="header-title mb-0">{% trans "Salesman - Sales vs Target" %}</h4>
+
+                            <div id="cardCollpase41" class="collapse pt-3 show">
+                                <div id="myChartSalesman1"></div>
+
+                            </div> <!-- end collapse-->
+                        </div> <!-- end card-body-->
+                    </div> <!-- end card-->
+            </div> <!-- end col-->
+            {% if request.user.is_superuser or salesmanncount > 0 %}
+            <div class="cardM col-xl-6">
+                <div id="drag12" class="card">
+                    <div class="card-body">
+                        <div class="card-widgets">
+                            <a data-toggle="collapse" href="#cardCollpase4" role="button" aria-expanded="false" aria-controls="cardCollpase4"><i class="mdi mdi-minus"></i></a>
+                        </div>
+                        <h4 class="header-title mb-0">{% trans "Best Salesman / Channel" %}</h4>
+
+                        <div id="cardCollpase4" class="collapse pt-3 show">
+                            <div class="table-responsive">
+                                <table id="table_id" class="table table-borderless table-sm table-hover table-centered m-0">
+                                    <thead>
+                                        <tr class="table-info">
+                                            <th>{% trans "Salesman" %}</th>
+                                            <th>{% trans "Channel" %}</th>
+                                            <th>{% trans "Sales" %}</th>
+                                            <th>{% trans "Percentage" %}</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                    {% for Salesman in chsmqs1 %}
+                                        <tr>
+                                            <td>{{ Salesman.salesman }}</td>
+                                            <td>{{ Salesman.channel }}</td>
+                                            <td>{{ Salesman.total|intcomma:False|currency_no_symbol }}</td>
+                                            <td>{{ Salesman.salesp }}%</td>
+                                        </tr>
+                                    {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div> <!-- end table responsive-->
+                        </div> <!-- collapsed end -->
+                    </div> <!-- end card-body -->
+                </div> <!-- end card-->
+            </div> <!-- end col -->
+            <div class="cardM col-xl-6">
+                <div id="drag13" class="card">
+                    <div class="card-body">
+                        <div class="card-widgets">
+                            <a data-toggle="collapse" href="#cardCollpase5" role="button" aria-expanded="false" aria-controls="cardCollpase5"><i class="mdi mdi-minus"></i></a>
+                        </div>
+                        <h4 class="header-title mb-0">{% trans "Best Customer / Channel" %}</h4>
+
+                        <div id="cardCollpase5" class="collapse pt-3 show">
+                            <div class="table-responsive">
+                                <table id="table2_id" class="table table-borderless table-sm table-hover table-centered m-0 nowrap">
+                                    <thead>
+                                        <tr class="table-warning">
+                                            <th>{% trans "Customer" %}</th>
+                                            <th>{% trans "Channel" %}</th>
+                                            <th>{% trans "Sales" %}</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                    {% for Salesman in chq1 %}
+                                        <tr>
+                                            <td>{{ Salesman.customer }}</td>
+                                            <td>{{ Salesman.channel }}</td>
+                                            <td>{{ Salesman.total|intcomma:False|currency_no_symbol }}</td>
+                                        </tr>
+                                    {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div> <!-- end card-body -->
+                </div>
+            </div> <!-- end col -->
+            {% endif %}
+
+             <div class="cardM col-xl-12">
+                <div id="drag14" class="card">
+                    <div class="card-body" dir="ltr">
+                        <div class="card-widgets">
+                            <a data-toggle="collapse" href="#cardCollpase6" role="button" aria-expanded="false" aria-controls="cardCollpase6"><i class="mdi mdi-minus"></i></a>
+                        </div>
+                        <h4 class="header-title mb-0">{% trans "Yearly Sales vs Target" %}</h4>
+
+                            <div id="cardCollpase6" class="collapse pt-3 show">
+                                <div id="myChartSalesM" style="width: 95%; height: 400px"></div>
+                            </div>
+                        </div> <!-- end collapse-->
+                    </div> <!-- end card-body-->
+            </div>
+        </div>
+        <div hidden class="row">
+             <div class="col-xl-12">
+                <div class="card">
+                    <div class="card-body" dir="ltr">
+                        <div class="card-widgets">
+                            <a data-toggle="collapse" href="#cardCollpase6" role="button" aria-expanded="false" aria-controls="cardCollpase6"><i class="mdi mdi-minus"></i></a>
+                        </div>
+
+                            <div id="world-map" style="width: 100%; height: 400px"></div>
+                        </div> <!-- end collapse-->
+                    </div> <!-- end card-body-->
+            </div>
+        </div>
+    </div>
+
+{% endblock %}
+
+{% block extra_javascript %}
+
+    <script src="{% static 'libs/select2/select2.min.js' %}"></script>
+    <script src="{% static 'libs/chart-js/Chart.bundle.min.js' %}"></script>
+    <script src="{% static 'libs/moment/moment.min.js' %}"></script>
+    <script src="{% static 'libs/jquery-scrollto/jquery.scrollTo.min.js' %}"></script>
+    <script src="{% static 'libs/sweetalert2/sweetalert2.min.js' %}"></script>
+    <script src="{% static 'js/pages/jquery.chat.js' %}"></script>
+    <script src="{% static 'libs/jquery-knob/jquery.knob.min.js' %}"></script>
+    <script src="{% static 'charts/morris.min.js' %}"></script>
+    <script src="{% static 'charts/raphael-min.js' %}"></script>
+    <script src="{% static 'charts/Chart.min.js' %}"></script>
+    <script type="text/javascript" src="{% static 'charts/loader.js' %}"></script>
+    <script src="{% static 'libs/jvectormap/jquery-1.8.2.js' %}"></script>
+    <script src="{% static 'libs/jvectormap/jquery-jvectormap.js' %}"></script>
+    <script src="{% static 'libs/jvectormap/jquery-mousewheel.js' %}"></script>
+    <script src="{% static 'libs/jvectormap/jvectormap.js' %}"></script>
+    <script src="{% static 'libs/jvectormap/abstract-element.js' %}"></script>
+    <script src="{% static 'libs/jvectormap/abstract-canvas-element.js' %}"></script>
+    <script src="{% static 'libs/jvectormap/abstract-shape-element.js' %}"></script>
+    <script src="{% static 'libs/jvectormap/svg-element.js' %}"></script>
+    <script src="{% static 'libs/jvectormap/svg-group-element.js' %}"></script>
+    <script src="{% static 'libs/jvectormap/svg-canvas-element.js' %}"></script>
+    <script src="{% static 'libs/jvectormap/svg-shape-element.js' %}"></script>
+    <script src="{% static 'libs/jvectormap/svg-path-element.js' %}"></script>
+    <script src="{% static 'libs/jvectormap/svg-circle-element.js' %}"></script>
+    <script src="{% static 'libs/jvectormap/svg-image-element.js' %}"></script>
+    <script src="{% static 'libs/jvectormap/svg-text-element.js' %}"></script>
+    <script src="{% static 'libs/jvectormap/vml-element.js' %}"></script>
+    <script src="{% static 'libs/jvectormap/vml-group-element.js' %}"></script>
+    <script src="{% static 'libs/jvectormap/vml-canvas-element.js' %}"></script>
+    <script src="{% static 'libs/jvectormap/vml-shape-element.js' %}"></script>
+    <script src="{% static 'libs/jvectormap/vml-path-element.js' %}"></script>
+    <script src="{% static 'libs/jvectormap/vml-circle-element.js' %}"></script>
+    <script src="{% static 'libs/jvectormap/vml-image-element.js' %}"></script>
+    <script src="{% static 'libs/jvectormap/map-object.js' %}"></script>
+    <script src="{% static 'libs/jvectormap/region.js' %}"></script>
+    <script src="{% static 'libs/jvectormap/marker.js' %}"></script>
+    <script src="{% static 'libs/jvectormap/vector-canvas.js' %}"></script>
+    <script src="{% static 'libs/jvectormap/simple-scale.js' %}"></script>
+    <script src="{% static 'libs/jvectormap/ordinal-scale.js' %}"></script>
+    <script src="{% static 'libs/jvectormap/numeric-scale.js' %}"></script>
+    <script src="{% static 'libs/jvectormap/color-scale.js' %}"></script>
+    <script src="{% static 'libs/jvectormap/legend.js' %}"></script>
+    <script src="{% static 'libs/jvectormap/data-series.js' %}"></script>
+    <script src="{% static 'libs/jvectormap/proj.js' %}"></script>
+    <script src="{% static 'libs/jvectormap/map.js' %}"></script>
+
+    <script src="{% static 'libs/jvectormap/jquery-jvectormap-world-mill-en.js' %}"></script>
+    <script src="{% static 'js/dragula.min.js' %}"></script>
+
+    <script src="{% static 'js/axios.min.js' %}"></script>
+
+    <script>
+        var updated = false;
+        var result = "";
+        function save(){
+            result = "";
+            updated.forEach(item=> {
+                result = result + item.outerHTML.replace("drag", "ndrag")
+            });
+            localStorage.setItem("savedHTML_{{LANGUAGE_CODE}}", result );
+            localStorage.setItem("UserHtml", "{{ user.id }}" )
+            console.log({{ user.id }} + '_' + "{{ LANGUAGE_CODE }}");
+        }
+        function reset(){
+            localStorage.setItem("savedHTML_{{LANGUAGE_CODE}}", undefined);
+            location.reload();
+        }
+
+         function getIndexInParent (el) {
+            console.log(Array.from(el.parentNode.children).indexOf(el))
+        }
+
+        function moveItem (array, fromIndex, toIndex) {
+            const arrayCopy = array.slice()
+            const item = arrayCopy[fromIndex]
+            //arrayCopy.splice(fromIndex, 1) // remove field that's moving
+            arrayCopy.splice(toIndex, 0, item) // add it back
+            console.log(item);
+            return arrayCopy
+        }
+
+        $("#filter_id").click(function() {
+            var Yearid = $("#id_year").val();
+            var Monthid = $("#id_month").val();
+
+            var url = $("#DashboardForm").attr("data-date-url");
+            window.location.href =url+"?year="+Yearid+"&month="+Monthid
+        });
+
+        $("#clear_filter_id").click(function() {
+            var Dateid = $("#id_date").val();
+
+            var url = $("#DashboardForm").attr("data-date-url");
+            window.location.href =url
+        });
+
+        jQuery.noConflict();
+        jQuery(function() {
+            var $ = jQuery;
+            var markers = [
+                {latLng: [24.774265, 46.738586], name: 'Riyadh', style: {r: 8, fill: 'yellow'}},
+                {latLng: [21.54238, 39.19797], name: 'Jeddah', style: {r: 8, fill: 'red'}}
+            ],
+            values1 = [408, 512, 550, 781],
+            values2 = [1, 2, 3, 4],
+            values3 = {
+                '4': 'bank',
+                '5': 'factory'
+            };
+
+            $('#world-map').vectorMap({
+                map: 'world_mill_en',
+                panOnDrag: true,
+                focusOn: {
+                    x: 0.6,
+                    y: 0.5,
+                    scale: 4,
+                    animate: true
+                },
+                markers: markers,
+                series: {
+                    regions: [{
+                        scale: ['#C8EEFF', '#0071A4'],
+                        normalizeFunction: 'polynomial',
+                        values: {
+                            "AF": 16.63,
+                            "AL": 11.58,
+                            "DZ": 158.97,
+                            "AO": 85.81,
+                            "AG": 1.1,
+                            "AR": 351.02,
+                            "AM": 8.83,
+                            "AU": 1219.72,
+                            "AT": 366.26,
+                            "AZ": 52.17,
+                            "BS": 7.54,
+                            "BH": 21.73,
+                            "BD": 105.4,
+                            "BB": 3.96,
+                            "BY": 52.89,
+                            "BE": 461.33,
+                            "BZ": 1.43,
+                            "BJ": 6.49,
+                            "BT": 1.4,
+                            "BO": 19.18,
+                            "BA": 16.2,
+                            "BW": 12.5,
+                            "BR": 2023.53,
+                            "BN": 11.96,
+                            "BG": 44.84,
+                            "BF": 8.67,
+                            "BI": 1.47,
+                            "KH": 11.36,
+                            "CM": 21.88,
+                            "CA": 1563.66,
+                            "CV": 1.57,
+                            "CF": 2.11,
+                            "TD": 7.59,
+                            "CL": 199.18,
+                            "CN": 5745.13,
+                            "CO": 283.11,
+                            "KM": 0.56,
+                            "CD": 12.6,
+                            "CG": 11.88,
+                            "CR": 35.02,
+                            "CI": 22.38,
+                            "HR": 59.92,
+                            "CY": 22.75,
+                            "CZ": 195.23,
+                            "DK": 304.56,
+                            "DJ": 1.14,
+                            "DM": 0.38,
+                            "DO": 50.87,
+                            "EC": 61.49,
+                            "EG": 216.83,
+                            "SV": 21.8,
+                            "GQ": 14.55,
+                            "ER": 2.25,
+                            "EE": 19.22,
+                            "ET": 30.94,
+                            "FJ": 3.15,
+                            "FI": 231.98,
+                            "FR": 2555.44,
+                            "GA": 12.56,
+                            "GM": 1.04,
+                            "GE": 11.23,
+                            "DE": 3305.9,
+                            "GH": 18.06,
+                            "GR": 305.01,
+                            "GD": 0.65,
+                            "GT": 40.77,
+                            "GN": 4.34,
+                            "GW": 0.83,
+                            "GY": 2.2,
+                            "HT": 6.5,
+                            "HN": 15.34,
+                            "HK": 226.49,
+                            "HU": 132.28,
+                            "IS": 12.77,
+                            "IN": 1430.02,
+                            "ID": 695.06,
+                            "IR": 337.9,
+                            "IQ": 84.14,
+                            "IE": 204.14,
+                            "IL": 201.25,
+                            "IT": 2036.69,
+                            "JM": 13.74,
+                            "JP": 5390.9,
+                            "JO": 27.13,
+                            "KZ": 129.76,
+                            "KE": 32.42,
+                            "KI": 0.15,
+                            "KR": 986.26,
+                            "KW": 117.32,
+                            "KG": 4.44,
+                            "LA": 6.34,
+                            "LV": 23.39,
+                            "LB": 39.15,
+                            "LS": 1.8,
+                            "LR": 0.98,
+                            "LY": 77.91,
+                            "LT": 35.73,
+                            "LU": 52.43,
+                            "MK": 9.58,
+                            "MG": 8.33,
+                            "MW": 5.04,
+                            "MY": 218.95,
+                            "MV": 1.43,
+                            "ML": 9.08,
+                            "MT": 7.8,
+                            "MR": 3.49,
+                            "MU": 9.43,
+                            "MX": 1004.04,
+                            "MD": 5.36,
+                            "MN": 5.81,
+                            "ME": 3.88,
+                            "MA": 91.7,
+                            "MZ": 10.21,
+                            "MM": 35.65,
+                            "NA": 11.45,
+                            "NP": 15.11,
+                            "NL": 770.31,
+                            "NZ": 138,
+                            "NI": 6.38,
+                            "NE": 5.6,
+                            "NG": 206.66,
+                            "NO": 413.51,
+                            "OM": 53.78,
+                            "PK": 174.79,
+                            "PA": 27.2,
+                            "PG": 8.81,
+                            "PY": 17.17,
+                            "PE": 153.55,
+                            "PH": 189.06,
+                            "PL": 438.88,
+                            "PT": 223.7,
+                            "QA": 126.52,
+                            "RO": 158.39,
+                            "RU": 1476.91,
+                            "RW": 5.69,
+                            "WS": 0.55,
+                            "ST": 0.19,
+                            "SA": 434.44,
+                            "SN": 12.66,
+                            "RS": 38.92,
+                            "SC": 0.92,
+                            "SL": 1.9,
+                            "SG": 217.38,
+                            "SK": 86.26,
+                            "SI": 46.44,
+                            "SB": 0.67,
+                            "ZA": 354.41,
+                            "ES": 1374.78,
+                            "LK": 48.24,
+                            "KN": 0.56,
+                            "LC": 1,
+                            "VC": 0.58,
+                            "SD": 65.93,
+                            "SR": 3.3,
+                            "SZ": 3.17,
+                            "SE": 444.59,
+                            "CH": 522.44,
+                            "SY": 59.63,
+                            "TW": 426.98,
+                            "TJ": 5.58,
+                            "TZ": 22.43,
+                            "TH": 312.61,
+                            "TL": 0.62,
+                            "TG": 3.07,
+                            "TO": 0.3,
+                            "TT": 21.2,
+                            "TN": 43.86,
+                            "TR": 729.05,
+                            "TM": 0,
+                            "UG": 17.12,
+                            "UA": 136.56,
+                            "AE": 239.65,
+                            "GB": 2258.57,
+                            "US": 14624.18,
+                            "UY": 40.71,
+                            "UZ": 37.72,
+                            "VU": 0.72,
+                            "VE": 285.21,
+                            "VN": 101.99,
+                            "YE": 30.02,
+                            "ZM": 15.69,
+                            "ZW": 5.57
+                        }
+                    }]
+                }
+            });
+        })
+    </script>
+
+    <script type="text/javascript">
+        var todoAdd = document.getElementById('todoadd_td')
+        var todoSave = document.getElementById('todosave_td')
+        todoAdd.style.display = "table-cell";
+        todoSave.style.display = "none";
+
+        google.charts.load('current', {packages: ['corechart']});
+        google.charts.setOnLoadCallback(drawChartsalesman);
+
+        function drawChartsalesman() {
+            var data = google.visualization.arrayToDataTable([
+                ["{% trans "Salesman" %}", "{% trans "Total Sales" %}", "{% trans "Target" %}" ],
+                {% for i in salesmanTotal %} ["{{ i.salesman }}", {{ i.total|currency_no_comma }}, {{ i.target|currency_no_comma }} ], {% endfor %}
+            ]);
+
+            var options = {
+                backgroundColor: { fill:'transparent' },
+                animation: {"startup": true,
+                    duration: 1000,
+                    easing: 'in',
+                },
+                titleTextStyle: {color: '#FFFFFF'},
+                {% if LANGUAGE_CODE == 'ar' %}
+                    fontName: 'Tajawal',
+                    annotations: { textStyle: { fontName: 'Tajawal', fontSize: 12, color:'white' } },
+                    legend: {
+                        textStyle: {
+                            fontName: 'Tajawal',
+                        },
+                    },
+                    tooltip: {
+                        textStyle: {
+                            fontName: 'Tajawal',
+                        },
+                    },
+                    title: {
+                        textStyle: {
+                            fontName: 'Tajawal',
+                        },
+                    },
+                {% endif %}
+                isStacked:true,
+                chartArea:{left:150,top:50,right:50,bottom:50,width: '70%', height: '70%'},
+                height: 340,
+                legend: { position: "none" },
+                colors:['#0088cc','#62b58f'],
+            };
+            var chart = new google.visualization.BarChart(document.getElementById("myChartSalesman1"));
+            chart.draw(data, options);
+        }
+
+        google.charts.load('current', {packages: ['corechart']});
+        google.charts.setOnLoadCallback(drawChartareas);
+
+        function drawChartareas() {
+            var data = google.visualization.arrayToDataTable([
+                ["{% trans "Area" %}", "{% trans "Total Sales" %}", "{% trans "Target" %}" ],
+                {% for i in areasales %} ["{{ i.area }}", {{ i.salest|currency_no_comma }}, {{ i.target|currency_no_comma }} ], {% endfor %}
+            ]);
+
+            var options = {
+                backgroundColor: { fill:'transparent' },
+                animation: {"startup": true,
+                    duration: 1000,
+                    easing: 'in'
+                },
+                {% if LANGUAGE_CODE == 'ar' %}
+                    fontName: 'Tajawal',
+                    annotations: { textStyle: { fontName: 'Tajawal', fontSize: 12 } },
+                    legend: {
+                        textStyle: {
+                            fontName: 'Tajawal',
+                        },
+                    },
+                    tooltip: {
+                        textStyle: {
+                            fontName: 'Tajawal',
+                        },
+                    },
+                    title: {
+                        textStyle: {
+                            fontName: 'Tajawal',
+                        },
+                    },
+
+                {% endif %}
+                isStacked:true,
+                chartArea:{left:150,top:50,right:50,bottom:50,width: '70%', height: '70%'},
+                height: 340,
+                legend: { position: "none" },
+                colors:['#0088cc','#f7b84b'],
+            };
+            var chart = new google.visualization.BarChart(document.getElementById("myChartArea"));
+            chart.draw(data, options);
+        }
+
+
+        google.charts.load('current', {packages: ['corechart']});
+        google.charts.setOnLoadCallback(drawChartchannels);
+
+        function drawChartchannels() {
+            var data = google.visualization.arrayToDataTable([
+                ["{% trans "Channel" %}", "{% trans "Total Sales" %}", "{% trans "Target" %}" ],
+                {% for i in channelsales %} ["{{ i.channel }}", {{ i.salest|currency_no_comma }}, {{ i.target|currency_no_comma }} ], {% endfor %}
+            ]);
+
+            var options = {
+                backgroundColor: { fill:'transparent' },
+                animation: {"startup": true,
+                    duration: 1000,
+                    easing: 'in'
+                },
+                {% if LANGUAGE_CODE == 'ar' %}
+                    fontName: 'Tajawal',
+                    annotations: { textStyle: { fontName: 'Tajawal', fontSize: 12 } },
+                    legend: {
+                        textStyle: {
+                            fontName: 'Tajawal',
+                        },
+                    },
+                    tooltip: {
+                        textStyle: {
+                            fontName: 'Tajawal',
+                        },
+                    },
+                    title: {
+                        textStyle: {
+                            fontName: 'Tajawal',
+                        },
+                    },
+                {% endif %}
+                isStacked:true,
+                chartArea:{left:150,top:50,right:50,bottom:50,width: '70%', height: '70%'},
+                height: 340,
+                legend: { position: "none" },
+                colors:['#0088cc','#f7b84b'],
+            };
+            var chart = new google.visualization.BarChart(document.getElementById("myChartChannel1"));
+            chart.draw(data, options);
+        }
+
+        google.charts.load('current', {packages: ['corechart']});
+        google.charts.setOnLoadCallback(drawChartcategory);
+
+        function drawChartcategory() {
+            var data = google.visualization.arrayToDataTable([
+                ["{% trans "Element" %}", "{% trans "Total Sales" %}", "{% trans "Target" %}" ],
+                {% for i in categorysalesTotal %} ["{{i.category}}", {{i.sales|currency_no_comma}}, {{i.target|currency_no_comma}} ], {% endfor %}
+            ]);
+
+            var options = {
+                backgroundColor: { fill:'transparent' },
+                animation: {"startup": true,
+                    duration: 1000,
+                    easing: 'in'
+                },
+                {% if LANGUAGE_CODE == 'ar' %}
+                    fontName: 'Tajawal',
+                    annotations: { textStyle: { fontName: 'Tajawal', fontSize: 12 } },
+                    legend: {
+                        textStyle: {
+                            fontName: 'Tajawal',
+                        },
+                    },
+                    tooltip: {
+                        textStyle: {
+                            fontName: 'Tajawal',
+                        },
+                    },
+                    title: {
+                        textStyle: {
+                            fontName: 'Tajawal',
+                        },
+                    },
+
+                {% endif %}
+                isStacked:true,
+                chartArea:{left:100,top:50,right:50,bottom:50,width: '70%', height: '70%'},
+                height: 340,
+                legend: { position: "none" },
+                colors:['#0088cc','#f1556c'],
+            };
+            var chart = new google.visualization.ColumnChart(document.getElementById("myChartCategory"));
+            chart.draw(data, options);
+        }
+
+        function tododone_function(id) {
+            var url = $("#TODOFORM").attr("data-done-url");
+            var todoId = id;
+            todoAdd.style.display = "table-cell";
+            todoSave.style.display = "none";
+            $("#todo_id").val('');
+            $("#todo-input-text").val('');
+            $("#id_to_user").val(1);
+            $("#id_priority").val(0);
+            $.ajax({
+                url: url,
+                data: {
+                    async: true,
+                    'pk': todoId,
+                },
+                success: function (data) {
+                    $("#id_salesman1").html(data);
+                    $('#table3_id').DataTable().destroy();
+                    refresh_table3();
+                    $('#table5_id').DataTable().destroy();
+                    refresh_table5();
+                }
+            });
+        };
+        function todoedit_function(id) {
+            todoAdd.style.display = "none";
+            todoSave.style.display = "table-cell";
+            var url = $("#TODOFORM").attr("data-edit-todo-url");
+            var todoId = id;
+            $.ajax({
+                url: url,
+                data: {
+                    'pk': todoId,
+                },
+                success: function (data) {
+                    $("#todo_id").val(data[0].id);
+                    $("#todo-input-text").val(data[0].task);
+                    $("#id_to_user").val(data[0].to_user.id);
+                    $("#id_priority").val(data[0].priority);
+                    console.log(data[0].task);
+                }
+            });
+        };
+
+        function todosave_function() {
+            var url = $("#TODOFORM").attr("data-save-todo-url");
+            var id = $("#todo_id").val();
+            var tasks = $("#todo-input-text").val();
+            var priority_id = $("#id_priority").val();
+            var touser_id = $(`select[name="to_user"]`).val();
+            todoAdd.style.display = "table-cell";
+            todoSave.style.display = "none";
+            $.ajax({
+                url: url,
+                data: {
+                    async: true,
+                    'pk': id,
+                    'task': tasks,
+                    'priority': priority_id,
+                    'to_user': touser_id,
+                },
+                success: function (data) {
+                    $("#todo_id").val('');
+                    $("#todo-input-text").val('');
+                    $("#id_to_user").val(1);
+                    $("#id_priority").val(0);
+                    $('#table3_id').DataTable().destroy();
+                    refresh_table3();
+                    $('#table5_id').DataTable().destroy();
+                    refresh_table5();
+                }
+            });
+
+        };
+        function todoadd_function() {
+            var url = $("#TODOFORM").attr("data-add-todo-url");
+            var tasks = $("#todo-input-text").val();
+            var priority_id = $("#id_priority").val();
+            var touser_id = $(`select[name="to_user"]`).val();
+            if (tasks !== '') {
+                $.ajax({
+                    url: url,
+                    data: {
+                    async: false,
+                        'task': tasks,
+                        'priority': priority_id,
+                        'to_user': touser_id,
+                    },
+                    success: function (data) {
+                        $("#id_salesman1").html(data);
+                    }
+                });
+                $('#table3_id').DataTable().destroy();
+                refresh_table3();
+            } else {
+                alert('{% trans "Task cannot be empty" %}');
+            }
+        };
+
+        function refresh_table3() {
+            var result = []
+            $('#table3_id').html("Loading...")
+            axios.get("/crm/api/todos", {
+                headers: {
+                    "Authorization": "Token " + "121986c5217a0e24286bde15f1629696aa1f129b"
+                }
+            }
+            ).then(
+                (r) => {
+                $('#table3_id').html("")
+                var table = $('#table3_id').DataTable({
+                    "pageLength": 10,
+                    data:JSON.parse(JSON.stringify(r.data)),
+                    columns: [
+                        { title: "{% trans 'Task' %}", data:'task' },
+                        { title: "{% trans 'From User' %}", data:'user.username' },
+                        { title: "{% trans 'To User' %}", data:'to_user.username' },
+                        { title: "{% trans 'Priority' %}", "render": function ( data, type, full, meta )
+                            {
+                                var Priority_id = full.priority;
+                                var result1 = ''
+
+                                if (Priority_id == 0) {
+                                    result1 = '<span class="badge bg-soft-success text-success">{% trans "Low" %}</span>'
+                                } else if (Priority_id == 1) {
+                                    result1 = '<span class="badge bg-soft-warning text-warning">{% trans "Med" %}</span>'
+                                } else {
+                                    result1 = '<span class="badge bg-soft-danger text-danger">{% trans "High" %}</span>'
+                                }
+                                return result1
+                            }
+                        },
+                        { title: "{% trans 'Action' %}", "render": function ( data, type, full, meta )
+                            {
+                                var buttonID = full.id;
+                                var done_url = "javascript:tododone_function(12345)".replace(/12345/, buttonID.toString());
+                                var edit_url = "javascript:todoedit_function(12345)".replace(/12345/, buttonID.toString());
+                                var result = ''
+
+                                {% if perms.crm.done_todolist %}
+                                    result = result + (`<a href=${done_url} class="todo-done action-icon" title="{% trans "Done" %}"><i class="fe-check"></i></a>`)
+                                {% endif %}
+                                    {% if perms.crm.change_todolist %}
+                                    result = result + (`<a href=${edit_url} class="todo-edit text-warning action-icon"  title="{% trans "Edit" %}"><i class="mdi mdi-square-edit-outline"></i></a>`)
+                                {% endif %}
+                                return result
+                            }
+                        }
+                    ],
+                    language: {
+                        buttons: {
+                            "collection": "{% trans "Columns" %}",
+                            "copy": "{% trans "Copy" %}",
+                            "csv": "{% trans "CSV" %}",
+                            "pdf": "{% trans "PDF" %}",
+                            "print": "{% trans "Print" %}",
+                            copyTitle: '{% trans "Copy to clipboard" %}',
+                            copySuccess: {
+                                _: '{% trans "Copied %d rows to clipboard" %}',
+                                1: '{% trans "Copied one row to clipboard" %}'
+                            }
+                        },
+                        "sEmptyTable":     "{% trans "No data available in table" %}",
+                        "sInfo":           "{% trans "Showing _START_ to _END_ of _TOTAL_ entries" %}",
+                        "sInfoEmpty":      "{% trans "Showing 0 to 0 of 0 entries" %}",
+                        "sInfoFiltered":   "{% trans "(filtered from _MAX_ total entries)" %}",
+                        "sInfoPostFix":    "",
+                        "sInfoThousands":  ",",
+                        "sLengthMenu":     "{% trans "Show _MENU_ entries" %}",
+                        "sLoadingRecords": "{% trans "Loading..." %}",
+                        "sProcessing":     "{% trans "Processing..." %}",
+                        "sSearch":         "{% trans "Search:" %}",
+                        "sZeroRecords":    "{% trans "No matching records found" %}",
+                        "oPaginate": {
+                            "sFirst":    "{% trans "First" %}",
+                            "sLast":     "{% trans "Last" %}",
+                            "sNext":     "{% trans "Next" %}",
+                            "sPrevious": "{% trans "Previous" %}"
+                        },
+                        "oAria": {
+                            "sSortAscending":  "{% trans ": activate to sort column ascending" %}",
+                            "sSortDescending": "{% trans ": activate to sort column descending" %}"
+                        }
+                    },
+                    buttons: false,
+                    stateSave: false,
+                    "paging": false,
+                    "searching": true,
+                    "info":     false,
+                    order: [[ 4, "desc" ]],
+                    "dom": "<'row'<'col-sm-12'<'form-group'<f>>>>tr<'row'<'col-sm-12'<'pull-left'i><'pull-right'p><'clearfix'>>>",
+                    responsive: true,
+                });
+
+                table
+                .buttons()
+                .container()
+            });
+        }
+        function refresh_table5() {
+            var result = []
+            $('#table5_id').html("Loading...")
+            axios.get("/crm/api/todosdone", {
+                headers: {
+                    "Authorization": "Token " + "121986c5217a0e24286bde15f1629696aa1f129b"
+                }
+            }
+            ).then(
+                (r) => {
+                    $('#table5_id').html("")
+                    var table = $('#table5_id').DataTable( {
+                    "pageLength": 10,
+                    data:JSON.parse(JSON.stringify(r.data)),
+                    columns: [
+                        { title: "{% trans 'Task' %}", data:'task' },
+                        { title: "{% trans 'From User' %}", data:'user.username' },
+                        { title: "{% trans 'To User' %}", data:'to_user.username' },
+                        { title: "{% trans 'Priority' %}", "render": function ( data, type, full, meta ) {
+                                 var Priority_id = full.priority;
+                                 var result1 = ''
+
+                                    if (Priority_id == 0) {
+                                        result1 = '<span class="badge bg-soft-success text-success">{% trans "Low" %}</span>'
+                                    } else if (Priority_id == 1) {
+                                        result1 = '<span class="badge bg-soft-warning text-warning">{% trans "Med" %}</span>'
+                                    } else {
+                                        result1 = '<span class="badge bg-soft-danger text-danger">{% trans "High" %}</span>'
+                                    }
+                                 return result1
+
+                            }
+                        },
+                        { title: "{% trans 'Action' %}", "render": function ( data, type, full, meta )
+                            {
+                                 var buttonID = full.id;
+                                 var done_url = "javascript:tododone_function(12345)".replace(/12345/, buttonID.toString());
+                                 var edit_url = "javascript:todoedit_function(12345)".replace(/12345/, buttonID.toString());
+                                 var result = ''
+
+                                {% if perms.crm.done_todolist %}
+                                    result = result + (`<a href=${done_url} class="todo-done action-icon text-success" title="{% trans "Done" %}"><i class="fe-check-square"></i></a>`)
+                                {% endif %}
+                                 return result
+                            }
+                        }
+                    ],
+                    language: {
+                        buttons: {
+                            "collection": "{% trans "Columns" %}",
+                            "copy": "{% trans "Copy" %}",
+                            "csv": "{% trans "CSV" %}",
+                            "pdf": "{% trans "PDF" %}",
+                            "print": "{% trans "Print" %}",
+                            copyTitle: '{% trans "Copy to clipboard" %}',
+                            copySuccess: {
+                                _: '{% trans "Copied %d rows to clipboard" %}',
+                                1: '{% trans "Copied one row to clipboard" %}'
+                            }
+                        },
+                        "sEmptyTable":     "{% trans "No data available in table" %}",
+                        "sInfo":           "{% trans "Showing _START_ to _END_ of _TOTAL_ entries" %}",
+                        "sInfoEmpty":      "{% trans "Showing 0 to 0 of 0 entries" %}",
+                        "sInfoFiltered":   "{% trans "(filtered from _MAX_ total entries)" %}",
+                        "sInfoPostFix":    "",
+                        "sInfoThousands":  ",",
+                        "sLengthMenu":     "{% trans "Show _MENU_ entries" %}",
+                        "sLoadingRecords": "{% trans "Loading..." %}",
+                        "sProcessing":     "{% trans "Processing..." %}",
+                        "sSearch":         "{% trans "Search:" %}",
+                        "sZeroRecords":    "{% trans "No matching records found" %}",
+                        "oPaginate": {
+                            "sFirst":    "{% trans "First" %}",
+                            "sLast":     "{% trans "Last" %}",
+                            "sNext":     "{% trans "Next" %}",
+                            "sPrevious": "{% trans "Previous" %}"
+                        },
+                        "oAria": {
+                            "sSortAscending":  "{% trans ": activate to sort column ascending" %}",
+                            "sSortDescending": "{% trans ": activate to sort column descending" %}"
+                        }
+                    },
+                    buttons: false,
+                    stateSave: false,
+                    "paging": false,
+                    "searching": true,
+                    "info":     false,
+                    order: [[ 4, "desc" ]],
+                    "dom": "<'row'<'col-sm-12'<'form-group'<f>>>>tr<'row'<'col-sm-12'<'pull-left'i><'pull-right'p><'clearfix'>>>",
+                    responsive: true,
+                });
+                table
+                .buttons()
+                .container()
+            });
+        }
+
+        $(function () {
+            var table = $('#table_id').DataTable( {
+                    language: {
+                        buttons: {
+                            "collection": "{% trans "Columns" %}",
+                            "copy": "{% trans "Copy" %}",
+                            "csv": "{% trans "CSV" %}",
+                            "pdf": "{% trans "PDF" %}",
+                            "print": "{% trans "Print" %}",
+                            copyTitle: '{% trans "Copy to clipboard" %}',
+                            copySuccess: {
+                                _: '{% trans "Copied %d rows to clipboard" %}',
+                                1: '{% trans "Copied one row to clipboard" %}'
+                            }
+                        },
+                        "sEmptyTable":     "{% trans "No data available in table" %}",
+                        "sInfo":           "{% trans "Showing _START_ to _END_ of _TOTAL_ entries" %}",
+                        "sInfoEmpty":      "{% trans "Showing 0 to 0 of 0 entries" %}",
+                        "sInfoFiltered":   "{% trans "(filtered from _MAX_ total entries)" %}",
+                        "sInfoPostFix":    "",
+                        "sInfoThousands":  ",",
+                        "sLengthMenu":     "{% trans "Show _MENU_ entries" %}",
+                        "sLoadingRecords": "{% trans "Loading..." %}",
+                        "sProcessing":     "{% trans "Processing..." %}",
+                        "sSearch":         "{% trans "Search:" %}",
+                        "sZeroRecords":    "{% trans "No matching records found" %}",
+                        "oPaginate": {
+                            "sFirst":    "{% trans "First" %}",
+                            "sLast":     "{% trans "Last" %}",
+                            "sNext":     "{% trans "Next" %}",
+                            "sPrevious": "{% trans "Previous" %}"
+                        },
+                        "oAria": {
+                            "sSortAscending":  "{% trans ": activate to sort column ascending" %}",
+                            "sSortDescending": "{% trans ": activate to sort column descending" %}"
+                        }
+                    },
+                buttons: false,
+                stateSave: false,
+                "paging": false,
+                "searching": false,
+                "info":     false,
+                "order": [[ 3, 'desc' ]]
+            });
+            table
+                .buttons()
+                .container()
+
+            var table2 = $('#table2_id').DataTable( {
+                    language: {
+                        buttons: {
+                            "collection": "{% trans "Columns" %}",
+                            "copy": "{% trans "Copy" %}",
+                            "csv": "{% trans "CSV" %}",
+                            "pdf": "{% trans "PDF" %}",
+                            "print": "{% trans "Print" %}",
+                            copyTitle: '{% trans "Copy to clipboard" %}',
+                            copySuccess: {
+                                _: '{% trans "Copied %d rows to clipboard" %}',
+                                1: '{% trans "Copied one row to clipboard" %}'
+                            }
+                        },
+                        "sEmptyTable":     "{% trans "No data available in table" %}",
+                        "sInfo":           "{% trans "Showing _START_ to _END_ of _TOTAL_ entries" %}",
+                        "sInfoEmpty":      "{% trans "Showing 0 to 0 of 0 entries" %}",
+                        "sInfoFiltered":   "{% trans "(filtered from _MAX_ total entries)" %}",
+                        "sInfoPostFix":    "",
+                        "sInfoThousands":  ",",
+                        "sLengthMenu":     "{% trans "Show _MENU_ entries" %}",
+                        "sLoadingRecords": "{% trans "Loading..." %}",
+                        "sProcessing":     "{% trans "Processing..." %}",
+                        "sSearch":         "{% trans "Search:" %}",
+                        "sZeroRecords":    "{% trans "No matching records found" %}",
+                        "oPaginate": {
+                            "sFirst":    "{% trans "First" %}",
+                            "sLast":     "{% trans "Last" %}",
+                            "sNext":     "{% trans "Next" %}",
+                            "sPrevious": "{% trans "Previous" %}"
+                        },
+                        "oAria": {
+                            "sSortAscending":  "{% trans ": activate to sort column ascending" %}",
+                            "sSortDescending": "{% trans ": activate to sort column descending" %}"
+                        }
+                    },
+                buttons: false,
+                stateSave: false,
+                "paging": false,
+                "searching": false,
+                "info":     false,
+                "order": [[ 2, 'desc' ]]
+            });
+
+            table2
+            .buttons()
+            .container()
+        });
+
+
+        google.charts.load("current", {packages:["corechart"]});
+        google.charts.setOnLoadCallback(drawChartChannel);
+        function drawChartChannel() {
+            var data = google.visualization.arrayToDataTable([
+                ['{% trans "Channel" %}', '{% trans "Total Sales" %}'],
+
+                {% for i in channelsales %} ["{{i.channel}}", {{i.sales|currency_no_comma}} ],  {% endfor %}
+            ]);
+
+            var options = {
+                backgroundColor: { fill:'transparent' },
+                animation: {"startup": true,
+                    duration: 1000,
+                    easing: 'in'
+                },
+                {% if LANGUAGE_CODE == 'ar' %}
+                    fontName: 'Tajawal',
+                    annotations: { textStyle: { fontName: 'Tajawal', fontSize: 12 } },
+                    legend: {
+                        textStyle: {
+                            fontName: 'Tajawal',
+                        },
+                    },
+                    tooltip: {
+                        textStyle: {
+                            fontName: 'Tajawal',
+                        },
+                    },
+                    title: {
+                        textStyle: {
+                            fontName: 'Tajawal',
+                        },
+                    },
+                {% endif %}
+                pieHole: 0.5,
+                chartArea:{left:10,top:30,right:10,bottom:30,width: '100%', height: '70%'},
+                legend: { position: "bottom", alignment: "center" },
+                tooltip: { trigger: 'selection' }
+            };
+            var chart = new google.visualization.PieChart(document.getElementById('ChannelsCharsD'));
+            chart.draw(data, options);
+        }
+
+        google.charts.load('current', {'packages':['corechart']});
+        google.charts.setOnLoadCallback(drawChartSalesTarget);
+
+        function drawChartSalesTarget() {
+
+            var data = google.visualization.arrayToDataTable([
+                ['{% trans "Month" %}', '{% trans "Total Sales" %}', '{% trans "Target" %}'],
+
+                {% for i in allmonthsales %} [{{ i.month }}, {{ i.sales|currency_no_comma }}, {{ i.target|currency_no_comma }} ],  {% endfor %}
+            ]);
+            var options = {
+                backgroundColor: { fill:'transparent' },
+                animation: {"startup": true,
+                    duration: 1000,
+                    easing: 'in'
+                },
+                hAxis: {title: '{% trans "Month" %}',  titleTextStyle: {color: '#333'},
+                   slantedText:true},
+                explorer: {
+                    actions: ['dragToZoom', 'rightClickToReset'],
+                    axis: 'horizontal',
+                    keepInBounds: true,
+                    maxZoomIn: 4.0
+                },
+                {% if LANGUAGE_CODE == 'ar' %}
+                    fontName: 'Tajawal',
+                    annotations: { textStyle: { fontName: 'Tajawal', fontSize: 12 } },
+                    legend: {
+                        textStyle: {
+                            fontName: 'Tajawal',
+                        },
+                    },
+                    tooltip: {
+                        textStyle: {
+                            fontName: 'Tajawal',
+                        },
+                    },
+                    title: {
+                        textStyle: {
+                            fontName: 'Tajawal',
+                        },
+                    },
+                {% endif %}
+                vAxis: {format: 'short'},
+                legend: { position: "bottom", alignment: "center" },
+                chartArea: {left:50,top:20,right:0,bottom:100,width:'100%', height:'80%'},
+                axes: {
+                    x: {
+                        0: {side: 'bottom'}
+                    }
+                }
+            };
+            var chart = new google.visualization.LineChart(document.getElementById('myChartSalesM'));
+            chart.draw(data, options);
+        }
+
+        $(document).ready(function() {
+            var savedHTML =  localStorage.getItem("savedHTML_{{LANGUAGE_CODE}}");
+            if (typeof(localStorage.getItem("savedHTML_{{LANGUAGE_CODE}}"))!="undefined" ){
+                if (localStorage.getItem("savedHTML_{{LANGUAGE_CODE}}") !="undefined"){
+                console.log("{{ user.id }}_{{ LANGUAGE_CODE }}");
+                    if("{{ user.id }}" == localStorage.getItem("UserHtml")) {
+                            console.log("{{ user.id }}_{{ LANGUAGE_CODE }}");
+                            document.getElementById("main_hidden").innerHTML = savedHTML;
+                            var arr_v = $('[id^="ndrag"]')
+                            for (var i = 0; i < arr_v.length; i++) {
+                            console.log(arr_v);
+                                arr_v[i].innerHTML = $("#" + arr_v[i].id.substring(1)).html()
+                            }
+                            $("#main").html($("#main_hidden").html())
+                            $("#main_hidden").html("");
+                            $(".dial").knob();
+                            $('canvas:first').remove();
+                    }else{
+                    $(".dial").knob();
+                    }
+                } else{
+                    $(".dial").knob();
+                }
+            }else {
+                    $(".dial").knob();
+            }
+
+            {% if request.user.tour == 1 %}
+                hopscotch.startTour( {
+                    id:"my-intro", steps:[
+                    {
+                        target: "dashboard-header", title: "{% trans "Dashboard" %}", content: "{% trans "The Dashboard gives you a quick overview about your business." %}" , placement: "bottom", zindex: 999
+                    },
+                    {
+                        target: "filter_id", title: "{% trans "Filter" %}", content: "{% trans "Choose Year and Month from the dropdown list and click this button to apply apply filter, or click on the next button to clear the filter." %}" , placement: "left", zindex: 999
+                    }
+                    ], showPrevButton:!0
+                })
+            {% endif %}
+
+            console.log("LOADED");
+
+            var boxArray = document.getElementsByClassName("cardM");
+            var boxes = Array.prototype.slice.call(boxArray);
+            const dra = dragula({ containers: boxes});
+
+            dra.on("drop" , (el, target, source, sibling)=> {
+                let fromIndex = getIndexInParent (source);
+                let toIndex = getIndexInParent (target);
+                updated = moveItem(boxes, fromIndex, toIndex).slice(1);
+            });
+            refresh_table3();
+            refresh_table5();
+            $('#id_user').select2();
+            $('#id_to_user').select2();
+        });
+
+        $(function () {
+            $(".currency-change").click(function () {
+                var url = $("#CurrencyForm").attr("data-currency-change-url");
+                var currencyId = $("#id_currency").val();
+                $.ajax({
+                    url: url,
+                    data: {
+                        'id': currencyId,
+                        'curl': window.location.href,
+                    },
+                    success: function (data) {
+                        $("#id_s2alesman1").html(data);
+                    }
+                });
+                location.reload();
+            });
+
+            $(".clear-all").click(function () {
+                var url = $("#SOForm1").attr("data-clear-all-url");
+                var customerId = $(this).attr("id");
+                $.ajax({
+                    url: url,
+                    data: {
+                        'pk': customerId,
+                    },
+                    success: function (data) {
+                        $("#id_salesman1").html(data);
+                        $("div[id*='noterow-']").remove();
+                    }
+                });
+            });
+       });
+
+    </script>
+    <style>
+        ul#todo-list {
+            height: 268px !important;
+        }
+        div#table3_id_wrapper {
+            height: 266px !important;
+        }
+        div#table5_id_wrapper {
+            height: 266px !important;
+        }
+        .nav-pills>a, .nav-pills>li>a, .nav-tabs>li>a {
+            color: #d4d4d4;
+            font-weight: 600;
+        }
+        div.dataTables_wrapper div.dataTables_filter {
+            text-align: left;
+        }
+        thead {
+            background-color: #efefef;
+        }
+    </style>
+{% endblock %}
+
+

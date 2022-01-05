@@ -1,0 +1,306 @@
+{% extends "auth_base.html" %}
+{% load i18n %}
+{% load widget_tweaks %}
+{% load crispy_forms_tags %}
+{% block content %}
+<link href="/static/libs/select2/select2.min.css" rel="stylesheet" />
+
+<div class="container-fluid">
+    <!-- start page title -->
+    <div class="row">
+        <div class="col-12">
+            <div class="page-title-box">
+                <h4 class="page-title">{% trans "Editing Question" %}</h4><h3>{{ object.title }}</h3>
+            </div>
+        </div>
+    </div>
+    <head>
+        <meta charset="utf-8" />
+        <title>Editing Question for {{ form.title }}</title>
+    </head>
+{% if perms.crm.view_questionanswers %}
+  <form action="" method="post" enctype="multipart/form-data">
+        {% for hidden_field in form.hidden_fields %}
+          {{ hidden_field.errors }}
+          {{ hidden_field }}
+        {% endfor %}
+
+        {% csrf_token %}
+
+        {{ form.management_form }}
+        {{ form.non_form_errors }}
+
+    {% for questionfields_form in form.forms %}
+      {% with forloop.counter as outer_counter %}
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="card">
+                    <div class="card-header bg-blue py-3 text-white" data-toggle="collapse" href="#cardCollpase{{ questionfields_form.instance.id }}" role="button" aria-expanded="false" aria-controls="cardCollpase{{ questionfields_form.instance.id }}">
+                            <div class="card-widgets">
+                                <a data-toggle="collapse" href="#cardCollpase{{ questionfields_form.instance.id }}" role="button" aria-expanded="false" aria-controls="cardCollpase{{ questionfields_form.instance.id }}"><i class="mdi mdi-minus"></i></a>
+                            </div>
+                        {{ questionfields_form.id }}
+                                {% if questionfields_form.instance.id %}
+                                    <div class="card-title mb-0 text-white" style="font-size:13, font-weight:500;line-height: 0px !important">{% trans "Question" %}: {{ questionfields_form.instance.title }} ?</div>
+                                    </h2>
+                                {% else %}
+                                    {% if form.forms|length > 1 %}
+                                        <div class="card-title mb-0 text-white" style="font-size:13, font-weight:500;line-height: 0px !important">{% trans "Add another Field" %}</div>
+                                    {% else %}
+                                        <div class="card-title mb-0 text-white" style="font-size:13, font-weight:500;line-height: 0px !important">{% trans "Add a Field" %}</div>
+                                    {% endif %}
+                                {% endif %}
+                    </div>
+                    <div class="card-body">
+                        <div id="cardCollpase{{ questionfields_form.instance.id }}" class="collapse pt-0 show">
+                            <div class="row">
+                                <div class="form-group col-md-12 mb-0">
+                                    <div class="col-12">
+                                        {% for hidden_field in questionfields_form.hidden_fields %}
+                                            {{ hidden_field.errors }}
+                                        {% endfor %}
+
+                                        <div hidden class="row">
+                                            <div class="form-group col-md-12 mb-0">
+                                                <div class="row">
+                                                    <div class="col-12">
+                                                        {{ questionfields_form.question }}
+                                                        {{ questionfields_form.id }}
+                                                        <div hidden>{{ questionfields_form.title }} ?</div>
+                                                    </div>
+                                                    <div hidden class="col-6">
+                                                        {{ questionfields_form.type|as_crispy_field }}
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        {% if questionfields_form.nested %}
+                                            <div class="indent child-div" id="div-id_question_fields-{{ forloop.counter0 }}-type">
+                                                {{ questionfields_form.nested.management_form }}
+                                                {{ questionfields_form.nested.non_form_errors }}
+
+                                                {% if questionfields_form.instance.type == 5 %}
+                                                    <select select-id="{{ outer_counter }}" name="select_questionfield" id="id_select_questionfield" class="select_questionfield">
+                                                        <option value="none">---------</option>
+                                                        {% for Answers in questionfields_form.nested.forms %}
+                                                            <option value="{{ Answers.instance.id }}" {% if Answers.instance.answer == '1' %} selected {% endif %}>{{ Answers.instance.questionfieldchilds_title }}</option>
+                                                        {% endfor %}
+                                                    </select>
+                                                        {% for Answers in questionfields_form.nested.forms %}
+                                                        <div class="sel1" id="sel1-{{ outer_counter }}" data-id="{{ questionfields_form.instance.id }}" last-id="{{ outer_counter }}" ques-id="{{ Answers.instance.id }}">
+                                                            {{ Answers.id }}
+                                                            {{ Answers.questionfield }}
+                                                            <div hidden id="sel-{{ Answers.instance.id }}" class="sel-{{ outer_counter }}" class-id="sel-{{ questionfields_form.instance.id }}" data-id="{{ Answers.instance.id }}" coun-id="{{ forloop.counter }}">
+                                                                {{ Answers.answer }}
+                                                            </div>
+                                                            <div hidden>
+                                                                {{ Answers.questionfieldchilds_title|as_crispy_field }}
+                                                            </div>
+                                                        </div>
+                                                        {% endfor %}
+                                                {% elif questionfields_form.instance.type == 3 %}
+                                                        {% for Answers in questionfields_form.nested.forms %}
+                                                        {{ Answers.id }}
+                                                        {{ Answers.questionfield }}
+                                                            <div class="checkbox mb-2">
+                                                                <input type="checkbox" id="checkbox{{ Answers.instance.id }}"  name="chk_questionfield" select-id="{{ outer_counter }}" class="chk_questionfield" ques-id="{{ Answers.instance.id }}"  {% if Answers.instance.answer == "1" %} checked {% endif %}>
+                                                                <label for="checkbox{{ Answers.instance.id }}">
+                                                                    <span>{{ Answers.instance.questionfieldchilds_title }} </span>
+                                                                </label>
+                                                            </div>
+                                                            <div hidden id="chk-{{ Answers.instance.id }}" class="chk-{{ outer_counter }}" class-id="chk-{{ questionfields_form.instance.id }}" data-id="{{ Answers.instance.id }}" coun-id="{{ forloop.counter }}">
+                                                                {{ Answers.answer }}
+                                                            </div>
+                                                            <div hidden>
+                                                                {{ Answers.questionfieldchilds_title|as_crispy_field }}
+                                                            </div>
+                                                        {% endfor %}
+                                                {% elif questionfields_form.instance.type == 4 %}
+                                                        {% for Answers in questionfields_form.nested.forms %}
+                                                        {{ Answers.id }}
+                                                        {{ Answers.questionfield }}
+                                                            <div class="radio mb-2">
+                                                                <input type="radio" id="radio{{ Answers.instance.id }}"  name="rdo_questionfield" select-id="{{ outer_counter }}" class="rdo_questionfield" ques-id="{{ Answers.instance.id }}" {% if Answers.instance.answer == "1" %} checked {% endif %}>
+                                                                <label for="radio{{ Answers.instance.id }}">
+                                                                    <span>{{ Answers.instance.questionfieldchilds_title }} </span>
+                                                                </label>
+                                                                <div hidden id="rdo-{{ Answers.instance.id }}" class="rdo-{{ outer_counter }}" class-id="rdo-{{ questionfields_form.instance.id }}" data-id="{{ Answers.instance.id }}" coun-id="{{ forloop.counter }}">
+                                                                    {{ Answers.answer }}
+                                                                </div>
+                                                                <div hidden>
+                                                                    {{ Answers.questionfieldchilds_title|as_crispy_field }}
+                                                                </div>
+                                                            </div>
+                                                        {% endfor %}
+                                                {% else %}
+                                                    {% for Answers in questionfields_form.nested.forms %}
+                                                        {{ Answers.id }}
+                                                        {{ Answers.questionfield }}
+                                                        {{ Answers.answer|as_crispy_field }}
+                                                        <div hidden>
+                                                            {{ Answers.questionfieldchilds_title|as_crispy_field }}
+                                                        </div>
+                                                        {% for hidden_field in Answers.hidden_fields %}
+                                                          {{ hidden_field.errors }}
+                                                        {% endfor %}
+                                                    {% endfor %}
+                                                {% endif %}
+                                            </div>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+      {% endwith %}
+    {% endfor %}
+
+            <div class="modal-footer">
+                <a class="btn btn-secondary waves-effect" href="{% url 'crm:actualvisits' %}">{% trans "Cancel" %}</a>
+                <input type="submit" class="submit-btn btn-danger btn btn-primary" value="{% trans "Update" %}"/>
+            </div>
+  </form>
+{% else %}
+<div class="row" >
+    <div class="col-xl-12">
+        <div class="card">
+            <div class="card-body">
+                    <STRONG> {% trans "You Don't have a permission to access this page." %} </STRONG>
+            </div>
+        </div>
+    </div>
+</div>
+{% endif %}
+
+</div>
+
+{% endblock %}
+
+{% block extra_javascript %}
+<script src="/static/libs/select2/select2.min.js"></script>
+
+<script type="text/javascript">
+let div2Count = 0;
+    $("select[name*='-type']").select2();
+    $("select[name*='select_questionfield']").select2();
+
+
+    $(".select_questionfield").change(function () {
+
+        var selectId = $(this).attr('select-id');
+        const selectV = $(this);
+        const selectVal = $(this).val();
+        $("#sel1-" + selectId).each(function() {
+            var divId = $(this).attr('data-id');
+            var quesId = $(this).attr('ques-id');
+            $(".sel-" + selectId).each(function() {
+                var div2Class = $(this).attr('class-id');
+                var div2Id = $(this).attr('data-id');
+                var div2Count = $(this).attr('coun-id');
+                const div2 = document.getElementsByClassName('sel-' + selectId);
+                for(i = j = 0; i < div2.length; i++)
+                    if(div2[i].children[0].nodeName == 'INPUT'){
+                        j++;
+                        var input = div2[i].childNodes[0].nextElementSibling;
+                        input.value ='0';
+                    }
+                if (selectVal != 'none') {
+                    var div12 = document.getElementById('sel-' + selectVal);
+                    for(i = j = 0; i < div12.childNodes.length; i++)
+                        if(div12.childNodes[i].nodeName == 'INPUT'){
+                            j++;
+                                var input = div12.childNodes[i];
+                                input.value = '1';
+                        }
+                }
+            });
+        });
+    });
+    $(".chk_questionfield").click(function () {
+        var selectId = $(this).attr('select-id');
+        const selectV = $(this);
+        const CheckedV = $(this).is(':checked');
+        const selectVal = $(this).attr('ques-id');
+            var divId = $(this).attr('data-id');
+            var quesId = $(this).attr('ques-id');
+            $(".chk-" + selectId).each(function() {
+                var div2Class = $(this).attr('class-id');
+                var div2Id = $(this).attr('data-id');
+                var div2Count = $(this).attr('coun-id');
+                const div2 = document.getElementsByClassName('chk-' + selectId);
+                if (selectVal != 'none') {
+                    var div12 = document.getElementById('chk-' + quesId);
+                    for(i = j = 0; i < div12.childNodes.length; i++)
+                        if(div12.childNodes[i].nodeName == 'INPUT'){
+                            j++;
+                                var input = div12.childNodes[i];
+                                if (CheckedV) {
+                                    input.value = '1';
+                                }
+                                else {
+                                    input.value = '0';
+                                };
+                        }
+                }
+            });
+    });
+    $(".rdo_questionfield").click(function () {
+        var selectId = $(this).attr('select-id');
+        const selectV = $(this);
+        const CheckedV = $(this).is(':checked');
+        const selectVal = $(this).attr('ques-id');
+            var divId = $(this).attr('data-id');
+            var quesId = $(this).attr('ques-id');
+            $(".rdo-" + selectId).each(function() {
+                var div2Class = $(this).attr('class-id');
+                var div2Id = $(this).attr('data-id');
+                var div2Count = $(this).attr('coun-id');
+                const div2 = document.getElementsByClassName('rdo-' + selectId);
+                for(i = j = 0; i < div2.length; i++)
+                    if(div2[i].children[0].nodeName == 'INPUT'){
+                        j++;
+                        var input = div2[i].childNodes[0].nextElementSibling;
+                        input.value ='0';
+                    }
+                if (selectVal != 'none') {
+                    var div12 = document.getElementById('rdo-' + quesId);
+                    for(i = j = 0; i < div12.childNodes.length; i++)
+                        if(div12.childNodes[i].nodeName == 'INPUT'){
+                            j++;
+                                var input = div12.childNodes[i];
+                                if (CheckedV) {
+                                    input.value = '1';
+                                }
+                                else {
+                                    input.value = '0';
+                                };
+                        }
+                }
+            });
+    });
+</script>
+
+<style>
+
+.card-header:first-child {
+    height: 28px !important;
+}
+h5.card-title.mb-0.text-white {
+    line-height: 0 !important;
+}
+.card-widgets {
+    line-height: 0 !important;
+}
+.card-widgets>a {
+    line-height: 0px !important;
+}
+.form-group {
+    margin-bottom: 0;
+}
+</style>
+{% endblock %}

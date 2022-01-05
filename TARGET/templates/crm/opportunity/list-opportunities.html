@@ -1,0 +1,476 @@
+{% extends "auth_base.html" %}
+{% load i18n %}
+{% load widget_tweaks %}
+{% load widgets %}
+{% load humanize %}
+{% block content %}
+<link href="/static/libs/sweetalert2/sweetalert2.min.css" rel="stylesheet" type="text/css" />
+
+    <div class="container-fluid">
+        <!-- start page title -->
+        <div class="row">
+            <div class="col-12">
+                <div class="page-title-box">
+                    <div class="page-title-right">
+                        <ol class="breadcrumb m-0">
+                            <li class="breadcrumb-item"><a href="/">TARGET</a></li>
+                            <li class="breadcrumb-item active">{% trans "Opportunity" %}</li>
+                        </ol>
+                    </div>
+                    <h4 class="page-title">{% trans "Opportunity" %}</h4>
+                </div>
+            </div>
+        </div>
+        <!-- end page title -->
+        {% if perms.crm.view_opportunity %}
+        <div class="row">
+            <div class="col-md-6 col-xl-4">
+                <div class="card-box">
+                    <div class="row">
+                        <div class="col-6">
+                            <div class="avatar-sm bg-blue rounded">
+                                <i class="fe-aperture avatar-title font-22 text-white"></i>
+                            </div>
+                        </div>
+                        <div class="col-6">
+                            <div class="text-right">
+                                <h4 class="text-dark my-1"><span>{{ totalactive|intcomma:False }}</span></h4>
+                                <p class="text-muted mb-1 text-truncate">{% trans "Active Deals" %}</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div hidden class="mt-3">
+                        <h6 class="text-uppercase">Target <span class="float-right">60%</span></h6>
+                        <div class="progress progress-sm m-0">
+                            <div class="progress-bar bg-blue" role="progressbar" aria-valuenow="60" aria-valuemin="0" aria-valuemax="100" style="width: 60%">
+                                <span class="sr-only">60% Complete</span>
+                            </div>
+                        </div>
+                    </div>
+                </div> <!-- end card-box-->
+            </div> <!-- end col -->
+
+            <div class="col-md-6 col-xl-4">
+                <div class="card-box">
+                    <div class="row">
+                        <div class="col-6">
+                            <div class="avatar-sm bg-success rounded">
+                                <i class="fe-shopping-cart avatar-title font-22 text-white"></i>
+                            </div>
+                        </div>
+                        <div class="col-6">
+                            <div class="text-right">
+                                <h4 class="text-dark my-1"><span>{{ totalwon|intcomma:False }}</span></h4>
+                                <p class="text-muted mb-1 text-truncate">{% trans "Won Deals" %}</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div hidden class="mt-3">
+                        <h6 class="text-uppercase">Target <span class="float-right">49%</span></h6>
+                        <div class="progress progress-sm m-0">
+                            <div class="progress-bar bg-success" role="progressbar" aria-valuenow="49" aria-valuemin="0" aria-valuemax="100" style="width: 49%">
+                                <span class="sr-only">49% Complete</span>
+                            </div>
+                        </div>
+                    </div>
+                </div> <!-- end card-box-->
+            </div> <!-- end col -->
+
+            <div class="col-md-6 col-xl-4">
+                <div class="card-box">
+                    <div class="row">
+                        <div class="col-6">
+                            <div class="avatar-sm bg-warning rounded">
+                                <i class="fas fa-hand-holding-usd avatar-title font-22 text-white"></i>
+                            </div>
+                        </div>
+                        <div class="col-6">
+                            <div class="text-right">
+                                <h4 class="text-dark my-1"><span >{{ totallost|intcomma:False }}</span></h4>
+                                <p class="text-muted mb-1 text-truncate">{% trans "Lost Deals" %}</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div hidden class="mt-3">
+                        <h6 class="text-uppercase">Target <span class="float-right">18%</span></h6>
+                        <div class="progress progress-sm m-0">
+                            <div class="progress-bar bg-warning" role="progressbar" aria-valuenow="18" aria-valuemin="0" aria-valuemax="100" style="width: 18%">
+                                <span class="sr-only">18% Complete</span>
+                            </div>
+                        </div>
+                    </div>
+                </div> <!-- end card-box-->
+            </div> <!-- end col -->
+
+        </div>
+
+        <div class="row">
+            <div class="col-xl-9">
+                <div class="row" >
+                    <div class="col-xl-12">
+                        <div class="card">
+                            <div class="card-body">
+                                <div class="row">
+                                    <div class="col-sm-6">
+                                        <div id="controlPanel" {% if LANGUAGE_CODE == 'ar' %} align="right" {% else %} align="left" {% endif %}>
+                                        </div>
+                                    </div>
+                                    {% if perms.crm.add_opportunity %}
+                                    <div {% if LANGUAGE_CODE == 'ar' %} align="left" {% else %} align="right" {% endif %} class="col-sm-6">
+                                        <button class="btn btn-blue waves-effect waves-light mb-2"  onclick="location.href='{% url 'crm:create_opportunity' %}'" type="button" name="button" data-overlayColor="#38414a">
+                                            <i class="mdi mdi-plus-circle mr-1"></i>  {% trans "Add" %}
+                                        </button>
+                                    </div>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+
+                    <div class="row">
+                        <div class="col-xl-12">
+                            <div class="card">
+                                <div class="card-body">
+                                    <div class="row mb-2">
+                                        <div class="col-sm-12">
+                                            <div class="text-sm-right">
+                                                <div class="modal fade" tabindex="-1" role="dialog" id="modal">
+                                                      <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
+                                                            <div class="modal-content"></div>
+                                                      </div>
+                                                </div>
+                                                <!-- Create salesorder button -->
+                                            </div><!-- end col-->
+                                        </div>
+                                    </div>
+
+
+<form id="OppListForm" method="" action="" data-lead-url="{% url 'crm:ajax_check_lead' %}" >
+                                    <table id="table_id" class="table activate-select table-sm table-hover nowrap" style="width:100%">
+                                        <thead class="thead-light" >
+                                            <tr>
+                                                <th>{% trans "Customer" %}</th>
+                                                <th>{% trans "Amount" %}</th>
+                                                <th>{% trans "Stage" %}</th>
+                                                <th>{% trans "Probability" %}</th>
+                                                <th>{% trans "Assigned To" %}</th>
+                                                <th>{% trans "Date" %}</th>
+                                                <th width="30">{% trans "Action" %}</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            {% for Opportunity in opportunities %}
+                                            <tr>
+                                                <td>
+                                                {% if Opportunity.customer != None %} {{ Opportunity.customer}} {% else %} {{ Opportunity.lead}} {% endif %}
+                                                </td>
+                                                <td>
+                                                {% if Opportunity.amount != None %}{{ Opportunity.amount|intcomma:False|currency_no_symbol}}{% else %} "0" {% endif%}
+                                                </td>
+                                                <td>
+                                                {{ Opportunity.get_stage_display}}
+                                                </td>
+                                                <td>
+                                                {% if Opportunity.probability != None %}{{ Opportunity.probability}}%{% else %} 0% {% endif%}
+                                                </td>
+                                                <td>
+                                                {{ Opportunity.salesman }}
+                                                </td>
+                                                <td>
+                                                {{ Opportunity.created_date }}
+                                                </td>
+                                                <td>
+                                                {% if Opportunity.converted == 0 %}
+                                                    {% if perms.crm.change_opportunity %}
+                                                    <a href={% url "crm:edit_opportunity" Opportunity.pk %} class="btn btn-outline-warning effect waves-light btn-xs" title="{% trans "Edit" %}"><i class="mdi mdi-square-edit-outline"></i></a>
+                                                    {% endif %}
+                                                    {% if perms.crm.convert_opportunity %}
+                                                    <button data-source-id="{{Opportunity.source}}" id="{{Opportunity.pk}}" type="button" class="convert-sales btn btn-outline-dark effect waves-light btn-xs" data-id={% url "crm:convert_opportunity" Opportunity.pk %}  title="{% trans "Convert to Sales Order" %}"><i class="mdi mdi-share"></i></button>
+                                                    {% endif %}
+                                                {% endif %}
+                                                {% if perms.crm.delete_opportunity %}
+                                                <button type="button" class="delete-opportunity btn btn-outline-danger effect waves-light btn-xs" data-id={% url "crm:delete_opportunity" Opportunity.pk %}  title="{% trans "Delete" %}"><i class="mdi mdi-delete"></i></button>
+                                                {% endif %}
+                                                </td>
+                                            </tr>
+                                            {% endfor %}
+                                        </tbody>
+                                    </table>
+</form>
+                                </div> <!-- end card-->
+                            </div> <!-- end col -->
+
+                        </div>
+                    <!-- end row -->
+
+                    </div> <!-- container -->
+                </div> <!-- end col-->
+            </div>
+    </div>
+            <div class="col-xl-3">
+                <div class="row">
+                    <div class="col-xl-12">
+                        <div class="card">
+                                <div class="card-body" dir="ltr">
+                                    <div class="card-widgets">
+                                        <a data-toggle="collapse" href="#cardCollpase35" role="button" aria-expanded="false" aria-controls="cardCollpase35"><i class="mdi mdi-minus"></i></a>
+                                    </div>
+                                    <h4 class="header-title mb-0">{% trans "Opportunity Stage" %}</h4>
+                                    <div id="cardCollpase35" class="collapse pt-3 show" >
+                                        <div id="OpportunityChart" style="width: 100%; height: 340px;"></div>
+                                    </div>
+                                </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-xl-12">
+                        <div class="card">
+                                <div class="card-body" dir="ltr">
+                                    <div class="card-widgets">
+                                        <a data-toggle="collapse" href="#cardCollpase36" role="button" aria-expanded="false" aria-controls="cardCollpase36"><i class="mdi mdi-minus"></i></a>
+                                    </div>
+                                    <h4 class="header-title mb-0">{% trans "Opportunity Stage" %}</h4>
+                                    <div id="cardCollpase36" class="collapse pt-3 show" >
+                                        <div id="myChartOpportunity1" style="width: 100%; height: 340px;"></div>
+                                    </div>
+                                </div>
+                            </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        {% else %}
+        <div class="row" >
+            <div class="col-xl-12">
+                <div class="card">
+                    <div class="card-body">
+                            <STRONG> {% trans "You Don't have a permission to access this page." %} </STRONG>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endif %}
+    </div>
+
+{% endblock %}
+
+
+{% block extra_javascript %}
+<script type="text/javascript" src="/static/charts/loader.js"></script>
+<script src="/static/libs/sweetalert2/sweetalert2.min.js"></script>
+
+    <script type="text/javascript">
+$(".convert-sales").on("click", function (e) {
+          var oppId = $(".convert-sales").attr("id");
+          var sourceId = parseInt($(this).attr("data-source-id"));
+          var urlup = $("#OppListForm").attr("data-lead-url");
+
+          if (sourceId == 1) {
+              $.ajax({
+                    url: urlup,
+                    data: {
+                        'pk': oppId,
+                        },
+                        success: function (data) {
+                            $("#id_").val(parseInt(data));
+                            if ( parseInt(data) == 0) {
+                                $('#modal').modal('hide');
+                                Swal.fire({
+                                    type: "error",
+                                    title: "Oops...",
+                                    text: "{% trans 'You Should convert the Lead to Contact first' %}",
+                                    confirmButtonClass: "btn btn-confirm mt-2",
+                                }).then(function(t){
+                                    $('#modal').modal('hide');
+                                })
+                            }
+                        }
+                    })
+            }
+});
+
+
+      $(function () {
+        // Create Opportunity button
+        $(".create-opportunity").modalForm({formURL: "{% url 'crm:create_opportunity' %}"});
+            // Update opportunity buttons
+            $(".edit-opportunity").each(function () {
+              $(this).modalForm({formURL: "{% url 'crm:edit_opportunity' 227 %}"});
+            });
+                // Delete opportunity button
+            $(".delete-opportunity").each(function () {
+              $(this).modalForm({formURL: $(this).data('id')});
+            });
+            $(".convert-sales").each(function () {
+              $(this).modalForm({formURL: $(this).data('id')});
+            });
+
+            var table = $('#table_id').DataTable( {
+                "pageLength": 10,
+                language: {
+                    buttons: {
+                        "collection": "{% trans "Columns" %}",
+				        "copy": "{% trans "Copy" %}",
+				        "csv": "{% trans "CSV" %}",
+				        "pdf": "{% trans "PDF" %}",
+				        "print": "{% trans "Print" %}",
+                        copyTitle: '{% trans "Copy to clipboard" %}',
+                        copySuccess: {
+                            _: '{% trans "Copied %d rows to clipboard" %}',
+                            1: '{% trans "Copied one row to clipboard" %}'
+                        }
+                    },
+                    "sEmptyTable":     "{% trans "No data available in table" %}",
+                    "sInfo":           "{% trans "Showing _START_ to _END_ of _TOTAL_ entries" %}",
+                    "sInfoEmpty":      "{% trans "Showing 0 to 0 of 0 entries" %}",
+                    "sInfoFiltered":   "{% trans "(filtered from _MAX_ total entries)" %}",
+                    "sInfoPostFix":    "",
+                    "sInfoThousands":  ",",
+                    "sLengthMenu":     "{% trans "Show _MENU_ entries" %}",
+                    "sLoadingRecords": "{% trans "Loading..." %}",
+                    "sProcessing":     "{% trans "Processing..." %}",
+                    "sSearch":         "{% trans "Search:" %}",
+                    "sZeroRecords":    "{% trans "No matching records found" %}",
+                    "oPaginate": {
+                        "sFirst":    "{% trans "First" %}",
+                        "sLast":     "{% trans "Last" %}",
+                        "sNext":     "{% trans "Next" %}",
+                        "sPrevious": "{% trans "Previous" %}"
+                    },
+                    "oAria": {
+                        "sSortAscending":  "{% trans ": activate to sort column ascending" %}",
+                        "sSortDescending": "{% trans ": activate to sort column descending" %}"
+                    }
+                },
+                buttons: [
+                    {
+                        extend: 'collection',
+                        buttons: [ 'columnsToggle' ]
+                    },
+                    {% if perms.crm.can_copy %}
+                        'copy',
+                    {% endif %}
+                    {% if perms.crm.can_csv %}
+                        'csv',
+                    {% endif %}
+                    {% if perms.crm.can_pdf %}
+                        'pdf',
+                    {% endif %}
+                    {% if perms.crm.can_print %}
+                        'print',
+                    {% endif %}
+                ],
+                "pagingType": "full_numbers",
+                responsive: true,
+                columnDefs: [
+                    { responsivePriority: 1, targets: 0 },
+                    { responsivePriority: 2, targets: 6 },
+
+                ]
+            } );
+
+            new $.fn.dataTable.ColReorder( table, {
+                colReorder: true,
+            } );
+
+            table
+                .buttons()
+                .container()
+                .appendTo( '#controlPanel' );
+        });
+
+        google.charts.load('current', {packages: ['corechart']});
+        google.charts.setOnLoadCallback(drawChartchannels);
+
+            function drawChartchannels() {
+              var data = google.visualization.arrayToDataTable([
+                ["{% trans "Stage" %}", "{% trans "Total Amount" %}" ],
+                {% for i in opparr %}
+                [{% if i.stage == 1 %}"Prospecting"{% elif i.stage == 2 %}"Qualification"{% elif i.stage == 4 %}"Needs Analysis"{% elif i.stage == 6 %}"Value Proposition"{% elif i.stage == 9 %}"Identifying Decision Makers"{% elif i.stage == 11 %}"Perception Analysis"{% elif i.stage == 13 %}"Proposal/Price Quote"{% elif i.stage == 14 %}"Negotiation/Review"{% elif i.stage == 16 %}"Closed Won"{% elif i.stage == 18 %}"Closed Lost"{% endif %}, {{ i.totalsum|currency_no_comma }} ], {% endfor %}
+              ]);
+
+              var options = {
+                isStacked:true,
+                chartArea:{left:50,top:50,right:20,bottom:50,width: '70%', height: '70%'},
+                height: 340,
+                legend: { position: "none" },
+                colors:['#0088cc','#f7b84b'],
+                animation: {"startup": true,
+                    duration: 1000,
+                    easing: 'in'
+                },
+                {% if LANGUAGE_CODE == 'ar' %}
+                    fontName: 'Tajawal',
+                    annotations: { textStyle: { fontName: 'Tajawal', fontSize: 12 } },
+                    legend: {
+                        textStyle: {
+                            fontName: 'Tajawal',
+                        },
+                    },
+                    tooltip: {
+                        textStyle: {
+                            fontName: 'Tajawal',
+                        },
+                    },
+                    title: {
+                        textStyle: {
+                            fontName: 'Tajawal',
+                        },
+                    },
+
+                {% endif %}
+
+              };
+              var chart = new google.visualization.ColumnChart(document.getElementById("myChartOpportunity1"));
+              chart.draw(data, options);
+          }
+
+          google.charts.load("current", {packages:["corechart"]});
+          google.charts.setOnLoadCallback(drawChartChannel);
+          function drawChartChannel() {
+            var data = google.visualization.arrayToDataTable([
+              ['{% trans "Stage" %}', '{% trans "Total Amount" %}'],
+                {% for i in opparr %}
+                [{% if i.stage == 1 %}"Prospecting"{% elif i.stage == 2 %}"Qualification"{% elif i.stage == 4 %}"Needs Analysis"{% elif i.stage == 6 %}"Value Proposition"{% elif i.stage == 9 %}"Identifying Decision Makers"{% elif i.stage == 11 %}"Perception Analysis"{% elif i.stage == 13 %}"Proposal/Price Quote"{% elif i.stage == 14 %}"Negotiation/Review"{% elif i.stage == 16 %}"Closed Won"{% elif i.stage == 18 %}"Closed Lost"{% endif %}, {{ i.totalsum|currency_no_comma }} ], {% endfor %}
+
+            ]);
+
+            var options = {
+                animation: {"startup": true,
+                    duration: 1000,
+                    easing: 'in'
+                },
+                {% if LANGUAGE_CODE == 'ar' %}
+                    fontName: 'Tajawal',
+                    annotations: { textStyle: { fontName: 'Tajawal', fontSize: 12 } },
+                    legend: {
+                        textStyle: {
+                            fontName: 'Tajawal',
+                        },
+                    },
+                    tooltip: {
+                        textStyle: {
+                            fontName: 'Tajawal',
+                        },
+                    },
+                    title: {
+                        textStyle: {
+                            fontName: 'Tajawal',
+                        },
+                    },
+
+                {% endif %}
+              pieHole: 0.5,
+                chartArea:{left:10,top:30,right:10,bottom:30,width: '100%', height: '70%'},
+            legend: { position: "bottom", alignment: "center" },
+            tooltip: { trigger: 'selection' }
+            };
+            var chart = new google.visualization.PieChart(document.getElementById('OpportunityChart'));
+            chart.draw(data, options);
+          }
+
+    </script>
+
+
+{% endblock %}

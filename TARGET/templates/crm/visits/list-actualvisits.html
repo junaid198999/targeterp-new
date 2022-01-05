@@ -1,0 +1,282 @@
+{% extends "auth_base.html" %}
+{% load i18n %}
+{% load widget_tweaks %}
+{% load widgets %}
+{% load humanize %}
+{% block content %}
+    {% if LANGUAGE_CODE == 'ar' %}
+        <link href="/static/libs/select2/select2-rtl.min.css" rel="stylesheet" />
+    {% else %}
+        <link href="/static/libs/select2/select2.min.css" rel="stylesheet" />
+    {% endif %}
+    <div class="container-fluid">
+        <!-- start page title -->
+        <div class="row">
+            <div class="col-12">
+                <div class="page-title-box">
+                    <div class="page-title-right">
+                        <ol class="breadcrumb m-0">
+                            <li class="breadcrumb-item"><a href="/">TARGET</a></li>
+                            <li class="breadcrumb-item active">{% trans "Actual Visits" %}</li>
+                        </ol>
+                    </div>
+                    <h4 class="page-title">{% trans "Actual Visits" %}</h4>
+                </div>
+            </div>
+        </div>
+        <!-- end page title -->
+        {% if perms.crm.view_actualvisit %}
+        <div class="row" >
+            <div class="col-xl-12">
+                <div class="card">
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-sm-6">
+                                <div id="controlPanel" {% if LANGUAGE_CODE == 'ar' %} align="right" {% else %} align="left" {% endif %}></div>
+                            </div>
+                            {% if perms.crm.add_actualvisit %}
+                            <div {% if LANGUAGE_CODE == 'ar' %} align="left" {% else %} align="right" {% endif %} class="col-sm-6">
+                                    <button class="btn btn-blue waves-effect waves-light mb-2"  onclick="location.href='{% url 'crm:create_actualvisit' %}'" type="button" name="button" data-overlayColor="#38414a">
+                                        <i class="mdi mdi-plus-circle mr-1"></i>  {% trans "Add" %}
+                                    </button>
+                            </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+        <div class="row">
+            <div class="col-xl-12">
+                <div class="card">
+                    <div class="card-body">
+                        <div class="row mb-2">
+                            <div class="col-sm-12">
+                                <div class="text-sm-right">
+                                    <div class="modal fade" tabindex="-1" role="dialog" id="modal">
+                                          <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
+                                                <div class="modal-content"></div>
+                                          </div>
+                                    </div>
+                                    <!-- Create actualvisit button -->
+                                </div><!-- end col-->
+                            </div>
+                        </div>
+
+
+                        <table id="table_id" class="table activate-select nowrap" style="width:100%">
+                            <thead class="thead-light" >
+                                <tr>
+                                    <th>{% trans "Customer" %}</th>
+                                    <th>{% trans "Salesman" %}</th>
+                                    <th>{% trans "Description" %}</th>
+                                    <th>{% trans "Questions" %}</th>
+                                    <th>{% trans "Created Date" %}</th>
+                                    <th width="30">{% trans "Action" %}</th>
+                                </tr>
+                            </thead>
+
+                            <tbody>
+                                {% for Visit in actualvisits %}
+                                <tr>
+                                        <td>
+                                            {% if Visit.customer_id != None %} {{ Visit.customer.name}} {% else %} {{ Visit.doctor.name}} {% endif %}
+                                        </td>
+                                        <td>
+                                            {{ Visit.salesman }}
+                                        </td>
+                                        <td>
+                                            {{ Visit.feedback }}
+                                        </td>
+                                        <td>
+                                            <select name="questions_list" id="id_questions_list_{{ Visit.id }}" row-id="{{ Visit.id }}" onchange="fun_questions_list(this)" class="questions_list">
+                                                <option value="none">---------</option>
+                                                {% for Question in questions %}
+                                                    <option value="{{ Question.id }}">{{ Question.title }}</option>
+                                                {% endfor %}
+                                            </select>
+                                        </td>
+                                        <td>
+                                            {{ Visit.created_date }}
+                                        </td>
+
+                                        <td>
+
+                                            <a id="question_btn_{{ Visit.id }}" onclick="edit_ques({{ Visit.id }})" class="question-btn btn btn-outline-dark effect waves-light btn-xs" title="{% trans "Question" %}"><i class="fas fa-question" ></i></a>
+                                            {% if perms.crm.convert_salesorder %}
+                                                {% if Visit.conv_salesorder_id == None %}
+                                                    <a class="btn btn-outline-success effect waves-light btn-xs"  href="{% url 'crm:create_salesorder' %}?actualvisit={{Visit.pk}} " type="button" name="button" data-overlayColor="#38414a" title="{% trans "Create Sales" %}"><i class="mdi mdi-cart"></i></button>
+                                                {% endif %}
+                                            {% endif %}
+                                            {% if perms.crm.change_actualvisit %}
+                                                <a href={% url "crm:edit_actualvisit" Visit.pk %} class="btn btn-outline-warning effect waves-light btn-xs" title="{% trans "Edit" %}"><i class="mdi mdi-square-edit-outline"></i></a>
+                                            {% endif %}
+                                            {% if perms.crm.delete_actualvisit %}
+                                                <button type="button" class="delete-actualvisit btn btn-outline-danger effect waves-light btn-xs" data-id="{% url 'crm:delete_actualvisit' Visit.pk %}"  title="{% trans "Delete" %}"><i class="mdi mdi-delete"></i></button>
+                                            {% endif %}
+                                        </td>
+
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+
+                    </div> <!-- end card-->
+                </div> <!-- end col -->
+
+            </div>
+        <!-- end row -->
+
+        </div> <!-- container -->
+        {% else %}
+        <div class="row" >
+            <div class="col-xl-12">
+                <div class="card">
+                    <div class="card-body">
+                            <STRONG> {% trans "You Don't have a permission to access this page." %} </STRONG>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endif %}
+
+    </div>
+{% endblock %}
+
+
+{% block extra_javascript %}
+    <script src="/static/libs/select2/select2.min.js"></script>
+    <script type="text/javascript">
+    let question_id = 'none';
+
+$("[name*=questions_list]").select2();
+
+    document.addEventListener('DOMContentLoaded', function() {
+        var appQuesBtn = document.getElementsByClassName('question-btn');
+        for (var i = 0; i < appQuesBtn.length; i ++) {
+            appQuesBtn[i].style.display = 'none';
+        }
+    }, false);
+
+    function edit_ques(visit_id) {
+
+          var url = "{% url 'crm:ajax_get_questionanswer_id' %}";
+          var questionId = question_id;
+          $.ajax({
+                url: url,
+                async: false,
+                data: {
+                    'question': question_id,
+                    'visit': visit_id,
+                    },
+                    success: function (data) {
+                        console.log(data);
+                        questionid = data;
+                    },
+          });
+       window.open("/crm/questionanswers/update/" + questionid +"?visit=" + visit_id,'_self');
+    }
+    function fun_questions_list(a) {
+        question_id = (a.value || a.options[a.selectedIndex].value);
+        var rowId = $(a).attr('row-id');
+        var appQuesBtn = document.getElementById('question_btn_' + rowId);
+        if (question_id != 'none') {
+            appQuesBtn.style.display = 'inline';
+        }else{
+            appQuesBtn.style.display = 'none';
+        }
+        console.log(question_id);
+    };
+
+      $(function () {
+        // Create actualvisit button
+        $(".create-actualvisit").modalForm({formURL: "{% url 'crm:create_actualvisit' %}"});
+            // Update actualvisit buttons
+            $(".edit-actualvisit").each(function () {
+              $(this).modalForm({formURL: $(this).data('id')});
+            });
+                // Delete actualvisit button
+            $(".delete-actualvisit").each(function () {
+              $(this).modalForm({formURL: $(this).data('id')});
+            });
+
+            var table = $('#table_id').DataTable( {
+                language: {
+                    buttons: {
+                        "collection": "{% trans "Columns" %}",
+				        "copy": "{% trans "Copy" %}",
+				        "csv": "{% trans "CSV" %}",
+				        "pdf": "{% trans "PDF" %}",
+				        "print": "{% trans "Print" %}",
+                        copyTitle: '{% trans "Copy to clipboard" %}',
+                        copySuccess: {
+                            _: '{% trans "Copied %d rows to clipboard" %}',
+                            1: '{% trans "Copied one row to clipboard" %}'
+                        }
+                    },
+                    "sEmptyTable":     "{% trans "No data available in table" %}",
+                    "sInfo":           "{% trans "Showing _START_ to _END_ of _TOTAL_ entries" %}",
+                    "sInfoEmpty":      "{% trans "Showing 0 to 0 of 0 entries" %}",
+                    "sInfoFiltered":   "{% trans "(filtered from _MAX_ total entries)" %}",
+                    "sInfoPostFix":    "",
+                    "sInfoThousands":  ",",
+                    "sLengthMenu":     "{% trans "Show _MENU_ entries" %}",
+                    "sLoadingRecords": "{% trans "Loading..." %}",
+                    "sProcessing":     "{% trans "Processing..." %}",
+                    "sSearch":         "{% trans "Search:" %}",
+                    "sZeroRecords":    "{% trans "No matching records found" %}",
+                    "oPaginate": {
+                        "sFirst":    "{% trans "First" %}",
+                        "sLast":     "{% trans "Last" %}",
+                        "sNext":     "{% trans "Next" %}",
+                        "sPrevious": "{% trans "Previous" %}"
+                    },
+                    "oAria": {
+                        "sSortAscending":  "{% trans ": activate to sort column ascending" %}",
+                        "sSortDescending": "{% trans ": activate to sort column descending" %}"
+                    }
+                },
+                buttons: [
+                    {
+                        extend: 'collection',
+                        buttons: [ 'columnsToggle' ]
+                    },
+                    {% if perms.crm.can_copy %}
+                        'copy',
+                    {% endif %}
+                    {% if perms.crm.can_csv %}
+                        'csv',
+                    {% endif %}
+                    {% if perms.crm.can_pdf %}
+                        'pdf',
+                    {% endif %}
+                    {% if perms.crm.can_print %}
+                        'print',
+                    {% endif %}
+                ],
+                order: [[ 4, "desc" ]],
+                stateSave: true,
+                "pagingType": "full_numbers",
+                responsive: true,
+                columnDefs: [
+                    { responsivePriority: 1, targets: 0 },
+                    { responsivePriority: 2, targets: 5 },
+
+                ]
+                } );
+
+            new $.fn.dataTable.ColReorder( table, {
+                colReorder: true,
+            } );
+            table
+                .buttons()
+                .container()
+                .appendTo( '#controlPanel' );
+        });
+
+    </script>
+
+<style>
+.question-btn {
+    cursor:pointer;
+}
+</style>
+{% endblock %}

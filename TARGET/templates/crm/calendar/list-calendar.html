@@ -1,0 +1,468 @@
+{% extends "auth_base.html" %}
+{% load i18n %}
+{% block content %}
+    <link href="/static/libs/fullcalendar/fullcalendar.min.css" rel="stylesheet" type="text/css" />
+    <link href="/static/css/jquery-ui.multidatespicker.css" rel="stylesheet" type="text/css" />
+    <link href="/static/css/jquery-ui.css" rel="stylesheet" type="text/css" />
+    <div class="container-fluid">
+        <!-- start page title -->
+        <div class="row">
+            <div class="col-12">
+                <div class="page-title-box">
+                    <div class="page-title-right">
+                        <ol class="breadcrumb m-0">
+                            <li class="breadcrumb-item"><a href="/">TARGET</a></li>
+                            <li class="breadcrumb-item active">{% trans "Calendar" %}</li>
+                        </ol>
+                    </div>
+                    <h4 class="page-title">{% trans "Calendar" %}</h4>
+                </div>
+            </div>
+        </div>
+        <!-- end page title -->
+        {% if request.user.is_superuser %}
+        <div class="row">
+            <div class="col-12">
+
+                <div class="card">
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-lg-3">
+                                <a href="#" data-toggle="modal" data-target="#add-category" class="btn btn-lg font-16 btn-primary btn-block  ">
+                                    <i class="mdi mdi-plus-circle-outline"></i> Create New Event
+                                </a>
+                                <div id="external-events" class="m-t-20">
+                                    <br>
+                                    <p class="text-muted">Drag and drop your event or click in the calendar</p>
+
+                                    {% for Event in events%}
+                                    <div class="external-event {{Event.classname}}" data-class="{{Event.classname}}">
+                                        <i class="mdi mdi-checkbox-blank-circle mr-2 vertical-middle"></i>{{Event.title}}
+                                    </div>
+                                    {% endfor %}
+                                </div>
+
+                                <!-- checkbox -->
+                                <div class="custom-control custom-checkbox mt-3">
+                                    <input type="checkbox" class="custom-control-input" id="drop-remove">
+                                    <label class="custom-control-label" for="drop-remove">Remove after drop</label>
+                                </div>
+
+                                <div class="mt-5 d-none d-xl-block">
+                                    <h5 class="text-center">How It Works ?</h5>
+
+                                    <ul class="pl-3">
+                                        <li class="text-muted mb-3">
+                                            You can Create new event by clicking on Create New New Event button.
+                                        </li>
+                                        <li class="text-muted mb-3">
+                                            Event can be drag & drop to the calendar .
+                                        </li>
+                                        <li class="text-muted mb-3">
+                                            Click on any day or Select multi days in the calendar to create event.
+                                        </li>
+                                        <li class="text-muted mb-3">
+                                            Click on the event in order to change or choose the enrolled user/s.
+                                        </li>
+                                    </ul>
+                                </div>
+
+                            </div> <!-- end col-->
+
+                            <div class="col-lg-9">
+                                <div id="calendar"></div>
+                            </div> <!-- end col -->
+
+                        </div>  <!-- end row -->
+                    </div> <!-- end card body-->
+                </div> <!-- end card -->
+
+                <!-- Add New Event MODAL -->
+                <div class="modal fade" id="event-modal" tabindex="-1">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h4 class="modal-title">Add New Event</h4>
+                                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                            </div>
+                            <div class="modal-body p-3">
+                            </div>
+                            <div class="text-right p-3">
+                                <button type="button" class="btn btn-light " data-dismiss="modal">Close</button>
+                                <button type="button" class="btn btn-success save-event  ">Create event</button>
+                                <button name="delete-event" type="button" class="btn btn-danger delete-event  " data-dismiss="modal">Delete</button>
+                            </div>
+                        </div> <!-- end modal-content-->
+                    </div> <!-- end modal dialog-->
+                </div>
+                <!-- end modal-->
+
+                <!-- Modal Add Category -->
+                <div class="modal fade" id="add-category" tabindex="-1">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h4 class="modal-title">Add a category</h4>
+                                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                            </div>
+                            <div class="modal-body p-3">
+                                <form data-calendar-url="{% url 'crm:ajax_save_calendar' %}" data-create-event-url="{% url 'crm:ajax_create_event' %}" data-update-event-url="{% url 'crm:ajax_update_event' %}" id="CAForm" action="" method="post" >
+                                    <div class="form-group">
+                                        <label class="control-label">Category Name</label>
+                                        <input id="category-name" class="form-control form-white" placeholder="Enter name" type="text" name="category-name"/>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="control-label">Choose Category Color</label>
+                                        <select class="form-control form-white" data-placeholder="Choose a color..." name="category-color">
+                                            <option value="primary">Primary</option>
+                                            <option value="success">Success</option>
+                                            <option value="danger">Danger</option>
+                                            <option value="info">Info</option>
+                                            <option value="warning">Warning</option>
+                                            <option value="dark">Dark</option>
+                                        </select>
+                                    </div>
+
+                                </form>
+                                <div class="text-right pt-2">
+                                    <button type="button" class="btn btn-light " data-dismiss="modal">Close</button>
+                                    <button id="create-event" type="button" class="btn btn-primary ml-1   save-category" data-dismiss="modal">Save</button>
+                                </div>
+
+                            </div> <!-- end modal-body-->
+                        </div> <!-- end modal-content-->
+                    </div> <!-- end modal dialog-->
+                </div>
+                <!-- end modal-->
+            </div>
+            <!-- end col-12 -->
+        </div>
+
+        {% else %}
+        <div class="row" >
+            <div class="col-xl-12">
+                <div class="card">
+                    <div class="card-body">
+                            <STRONG> {% trans "You Don't have a permission to access this page." %} </STRONG>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endif %}
+    </div>
+
+<div id="mdp-demo"></div>
+<div id="mdp-demo1"></div>
+{% endblock %}
+
+{% block extra_javascript %}
+
+<!-- plugin js -->
+<script src="/static/libs/moment/moment.min.js"></script>
+<script src="/static/libs/jquery-ui/jquery-ui.min.js"></script>
+<script src="/static/libs/fullcalendar/fullcalendar.min.js"></script>
+<script src="/static/js/jquery-ui.multidatespicker.js"></script>
+
+<script>
+var date = new Date();
+$('#mdp-demo').multiDatesPicker({
+	maxPicks: 2,
+	beforeShowDay: $.datepicker.noWeekends
+});
+var today = new Date();
+var y = today.getFullYear();
+$('#mdp-demo1').multiDatesPicker({
+	maxPicks: 2,
+	addDates: ['10/14/'+y, '02/19/'+y, '01/14/'+y, '11/16/'+y],
+	numberOfMonths: [3,4],
+	defaultDate: '1/1/'+y
+});
+var dates = $('#mdp-demo1').multiDatesPicker('getDates');
+alert(dates)
+$(function () {
+    $(".delete-event").unbind("click").click(function() {
+        alert('delete');
+    });
+    $("#create-event").click(function(){
+          var CategortName = $(`input[name="category-name"]`).val();
+          var CategoryColor = $(`select[name="category-color"]`).val();
+          var url = $("#CAForm").attr("data-create-event-url");
+              $.ajax({
+                    async: false,
+                    url: url,
+                    data: {
+                        'tital': CategortName,
+                        'classname': 'bg-' + CategoryColor,
+                        },
+                        success: function (data) {
+                            $("#id_customer").html(data);
+                    }
+              });
+    });
+});
+
+
+! function(o) {
+    "use strict";
+    var e = function() {
+        this.$body = o("body"), this.$modal = o("#event-modal"), this.$event = "#external-events div.external-event", this.$calendar = o("#calendar"), this.$saveCategoryBtn = o(".save-category"), this.$categoryForm = o("#add-category form"), this.$extEvents = o("#external-events"), this.$calendarObj = null
+    };
+    e.prototype.onEventChange = function(e, t) {
+        alert('here');
+    },
+    e.prototype.onDragStop = function(n, a, e, s) {
+        var o = s.data("eventObject"),
+            p = s.attr("data-class"),
+            b = this;
+        console.log('n', n);
+        console.log('a', a);
+        console.log('e', e);
+        console.log('s', s);
+        console.log("Resource: " + b);
+
+              var url = $("#CAForm").attr("update");
+              var startd = n.start.toString();
+              var datastr = startd.substring(4, 15);
+              var mstr = datastr.substring(0, 3);
+              var month = moment().month(mstr).format("MM");
+              var day = datastr.substring(4, 6);
+              var year = datastr.substring(7, 11);
+              var from_date = year + "-" + month + "-" + day;
+              if (n.end != null) {
+              var endd = n.end.toString();
+              var todatastr = endd.substring(4, 15);
+              var tomstr = todatastr.substring(0, 3);
+              var tomonth = moment().month(tomstr).format("MM");
+              var today = todatastr.substring(4, 6);
+              var toyear = todatastr.substring(7, 11);
+              var to_date = toyear + "-" + tomonth + "-" + today;
+              } else {
+              to_date = ''
+
+              }
+
+              var n_startd = a.toString();
+              var n_datastr = n_startd.substring(4, 15);
+              var n_mstr = n_datastr.substring(0, 3);
+              var n_month = moment().month(n_mstr).format("MM");
+              var n_day = n_datastr.substring(4, 6);
+              var n_year = n_datastr.substring(7, 11);
+              var n_from_date = n_year + "-" + n_month + "-" + n_day;
+
+     var start = from_date;
+     var n_start = n_from_date;
+     var end = to_date;
+
+     var startDay = new Date(start);
+     var n_startDay = new Date(n_start);
+     var endDay = new Date(end);
+     var millisecondsPerDay = 1000 * 60 * 60 * 24;
+
+     var newdate = new Date(n_startDay);
+
+     var millisBetween = endDay.getTime() - startDay.getTime();
+     var days = millisBetween / millisecondsPerDay;
+
+     var n_to_date = newdate.setDate(newdate.getDate() + parseInt(days));
+
+       var yyyy = newdate.getFullYear().toString();
+       var mm = (newdate.getMonth()+1).toString(); // getMonth() is zero-based
+       var dd  = newdate.getDate().toString();
+       var to_daten = yyyy + "-" + (mm[1]?mm:"0"+mm[0]) + "-" + (dd[1]?dd:"0"+dd[0]);
+
+
+              $.ajax({
+                    async: false,
+                    url: url,
+                    data: {
+                        'tital': n.title,
+                        'start': n_from_date,
+                        'end': n_to_date,
+                        'classname': a,
+                        },
+                        success: function (data) {
+                            $("#id_customer").html(data);
+                    }
+              });
+
+    },
+    e.prototype.onDrop = function(e, t) {
+        var n = e.data("eventObject"),
+            a = e.attr("data-class"),
+            l = o.extend({}, n);
+              var url = $("#CAForm").attr("data-calendar-url");
+              var startd = t.toString();
+              var datastr = startd.substring(4, 15);
+              var mstr = datastr.substring(0, 3);
+              var month = moment().month(mstr).format("MM");
+              var day = datastr.substring(4, 6);
+              var year = datastr.substring(7, 11);
+              var from_date = year + "-" + month + "-" + day;
+
+
+              $.ajax({
+                    async: false,
+                    url: url,
+                    data: {
+                        'tital': n.title,
+                        'start': from_date,
+                        'end': from_date,
+                        'classname': a,
+                        },
+                        success: function (data) {
+                            $("#id_customer").html(data);
+                    }
+              });
+        l.start = t, a && (l.className = [a]), this.$calendar.fullCalendar("renderEvent", l, !0), o("#drop-remove").is(":checked") && e.remove()
+    },
+    e.prototype.onEventClick = function(t, e, n) {
+        var a = this,
+            l = o("<form></form>");
+        l.append("<label>Change event name</label>"), l.append("<div class='input-group m-b-15'><input class='form-control' type=text value='" + t.title + "' /><span class='input-group-append'><button type='submit' class='btn btn-success btn-md  '><i class='fa fa-check'></i> Save</button></span></div>"), a.$modal.modal({
+            backdrop: "static"
+        }), a.$modal.find(".delete-event").show().end().find(".save-event").hide().end().find(".modal-body").empty().prepend(l).end().find(".delete-event").unbind("click").click(function() {
+            a.$calendarObj.fullCalendar("removeEvents", function(e) {
+                return e._id == t._id
+            }), a.$modal.modal("hide")
+        }), a.$modal.find("form").on("submit", function() {
+            return t.title = l.find("input[type=text]").val(), a.$calendarObj.fullCalendar("updateEvent", t), a.$modal.modal("hide"), !1
+        })
+    },
+    e.prototype.onSelect = function(n, a, e) {
+        var l = this;
+        l.$modal.modal({
+            backdrop: "static"
+        });
+        var i = o("<form></form>");
+        i.append("<div class='row'></div>"), i.find(".row").append("<div class='col-12'><div class='form-group'><label class='control-label'>Event Name</label><input class='form-control' placeholder='Insert Event Name' type='text' name='title'/></div></div>").append("<div class='col-12'><div class='form-group'><label class='control-label'>Category</label><select class='form-control' name='category'></select></div></div>").find("select[name='category']").append("<option value='bg-danger'>Danger</option>").append("<option value='bg-success'>Success</option>").append("<option value='bg-primary'>Primary</option>").append("<option value='bg-info'>Info</option>").append("<option value='bg-dark'>Dark</option>").append("<option value='bg-warning'>Warning</option></div></div>"), l.$modal.find(".delete-event").hide().end().find(".save-event").show().end().find(".modal-body").empty().prepend(i).end().find(".save-event").unbind("click").click(function() {
+            i.submit()
+
+
+        }), l.$modal.find("form").on("submit", function() {
+              var url = $("#CAForm").attr("data-calendar-url");
+              var startd = n.toString();
+              var datastr = startd.substring(4, 15);
+              var mstr = datastr.substring(0, 3);
+              var month = moment().month(mstr).format("MM");
+              var day = datastr.substring(4, 6);
+              var year = datastr.substring(7, 11);
+              var from_date = year + "-" + month + "-" + day;
+
+              var endd = a.toString();
+              var todatastr = endd.substring(4, 15);
+              var tomstr = todatastr.substring(0, 3);
+              var tomonth = moment().month(tomstr).format("MM");
+              var today = todatastr.substring(4, 6);
+              var toyear = todatastr.substring(7, 11);
+              var to_date = toyear + "-" + tomonth + "-" + today;
+              var classname = $(`select[name='category']`).val();
+
+              $.ajax({
+                    async: false,
+                    url: url,
+                    data: {
+                        'tital': i.find("input[name='title']").val(),
+                        'start': from_date,
+                        'end': to_date,
+                        'classname': classname,
+                        },
+                        success: function (data) {
+                            $("#id_customer").html(data);
+                    }
+              });
+            var e = i.find("input[name='title']").val(),
+              t = (i.find("input[name='beginning']").val(), i.find("input[name='ending']").val(), i.find("select[name='category'] option:checked").val());
+
+            return null !== e && 0 != e.length ? (l.$calendarObj.fullCalendar("renderEvent", {
+                title: e,
+                start: n,
+                end: a,
+                allDay: !1,
+                className: t
+
+            }, !0), l.$modal.modal("hide")) : alert("You have to give a title to your event"), !1
+        }), l.$calendarObj.fullCalendar("unselect")
+    },
+    e.prototype.enableDrag = function() {
+        o(this.$event).each(function() {
+            var e = {
+                title: o.trim(o(this).text())
+            };
+            o(this).data("eventObject", e), o(this).draggable({
+                zIndex: 999,
+                revert: !0,
+                revertDuration: 0
+            })
+        })
+    },
+    e.prototype.init = function() {
+        this.enableDrag();
+        var e = new Date,
+            t = (e.getDate(), e.getMonth(), e.getFullYear(), new Date(o.now())),
+            n =
+                [
+            {% for i in calender %}
+                    {
+                        title: "{{i.message}}",
+                        start: new Date("{{i.start}}"),
+                        end: new Date("{{i.end}}"),
+                        className: "{{i.classname}}"
+                    },
+            {% endfor %}
+                ],
+            a = this;
+        a.$calendarObj = a.$calendar.fullCalendar({
+            slotDuration: "00:15:00",
+            minTime: "08:00:00",
+            maxTime: "19:00:00",
+            defaultView: "month",
+            handleWindowResize: !0,
+            height: o(window).height() - 200,
+            header: {
+                left: "prev,next today",
+                center: "title",
+                right: "month,agendaWeek,agendaDay"
+            },
+            events: n,
+            editable: !0,
+            droppable: !0,
+            eventLimit: !0,
+            selectable: !0,
+            eventDragStop: function(e) {
+                a.onDragStop(e, t, n, o(this))
+            },
+            drop: function(e) {
+                a.onDrop(o(this), e)
+            },
+            select: function(e, t, n) {
+                a.onSelect(e, t, n)
+            },
+            eventClick: function(e, t, n) {
+                a.onEventClick(e, t, n)
+            }
+        }),
+        this.$saveCategoryBtn.on("click", function() {
+            var e = a.$categoryForm.find("input[name='category-name']").val(),
+                t = a.$categoryForm.find("select[name='category-color']").val(),
+                h = a.$categoryForm.find("select[name='users']").val();
+            null !== e && 0 != e.length && (a.$extEvents.append('<div class="external-event bg-' + t + '" data-class="bg-' + t + '" style="position: relative;"><i class="mdi mdi-checkbox-blank-circle mr-2 vertical-middle"></i>' + e + "</div>"), a.enableDrag())
+        })
+    },
+    o.CalendarApp = new e, o.CalendarApp.Constructor = e
+}(window.jQuery),
+function(e) {
+    "use strict";
+    window.jQuery.CalendarApp.init()
+}();
+</script>
+
+<script type="text/javascript">
+$(function() {
+    $('#calendar').fullCalendar();
+});
+
+
+</script>
+{% endblock %}
+
+

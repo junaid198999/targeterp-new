@@ -1,0 +1,112 @@
+{% extends "auth_base.html" %}
+{% load i18n %}
+{% load widget_tweaks %}
+{% load django_tables2 %}
+{% block content %}
+    <div class="container-fluid">
+        <!-- start page title -->
+        <div class="row">
+            <div class="col-12">
+                <div class="page-title-box">
+                    <div class="page-title-right">
+                        <ol class="breadcrumb m-0">
+                            <li class="breadcrumb-item"><a href="/">TARGET</a></li>
+                            <li class="breadcrumb-item active">{% trans "Product Units Name" %}</li>
+                        </ol>
+                    </div>
+                    <h4 class="page-title">{% trans "Product Units Name" %}</h4>
+                </div>
+            </div>
+        </div>
+        <!-- end page title -->
+
+        {% if perms.crm.view_unitsname %}
+        <div class="row">
+            <div class="col-xl-12">
+                <div class="card">
+                    <div class="card-body">
+                        <div class="row mb-2">
+                            <div class="col-sm-12">
+                                <div class="text-sm-right">
+                                    <div class="modal fade" tabindex="-1" role="dialog" id="modal">
+                                          <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
+                                                <div class="modal-content"></div>
+                                          </div>
+                                    </div>
+                                    <!-- Create Product button -->
+                                </div><!-- end col-->
+                            </div>
+                        </div>
+
+                        <table id="table_id" class="table nowrap" style="width:100%">
+                            <thead class="thead-light" >
+                                <tr>
+                                    <th>{% trans "Unit 1 Name" %}</th>
+                                    <th>{% trans "Unit 2 Name" %}</th>
+                                    <th width="30">{% trans "Action" %}</th>
+                                </tr>
+                            </thead>
+
+                            <tbody>
+                                {% for form in productunits %}
+                                <tr>
+                                        <td>
+                                            {{ form.unit_1 }}
+                                        </td>
+                                        <td>
+                                            {{ form.unit_2 }}
+                                        </td>
+
+                                        <td>
+                                            {% if perms.crm.change_unitsname %}
+                                            <button type="button" class="edit-productunits btn btn-outline-warning effect waves-light btn-xs" data-id="{% url 'crm:edit_productunits' form.pk %}" title="{% trans "Edit" %}"><i class="mdi mdi-square-edit-outline"></i></button>
+                                            {% endif %}
+                                        </td>
+
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+
+                    </div> <!-- end card-->
+                </div> <!-- end col -->
+
+            </div>
+        <!-- end row -->
+
+        </div> <!-- container -->
+        {% else %}
+        <div class="row" >
+            <div class="col-xl-12">
+                <div class="card">
+                    <div class="card-body">
+                            <STRONG> {% trans "You Don't have a permission to access this page." %} </STRONG>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endif %}
+
+    </div>
+{% endblock %}
+
+
+{% block extra_javascript %}
+    <script type="text/javascript">
+      $(function () {
+        // Create Product button
+            // Update product buttons
+            $(".edit-productunits").each(function () {
+              $(this).modalForm({formURL: $(this).data('id')});
+            });
+                // Delete Product button
+            $(".delete-product").each(function () {
+              $(this).modalForm({formURL: $(this).data('id')});
+            });
+
+        });
+
+    </script>
+
+
+{% endblock %}

@@ -1,0 +1,6 @@
+{% load widgets %}
+{% if collections  >= 0  %}
+{{ collections|currency_no_comma }}
+{% else  %}
+0
+{% endif  %}

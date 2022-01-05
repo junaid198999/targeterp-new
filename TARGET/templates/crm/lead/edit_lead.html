@@ -1,0 +1,647 @@
+{% extends "auth_base.html" %}
+{% load i18n %}
+{% load widget_tweaks %}
+{% load crispy_forms_tags %}
+{% block content %}
+<link href="/static/libs/select2/select2.min.css" rel="stylesheet" />
+{% comment %}
+<link href="/static/libs/bootstrap-datepicker/bootstrap-datepicker.min.css" rel="stylesheet" type="text/css" />
+{% endcomment %}
+<div class="container-fluid">
+    <!-- start page title -->
+    <div class="row">
+        <div class="col-12">
+            <div class="page-title-box">
+                <h4 class="page-title">{% trans "Update Lead" %}</h4>
+            </div>
+        </div>
+    </div>
+    <head>
+        <meta charset="utf-8" />
+        <title>lead_form</title>
+    </head>
+    <form id="LeadForm" action="" method="post" data-areas-url="{% url 'crm:ajax_load_areas' %}" data-cities-url="{% url 'crm:ajax_load_cities' %}" novalidate>
+        {% csrf_token %}
+        {{ form.helper.attrs.id }}
+        <div class="{% if form.non_field_errors %}invalid{% endif %} ">
+          {% if form.non_field_errors %}
+            {{ error }}
+            {% endif %}
+        </div>
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="card">
+                    <div class="card-header bg-warning py-3 text-white" data-toggle="collapse" href="#cardCollpase1" role="button" aria-expanded="false" aria-controls="cardCollpase1">
+                            <div class="card-widgets">
+                                <a data-toggle="collapse" href="#cardCollpase1" role="button" aria-expanded="false" aria-controls="cardCollpase1"><i class="mdi mdi-minus"></i></a>
+                            </div>
+                            <div class="card-title mb-0 text-white" style="font-size:13, font-weight:500;line-height: 0px !important">{% trans "OVERVIEW" %}</div>
+                    </div>
+                    <div class="card-body">
+                        <div id="cardCollpase1" class="collapse pt-3 show">
+
+                            <div class="row">
+                                <div class="form-group col-md-6 mb-0">
+                                    <div class="row">
+                                        <label class="col-3 col-form-label" style="padding-left: 30px; font-weight: 700;">{{form.name.label}}:</label>
+                                        <div class="col-8">
+                                            {{ form.name|as_crispy_field }}
+                                            <div class="{% if form.name.errors %} invalid{% endif %}">
+                                                {% if error in form.name.errors %}
+                                                    <p class="help-block">{{ error }}</p>
+                                                    {% endif %}
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-group col-md-6 mb-0">
+                                    <div class="row">
+                                        <label class="col-3 col-form-label" style="font-weight: 700;">{{form.office_phone.label}}:</label>
+                                        <div class="col-8">
+                                            {{ form.office_phone|as_crispy_field }}
+                                            <div class="{% if form.office_phone.errors %} invalid{% endif %}">
+                                                {% if error in form.office_phone.errors %}
+                                                    <p class="help-block">{{ error }}</p>
+                                                    {% endif %}
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="form-group col-md-6 mb-0">
+                                    <div class="row">
+                                        <label class="col-3 col-form-label" style="padding-left: 30px; font-weight: 700;">{{form.title.label}}:</label>
+                                        <div class="col-8">
+                                            {{ form.title|as_crispy_field }}
+                                            <div class="{% if form.title.errors %} invalid{% endif %}">
+                                                {% if error in form.title.errors %}
+                                                    <p class="help-block">{{ error }}</p>
+                                                    {% endif %}
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-group col-md-6 mb-0">
+                                    <div class="row">
+                                        <label class="col-3 col-form-label" style="font-weight: 700;">{{form.mobile.label}}:</label>
+                                        <div class="col-8">
+                                            {{ form.mobile|as_crispy_field }}
+                                            <div class="{% if form.mobile.errors %} invalid{% endif %}">
+                                                {% if error in form.mobile.errors %}
+                                                    <p class="help-block">{{ error }}</p>
+                                                    {% endif %}
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="form-group col-md-6 mb-0">
+                                    <div class="row">
+                                        <label class="col-3 col-form-label" style="padding-left: 30px; font-weight: 700;">{{form.department.label}}:</label>
+                                        <div class="col-8">
+                                            {{ form.department|as_crispy_field }}
+                                            <div class="{% if form.department.errors %} invalid{% endif %}">
+                                                {% if error in form.department.errors %}
+                                                    <p class="help-block">{{ error }}</p>
+                                                    {% endif %}
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-group col-md-6 mb-0">
+                                    <div class="row">
+                                        <label class="col-3 col-form-label" style="font-weight: 700;">{{form.fax.label}}:</label>
+                                        <div class="col-8">
+                                            {{ form.fax|as_crispy_field }}
+                                            <div class="{% if form.fax.errors %} invalid{% endif %}">
+                                                {% if error in form.fax.errors %}
+                                                    <p class="help-block">{{ error }}</p>
+                                                    {% endif %}
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </div>
+                            <div class="row">
+                                <div class="form-group col-md-6 mb-0">
+                                    <div class="row">
+                                        <label class="col-3 col-form-label" style="padding-left: 30px; font-weight: 700;">{{form.account_name.label}}:</label>
+                                        <div class="col-8">
+                                            {{ form.account_name|as_crispy_field }}
+                                            <div class="{% if form.account_name.errors %} invalid{% endif %}">
+                                                {% if error in form.account_name.errors %}
+                                                    <p class="help-block">{{ error }}</p>
+                                                    {% endif %}
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-group col-md-6 mb-0">
+                                    <div class="row">
+                                        <label class="col-3 col-form-label" style="font-weight: 700;">{{form.website.label}}:</label>
+                                        <div class="col-8">
+                                            {{ form.website|as_crispy_field }}
+                                            <div class="{% if form.website.errors %} invalid{% endif %}">
+                                                {% if error in form.website.errors %}
+                                                    <p class="help-block">{{ error }}</p>
+                                                    {% endif %}
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+
+                            <div class="row  mt-2">
+                                <div class="form-group col-md-6 mb-0">
+                                    <div class="row">
+                                        <label class="col-3 col-form-label" style="padding-left: 30px; font-weight: 700;"></label>
+                                        <div class="col-8">
+                                            <label class="col-form-label" style="font-size: 16px; font-weight: 700;">{% trans "Primary Address" %}</label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-group col-md-6 mb-0">
+                                    <div class="row">
+                                        <label class="col-3 col-form-label" style="font-weight: 700;"></label>
+                                        <div class="col-8">
+                                            <label class="col-form-label" style="font-size: 16px; font-weight: 700;">{% trans "Other Address" %}</label>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row  mt-2">
+                                <div class="form-group col-md-6 mb-0">
+                                    <div class="row">
+                                        <label class="col-3 col-form-label" style="padding-left: 30px; font-weight: 700;">{{form.address.label}}:</label>
+                                        <div class="col-8">
+                                            {{ form.address|as_crispy_field }}
+                                            <div class="{% if form.address.errors %} invalid{% endif %}">
+                                                {% if error in form.address.errors %}
+                                                    <p class="help-block">{{ error }}</p>
+                                                    {% endif %}
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-group col-md-6 mb-0">
+                                    <div class="row">
+                                        <label class="col-3 col-form-label" style="font-weight: 700;">{{form.other_address.label}}:</label>
+                                        <div class="col-8">
+                                            {{ form.other_address|as_crispy_field }}
+                                            <div class="{% if form.other_address.errors %} invalid{% endif %}">
+                                                {% if error in form.other_address.errors %}
+                                                    <p class="help-block">{{ error }}</p>
+                                                    {% endif %}
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="form-group col-md-6 mb-0">
+                                    <div class="row">
+                                        <label class="col-3 col-form-label" style="padding-left: 30px; font-weight: 700;">{{form.country.label}}:</label>
+                                        <div class="col-8">
+                                            {{ form.country|as_crispy_field }}
+                                            <div class="{% if form.country.errors %} invalid{% endif %}">
+                                                {% if error in form.country.errors %}
+                                                    <p class="help-block">{{ error }}</p>
+                                                    {% endif %}
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-group col-md-6 mb-0">
+                                    <div class="row">
+                                        <label class="col-3 col-form-label" style="font-weight: 700;">{{form.other_country.label}}:</label>
+                                        <div class="col-8">
+                                            {{ form.other_country|as_crispy_field }}
+                                            <div class="{% if form.other_country.errors %} invalid{% endif %}">
+                                                {% if error in form.other_country.errors %}
+                                                    <p class="help-block">{{ error }}</p>
+                                                    {% endif %}
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="form-group col-md-6 mb-0">
+                                    <div class="row">
+                                        <label class="col-3 col-form-label" style="padding-left: 30px; font-weight: 700;">{{form.area.label}}:</label>
+                                        <div class="col-8">
+                                            {{ form.area|as_crispy_field }}
+                                            <div class="{% if form.area.errors %} invalid{% endif %}">
+                                                {% if error in form.area.errors %}
+                                                    <p class="help-block">{{ error }}</p>
+                                                    {% endif %}
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-group col-md-6 mb-0">
+                                    <div class="row">
+                                        <label class="col-3 col-form-label" style="font-weight: 700;">{{form.other_area.label}}:</label>
+                                        <div class="col-8">
+                                            {{ form.other_area|as_crispy_field }}
+                                            <div class="{% if form.other_area.errors %} invalid{% endif %}">
+                                                {% if error in form.other_area.errors %}
+                                                    <p class="help-block">{{ error }}</p>
+                                                    {% endif %}
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="form-group col-md-6 mb-0">
+                                    <div class="row">
+                                        <label class="col-3 col-form-label" style="padding-left: 30px; font-weight: 700;">{{form.city.label}}:</label>
+                                        <div class="col-8">
+                                            {{ form.city|as_crispy_field }}
+                                            <div class="{% if form.city.errors %} invalid{% endif %}">
+                                                {% if error in form.city.errors %}
+                                                    <p class="help-block">{{ error }}</p>
+                                                    {% endif %}
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-group col-md-6 mb-0">
+                                    <div class="row">
+                                        <label class="col-3 col-form-label" style="font-weight: 700;">{{form.other_city.label}}:</label>
+                                        <div class="col-8">
+                                            {{ form.other_city|as_crispy_field }}
+                                            <div class="{% if form.other_city.errors %} invalid{% endif %}">
+                                                {% if error in form.other_city.errors %}
+                                                    <p class="help-block">{{ error }}</p>
+                                                    {% endif %}
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="form-group col-md-6 mb-0">
+                                    <div class="row">
+                                        <label class="col-3 col-form-label" style="padding-left: 30px; font-weight: 700;">{{form.postal_code.label}}:</label>
+                                        <div class="col-8">
+                                            {{ form.postal_code|as_crispy_field }}
+                                            <div class="{% if form.postal_code.errors %} invalid{% endif %}">
+                                                {% if error in form.postal_code.errors %}
+                                                    <p class="help-block">{{ error }}</p>
+                                                    {% endif %}
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-group col-md-6 mb-0">
+                                    <div class="row">
+                                        <label class="col-3 col-form-label" style="font-weight: 700;">{{form.other_postal_code.label}}:</label>
+                                        <div class="col-8">
+                                            {{ form.other_postal_code|as_crispy_field }}
+                                            <div class="{% if form.other_postal_code.errors %} invalid{% endif %}">
+                                                {% if error in form.other_postal_code.errors %}
+                                                    <p class="help-block">{{ error }}</p>
+                                                    {% endif %}
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-group col-md-6 mb-0 offset-md-6">
+                                    <div class="row">
+                                        <label class="col-3 col-form-label" style="font-weight: 700;">{% trans "Copy address from left:" %}</label>
+                                        <div class="col-8">
+                                            <div class="checkbox checkbox-single checkbox-info mb-2 col-form-label">
+                                                <input class="copy_address" name="copy_address" id="id_copy_address" type="checkbox">
+                                                <label></label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row mt-3">
+                                <div class="form-group col-md-6 mb-0">
+                                    <div class="row">
+                                        <label class="col-3 col-form-label" style="padding-left: 30px; font-weight: 700;">{{form.email.label}}:</label>
+                                        <div class="col-8">
+                                            {{ form.email|as_crispy_field }}
+                                            <div class="{% if form.email.errors %} invalid{% endif %}">
+                                                {% if error in form.email.errors %}
+                                                    <p class="help-block">{{ error }}</p>
+                                                    {% endif %}
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="form-group col-md-6 mb-0">
+                                    <div class="row">
+                                        <label class="col-3 col-form-label" style="padding-left: 30px; font-weight: 700;">{{form.description.label}}:</label>
+                                        <div class="col-8">
+                                            {{ form.description|as_crispy_field }}
+                                            <div class="{% if form.description.errors %} invalid{% endif %}">
+                                                {% if error in form.description.errors %}
+                                                    <p class="help-block">{{ error }}</p>
+                                                    {% endif %}
+                                            </div>
+                                        </div>
+                                        <div class="col-1">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="card">
+                    <div class="card-header bg-warning py-3 text-white" data-toggle="collapse" href="#cardCollpase2" role="button" aria-expanded="false" aria-controls="cardCollpase2">
+                            <div class="card-widgets">
+                                <a data-toggle="collapse" href="#cardCollpase2" role="button" aria-expanded="false" aria-controls="cardCollpase2"><i class="mdi mdi-minus"></i></a>
+                            </div>
+                            <div class="card-title mb-0 text-white" style="font-size:13, font-weight:500;line-height: 0px !important">{% trans "MORE INFORMATION" %}</div>
+                    </div>
+                    <div class="card-body">
+                        <div id="cardCollpase2" class="collapse pt-3 show">
+
+                            <div class="row">
+                                <div class="form-group col-md-6 mb-0">
+                                    <div class="row">
+                                        <label class="col-3 col-form-label" style="padding-left: 30px; font-weight: 700;">{{form.status.label}}:</label>
+                                        <div class="col-8">
+                                            {{ form.status|as_crispy_field }}
+                                            <div class="{% if form.status.errors %} invalid{% endif %}">
+                                                {% if error in form.status.errors %}
+                                                    <p class="help-block">{{ error }}</p>
+                                                    {% endif %}
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-group col-md-6 mb-0">
+                                    <div class="row">
+                                        <label class="col-3 col-form-label" style="font-weight: 700;">{{form.lead_Source.label}}:</label>
+                                        <div class="col-8">
+                                            {{ form.lead_Source|as_crispy_field }}
+                                            <div class="{% if form.lead_Source.errors %} invalid{% endif %}">
+                                                {% if error in form.lead_Source.errors %}
+                                                    <p class="help-block">{{ error }}</p>
+                                                    {% endif %}
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="form-group col-md-6 mb-0">
+                                    <div class="row">
+                                        <label class="col-3 col-form-label" style="padding-left: 30px; font-weight: 700;">{{form.status_description.label}}:</label>
+                                        <div class="col-8">
+                                            {{ form.status_description|as_crispy_field }}
+                                            <div class="{% if form.status_description.errors %} invalid{% endif %}">
+                                                {% if error in form.status_description.errors %}
+                                                    <p class="help-block">{{ error }}</p>
+                                                    {% endif %}
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-group col-md-6 mb-0">
+                                    <div class="row">
+                                        <label class="col-3 col-form-label" style="font-weight: 700;">{{form.lead_description.label}}:</label>
+                                        <div class="col-8">
+                                            {{ form.lead_description|as_crispy_field }}
+                                            <div class="{% if form.lead_description.errors %} invalid{% endif %}">
+                                                {% if error in form.lead_description.errors %}
+                                                    <p class="help-block">{{ error }}</p>
+                                                    {% endif %}
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="form-group col-md-6 mb-0">
+                                    <div class="row">
+                                        <label class="col-3 col-form-label" style="padding-left: 30px; font-weight: 700;">{{form.amount.label}}:</label>
+                                        <div class="col-8">
+                                            {{ form.amount|as_crispy_field }}
+                                            <div class="{% if form.amount.errors %} invalid{% endif %}">
+                                                {% if error in form.amount.errors %}
+                                                    <p class="help-block">{{ error }}</p>
+                                                    {% endif %}
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-group col-md-6 mb-0">
+                                    <div class="row">
+                                        <label class="col-3 col-form-label" style="font-weight: 700;">{{form.referred_by.label}}:</label>
+                                        <div class="col-8">
+                                            {{ form.referred_by|as_crispy_field }}
+                                            <div class="{% if form.referred_by.errors %} invalid{% endif %}">
+                                                {% if error in form.referred_by.errors %}
+                                                    <p class="help-block">{{ error }}</p>
+                                                    {% endif %}
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="card">
+                    <div class="card-header bg-warning py-3 text-white" data-toggle="collapse" href="#cardCollpase3" role="button" aria-expanded="false" aria-controls="cardCollpase3">
+                            <div class="card-widgets">
+                                <a data-toggle="collapse" href="#cardCollpase3" role="button" aria-expanded="false" aria-controls="cardCollpase3"><i class="mdi mdi-minus"></i></a>
+                            </div>
+                            <div class="card-title mb-0 text-white" style="font-size:13, font-weight:500;line-height: 0px !important">{% trans "OTHER" %}</div>
+                    </div>
+                    <div class="card-body">
+                        <div id="cardCollpase3" class="collapse pt-3 show">
+                            <div class="row">
+                                <div class="form-group col-md-6 mb-0">
+                                    <div class="row">
+                                        <label class="col-3 col-form-label" style="padding-left: 30px; font-weight: 700;">{{form.salesman.label}}:</label>
+                                            <div class="col-8">
+                                            {% if request.user.is_superuser %}
+                                                <div>{{ form.salesman}}</div>
+                                            {% else %}
+                                                <div hidden>{{ form.salesman}}</div>
+                                                <select name="salesman1" class="form-control" id="id_salesman1" style="width:100%" disabled data-value="{{form.salesman}}
+                                                </select>
+                                            {% endif %}
+
+                                            <div class="{% if form.salesman.errors %} invalid{% endif %}">
+                                                {% if error in form.salesman.errors %}
+                                                    <p class="help-block">{{ error }}</p>
+                                                    {% endif %}
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
+            <div class="modal-footer">
+                <a class="btn btn-secondary waves-effect" href="{% url 'crm:leads' %}">{% trans "Cancel" %}</a>
+                <input type="submit" class="submit-btn btn-danger btn btn-primary" value="{% trans "Save" %}"/>
+            </div>
+
+    </form>
+
+</div>
+
+{% endblock %}
+
+{% block extra_javascript %}
+
+{% comment %}
+<script src="/static/libs/moment/moment.min.js"></script>
+<script src="/static/libs/bootstrap-datepicker/bootstrap-datepicker.min.js"></script>
+{% endcomment %}
+<script src="/static/libs/select2/select2.min.js"></script>
+
+<script type="text/javascript">
+let copyid = 0
+
+        $('#id_customer').select2();
+        $('#id_salesman').select2();
+        $('#id_lead').select2();
+
+        $('#id_country').select2();
+        $('#id_area').select2();
+        $('#id_city').select2();
+        $('#id_other_country').select2();
+        $('#id_other_area').select2();
+        $('#id_other_city').select2();
+
+    $("#id_country").change(function () {
+          var url = $("#LeadForm").attr("data-areas-url");
+          var countryId = $(this).val();
+
+          $.ajax({
+                url: url,
+                data: {
+                    'country': countryId
+                    },
+                    success: function (data) {
+                        $("#id_area").html(data);
+                }
+          });
+    });
+
+    $("#id_area").change(function () {
+          var url = $("#LeadForm").attr("data-cities-url");
+          var areaId = $(this).val();
+
+          $.ajax({
+                url: url,
+                data: {
+                    'area': areaId
+                    },
+                    success: function (data) {
+                        $("#id_city").html(data);
+                }
+          });
+    });
+    if (copyid == 0) {
+        $("#id_other_country").change(function () {
+              var url = $("#LeadForm").attr("data-areas-url");
+              var countryId = $(this).val();
+
+              $.ajax({
+                    url: url,
+                    async: false,
+                    data: {
+                        'country': countryId
+                        },
+                        success: function (data) {
+                            $("#id_other_area").html(data);
+                    }
+              });
+        });
+
+        $("#id_other_area").change(function () {
+              var url = $("#LeadForm").attr("data-cities-url");
+              var areaId = $(this).val();
+
+              $.ajax({
+                    url: url,
+                    async: false,
+                    data: {
+                        'area': areaId
+                        },
+                        success: function (data) {
+                            $("#id_other_city").html(data);
+                    }
+              });
+        });
+    }
+
+    $('.card-header').click(function () {
+    alert('ffff')
+    });
+    $("#id_copy_address").click(function () {
+        if (this.checked) {
+            copyid = 1
+            $("#id_other_postal_code").val($("#id_postal_code").val());
+            $("#id_other_country").val($("#id_country").val()).trigger('change');
+            $("#id_other_area").val($("#id_area").val()).trigger('change');
+            $("#id_other_city").val($("#id_city").val()).trigger('change');
+            $("#id_other_address").val($("#id_address").val());
+        }
+        else {
+            copyid = 0
+            $("#id_other_postal_code").val('');
+            $("#id_other_country").val('').trigger('change');
+            $("#id_other_area").val('').trigger('change');
+            $("#id_other_city").val('').trigger('change');
+            $("#id_other_address").val('');
+        };
+    })
+
+</script>
+
+<style>
+.card-header:first-child {
+    height: 28px !important;
+}
+h5.card-title.mb-0.text-white {
+    line-height: 0 !important;
+}
+.card-widgets {
+    line-height: 0 !important;
+}
+.card-widgets>a {
+    line-height: 0px !important;
+}
+</style>
+{% endblock %}

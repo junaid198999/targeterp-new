@@ -1,0 +1,165 @@
+{% load i18n %}
+{% load widget_tweaks %}
+{% load crispy_forms_tags %}
+{% block content %}
+
+<form align="left" id="VendorForm" method="post" action="" data-cities-url="{% url 'crm:ajax_load_cities' %}">
+    {% if LANGUAGE_CODE == 'ar' %}
+        <link href="/static/libs/select2/select2-rtl.min.css" rel="stylesheet" />
+    {% else %}
+        <link href="/static/libs/select2/select2.min.css" rel="stylesheet" />
+    {% endif %}
+  {% csrf_token %}
+
+    <div class="modal-header" style="background: #f7b84b;">
+      <h3 class="modal-title" style="color: white;">{% trans "Update Vendor" %}</h3>
+      <button style="color:white; font-size: 2rem;" type="button" class="close" data-dismiss="modal" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+
+        <div class="modal-body">
+            <table>
+                <div class="{% if form.non_field_errors %}invalid{% endif %} mb-2">
+                  {% if form.non_field_errors %}
+                    {{ error }}
+                    {% endif %}
+                </div>
+
+                <div class="form-row">
+                      <div class="form-group col-md-6 mb-0">
+                          {{ form.name|as_crispy_field }}
+                                <div class="{% if form.name.errors %} invalid{% endif %}">
+                                    {% if error in form.name.errors %}
+                                        <p class="help-block">{{ error }}</p>
+                                        {% endif %}
+                                </div>
+                        </div>
+                      <div class="form-group col-md-3 mb-0">
+                          {{ form.contact_person|as_crispy_field }}
+                                <div class="{% if form.contact_person.errors %} invalid{% endif %}">
+                                    {% if error in form.contact_person.errors %}
+                                        <p class="help-block">{{ error }}</p>
+                                        {% endif %}
+                                </div>
+                      </div>
+                      <div class="form-group col-md-3 mb-0">
+                          {{ form.mobile|as_crispy_field }}
+                                <div class="{% if form.mobile.errors %} invalid{% endif %}">
+                                    {% if error in form.mobile.errors %}
+                                        <p class="help-block">{{ error }}</p>
+                                        {% endif %}
+                                </div>
+                      </div>
+                </div>
+
+                <div class="form-row">
+                      <div class="form-group col-md-3 mb-0">
+                          {{ form.country|as_crispy_field }}
+                            <div class="{% if form.country.errors %} invalid{% endif %}">
+                                {% if error in form.country.errors %}
+                                    <p class="help-block">{{ error }}</p>
+                                    {% endif %}
+                            </div>
+                      </div>
+                      <div class="form-group col-md-3 mb-0">
+                           {{ form.city|as_crispy_field }}
+                            <div class="{% if form.city.errors %} invalid{% endif %}">
+                                {% if error in form.city.errors %}
+                                    <p class="help-block">{{ error }}</p>
+                                    {% endif %}
+                            </div>
+                      </div>
+                      <div class="form-group col-md-6 mb-0">
+                          {{ form.address|as_crispy_field }}
+                      </div>
+                </div>
+                <div class="form-row">
+                      <div class="form-group col-md-3 mb-0">
+                          {{ form.office_phone|as_crispy_field }}
+                            <div class="{% if form.office_phone.errors %} invalid{% endif %}">
+                                {% if error in form.office_phone.errors %}
+                                    <p class="help-block">{{ error }}</p>
+                                    {% endif %}
+                            </div>
+                      </div>
+                      <div class="form-group col-md-3 mb-0">
+                           {{ form.email|as_crispy_field }}
+                            <div class="{% if form.email.errors %} invalid{% endif %}">
+                                {% if error in form.email.errors %}
+                                    <p class="help-block">{{ error }}</p>
+                                    {% endif %}
+                            </div>
+                      </div>
+                      <div class="form-group col-md-6 mb-0">
+                            {{ form.user|as_crispy_field }}
+                            <div class="{% if form.user.errors %} invalid{% endif %}">
+                                {% if error in form.user.errors %}
+                                    <p class="help-block">{{ error }}</p>
+                                {% endif %}
+                            </div>
+                        </div>
+                     <div class="form-group col-md-12 mb-0">
+                          {{ form.description|as_crispy_field }}
+                      </div>
+                </div>
+
+            </table>
+
+        </div>
+
+  <div class="modal-footer">
+    <button type="button" class="btn btn-secondary waves-effect" data-dismiss="modal">{% trans "Cancel" %}</button>
+    <button type="button" class="submit-btn btn-danger btn btn-primary">{% trans "Save" %}</button>
+  </div>
+
+</form>
+    <script src="/static/libs/select2/select2.min.js"></script>
+
+<script type="text/javascript">
+    $("#id_country").change(function () {
+      var url = $("#VendorForm").attr("data-cities-url");  // get the url of the `load_cities` view
+      var countryId = $(this).val();  // get the selected country ID from the HTML input
+
+      $.ajax({                       // initialize an AJAX request
+        url: url,                    // set the url of the request (= localhost:8000/hr/ajax/load-cities/)
+        data: {
+          'country': countryId       // add the country id to the GET parameters
+        },
+        success: function (data) {   // `data` is the return of the `load_cities` view function
+          $("#id_city").html(data);  // replace the contents of the city input with the data that came from the server
+        }
+      });
+
+    });
+    $(function () {
+        $('#id_country').select2({
+            width: '100%',
+            templateSelection: function (data) {
+                if (data.id === '') {
+                  return 'Select';
+                }
+            return data.text;
+            }
+        });
+        $('#id_city').select2({
+            width: '100%',
+            templateSelection: function (data) {
+                if (data.id === '') {
+                  return 'Select';
+                }
+            return data.text;
+            }
+        });
+        $('#id_user').select2({
+            width: '100%',
+            templateSelection: function (data) {
+                if (data.id === '') {
+                  return 'Select';
+                }
+            return data.text;
+            }
+        });
+    });
+  </script>
+{% endblock %}

@@ -1,0 +1,39 @@
+{% load widgets %}
+
+<script>
+    var p_id = "";
+
+    var p_name = "";
+    var num = 0;
+    var remainamount = 0;
+    var paidamount = 0 ;
+</script>
+{% for so in duepaymentslines %}
+
+<script>
+    p_id = {{so.id}} + ""
+    p_name = "{{so.duedate  }}";
+
+    paidamount = {{ so.paidamount }} + ""
+    if (paidamount == ""){
+        paidamount = 0 ;
+        }
+    remainamount = {{so.dueamount }} - paidamount ;
+    iu_id = {{so.dueamount}} + ""
+
+    $(`select[name="collectionsduepayments_set-${num}-customerpaymentschedule"]`).html(
+    `<option selected value="${p_id}">${p_id}</option>`);
+
+    $(`input[name="collectionsduepayments_set-${num}-operationnumber"]`).val('{{so.operationnumber}}');
+    $(`input[name="collectionsduepayments_set-${num}-duedate"]`).val('{{so.duedate}}');
+
+    $(`input[name="collectionsduepayments_set-${num}-dueamount"]`).val( remainamount );
+
+    $(`input[name="collectionsduepayments_set-${num}-paidamount"]`).val(0);
+
+    num = num + 1;
+
+</script>
+
+
+{% endfor %}

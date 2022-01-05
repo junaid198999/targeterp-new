@@ -1,0 +1,126 @@
+{% extends "auth_base.html" %}
+{% load i18n %}
+{% load widget_tweaks %}
+{% load widgets %}
+
+{% block content %}
+{% comment %}
+{% if messages %}}
+    {% for message in messages %}
+        <div>
+            <strong>{{message|safe}}</strong>
+        </div>
+    {% endfor %}
+{% endif %}
+{% endcomment %}
+    {% if LANGUAGE_CODE == 'ar' %}
+        <link href="/static/libs/select2/select2-rtl.min.css" rel="stylesheet" />
+    {% else %}
+        <link href="/static/libs/select2/select2.min.css" rel="stylesheet" />
+    {% endif %}
+<link href="/static/libs/sweetalert2/sweetalert2.min.css" rel="stylesheet" type="text/css" />
+    <div class="container-fluid">
+        <!-- start page title -->
+        <div class="row">
+            <div class="col-12">
+                <div class="page-title-box">
+                    <div class="page-title-right">
+                        <ol class="breadcrumb m-0">
+                            <li class="breadcrumb-item"><a href="/">TARGET</a></li>
+                            <li class="breadcrumb-item active">{% trans "Export" %}</li>
+                        </ol>
+                    </div>
+                    <h4 class="page-title">{% trans "Export" %}</h4>
+                </div>
+            </div>
+        </div>
+        <!-- end page title -->
+        {% if request.user.is_superuser %}
+
+        <div class="row" >
+            <div class="col-xl-12">
+                <div class="card">
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-12">
+                                <h4 class="header-title mb-0">{% trans "Export Source to .CSV file" %}</h4>
+                                <br>
+                                <form id="ExportForm" method="post" enctype="multipart/form-data" class="mt-3">
+                                    {% csrf_token %}
+                                    <span>{% trans "Select the source" %}:</span>
+                                    <br>
+                                    <div class="form-group mb-3">
+                                        <select name="source" class="form-control" id="id_source" style="width:100%">
+                                            <option value="Products" selected>{% trans "Producst" %}</option>
+                                            <option value="Categories">{% trans "Categories" %}</option>
+                                            <option value="Leads">{% trans "Leads" %}</option>
+                                            <option value="Customers">{% trans "Customers" %}</option>
+                                            <option value="Vendors">{% trans "Vendors" %}</option>
+                                            <option value="Doctors">{% trans "Doctors" %}</option>
+                                            <option value="Salesmen">{% trans "Salesmen" %}</option>
+                                            <option value="SalesOrders">{% trans "Sales Orders" %}</option>
+                                            <option value="SalesReturnOrder">{% trans "Sales Returns" %}</option>
+                                            <option value="PurchaseOrder">{% trans "Purchase Orders" %}</option>
+                                            <option value="PurchaseReturnOrder">{% trans "Purchase Returns" %}</option>
+                                            <option value="Channels">{% trans "Channels" %}</option>
+                                            <option value="Samples">{% trans "Samples" %}</option>
+                                            <option value="Collections">{% trans "Collections" %}</option>
+                                        </select>
+                                    </div>
+                                    <br>
+                                    <div class="modal-footer">
+                                        <button class="btn btn-danger waves-effect waves-light" type="submit">
+                                            <i class="fe-upload mr-1"></i>{% trans "Export" %}
+                                        </button>
+                                        <a class="btn btn-secondary waves-effect waves-light md-2" href="{% url 'crm:export' %}">{% trans "Cancel" %}</a>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% else %}
+        <div class="row" >
+            <div class="col-xl-12">
+                <div class="card">
+                    <div class="card-body">
+                            <STRONG> {% trans "You Don't have a permission to access this page." %} </STRONG>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endif %}
+
+    </div>
+{% endblock %}
+{% block extra_javascript %}
+<script src="/static/libs/select2/select2.min.js"></script>
+<script src="/static/libs/sweetalert2/sweetalert2.min.js"></script>
+<script type="text/javascript">
+$(function () {
+    $('#id_source').select2({
+        width: '100%',
+        templateSelection: function (data) {
+            if (data.id === '') {
+              return 'Select';
+            }
+        return data.text;
+        }
+    });
+});
+
+{% if success == 1 %}
+        Swal.fire({
+            type: "success",
+            title: "Done",
+            text: "{% trans 'Leads uploaded Successfully' %}",
+            confirmButtonClass: "btn btn-confirm mt-2",
+        }).then(function(t){
+            location.href = '/crm/import/';
+        })
+{% endif %}
+</script>
+{% endblock %}
+

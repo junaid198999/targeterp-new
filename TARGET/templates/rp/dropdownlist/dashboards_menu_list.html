@@ -1,0 +1,18 @@
+{% load widgets %}
+{% load static i18n %}
+{% load i18n %}
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+
+
+{% for ot in rpt %}
+    <li>
+        <a id="rep-{{ ot.id }}" href="/rp/dashboardview/{{ ot.id }}">
+            <i class="fe-bar-chart-2 mdi-18px" ></i>
+            {{ ot.engname }}
+        </a>
+    </li>
+
+{% endfor %}
+
+
+

@@ -1,0 +1,98 @@
+{% load i18n %}
+
+{% load widget_tweaks %}
+{% load crispy_forms_tags %}
+{% block content %}
+
+    <form  align="left" method="POST" action="#" >
+
+  <link rel="stylesheet" type="text/css" href="/static/css/bootstrap-duallistbox.css">
+        {% csrf_token %}
+
+        <div class="modal-header" style="background: #f7b84b;">
+          <h3 class="modal-title" style="color: white;">{% trans "Edit User" %}</h3>
+          <button style="color:white; font-size: 2rem;" type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+
+        <div class="modal-body">
+            <div class="{% if form.non_field_errors %}invalid{% endif %} mb-2">
+              {% if form.non_field_errors %}
+                {{ error }}
+                {% endif %}
+            </div>
+
+            <div class="col-md-12">
+                <div class="row">
+                    <div class="col-md-12" style="background: #eaeaea;">
+                        <div class="col-12">
+                            <h2>{{form.instance.name|title}}</h2>
+                            <div hidden>{{form.name}}</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <label class="col-form-label">{% trans "Group Permission" %}</label>
+                            </div>
+                            <div class="col-md-12">
+                                <select multiple="multiple" size="10" name="permissions" title="permissions" id="id_permissions" data-value="{{form.permissions}}
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-secondary waves-effect" data-dismiss="modal">{% trans "Cancel" %}</button>
+            <button type="button" class="submit-btn btn-danger btn btn-primary">{% trans "Update" %}</button>
+        </div>
+
+
+    </form>
+
+  <script src="/static/js/jquery.bootstrap-duallistbox.js"></script>
+
+<script >
+var demo1 = $('#id_permissions').bootstrapDualListbox({
+  nonSelectedListLabel: 'Non-selected',
+  selectedListLabel: 'Selected',
+  preserveSelectionOnMove: 'moved',
+  moveOnSelect: true,
+});
+
+
+</script>
+<style>
+select#bootstrap-duallistbox-selected-list_permissions {
+    width: 100%;
+    border-color: lightgray;
+    height: 300px !important;
+}
+select#bootstrap-duallistbox-nonselected-list_permissions {
+    width: 100%;
+    border-color: lightgray;
+    height: 300px !important;
+}
+button.btn.removeall.btn-outline-secondary {
+    border-color: lightgray;
+}
+button.btn.moveall.btn-outline-secondary {
+    border-color: lightgray;
+}
+button.btn.btn-sm.clear1 {
+    color: #f7b84a;
+}
+button.btn.btn-sm.clear2 {
+    color: #f7b84a;
+}
+
+</style>
+{% endblock %}

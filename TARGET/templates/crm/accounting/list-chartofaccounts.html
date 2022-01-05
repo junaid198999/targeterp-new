@@ -1,0 +1,192 @@
+{% extends "auth_base.html" %}
+{% load i18n %}
+{% load widget_tweaks %}
+{% load django_tables2 %}
+{% load crispy_forms_tags %}
+{% block content %}
+<link href="/static/libs/select2/select2.min.css" rel="stylesheet" />
+    <div class="container-fluid">
+        <!-- start page title -->
+        <div class="row">
+            <div class="col-12">
+                <div class="page-title-box">
+                    <div class="page-title-right">
+                        <ol class="breadcrumb m-0">
+                            <li class="breadcrumb-item"><a href="/">TARGET</a></li>
+                            <li class="breadcrumb-item active">{% trans "Chart of Accounts" %}</li>
+                        </ol>
+                    </div>
+                    <h4 class="page-title">{% trans "Chart of Accounts" %}</h4>
+                </div>
+            </div>
+        </div>
+        <!-- end page title -->
+        {% if perms.crm.view_chart_of_account_accounting %}
+        <div class="row" >
+            <div class="col-xl-12">
+                <div class="card">
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-sm-6">
+                                <div id="controlPanel" {% if LANGUAGE_CODE == 'ar' %} align="right" {% else %} align="left" {% endif %}></div>
+                            </div>
+                            {% if perms.crm.add_accountingchild %}
+                            <div {% if LANGUAGE_CODE == 'ar' %} align="left" {% else %} align="right" {% endif %} class="col-sm-6">
+                                <button class="btn btn-warning waves-effect waves-light mb-2"  onclick="location.href='{% url 'crm:chartofaccounts_upload' %}'" type="button" name="button" data-overlayColor="#38414a">
+                                    <i class="fe-download mr-1"></i>{% trans "Import Chart of Accounts" %}
+                                </button>
+                                    <a  id="demo-create-row" class="create-g-cof btn btn-blue waves-effect waves-light mb-2" data-id="{% url 'crm:create_all_chartofaccounts' %}" data-target="#add_new1_{{ sub_sub_p.id }}" href="#{{ sub_p.name }}"><i class="mdi mdi-plus-circle mr-1"></i>  {% trans "Add" %}</a>
+                            </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+        <div class="row">
+            <div class="col-xl-12">
+                <div class="card">
+                    <div class="card-body">
+                        <div class="row mb-2">
+                            <div class="col-sm-12">
+                                <div class="text-sm-right">
+                                    <div class="modal fade" tabindex="-1" role="dialog" id="modal">
+                                          <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
+                                                <div class="modal-content"></div>
+                                          </div>
+                                    </div>
+                                    <!-- Create account button -->
+                                </div><!-- end col-->
+                            </div>
+                        </div>
+
+
+
+                        <div class="tabs">
+                                <ul class="tab-links nav nav-tabs nav-bordered" id="myTab">
+                                {% for sub_p in prot %}
+                                    <li class="li nav-item"><a class="nav-link" data-toggle="tab" href="#{{ sub_p.name }}">
+                                            <span>{{ sub_p.name }}</span>
+                                            <span class="badge badge-light"> {{ sub_p.accounting_parent.count }}</span>
+                                        </a>
+                                    </li>
+                                {% endfor %}
+                                </ul>
+
+                            <div class="tab-content">
+                                {% for sub_p in prot %}
+                                    <div id="{{ sub_p.name }}" class="tab">
+                                        <table id="table_id" class="table" style="width:100%">
+                                            <thead class="thead-light" >
+                                            </thead>
+                                            <tbody>
+                                                {% for sub_sub_p in sub_p.accounting_parent.all %}
+                                                    <tr>
+                                                        {% if LANGUAGE_CODE == 'ar' %}
+                                                            <td style="background: #edf8ff; width:100%" colspan="3">
+                                                                <i data-toggle="tooltip" data-placement="left" title="" data-original-title="{{ sub_sub_p.description }}" class="fe-help-circle"></i>
+                                                                {{ sub_sub_p.name }}
+                                                            </td>
+                                                        {% else %}
+                                                            <td style="background: #edf8ff; width:100%" colspan="3">
+                                                                {{ sub_sub_p.name }}
+                                                                <i data-toggle="tooltip" data-placement="right" title="" data-original-title="{{ sub_sub_p.description }}" class="fe-help-circle"></i>
+                                                            </td>
+                                                        {% endif %}
+                                                        <td style="background: #edf8ff;">
+                                                        </td>
+                                                        <td style="background: #edf8ff;">
+                                                            {% trans "Action" %}
+                                                        </td>
+                                                        {% for f_p in sub_sub_p.accounting_child.all %}
+                                                            <tr  class="row-tr">
+                                                                <td style="width:5%"></td>
+                                                                <td style="width:10%">{{ f_p.number }}</td>
+                                                                <td style="width:30%">{{ f_p.name }} </td>
+                                                                <td style="width:50%">{{ f_p.description }}</td>
+                                                                <td style="width:10%">
+                                                                    <button type="button" class="edit-cof btn btn-outline-warning effect waves-light btn-xs" data-id="{% url 'crm:edit_chartofaccounts' f_p.id %}?oldsub={{ sub_sub_p.id }}" title="{% trans "Edit" %}"><i class="mdi mdi-square-edit-outline"></i></button>
+                                                                </td>
+                                                            </tr>
+
+
+                                                        {% endfor %}
+
+
+                                                        <tr>
+                                                            <td style="width:5%"></td>
+                                                            <td colspan="4">
+                                                                <a class="create-cof nav-link1" data-id="{% url 'crm:create_chartofaccounts' %}?parent={{sub_sub_p.id}}" data-target="#add_new_{{ sub_sub_p.id }}" href="#{{ sub_p.name }}"><i class="fe-plus-circle"></i> Add a new account</a>
+                                                            </td>
+                                                        </tr>
+                                                    </tr>
+                                                {% endfor %}
+                                            </tbody>
+                                        </table>
+
+                                    </div>
+                                {% endfor %}
+                            </div>
+                        </div>
+                    </div> <!-- end card-->
+                </div> <!-- end col -->
+
+            </div>
+        <!-- end row -->
+
+        </div> <!-- container -->
+        {% else %}
+        <div class="row" >
+            <div class="col-xl-12">
+                <div class="card">
+                    <div class="card-body">
+                            <STRONG> {% trans "You Don't have a permission to access this page." %} </STRONG>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endif %}
+
+    </div>
+{% endblock %}
+
+{% block extra_javascript %}
+<script src="/static/libs/select2/select2.min.js"></script>
+<script>
+$(".edit-cof").each(function () {
+  $(this).modalForm({formURL: $(this).data('id')});
+});
+$(".create-cof").each(function () {
+  $(this).modalForm({formURL: $(this).data('id')});
+});
+$(".create-g-cof").each(function () {
+  $(this).modalForm({formURL: $(this).data('id')});
+});
+
+$(document).ready(function(){
+	$('a[data-toggle="tab"]').on('show.bs.tab', function(e) {
+		localStorage.setItem('activeTab', $(e.target).attr('href'));
+	});
+	var activeTab = localStorage.getItem('activeTab');
+	if(activeTab){
+		$('#myTab a[href="' + activeTab + '"]').tab('show');
+	}
+});
+
+
+
+</script>
+    <!-- JS, Popper.js, and jQuery -->
+    <style>
+
+        .row-tr:hover {
+            background: #fbfbfb;
+        }
+
+        .tab {
+            display: none;
+        }
+
+        .tab.active {
+            display: block;
+        }
+    </style>
+{% endblock %}

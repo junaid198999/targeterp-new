@@ -1,0 +1,227 @@
+{% load i18n %}
+{% load widget_tweaks %}
+{% load crispy_forms_tags %}
+{% block content %}
+
+
+<form align="left" id="LedgerForm" method="post" action=""  >
+
+    {% if LANGUAGE_CODE == 'ar' %}
+        <link href="/static/libs/select2/select2-rtl.min.css" rel="stylesheet" />
+    {% else %}
+        <link href="/static/libs/select2/select2.min.css" rel="stylesheet" />
+    {% endif %}
+  {% csrf_token %}
+
+    <div class="modal-header" style="background: #f7b84b;">
+      <h3 class="modal-title" style="color: white;">{% trans "Approval Treasury Orders" %}</h3>
+      <button style="color:white; font-size: 2rem;" type="button" class="close" data-dismiss="modal" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+
+        <div class="modal-body">
+
+            <table>
+                <div class="{% if form.non_field_errors %}invalid{% endif %} mb-2">
+                          {% if form.non_field_errors %}
+                            {{ error }}
+                            {% endif %}
+                    </div>
+                <div class="form-row">
+                    <div class="form-group col-md-12 mb-0">
+                        <div class="form-row">
+
+                              <div class="form-group col-md-6 mb-0">
+                                  {{ form.treasury|as_crispy_field }}
+                                    <div class="{% if form.treasury.errors %} invalid{% endif %}">
+                                        {% if error in form.treasury.errors %}
+                                            <p class="help-block">{{ error }}</p>
+                                            {% endif %}
+                                    </div>
+                              </div>
+
+                              <div class="form-group col-md-6 mb-0">
+                                    {{ form.paymentdirection|as_crispy_field }}
+                                    <div class="{% if form.paymentdirection.errors %} invalid{% endif %}">
+                                        {% if error in form.paymentdirection.errors %}
+                                            <p class="help-block">{{ error }}</p>
+                                            {% endif %}
+                                    </div>
+                              </div>
+
+                              <div class="form-group col-md-4 mb-1">
+                                    {{ form.paymentmethod|as_crispy_field }}
+                                    <div class="{% if form.paymentmethod.errors %} invalid{% endif %}">
+                                        {% if error in form.paymentmethod.errors %}
+                                            <p class="help-block">{{ error }}</p>
+                                            {% endif %}
+                                    </div>
+                              </div>
+                              <div class="form-group col-md-4 mb-1">
+                                    {{ form.orderdate|as_crispy_field }}
+                                    <div class="{% if form.orderdate.errors %} invalid{% endif %}">
+                                        {% if error in form.orderdate.errors %}
+                                            <p class="help-block">{{ error }}</p>
+                                            {% endif %}
+                                    </div>
+                              </div>
+
+
+                              <div class="form-group col-md-4 mb-0" >
+                                    {{ form.amount|as_crispy_field  }}
+                                    <div class="{% if form.amount.errors %} invalid{% endif %}">
+                                        {% if error in form.amount.errors %}
+                                            <p class="help-block">{{ error }}</p>
+                                            {% endif %}
+                                    </div>
+                              </div>
+
+                              <div class="form-group col-md-4 mb-0">
+                                    {{ form.currency|as_crispy_field }}
+                                    <div class="{% if form.currency.errors %} invalid{% endif %}">
+                                        {% if error in form.currency.errors %}
+                                            <p class="help-block">{{ error }}</p>
+                                            {% endif %}
+                                    </div>
+                              </div>
+
+                              <div class="form-group col-md-4 mb-0">
+                                    {{ form.engdesc|as_crispy_field }}
+                                    <div class="{% if form.engdesc.errors %} invalid{% endif %}">
+                                        {% if error in form.engdesc.errors %}
+                                            <p class="help-block">{{ error }}</p>
+                                            {% endif %}
+                                    </div>
+                              </div>
+                              <div class="form-group col-md-4 mb-0">
+                                    {{ form.arbdesc|as_crispy_field }}
+                                    <div class="{% if form.arbdesc.errors %} invalid{% endif %}">
+                                        {% if error in form.arbdesc.errors %}
+                                            <p class="help-block">{{ error }}</p>
+                                            {% endif %}
+                                    </div>
+                              </div>
+                              <div class="form-group col-md-4 mb-0">
+                                    {{ form.accounttype|as_crispy_field }}
+                                    <div class="{% if form.accounttype.errors %} invalid{% endif %}">
+                                        {% if error in form.accounttype.errors %}
+                                            <p class="help-block">{{ error }}</p>
+                                            {% endif %}
+                                    </div>
+                              </div>
+
+                              <div class="form-group col-md-6 mb-0">
+                                    {{ form.ledger|as_crispy_field }}
+                                    <div class="{% if form.ledger.errors %} invalid{% endif %}">
+                                        {% if error in form.ledger.errors %}
+                                            <p class="help-block">{{ error }}</p>
+                                            {% endif %}
+                                    </div>
+                              </div>
+
+                              <div class="form-group col-md-6 mb-0">
+                                    {{ form.customer|as_crispy_field }}
+                                    <div class="{% if form.customer.errors %} invalid{% endif %}">
+                                        {% if error in form.customer.errors %}
+                                            <p class="help-block">{{ error }}</p>
+                                            {% endif %}
+                                    </div>
+                              </div>
+
+                              <div class="form-group col-md-4 mb-0">
+                                    {{ form.transtype|as_crispy_field }}
+                                    <div class="{% if form.transtype.errors %} invalid{% endif %}">
+                                        {% if error in form.transtype.errors %}
+                                            <p class="help-block">{{ error }}</p>
+                                            {% endif %}
+                                    </div>
+                              </div>
+                            {% if  comusecostcenter1 == True  %}
+
+                              <div class="form-group col-md-4 mb-0">
+                                    {{ form.costcenter1|as_crispy_field }}
+                                    <div class="{% if form.costcenter1.errors %} invalid{% endif %}">
+                                        {% if error in form.costcenter1.errors %}
+                                            <p class="help-block">{{ error }}</p>
+                                            {% endif %}
+                                    </div>
+                              </div>
+                            {% endif %}
+
+                            {% if  comusecostcenter2 == True  %}
+                              <div class="form-group col-md-4 mb-0">
+                                    {{ form.costcenter2|as_crispy_field }}
+                                    <div class="{% if form.costcenter2.errors %} invalid{% endif %}">
+                                        {% if error in form.costcenter2.errors %}
+                                            <p class="help-block">{{ error }}</p>
+                                            {% endif %}
+                                    </div>
+                              </div>
+                            {% endif %}
+
+
+                        </div>
+                    </div>
+                </div>
+
+            </table>
+        </div>
+
+  <div class="modal-footer">
+    <button type="button" class="btn btn-secondary waves-effect" data-dismiss="modal">{% trans "Cancel" %}</button>
+    <button type="button" class="submit-btn btn-danger btn btn-primary">{% trans "Approve" %}</button>
+  </div>
+
+
+</form>
+    <script src="/static/libs/select2/select2.min.js"></script>
+
+<script type="text/javascript">
+
+
+$(document).ready(function(){
+        console.log('234')
+        type_value = $(this).children("option:selected").text();
+        console.log(type_value)
+        if(type_value.includes("1 - ")){
+            document.getElementById("id_ledger" ).disabled = false;
+            document.getElementById("id_customer" ).disabled = true;
+
+        } else if(type_value.includes("3 - ")) {
+            document.getElementById("id_ledger" ).disabled = true;
+            document.getElementById("id_customer" ).disabled = false;
+        } else{
+            document.getElementById("id_ledger" ).disabled = true;
+            document.getElementById("id_customer" ).disabled = true;
+
+        }
+        console.log("2234353")
+
+});
+
+
+
+$("select[name*='accounttype']").change(function () {
+        type_value = $(this).children("option:selected").text();
+        console.log(type_value)
+        if(type_value.includes("1 - ")){
+            document.getElementById("id_ledger" ).disabled = false;
+            document.getElementById("id_customer" ).disabled = true;
+
+        } else if(type_value.includes("3 - ")) {
+            document.getElementById("id_ledger" ).disabled = true;
+            document.getElementById("id_customer" ).disabled = false;
+        } else{
+            document.getElementById("id_ledger" ).disabled = true;
+            document.getElementById("id_customer" ).disabled = true;
+
+        }
+
+
+});
+
+
+</script>
+
+{% endblock %}

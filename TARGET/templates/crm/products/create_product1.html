@@ -1,0 +1,127 @@
+
+{% load widget_tweaks %}
+{% load crispy_forms_tags %}
+{% block content %}
+
+    <form  align="left" id="ProductForm" method="post" action="#"  novalidate>
+    <link href="/static/libs/select2/select2.min.css?{% now "U" %}" rel="stylesheet" />
+        {% csrf_token %}
+
+        <div class="modal-header" style="background: #4a81d4;">
+          <h3 class="modal-title" style="color: white;">Add Product</h3>
+          <button style="color:white; font-size: 2rem;" type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+
+        <div class="modal-body">
+            <table>
+                <div class="{% if form.non_field_errors %}invalid{% endif %} mb-2">
+                  {% if form.non_field_errors %}
+                    {{ error }}
+                    {% endif %}
+                </div>
+
+                    <div class="form-row">
+                        <div class="form-group col-md-6 mb-0">
+                          {{ form.name|as_crispy_field }}
+                                <div class="{% if form.name.errors %} invalid{% endif %}">
+                                    {% if error in form.name.errors %}
+                                        <p class="help-block">{{ error }}</p>
+                                        {% endif %}
+                                </div>
+                        </div>
+                        <div class="form-group col-md-3 mb-0">
+                            {{ form.sku|as_crispy_field }}
+                        </div>
+                        <div class="form-group col-md-3 mb-0">
+                            {{ form.category|as_crispy_field }}
+                                <div class="{% if form.category.errors %} invalid{% endif %}">
+                                    {% if error in form.category.errors %}
+                                        <p class="help-block">{{ error }}</p>
+                                        {% endif %}
+                                </div>
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                          <div class="form-group col-md-3 mb-0">
+                              {{ form.price|as_crispy_field }}
+                          </div>
+                          <div class="form-group col-md-2 mb-0">
+                              {{ form.uom|as_crispy_field }}
+                                <div class="{% if form.uom.errors %} invalid{% endif %}">
+                                    {% if error in form.uom.errors %}
+                                        <p class="help-block">{{ error }}</p>
+                                        {% endif %}
+                                </div>
+                          </div>
+                          <div class="form-group col-md-2 mb-0">
+                              {{ form.uom2|as_crispy_field}}
+                                <div class="{% if form.uom2.errors %} invalid{% endif %}">
+                                    {% if error in form.uom2.errors %}
+                                        <p class="help-block">{{ error }}</p>
+                                        {% endif %}
+                                </div>
+                          </div>
+                          <div class="form-group col-md-2 mb-0">
+                              {{ form.packing|as_crispy_field}}
+                                <div class="{% if form.packing.errors %} invalid{% endif %}">
+                                    {% if error in form.packing.errors %}
+                                        <p class="help-block">{{ error }}</p>
+                                        {% endif %}
+                                </div>
+                          </div>
+
+                         <div class="form-group col-md-3 mb-0">
+                              {{ form.product_type|as_crispy_field }}
+                          </div>
+                    </div>
+                    <div class="form-row">
+                          <div class="form-group col-md-3 mb-0">
+                              {{ form.weight|as_crispy_field }}
+                          </div>
+                          <div class="form-group col-md-3 mb-0">
+                              {{ form.monthly_safety_stock|as_crispy_field }}
+                          </div>
+                          <div class="form-group col-md-3 mb-0">
+                              {{ form.ti|as_crispy_field }}
+                          </div>
+                          <div class="form-group col-md-3 mb-0">
+                              {{ form.hi|as_crispy_field }}
+                          </div>
+                    </div>
+                    <div class="form-row">
+                          <div class="form-group col-md-3 mb-0">
+                              {{ form.barcode|as_crispy_field }}
+                          </div>
+                          <div class="form-group col-md-9 mb-0">
+                              {{ form.description|as_crispy_field }}
+                          </div>
+                    </div>
+            </table>
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-secondary waves-effect" data-dismiss="modal">Cancel</button>
+            <button type="button" class="submit-btn btn-danger btn btn-primary">Create</button>
+        </div>
+
+
+    </form>
+<script src="/static/libs/select2/select2.min.js"></script>
+
+<script type="text/javascript">
+    $(function () {
+        $('select').select2({
+            width: '100%',
+            templateSelection: function (data) {
+                if (data.id === '') {
+                  return 'Select';
+                }
+            return data.text;
+            }
+        });
+    });
+</script>
+
+{% endblock %}

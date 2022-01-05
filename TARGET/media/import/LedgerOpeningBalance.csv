@@ -1,0 +1,3 @@
+Serial,Balance_Date,Ledger_Code,CC1_Code,CC2_Code,CC3_Code,CC4_Code,Debit_Amount,Credit_Amount,Debit_AmountFC,Credit_AmountFC,
+1,01/12/2020,101040010010,,,,,20000,0,0,0,0
+2,01/12/2020,101040010020,,,,,125500,0,0,0,0

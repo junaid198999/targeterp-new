@@ -1,0 +1,249 @@
+﻿<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<StiSerializer version="1.0" application="StiReport">
+  <Dictionary Ref="1" type="Dictionary" isKey="true">
+    <BusinessObjects isList="true" count="0" />
+    <Databases isList="true" count="0" />
+    <DataSources isList="true" count="1">
+      <Table Ref="2" type="Stimulsoft.Report.Dictionary.StiSqlSource" isKey="true">
+        <Alias>Table</Alias>
+        <Columns isList="true" count="28">
+          <value>Code,System.String</value>
+          <value>rowguid,System.Int64</value>
+          <value>DataOutDateTime,System.DateTime</value>
+          <value>AccountNo,System.String</value>
+          <value>IsCredit,System.String</value>
+          <value>ActiveDate,System.DateTime</value>
+          <value>CancelDate,System.DateTime</value>
+          <value>MaxPeriod,System.Int64</value>
+          <value>MaxAmountPerInvoice,System.Double</value>
+          <value>EngName,System.String</value>
+          <value>ArbName,System.String</value>
+          <value>POBox,System.String</value>
+          <value>PostCode,System.String</value>
+          <value>City,System.String</value>
+          <value>Street,System.String</value>
+          <value>Country,System.String</value>
+          <value>District,System.String</value>
+          <value>Telephone1,System.String</value>
+          <value>Telephone1Type,System.String</value>
+          <value>Telephone2,System.String</value>
+          <value>Telephone2Type,System.String</value>
+          <value>Telephone3,System.String</value>
+          <value>Telephone3Type,System.String</value>
+          <value>Company,System.String</value>
+          <value>Email,System.String</value>
+          <value>WebAddress,System.String</value>
+          <value>DiscountValue,System.Double</value>
+          <value>DefaultPrice,System.Int64</value>
+        </Columns>
+        <CommandTimeout>30</CommandTimeout>
+        <Dictionary isRef="1" />
+        <Name>Table</Name>
+        <NameInSource>Table</NameInSource>
+        <Parameters isList="true" count="0" />
+        <SqlCommand>select * from Customer</SqlCommand>
+      </Table>
+    </DataSources>
+    <Relations isList="true" count="0" />
+    <Report isRef="0" />
+    <Variables isList="true" count="0" />
+  </Dictionary>
+  <EngineVersion>EngineV2</EngineVersion>
+  <GlobalizationStrings isList="true" count="0" />
+  <MetaTags isList="true" count="0" />
+  <Pages isList="true" count="1">
+    <Page1 Ref="3" type="Page" isKey="true">
+      <Border>None;Black;2;Solid;False;4;Black</Border>
+      <Brush>Transparent</Brush>
+      <Components isList="true" count="10">
+        <Text1 Ref="4" type="Text" isKey="true">
+          <Brush>Transparent</Brush>
+          <ClientRectangle>0,0,2.2,0.3</ClientRectangle>
+          <Conditions isList="true" count="0" />
+          <Font>Times New Roman,15,Bold| Italic| Underline</Font>
+          <Margins>0,0,0,0</Margins>
+          <Name>Text1</Name>
+          <Page isRef="3" />
+          <Parent isRef="3" />
+          <Text>Cosmodearm Pharmacy</Text>
+          <TextBrush>Black</TextBrush>
+        </Text1>
+        <BarCode1 Ref="5" type="Stimulsoft.Report.BarCodes.StiBarCode" isKey="true">
+          <AutoScale>True</AutoScale>
+          <BackColor>Transparent</BackColor>
+          <BarCodeType Ref="6" type="Stimulsoft.Report.BarCodes.StiCode128bBarCodeType" isKey="true" />
+          <ClientRectangle>0,1.7,3.1,0.4</ClientRectangle>
+          <Code>{Customer.Code}</Code>
+          <Conditions isList="true" count="0" />
+          <Font>Arial,8,Bold,Pixel</Font>
+          <ForeColor>Black</ForeColor>
+          <HorAlignment>Center</HorAlignment>
+          <Name>BarCode1</Name>
+          <Page isRef="3" />
+          <Parent isRef="3" />
+          <ShowLabelText>False</ShowLabelText>
+          <VertAlignment>Center</VertAlignment>
+        </BarCode1>
+        <Text2 Ref="7" type="Text" isKey="true">
+          <Brush>Transparent</Brush>
+          <ClientRectangle>0,0.4,1.7,0.2</ClientRectangle>
+          <Conditions isList="true" count="0" />
+          <Font>Times New Roman,12,Bold| Italic</Font>
+          <Margins>0,0,0,0</Margins>
+          <Name>Text2</Name>
+          <Page isRef="3" />
+          <Parent isRef="3" />
+          <Text>Customer Credit Card</Text>
+          <TextBrush>Black</TextBrush>
+        </Text2>
+        <Text3 Ref="8" type="Text" isKey="true">
+          <Brush>Transparent</Brush>
+          <ClientRectangle>0,0.7,0.8,0.2</ClientRectangle>
+          <Conditions isList="true" count="0" />
+          <Font>Times New Roman,13</Font>
+          <HorAlignment>Right</HorAlignment>
+          <Margins>0,0,0,0</Margins>
+          <Name>Text3</Name>
+          <Page isRef="3" />
+          <Parent isRef="3" />
+          <Text>Mr.\Mrs. : </Text>
+          <TextBrush>Black</TextBrush>
+          <VertAlignment>Center</VertAlignment>
+        </Text3>
+        <Text4 Ref="9" type="Text" isKey="true">
+          <Brush>Transparent</Brush>
+          <ClientRectangle>0.8,0.7,2.3,0.2</ClientRectangle>
+          <Conditions isList="true" count="0" />
+          <Font>Times New Roman,13</Font>
+          <Margins>0,0,0,0</Margins>
+          <Name>Text4</Name>
+          <Page isRef="3" />
+          <Parent isRef="3" />
+          <Text>{Customer.EngName}</Text>
+          <TextBrush>Black</TextBrush>
+        </Text4>
+        <Text5 Ref="10" type="Text" isKey="true">
+          <Brush>Transparent</Brush>
+          <ClientRectangle>0.8,1.2,1.3,0.2</ClientRectangle>
+          <Conditions isList="true" count="0" />
+          <Font>Times New Roman,10</Font>
+          <Margins>0,0,0,0</Margins>
+          <Name>Text5</Name>
+          <Page isRef="3" />
+          <Parent isRef="3" />
+          <Text>{Customer.ActiveDate}</Text>
+          <TextBrush>Black</TextBrush>
+          <TextFormat Ref="11" type="DateFormat" isKey="true" />
+        </Text5>
+        <Text6 Ref="12" type="Text" isKey="true">
+          <Brush>Transparent</Brush>
+          <ClientRectangle>0,1.2,0.8,0.2</ClientRectangle>
+          <Conditions isList="true" count="0" />
+          <Font>Times New Roman,10</Font>
+          <HorAlignment>Right</HorAlignment>
+          <Margins>0,0,0,0</Margins>
+          <Name>Text6</Name>
+          <Page isRef="3" />
+          <Parent isRef="3" />
+          <Text>Active Date : </Text>
+          <TextBrush>Black</TextBrush>
+        </Text6>
+        <Text7 Ref="13" type="Text" isKey="true">
+          <Brush>Transparent</Brush>
+          <ClientRectangle>0.8,1.4,1.3,0.2</ClientRectangle>
+          <Conditions isList="true" count="0" />
+          <Font>Times New Roman,10</Font>
+          <Margins>0,0,0,0</Margins>
+          <Name>Text7</Name>
+          <Page isRef="3" />
+          <Parent isRef="3" />
+          <Text>{Customer.CancelDate}</Text>
+          <TextBrush>Black</TextBrush>
+          <TextFormat Ref="14" type="DateFormat" isKey="true" />
+        </Text7>
+        <Text8 Ref="15" type="Text" isKey="true">
+          <Brush>Transparent</Brush>
+          <ClientRectangle>0,1.4,0.8,0.2</ClientRectangle>
+          <Conditions isList="true" count="0" />
+          <Font>Times New Roman,10</Font>
+          <HorAlignment>Right</HorAlignment>
+          <Margins>0,0,0,0</Margins>
+          <Name>Text8</Name>
+          <Page isRef="3" />
+          <Parent isRef="3" />
+          <Text>Expire Date : </Text>
+          <TextBrush>Black</TextBrush>
+        </Text8>
+        <Image1 Ref="16" type="Image" isKey="true">
+          <Brush>Transparent</Brush>
+          <ClientRectangle>2.2,0,0.9,0.6</ClientRectangle>
+          <Conditions isList="true" count="0" />
+          <Image>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</Image>
+          <Name>Image1</Name>
+          <Page isRef="3" />
+          <Parent isRef="3" />
+          <Stretch>True</Stretch>
+        </Image1>
+      </Components>
+      <Conditions isList="true" count="0" />
+      <Guid>4943e3149e474a71aaaedd38b5c3f7cd</Guid>
+      <Margins>0.2,0.2,0.2,0.2</Margins>
+      <Name>Page1</Name>
+      <PageHeight>2.5</PageHeight>
+      <PageWidth>3.5</PageWidth>
+      <Report isRef="0" />
+      <Watermark Ref="17" type="Stimulsoft.Report.Components.StiWatermark" isKey="true">
+        <Angle>0</Angle>
+        <Font>Times New Roman,85,Italic</Font>
+        <ImageStretch>True</ImageStretch>
+        <Text>Cosmo</Text>
+        <TextBrush>[50:0:0:0]</TextBrush>
+      </Watermark>
+    </Page1>
+  </Pages>
+  <PrinterSettings Ref="18" type="Stimulsoft.Report.Print.StiPrinterSettings" isKey="true" />
+  <ReferencedAssemblies isList="true" count="8">
+    <value>System.Dll</value>
+    <value>System.Drawing.Dll</value>
+    <value>System.Windows.Forms.Dll</value>
+    <value>System.Data.Dll</value>
+    <value>System.Xml.Dll</value>
+    <value>Stimulsoft.Controls.Dll</value>
+    <value>Stimulsoft.Base.Dll</value>
+    <value>Stimulsoft.Report.Dll</value>
+  </ReferencedAssemblies>
+  <ReportAlias>Report</ReportAlias>
+  <ReportChanged>6/15/2013 11:10:35 AM</ReportChanged>
+  <ReportCreated>6/15/2013 10:17:04 AM</ReportCreated>
+  <ReportFile>D:\Venus\VenusNet\Source\POS_NewVer\POS Source\POS\bin\CustomerCard.mrt</ReportFile>
+  <ReportGuid>80b9b4fc1a3e42299959242983d63920</ReportGuid>
+  <ReportName>Report</ReportName>
+  <ReportUnit>Inches</ReportUnit>
+  <ReportVersion>2010.1.700</ReportVersion>
+  <Script>using System;
+using System.Drawing;
+using System.Windows.Forms;
+using System.Data;
+using Stimulsoft.Controls;
+using Stimulsoft.Base.Drawing;
+using Stimulsoft.Report;
+using Stimulsoft.Report.Dialogs;
+using Stimulsoft.Report.Components;
+
+namespace Reports
+{
+    
+    public class Report : Stimulsoft.Report.StiReport
+    {
+        
+        public Report()
+        {
+            this.InitializeComponent();
+        }
+        #region StiReport Designer generated code - do not modify#endregion StiReport Designer generated code - do not modify
+    }
+}
+</Script>
+  <ScriptLanguage>CSharp</ScriptLanguage>
+  <Styles isList="true" count="0" />
+</StiSerializer>

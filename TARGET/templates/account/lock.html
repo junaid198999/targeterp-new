@@ -1,0 +1,67 @@
+{% extends "account/base.html" %}
+
+{% load i18n static %}
+{% load account socialaccount %}
+{% load crispy_forms_tags %}
+
+{% block head_title %}{% trans "Sign In" %}{% endblock %}
+
+{% block content %}
+
+<div class="account-pages mt-5 mb-5">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-md-8 col-lg-6 col-xl-5">
+                <div class="card bg-pattern">
+
+                    <div class="card-body p-4">
+
+                        <div class="text-center mb-4">
+                        <a href="/">
+                          <span><img src="{% static 'images/logo-light.png' %}" alt="" height="44"></span>
+                        </a>
+                        </div>
+
+                        <div class="text-center w-75 m-auto">
+                            <img src="{{ request.user.picture.url }}" height="88" alt="user-image" class="rounded-circle shadow">
+                            <h4 class="text-dark-50 text-center mt-3">{% trans "Hi !" %} {{ name }} </h4>
+                            <p class="text-muted mb-4">{% trans "Enter your password to access the system." %}</p>
+                        </div>
+
+
+                        <form class="login" method="POST" action="{% url 'account_login' %}" novalidate>
+                            {% csrf_token %}
+
+                            <div class="form-group mb-3">
+                                <label for="id_password">{% trans "Password?" %}</label>
+                                <input class="form-control" type="password" required="" id="id_password" placeholder="Enter your password">
+                                <input class="form-control" type="email" required="" id="id_email" value="{{email}}">
+                            </div>
+
+                            <div class="form-group mb-0 text-center">
+                                <button class="btn btn-primary btn-block" type="submit"> {% trans "Log In?" %} </button>
+                            </div>
+
+                        </form>
+
+                    </div> <!-- end card-body -->
+                </div>
+                <!-- end card -->
+                {% comment %}
+                <div class="row mt-3">
+                    <div class="col-12 text-center">
+                        <p class="text-white-50">{% trans "Not you? return" %} <a href="pages-login.html" class="text-white ml-1"><b>{% trans "Sign In" %}</b></a></p>
+                    </div> <!-- end col -->
+                </div>
+                {% endcomment %}
+                <!-- end row -->
+
+            </div> <!-- end col -->
+        </div>
+        <!-- end row -->
+    </div>
+    <!-- end container -->
+</div>
+<!-- end page -->
+
+{% endblock %}

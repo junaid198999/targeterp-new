@@ -1,0 +1,7 @@
+{% for customer in customers %}
+{% if customer.payment_terms  == 1  %}
+<option value="1">Cash</option>
+{% else  %}
+<option value="2">Credit</option>
+{% endif  %}
+{% endfor %}

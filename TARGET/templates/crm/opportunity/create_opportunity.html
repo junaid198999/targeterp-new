@@ -1,0 +1,317 @@
+{% extends "auth_base.html" %}
+{% load i18n %}
+{% load widget_tweaks %}
+{% load crispy_forms_tags %}
+{% block content %}
+<link href="/static/libs/select2/select2.min.css" rel="stylesheet" />
+{% comment %}
+<link href="/static/libs/bootstrap-datepicker/bootstrap-datepicker.min.css" rel="stylesheet" type="text/css" />
+{% endcomment %}
+
+<div class="container-fluid">
+    <!-- start page title -->
+    <div class="row">
+        <div class="col-12">
+            <div class="page-title-box">
+                <h4 class="page-title">{% trans "Create Opportunity" %}</h4>
+            </div>
+        </div>
+    </div>
+    <head>
+        <meta charset="utf-8" />
+        <title>opportunity_form</title>
+    </head>
+    <form id="OpportunityForm" action="" method="post">
+        {% csrf_token %}
+        <div class="{% if form.non_field_errors %}invalid{% endif %} ">
+          {% if form.non_field_errors %}
+            {{ error }}
+            {% endif %}
+        </div>
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="card">
+                    <div class="card-header bg-blue py-3 text-white" data-toggle="collapse" href="#cardCollpase1" role="button" aria-expanded="false" aria-controls="cardCollpase1">
+                            <div class="card-widgets">
+                                <a data-toggle="collapse" href="#cardCollpase1" role="button" aria-expanded="false" aria-controls="cardCollpase1"><i class="mdi mdi-minus"></i></a>
+                            </div>
+                            <div class="card-title mb-0 text-white" style="font-size:13, font-weight:500;line-height: 0px !important">{% trans "BASIC" %}</div>
+                    </div>
+                    <div class="card-body">
+                        <div id="cardCollpase1" class="collapse pt-3 show">
+
+                            <div class="row">
+                                <div class="form-group col-md-6 mb-0">
+                                    <div class="row">
+                                        <label class="col-3 col-form-label" style="padding-left: 30px; font-weight: 700;">{{form.name.label}}:</label>
+                                        <div class="col-8">
+                                            {{ form.name|as_crispy_field }}
+                                            <div class="{% if form.name.errors %} invalid{% endif %}">
+                                                {% if error in form.name.errors %}
+                                                    <p class="help-block">{{ error }}</p>
+                                                    {% endif %}
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-group col-md-6 mb-0">
+                                    <div class="row">
+                                        <label class="col-3 col-form-label" style="font-weight: 700;">{% trans "Source" %}:</label>
+                                            <div class="form-group col-md-3 mb-0">
+                                                <div id="customer_type_div">
+                                                    {{ form.source|as_crispy_field }}
+                                                </div>
+                                            </div>
+                                            <div class="form-group col-md-5 mb-0">
+                                                <div hidden id="customer_select">
+                                                    {{ form.customer|as_crispy_field }}
+                                                    <div class="{% if form.customer.errors %} invalid{% endif %}">
+                                                        {% if error in form.customer.errors %}
+                                                            <p class="help-block">{{ error }}</p>
+                                                            {% endif %}
+                                                    </div>
+                                                </div>
+                                                <div hidden id="lead_select">
+                                                    {{ form.lead|as_crispy_field }}
+                                                    <div class="{% if form.lead.errors %} invalid{% endif %}">
+                                                        {% if error in form.lead.errors %}
+                                                            <p class="help-block">{{ error }}</p>
+                                                            {% endif %}
+                                                    </div>
+                                                </div>
+                                            </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="form-group col-md-6 mb-0">
+                                    <div class="row">
+                                        <label class="col-3 col-form-label" style="padding-left: 30px; font-weight: 700;">{{form.amount.label}}:</label>
+                                        <div class="col-8">
+                                            {{ form.amount|as_crispy_field }}
+                                            <div class="{% if form.amount.errors %} invalid{% endif %}">
+                                                {% if error in form.amount.errors %}
+                                                    <p class="help-block">{{ error }}</p>
+                                                    {% endif %}
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-group col-md-6 mb-0">
+                                    <div class="row">
+                                        <label class="col-3 col-form-label" style="font-weight: 700;">{{form.closedate.label}}:</label>
+                                        <div class="col-8">
+                                             <input id="id_closedate1" name="closedate" type="date" class="form-control"/>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="form-group col-md-6 mb-0">
+                                    <div class="row">
+                                        <label class="col-3 col-form-label" style="padding-left: 30px; font-weight: 700;">{{form.type.label}}:</label>
+                                        <div class="col-8">
+                                            {{ form.type|as_crispy_field }}
+                                            <div class="{% if form.type.errors %} invalid{% endif %}">
+                                                {% if error in form.type.errors %}
+                                                    <p class="help-block">{{ error }}</p>
+                                                    {% endif %}
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-group col-md-6 mb-0">
+                                    <div class="row">
+                                        <label class="col-3 col-form-label" style="font-weight: 700;">{{form.lead_Source.label}}:</label>
+                                        <div class="col-8">
+                                            {{ form.lead_Source|as_crispy_field }}
+                                            <div class="{% if form.lead_Source.errors %} invalid{% endif %}">
+                                                {% if error in form.lead_Source.errors %}
+                                                    <p class="help-block">{{ error }}</p>
+                                                    {% endif %}
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </div>
+                            <div class="row">
+                                <div class="form-group col-md-6 mb-0">
+                                    <div class="row">
+                                        <label class="col-3 col-form-label" style="padding-left: 30px; font-weight: 700;">{{form.probability.label}}:</label>
+                                        <div class="col-8">
+                                            {{ form.probability|as_crispy_field }}
+                                            <div class="{% if form.probability.errors %} invalid{% endif %}">
+                                                {% if error in form.probability.errors %}
+                                                    <p class="help-block">{{ error }}</p>
+                                                    {% endif %}
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-group col-md-6 mb-0">
+                                    <div class="row">
+                                        <label class="col-3 col-form-label" style="font-weight: 700;">{{form.stage.label}}:</label>
+                                        <div class="col-8">
+                                            {{ form.stage|as_crispy_field }}
+                                            <div class="{% if form.stage.errors %} invalid{% endif %}">
+                                                {% if error in form.stage.errors %}
+                                                    <p class="help-block">{{ error }}</p>
+                                                    {% endif %}
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row mt-3">
+                                <div class="form-group col-md-6 mb-0">
+                                    <div class="row">
+                                        <label class="col-3 col-form-label" style="padding-left: 30px; font-weight: 700;">{{form.next_step.label}}:</label>
+                                        <div class="col-8">
+                                            {{ form.next_step|as_crispy_field }}
+                                            <div class="{% if form.next_step.errors %} invalid{% endif %}">
+                                                {% if error in form.next_step.errors %}
+                                                    <p class="help-block">{{ error }}</p>
+                                                    {% endif %}
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="form-group col-md-6 mb-0">
+                                    <div class="row">
+                                        <label class="col-3 col-form-label" style="padding-left: 30px; font-weight: 700;">{{form.description.label}}:</label>
+                                        <div class="col-8">
+                                            {{ form.description|as_crispy_field }}
+                                            <div class="{% if form.description.errors %} invalid{% endif %}">
+                                                {% if error in form.description.errors %}
+                                                    <p class="help-block">{{ error }}</p>
+                                                    {% endif %}
+                                            </div>
+                                        </div>
+                                        <div class="col-1">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="card">
+                    <div class="card-header bg-blue py-3 text-white" data-toggle="collapse" href="#cardCollpase3" role="button" aria-expanded="false" aria-controls="cardCollpase3">
+                            <div class="card-widgets">
+                                <a data-toggle="collapse" href="#cardCollpase3" role="button" aria-expanded="false" aria-controls="cardCollpase3"><i class="mdi mdi-minus"></i></a>
+                            </div>
+                            <div class="card-title mb-0 text-white" style="font-size:13, font-weight:500;line-height: 0px !important">{% trans "OTHER" %}</div>
+                    </div>
+                    <div class="card-body">
+                        <div id="cardCollpase3" class="collapse pt-3 show">
+                            <div class="row">
+                                <div class="form-group col-md-6 mb-0">
+                                    <div class="row">
+                                        <label class="col-3 col-form-label" style="padding-left: 30px; font-weight: 700;">{{form.salesman.label}}:</label>
+                                        <div class="col-8">
+                                            {{ form.salesman|as_crispy_field }}
+                                            <div class="{% if form.salesman.errors %} invalid{% endif %}">
+                                                {% if error in form.salesman.errors %}
+                                                    <p class="help-block">{{ error }}</p>
+                                                    {% endif %}
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
+            <div class="modal-footer">
+                <a class="btn btn-secondary waves-effect" href="{% url 'crm:opportunities' %}">{% trans "Cancel" %}</a>
+                <input type="submit" class="submit-btn btn-danger btn btn-primary" value="{% trans "Create" %}"/>
+            </div>
+
+    </form>
+
+</div>
+
+{% endblock %}
+
+{% block extra_javascript %}
+{% comment %}
+<script src="/static/libs/moment/moment.min.js"></script>
+<script src="/static/libs/bootstrap-datepicker/bootstrap-datepicker.min.js"></script>
+{% endcomment %}
+<script src="/static/libs/select2/select2.min.js"></script>
+
+
+<script type="text/javascript">
+        {% if request.user.is_superuser %}
+        {% else %}
+            $(`select[name="salesman"]`).html(
+            `<option selected value="{{salesmanid}}">{{salesmanname}}</option>`
+            );
+        {% endif %}
+
+        $('#id_customer').select2();
+        $('#id_salesman').select2();
+        $('#id_lead').select2();
+
+        $("#id_source").change(function () {
+            if ($("#id_source").val() == 2) {
+                $("#id_lead_Source").val(2)
+                $("#customer_select").attr('hidden',false)
+                $("#lead_select").attr('hidden',true)
+                $("#id_lead").val('').trigger('change');
+            } else if ($("#id_source").val() == 1) {
+                $("#id_lead_Source").val(0)
+                $("#lead_select").attr('hidden',false)
+                $("#customer_select").attr('hidden',true)
+                $("#id_customer").val('').trigger('change');
+            } else {
+                $("#id_lead_Source").val(0)
+                $("#lead_select").attr('hidden',true)
+                $("#customer_select").attr('hidden',true)
+                $("#id_lead").val('').trigger('change');
+                $("#id_customer").val('').trigger('change');
+
+            }
+
+        });
+
+{% comment %}
+      $(function () {
+        $("#datetimepicker1").datepicker({
+            format: 'yyyy/mm/dd',
+        });
+      });
+{% endcomment %}
+
+</script>
+
+<style>
+.card-header:first-child {
+    height: 28px !important;
+}
+h5.card-title.mb-0.text-white {
+    line-height: 0 !important;
+}
+.card-widgets {
+    line-height: 0 !important;
+}
+.card-widgets>a {
+    line-height: 0px !important;
+}
+</style>
+{% endblock %}

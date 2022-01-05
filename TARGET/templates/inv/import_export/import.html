@@ -1,0 +1,295 @@
+{% extends "auth_base.html" %}
+{% load i18n %}
+{% load widget_tweaks %}
+{% load widgets %}
+
+{% block content %}
+{% comment %}
+{% if messages %}}
+    {% for message in messages %}
+        <div>
+            <strong>{{message|safe}}</strong>
+        </div>
+    {% endfor %}
+{% endif %}
+{% endcomment %}
+    {% if LANGUAGE_CODE == 'ar' %}
+        <link href="/static/libs/select2/select2-rtl.min.css" rel="stylesheet" />
+    {% else %}
+        <link href="/static/libs/select2/select2.min.css" rel="stylesheet" />
+    {% endif %}
+<link href="/static/libs/sweetalert2/sweetalert2.min.css" rel="stylesheet" type="text/css" />
+    <div class="container-fluid">
+        <!-- start page title -->
+        <div class="row">
+            <div class="col-12">
+                <div class="page-title-box">
+                    <div class="page-title-right">
+                        <ol class="breadcrumb m-0">
+                            <li class="breadcrumb-item"><a href="/">TARGET</a></li>
+                            <li class="breadcrumb-item active">{% trans "Import" %}</li>
+                        </ol>
+                    </div>
+                    <h4 class="page-title">{% trans "Import" %}</h4>
+                </div>
+            </div>
+        </div>
+        <!-- end page title -->
+        {% if request.user.is_superuser %}
+
+        <div class="row" >
+            <div class="col-xl-12">
+                <div class="card">
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-12">
+                                <h4 class="header-title mb-0">{% trans "Import Source from .CSV file" %}</h4>
+                                <br>
+                                <form method="post" enctype="multipart/form-data" class="mt-3">
+                                    {% csrf_token %}
+                                    <span>{% blocktrans %}Select the source:{% endblocktrans %}</span>
+                                    <br>
+                                    <div class="form-group mb-3">
+                                        <select name="source" class="form-control" id="id_source" style="width:100%">
+                                            <option value="SystemLookUp">{% trans "System LookUp" %}</option>
+                                            <option value="Ledger">{% trans "Ledger" %}</option>
+                                            <option value="LedgerBalance">{% trans "Ledger Balances" %}</option>
+                                            <option value="APVendors">{% trans "AP Vendors" %}</option>
+                                            <option value="VendorBalance">{% trans "AP Vendors Balances" %}</option>
+                                            <option value="ARCustomers">{% trans "AR Customers" %}</option>
+                                            <option value="CustomerBalance">{% trans "AR Customers Balances" %}</option>
+
+                                        </select>
+                                    </div>
+                                    <span>{% blocktrans %}Select a file on your computer that contains the data that you would like to import, or download the template to get a head start on creating the import file.{% endblocktrans %}</span>
+                                    <br>
+                                    <div id="SystemLookUp_Div">
+                                        <a href="/media/import/SystemLookUp.csv">{% trans "Download Import File Template" %}</a>
+                                    </div>
+                                    <div id="Ledger_Div">
+                                        <a href="/media/import/Ledger.csv">{% trans "Download Import File Template" %}</a>
+                                    </div>
+                                    <div id="LedgerBalance_Div">
+                                        <a href="/media/import/LedgerBalance.csv">{% trans "Download Import File Template Ledger Balance" %}</a>
+                                    </div>
+                                    <div id="APVendors_Div">
+                                        <a href="/media/import/APVendors.csv">{% trans "Download Import File Template AP Vendors" %}</a>
+                                    </div>
+                                    <div id="APVendorBalance_Div">
+                                        <a href="/media/import/APVendorOpeningBalance.csv">{% trans "Download Import File Template AP Vendor Opening Balance" %}</a>
+                                    </div>
+                                    <div id="ARCustomers_Div">
+                                        <a href="/media/import/ARCustomers.csv">{% trans "Download Import File Template AR Customers" %}</a>
+                                    </div>
+                                    <div id="ARCustomerBalance_Div">
+                                        <a href="/media/import/ARCustomerOpeningBalance.csv">{% trans "Download Import File Template AR Customer Opening Balance" %}</a>
+                                    </div>
+
+                                    <br>
+                                    <br>
+                                    <div class="form-group mb-3">
+                                        <label for="example-fileinput">{% trans "Select file:" %}</label>
+                                        <input name="file" type="file" id="example-fileinput" class="form-control-file">
+                                    </div>
+
+                                    <div class="modal-footer">
+                                        <button class="btn btn-danger waves-effect waves-light" type="submit">
+                                            <i class="fe-upload mr-1"></i>{% trans "Import" %}
+                                        </button>
+                                        <a class="btn btn-secondary waves-effect waves-light md-2" href="{% url 'inv:import' %}">{% trans "Cancel" %}</a>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row" >
+            <div class="col-xl-12">
+                <div class="card">
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-xl-12 mt-3 mt-xl-0">
+                                <h4 class="header-title">{% trans "Import Instructions:" %}</h4>
+                                            <ul class="list-unstyled mt-3">
+                                                <li>
+                                                    - {% blocktrans %}This is a sample import file which provides an example of the expected contents of a file that is ready for import.{% endblocktrans %}
+                                                </li>
+                                                <li>
+                                                    - {% blocktrans %}The header row is the top-most row in the file and contains the field labels as you would see them in the application.{% endblocktrans %}
+                                                </li>
+                                                <li>
+                                                    - {% blocktrans %}These labels are used for mapping the data in the file to the fields in the application.{% endblocktrans %}
+                                                </li>
+                                                <li>
+                                                    - {% blocktrans %}The column order is critical{% endblocktrans %} <strong>{% trans "PLEASE DO NOT CHANGE IT." %}</strong>
+                                                </li>
+                                            </ul>
+
+
+                                <p class="sub-header">
+                                    {% blocktrans %}To use this file as a template, do the following:{% endblocktrans %}
+                                </p>
+
+
+                                <ol>
+                                    <li>
+                                        {% blocktrans %}Remove the sample rows of data{% endblocktrans %}
+                                    </li>
+                                    <li>
+                                        {% blocktrans %}Input your own data into the appropriate rows and columns{% endblocktrans %}
+                                    </li>
+                                    <li>
+                                        {% blocktrans %}Save the file to a known location on your system{% endblocktrans %}
+                                    </li>
+                                    <li>
+                                        {% blocktrans %}Click on Choose File button, choose  the CSV to upload file, then click on Upload.{% endblocktrans %}
+                                    </li>
+                                </ol>
+                            </div> <!-- end col -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% else %}
+        <div class="row" >
+            <div class="col-xl-12">
+                <div class="card">
+                    <div class="card-body">
+                            <STRONG> {% trans "You Don't have a permission to access this page." %} </STRONG>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endif %}
+
+    </div>
+{% endblock %}
+{% block extra_javascript %}
+<script src="/static/libs/select2/select2.min.js"></script>
+<script src="/static/libs/sweetalert2/sweetalert2.min.js"></script>
+<script type="text/javascript">
+$(function () {
+    $('#id_source').select2({
+        width: '100%',
+        templateSelection: function (data) {
+            if (data.id === '') {
+              return 'Select';
+            }
+        return data.text;
+        }
+    });
+});
+var LookUp = document.getElementById("SystemLookUp_Div");
+var led = document.getElementById("Ledger_Div");
+var ledbal = document.getElementById("LedgerBalance_Div");
+var APVend = document.getElementById("APVendors_Div");
+var vendbal = document.getElementById("APVendorBalance_Div");
+var ARCus = document.getElementById("ARCustomers_Div");
+var custbal = document.getElementById("ARCustomerBalance_Div");
+
+
+LookUp.style.display = "none";
+led.style.display = "none";
+ledbal.style.display = "none";
+APVend.style.display = "none";
+vendbal.style.display = "none";
+ARCus.style.display = "none";
+custbal.style.display = "none";
+
+
+$("#id_source").change(function () {
+    if ($("#id_source").val() == 'SystemLookUp') {
+        LookUp.style.display = "block";
+        led.style.display = "none";
+        ledbal.style.display = "none";
+        APVend.style.display = "none";
+        vendbal.style.display = "none";
+        ARCus.style.display = "none";
+        custbal.style.display = "none";
+
+    } else if ($("#id_source").val() == 'Ledger') {
+        led.style.display = "block";
+        LookUp.style.display = "none";
+        ledbal.style.display = "none";
+        APVend.style.display = "none";
+        vendbal.style.display = "none";
+        ARCus.style.display = "none";
+        custbal.style.display = "none";
+
+    } else if ($("#id_source").val() == 'LedgerBalance') {
+        ledbal.style.display = "block";
+        led.style.display = "none";
+        LookUp.style.display = "none";
+        APVend.style.display = "none";
+        vendbal.style.display = "none";
+        ARCus.style.display = "none";
+        custbal.style.display = "none";
+
+
+    } else if ($("#id_source").val() == 'APVendors') {
+        APVend.style.display = "block";
+        ledbal.style.display = "none";
+        led.style.display = "none";
+        LookUp.style.display = "none";
+        vendbal.style.display = "none";
+        ARCus.style.display = "none";
+        custbal.style.display = "none";
+
+    } else if ($("#id_source").val() == 'VendorBalance') {
+        vendbal.style.display = "block";
+        APVend.style.display = "none";
+        ledbal.style.display = "none";
+        led.style.display = "none";
+        LookUp.style.display = "none";
+        ARCus.style.display = "none";
+        custbal.style.display = "none";
+
+
+    } else if ($("#id_source").val() == 'ARCustomers') {
+        ARCus.style.display = "block";
+        vendbal.style.display = "none";
+        APVend.style.display = "none";
+        ledbal.style.display = "none";
+        led.style.display = "none";
+        LookUp.style.display = "none";
+        custbal.style.display = "none";
+
+    } else if ($("#id_source").val() == 'CustomerBalance') {
+        custbal.style.display = "block";
+        ARCus.style.display = "none";
+        vendbal.style.display = "none";
+        APVend.style.display = "none";
+        ledbal.style.display = "none";
+        led.style.display = "none";
+        LookUp.style.display = "none";
+    }
+
+});
+
+$(document).on("click", ":submit", function (e) {
+    if (!$('#example-fileinput').val()) {
+        Swal.fire({
+            type: "error",
+            title: "Oops...",
+            text: "{% trans 'Please select file' %}",
+            confirmButtonClass: "btn btn-confirm mt-2",
+        })
+        e.preventDefault();
+    }
+});
+{% if success == 1 %}
+        Swal.fire({
+            type: "success",
+            title: "Done",
+            text: "{% trans 'Leads uploaded Successfully' %}",
+            confirmButtonClass: "btn btn-confirm mt-2",
+        }).then(function(t){
+            location.href = '/inv/dataimport/';
+        })
+{% endif %}
+</script>
+{% endblock %}
+

@@ -1,0 +1,916 @@
+{% extends "auth_base.html" %}
+{% load i18n %}
+{% load django_tables2 %}
+{% load widget_tweaks %}
+{% load crispy_forms_tags %}
+{% block content %}
+{% load humanize %}
+<link href="/static/libs/select2/select2.min.css" rel="stylesheet" />
+<link href="/static/libs/sweetalert2/sweetalert2.min.css" rel="stylesheet" type="text/css" />
+<link href="/static/libs/dropify/dropify.min.css" rel="stylesheet">
+
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+
+<div class="container-fluid" >
+    <!-- start page title -->
+
+    <div class="row" style="position: fixed;top:70px;z-index:2; overflow: hidden;width: 100%; ">
+        <div class="col-7" >
+            <div class="page-title" style="background: #60b4fd;height:45px;text-align: left;padding-top: 1px;padding-left: 5px;">
+                <h4 class="page-title" style="margin:4px; font-size: 2rem;color: white;">{% trans "Create Item "  %} </h4>
+            </div>
+        </div>
+        <div class="col-5" >
+            <div class="buttons" style="margin-top:8px;float: left; ">
+                <input type="submit" id="create_id" form="LJForm" style="width: 105px;" class="submit-btn btn-danger btn btn-sm" value="{% trans "Save" %}"/>
+                <a style="width: 105px;" class="btn btn-secondary btn-lg btn-sm"  href={% url "in:list-items"  %}   >{% trans "Cancel" %}</a>
+
+           </div>
+        </div>
+
+    </div>
+
+
+    <head>
+        <meta charset="utf-8" />
+        <title>Item_form</title>
+    </head>
+    <div class="row">
+        <div class="col-xl-12">
+            <div class="card" style="top: 46px; ">
+                <div class="card-body" style="padding:0.5rem;padding-bottom: 0px;">
+                    <form  id="LJForm" action="" method="post"    novalidate enctype="multipart/form-data"  >
+                        {% csrf_token %}
+
+
+                        <table class="table table-bordered ">
+                            <div class="{% if form.non_field_errors %}invalid{% endif %} mb-2">
+                              {% if form.non_field_errors %}
+                                {{ error }}
+                                {% endif %}
+                            </div>
+                            <tbody style="background-color: white;">
+                                    <td colspan = "2" style="vertical-align: middle">
+                                        <div class="input-group">
+                                            <div class="form-group col-md-6 mb-0">
+                                                {{ form.code|as_crispy_field }}
+                                                <div class="{% if form.code.errors %} invalid{% endif %}">
+                                                    {% if error in form.code.errors %}
+                                                    <p class="help-block">{{ error }}</p>
+                                                    {% endif %}
+                                                </div>
+                                            </div>
+
+                                            <div class="form-group col-md-6 mb-0">
+                                                {{ form.barcode|as_crispy_field }}
+                                                <div class="{% if form.barcode.errors %} invalid{% endif %}">
+                                                    {% if error in form.barcode.errors %}
+                                                    <p class="help-block">{{ error }}</p>
+                                                    {% endif %}
+                                                </div>
+                                            </div>
+
+                                            <div class="form-group col-md-4 mb-0">
+                                                {{ form.engname|as_crispy_field }}
+                                                <div class="{% if form.engname.errors %} invalid{% endif %}">
+                                                    {% if error in form.engname.errors %}
+                                                    <p class="help-block">{{ error }}</p>
+                                                    {% endif %}
+                                                </div>
+                                            </div>
+
+                                            <div class="form-group col-md-4 mb-0">
+                                                {{ form.arbname|as_crispy_field }}
+                                                <div class="{% if form.arbname.errors %} invalid{% endif %}">
+                                                    {% if error in form.arbname.errors %}
+                                                    <p class="help-block">{{ error }}</p>
+                                                    {% endif %}
+                                                </div>
+                                            </div>
+
+                                            <div class="form-group col-md-2 mb-0">
+                                                {{ form.shortengname|as_crispy_field }}
+                                                <div class="{% if form.shortengname.errors %} invalid{% endif %}">
+                                                    {% if error in form.shortengname.errors %}
+                                                    <p class="help-block">{{ error }}</p>
+                                                    {% endif %}
+                                                </div>
+                                            </div>
+
+                                            <div class="form-group col-md-2 mb-0">
+                                                {{ form.shortarbname|as_crispy_field }}
+                                                <div class="{% if form.shortarbname.errors %} invalid{% endif %}">
+                                                    {% if error in form.shortarbname.errors %}
+                                                    <p class="help-block">{{ error }}</p>
+                                                    {% endif %}
+                                                </div>
+                                            </div>
+
+
+                                        </div>
+                                    </td>
+                                    <td colspan = "3" style="vertical-align: middle">
+                                        <div class="input-group">
+                                            <div class="form-group col-md-12 mb-0">
+
+                                                <div class="form-row">
+                                                      <div class="form-group col-md-12 mb-0">
+                                                        <label class="col-form-label">{% trans "Product Image" %}</label>
+                                                        <input type="file" id="id_image" name="image" class="dropify" data-height="190"/>
+                                                      </div>
+                                                </div>
+
+                                            </div>
+                                        </div>
+                                    </td>
+
+
+                            </tbody>
+                        </table>
+
+
+                        <div class="tab" role="tabpanel">
+                        <ul class="nav nav-tabs" role="tablist">
+                            <li  class="active"><a href="#general"   role="tab" aria-selected="true"  data-toggle="pill" >General</a></li>
+                            <li  ><a href="#info"  role="tab" data-toggle="tab">Info</a></li>
+                            <li  ><a href="#plan"  role="tab" data-toggle="tab">Plan</a></li>
+                            <li  ><a href="#medical"  role="tab" data-toggle="tab">Medical</a></li>
+                            <li  ><a href="#locations"  role="tab" data-toggle="tab">Locations</a></li>
+                            <li  ><a href="#units"  role="tab" data-toggle="tab">Units</a></li>
+                        </ul>
+                        </div>
+
+                        <div class="tab-content">
+                            <div id="general" class="tab-pane fade in active">
+                                    <table class="table table-bordered ">
+                                        <div class="{% if form.non_field_errors %}invalid{% endif %} mb-2">
+                                          {% if form.non_field_errors %}
+                                            {{ error }}
+                                            {% endif %}
+                                        </div>
+                                        <tbody style="background-color: white;">
+
+                                            <tr>
+                                                <td width="100%" colspan = "7">
+                                                    <div class="input-group" >
+
+                                                        <div class="form-group col-md-2 mb-0">
+                                                            {{ form.itemtype|as_crispy_field }}
+                                                            <div class="{% if form.itemtype.errors %} invalid{% endif %}">
+                                                                {% if error in form.itemtype.errors %}
+                                                                <p class="help-block">{{ error }}</p>
+                                                                {% endif %}
+                                                            </div>
+                                                        </div>
+
+
+                                                        <div class="form-group col-md-2 mb-0">
+                                                            {{ form.itemclass|as_crispy_field }}
+                                                            <div class="{% if form.itemclass.errors %} invalid{% endif %}">
+                                                                {% if error in form.itemclass.errors %}
+                                                                <p class="help-block">{{ error }}</p>
+                                                                {% endif %}
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="form-group col-md-2 mb-0" >
+                                                            {{ form.itemcategory|as_crispy_field }}
+                                                            <div class="{% if form.itemcategory.errors %} invalid{% endif %}">
+                                                                {% if error in form.itemcategory.errors %}
+                                                                <p class="help-block">{{ error }}</p>
+                                                                {% endif %}
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="form-group col-md-2 mb-0">
+                                                            {{ form.itemgroup|as_crispy_field }}
+                                                            <div class="{% if form.itemgroup.errors %} invalid{% endif %}">
+                                                                {% if error in form.itemgroup.errors %}
+                                                                <p class="help-block">{{ error }}</p>
+                                                                {% endif %}
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="form-group col-md-2 mb-0">
+                                                            {{ form.itembrand|as_crispy_field }}
+                                                            <div class="{% if form.itembrand.errors %} invalid{% endif %}">
+                                                                {% if error in form.itembrand.errors %}
+                                                                <p class="help-block">{{ error }}</p>
+                                                                {% endif %}
+                                                            </div>
+                                                        </div>
+
+
+                                                        <div class="form-group col-md-2 mb-0">
+                                                            {{ form.storagemethod|as_crispy_field }}
+                                                            <div class="{% if form.storagemethod.errors %} invalid{% endif %}">
+                                                                {% if error in form.storagemethod.errors %}
+                                                                <p class="help-block">{{ error }}</p>
+                                                                {% endif %}
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="form-group col-md-2 mb-0">
+                                                            {{ form.baseunit|as_crispy_field }}
+                                                            <div class="{% if form.baseunit.errors %} invalid{% endif %}">
+                                                                {% if error in form.baseunit.errors %}
+                                                                <p class="help-block">{{ error }}</p>
+                                                                {% endif %}
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="form-group col-md-2 mb-0">
+                                                            {{ form.noofpiece|as_crispy_field }}
+                                                            <div class="{% if form.noofpiece.errors %} invalid{% endif %}">
+                                                                {% if error in form.noofpiece.errors %}
+                                                                <p class="help-block">{{ error }}</p>
+                                                                {% endif %}
+                                                            </div>
+                                                        </div>
+                                                        <div class="form-group col-md-2 mb-0">
+                                                            {{ form.quantitydecimal|as_crispy_field }}
+                                                            <div class="{% if form.quantitydecimal.errors %} invalid{% endif %}">
+                                                                {% if error in form.quantitydecimal.errors %}
+                                                                <p class="help-block">{{ error }}</p>
+                                                                {% endif %}
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="form-group col-md-2 mb-0">
+                                                            {{ form.weight|as_crispy_field }}
+                                                            <div class="{% if form.weight.errors %} invalid{% endif %}">
+                                                                {% if error in form.weight.errors %}
+                                                                <p class="help-block">{{ error }}</p>
+                                                                {% endif %}
+                                                            </div>
+                                                        </div>
+                                                        <div class="form-group col-md-2 mb-0">
+                                                            {{ form.weightunit|as_crispy_field }}
+                                                            <div class="{% if form.weightunit.errors %} invalid{% endif %}">
+                                                                {% if error in form.weightunit.errors %}
+                                                                <p class="help-block">{{ error }}</p>
+                                                                {% endif %}
+                                                            </div>
+                                                        </div>
+
+
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td width="100%" colspan = "7">
+                                                    <div class="input-group">
+
+                                                        <div class="form-group col-md-2 mb-0">
+                                                            {{ form.status|as_crispy_field }}
+                                                            <div class="{% if form.status.errors %} invalid{% endif %}">
+                                                                {% if error in form.status.errors %}
+                                                                <p class="help-block">{{ error }}</p>
+                                                                {% endif %}
+                                                            </div>
+                                                        </div>
+
+
+                                                        <div class="form-group col-md-2 mb-0">
+                                                            {{ form.statuschangedby|as_crispy_field }}
+                                                            <div class="{% if form.statuschangedby.errors %} invalid{% endif %}">
+                                                                {% if error in form.statuschangedby.errors %}
+                                                                <p class="help-block">{{ error }}</p>
+                                                                {% endif %}
+                                                            </div>
+                                                        </div>
+
+
+                                                        <div class="form-group col-md-2 mb-0">
+                                                            {{ form.statusdate|as_crispy_field }}
+                                                            <div class="{% if form.statusdate.errors %} invalid{% endif %}">
+                                                                {% if error in form.statusdate.errors %}
+                                                                <p class="help-block">{{ error }}</p>
+                                                                {% endif %}
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="form-group col-md-2 mb-0">
+                                                            {{ form.statusreason|as_crispy_field }}
+                                                            <div class="{% if form.statusreason.errors %} invalid{% endif %}">
+                                                                {% if error in form.statusreason.errors %}
+                                                                <p class="help-block">{{ error }}</p>
+                                                                {% endif %}
+                                                            </div>
+                                                        </div>
+
+                                                    </div>
+                                                </td>
+                                            </tr>
+
+                                        </tbody>
+                                    </table>
+                            </div>
+
+                            <div id="info" class="tab-pane fade in active">
+                                    <table class="table table-bordered ">
+                                        <div class="{% if form.non_field_errors %}invalid{% endif %} mb-2">
+                                          {% if form.non_field_errors %}
+                                            {{ error }}
+                                            {% endif %}
+                                        </div>
+                                        <tbody style="background-color: white;">
+
+                                            <tr>
+                                                <td width="100%" colspan = "7">
+                                                    <div class="input-group" >
+                                                        <div class="form-group col-md-2 mb-0">
+                                                            {{ form.alertexpiredays|as_crispy_field }}
+                                                            <div class="{% if form.alertexpiredays.errors %} invalid{% endif %}">
+                                                                {% if error in form.alertexpiredays.errors %}
+                                                                <p class="help-block">{{ error }}</p>
+                                                                {% endif %}
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="form-group col-md-2 mb-0">
+                                                            {{ form.abccode|as_crispy_field }}
+                                                            <div class="{% if form.abccode.errors %} invalid{% endif %}">
+                                                                {% if error in form.abccode.errors %}
+                                                                <p class="help-block">{{ error }}</p>
+                                                                {% endif %}
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="form-group col-md-2 mb-0">
+                                                            {{ form.allowecommerce|as_crispy_field }}
+                                                            <div class="{% if form.allowecommerce.errors %} invalid{% endif %}">
+                                                                {% if error in form.allowecommerce.errors %}
+                                                                <p class="help-block">{{ error }}</p>
+                                                                {% endif %}
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="form-group col-md-2 mb-0">
+                                                            {{ form.taxgroupsale|as_crispy_field }}
+                                                            <div class="{% if form.taxgroupsale.errors %} invalid{% endif %}">
+                                                                {% if error in form.taxgroupsale.errors %}
+                                                                <p class="help-block">{{ error }}</p>
+                                                                {% endif %}
+                                                            </div>
+                                                        </div>
+                                                        <div class="form-group col-md-2 mb-0">
+                                                            {{ form.taxgroupsaleincludedprice|as_crispy_field }}
+                                                            <div class="{% if form.taxgroupsaleincludedprice.errors %} invalid{% endif %}">
+                                                                {% if error in form.taxgroupsaleincludedprice.errors %}
+                                                                <p class="help-block">{{ error }}</p>
+                                                                {% endif %}
+                                                            </div>
+                                                        </div>
+                                                        <div class="form-group col-md-2 mb-0">
+                                                            {{ form.taxgroupPurchase|as_crispy_field }}
+                                                            <div class="{% if form.taxgroupPurchase.errors %} invalid{% endif %}">
+                                                                {% if error in form.taxgroupPurchase.errors %}
+                                                                <p class="help-block">{{ error }}</p>
+                                                                {% endif %}
+                                                            </div>
+                                                        </div>
+                                                        <div class="form-group col-md-2 mb-0">
+                                                            {{ form.taxgroupPurchaseincludedprice|as_crispy_field }}
+                                                            <div class="{% if form.taxgroupPurchaseincludedprice.errors %} invalid{% endif %}">
+                                                                {% if error in form.taxgroupPurchaseincludedprice.errors %}
+                                                                <p class="help-block">{{ error }}</p>
+                                                                {% endif %}
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="form-group col-md-2 mb-0">
+                                                            {{ form.remarks|as_crispy_field }}
+                                                            <div class="{% if form.remarks.errors %} invalid{% endif %}">
+                                                                {% if error in form.remarks.errors %}
+                                                                <p class="help-block">{{ error }}</p>
+                                                                {% endif %}
+                                                            </div>
+                                                        </div>
+                                                            <div class="form-group col-md-2 mb-0">
+                                                                {{ form.ti|as_crispy_field }}
+                                                                <div class="{% if form.ti.errors %} invalid{% endif %}">
+                                                                    {% if error in form.ti.errors %}
+                                                                    <p class="help-block">{{ error }}</p>
+                                                                    {% endif %}
+                                                                </div>
+                                                            </div>
+                                                            <div class="form-group col-md-2 mb-0">
+                                                                {{ form.hi|as_crispy_field }}
+                                                                <div class="{% if form.hi.errors %} invalid{% endif %}">
+                                                                    {% if error in form.hi.errors %}
+                                                                    <p class="help-block">{{ error }}</p>
+                                                                    {% endif %}
+                                                                </div>
+                                                            </div>
+
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                            </div>
+
+                            <div id="plan" class="tab-pane fade in active">
+                                    {{ itemsseasonality.management_form }}
+                                    {{ form.id }}
+                                    <div class="row">
+                                        <div class="col-12">
+                                            <div class="sub-header">
+                                                <a style="float:right" class="buttonHolderpln" id="add-rowpln"></a>
+                                           </div>
+                                        </div>
+                                    </div>
+
+                                    <table id="table_pln_id" class="table table-bordered ">
+                                            <thead class="thead-light">
+                                                <tr>
+                                                    <th>{% trans "Area" %}</th>
+                                                    <th>{% trans "Quota " %}</th>
+                                                    <th>{% trans "M1" %}</th>
+                                                    <th>{% trans "M2" %}</th>
+                                                    <th>{% trans "M3" %}</th>
+                                                    <th>{% trans "M4" %}</th>
+                                                    <th>{% trans "M5" %}</th>
+                                                    <th>{% trans "M6" %}</th>
+                                                    <th>{% trans "M7" %}</th>
+                                                    <th>{% trans "M8" %}</th>
+                                                    <th>{% trans "M9" %}</th>
+                                                    <th>{% trans "M10" %}</th>
+                                                    <th>{% trans "M11" %}</th>
+                                                    <th>{% trans "M12" %}</th>
+
+                                                </tr>
+                                            </thead>
+                                            <tbody class="formset_rowpln">
+
+                                                {% for form in itemsseasonality %}
+                                                    {{ form.id }}
+
+                                                    <tr style="padding: 0px !important;" class="rowclass">
+                                                        <td style="padding: 0rem !important;width:300px;" >{{ form.area|as_crispy_field }}</td>
+                                                        <td style="padding: 0rem !important;width:100px;">{{ form.quotapercent|as_crispy_field }}</td>
+                                                        <td style="padding: 0rem !important;width:50px;">{{ form.m1|as_crispy_field }}</td>
+                                                        <td style="padding: 0rem !important;width:50px;">{{ form.m2|as_crispy_field }}</td>
+                                                        <td style="padding: 0rem !important;width:50px;">{{ form.m3|as_crispy_field }}</td>
+                                                        <td style="padding: 0rem !important;width:50px;">{{ form.m4|as_crispy_field }}</td>
+                                                        <td style="padding: 0rem !important;width:50px;">{{ form.m5|as_crispy_field }}</td>
+                                                        <td style="padding: 0rem !important;width:50px;">{{ form.m6|as_crispy_field }}</td>
+                                                        <td style="padding: 0rem !important;width:50px;">{{ form.m7|as_crispy_field }}</td>
+                                                        <td style="padding: 0rem !important;width:50px;">{{ form.m8|as_crispy_field }}</td>
+                                                        <td style="padding: 0rem !important;width:50px;">{{ form.m9|as_crispy_field }}</td>
+                                                        <td style="padding: 0rem !important;width:50px;">{{ form.m10|as_crispy_field }}</td>
+                                                        <td style="padding: 0rem !important;width:50px;">{{ form.m11|as_crispy_field }}</td>
+                                                        <td style="padding: 0rem !important;width:50px;">{{ form.m12|as_crispy_field }}</td>
+                                                        <td style="padding: 0rem !important;width:10px; text-align: center;"></td>
+                                                    </tr>
+                                                {% endfor %}
+                                            </tbody>
+
+                                    </table>
+                            </div>
+
+                            <div id="medical" class="tab-pane fade in active">
+                                    <table class="table table-bordered ">
+                                        <div class="{% if form.non_field_errors %}invalid{% endif %} mb-2">
+                                          {% if form.non_field_errors %}
+                                            {{ error }}
+                                            {% endif %}
+                                        </div>
+                                        <tbody style="background-color: white;">
+                                            <tr>
+                                                <td width="100%" colspan = "7">
+                                                    <div class="input-group" >
+                                                        <div class="form-group col-md-2 mb-0">
+                                                            {{ form.sfdaregno|as_crispy_field }}
+                                                            <div class="{% if form.sfdaregno.errors %} invalid{% endif %}">
+                                                                {% if error in form.sfdaregno.errors %}
+                                                                <p class="help-block">{{ error }}</p>
+                                                                {% endif %}
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="form-group col-md-2 mb-0">
+                                                            {{ form.genericname|as_crispy_field }}
+                                                            <div class="{% if form.genericname.errors %} invalid{% endif %}">
+                                                                {% if error in form.genericname.errors %}
+                                                                <p class="help-block">{{ error }}</p>
+                                                                {% endif %}
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="form-group col-md-2 mb-0">
+                                                            {{ form.dosageform|as_crispy_field }}
+                                                            <div class="{% if form.dosageform.errors %} invalid{% endif %}">
+                                                                {% if error in form.dosageform.errors %}
+                                                                <p class="help-block">{{ error }}</p>
+                                                                {% endif %}
+                                                            </div>
+                                                        </div>
+                                                        <div class="form-group col-md-2 mb-0">
+                                                            {{ form.strength|as_crispy_field }}
+                                                            <div class="{% if form.strength.errors %} invalid{% endif %}">
+                                                                {% if error in form.strength.errors %}
+                                                                <p class="help-block">{{ error }}</p>
+                                                                {% endif %}
+                                                            </div>
+                                                        </div>
+                                                        <div class="form-group col-md-2 mb-0">
+                                                            {{ form.instruction|as_crispy_field }}
+                                                            <div class="{% if form.instruction.errors %} invalid{% endif %}">
+                                                                {% if error in form.instruction.errors %}
+                                                                <p class="help-block">{{ error }}</p>
+                                                                {% endif %}
+                                                            </div>
+                                                        </div>
+                                                        <div class="form-group col-md-2 mb-0">
+                                                            {{ form.routeofadministration|as_crispy_field }}
+                                                            <div class="{% if form.routeofadministration.errors %} invalid{% endif %}">
+                                                                {% if error in form.routeofadministration.errors %}
+                                                                <p class="help-block">{{ error }}</p>
+                                                                {% endif %}
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="form-group col-md-2 mb-0">
+                                                            {{ form.lasa|as_crispy_field }}
+                                                            <div class="{% if form.lasa.errors %} invalid{% endif %}">
+                                                                {% if error in form.lasa.errors %}
+                                                                <p class="help-block">{{ error }}</p>
+                                                                {% endif %}
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="form-group col-md-2 mb-0">
+                                                            {{ form.highalter|as_crispy_field }}
+                                                            <div class="{% if form.highalter.errors %} invalid{% endif %}">
+                                                                {% if error in form.highalter.errors %}
+                                                                <p class="help-block">{{ error }}</p>
+                                                                {% endif %}
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="form-group col-md-2 mb-0">
+                                                            {{ form.controlled|as_crispy_field }}
+                                                            <div class="{% if form.controlled.errors %} invalid{% endif %}">
+                                                                {% if error in form.controlled.errors %}
+                                                                <p class="help-block">{{ error }}</p>
+                                                                {% endif %}
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="form-group col-md-2 mb-0">
+                                                            {{ form.aso|as_crispy_field }}
+                                                            <div class="{% if form.aso.errors %} invalid{% endif %}">
+                                                                {% if error in form.aso.errors %}
+                                                                <p class="help-block">{{ error }}</p>
+                                                                {% endif %}
+                                                            </div>
+                                                        </div>
+                                                        <div class="form-group col-md-2 mb-0">
+                                                            {{ form.prescribed|as_crispy_field }}
+                                                            <div class="{% if form.prescribed.errors %} invalid{% endif %}">
+                                                                {% if error in form.prescribed.errors %}
+                                                                <p class="help-block">{{ error }}</p>
+                                                                {% endif %}
+                                                            </div>
+                                                        </div>
+                                                        <div class="form-group col-md-2 mb-0">
+                                                            {{ form.multidosage|as_crispy_field }}
+                                                            <div class="{% if form.multidosage.errors %} invalid{% endif %}">
+                                                                {% if error in form.multidosage.errors %}
+                                                                <p class="help-block">{{ error }}</p>
+                                                                {% endif %}
+                                                            </div>
+                                                        </div>
+
+
+
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                            </div>
+
+                            <div id="locations" class="tab-pane fade in active">
+                                    {{ itemsinvlocations.management_form }}
+                                    {{ form.id }}
+                                    <div class="row">
+                                        <div class="col-12">
+                                            <div class="sub-header">
+                                                <a style="float:right" class="buttonHolderloc" id="add-rowloc"></a>
+                                           </div>
+                                        </div>
+                                    </div>
+                                    <table id="table_loc_id" class="table table-bordered table-hover table-sm mb-0"  >
+                                            <thead class="thead-light">
+                                                <tr>
+                                                    <th>{% trans "Location" %}</th>
+                                                    <th>{% trans "Bin Location" %}</th>
+                                                    <th>{% trans "Status" %}</th>
+
+                                                </tr>
+                                            </thead>
+                                            <tbody class="formset_rowloc">
+
+                                                {% for form in itemsinvlocations %}
+                                                    {{ form.id }}
+
+                                                    <tr style="padding: 0px !important;" class="rowclass">
+                                                        <td style="padding: 0rem !important;width:300px;" >{{ form.invlocation|as_crispy_field }}</td>
+                                                        <td style="padding: 0rem !important;width:100px;">{{ form.binlocation|as_crispy_field }}</td>
+                                                        <td style="padding: 0rem !important;width:100px;">{{ form.status|as_crispy_field }}</td>
+                                                        <td style="padding: 0rem !important;width:10px; text-align: center;"></td>
+                                                    </tr>
+                                                {% endfor %}
+                                            </tbody>
+                                    </table>
+                            </div>
+
+                            <div id="units" class="tab-pane fade in active">
+                                    {{ itemsuom.management_form }}
+                                    {{ form.id }}
+                                    <div class="row">
+                                        <div class="col-12">
+                                            <div class="sub-header">
+                                                <a style="float:right" class="buttonHolderuom" id="add-rowuom"></a>
+                                           </div>
+                                        </div>
+                                    </div>
+                                    <table id="table_uom_id" class="table table-bordered table-hover table-sm mb-0" >
+                                            <thead class="thead-light">
+                                                <tr>
+                                                    <th>{% trans "Unit" %}</th>
+                                                    <th>{% trans "Base Unit Factor" %}</th>
+                                                    <th>{% trans "Barcode" %}</th>
+
+                                                </tr>
+                                            </thead>
+                                            <tbody class="formset_rowuom">
+
+                                                {% for form in itemsuom %}
+                                                    {{ form.id }}
+
+                                                    <tr style="padding: 0px !important;" class="rowclass">
+                                                        <td style="padding: 0rem !important;width:300px;" >{{ form.unit|as_crispy_field }}</td>
+                                                        <td style="padding: 0rem !important;width:100px;">{{ form.baseunitfactor|as_crispy_field }}</td>
+                                                        <td style="padding: 0rem !important;width:100px;">{{ form.barcode|as_crispy_field }}</td>
+                                                        <td style="padding: 0rem !important;width:10px; text-align: center;"></td>
+                                                    </tr>
+                                                {% endfor %}
+                                            </tbody>
+                                    </table>
+                            </div>
+
+                            <br><br>
+                        </div>
+
+                    </form>
+
+                </div>
+            </div>
+        </div>
+    </div>
+    <button hidden type="button" class="btn btn-info btn-xs" id="sa-error">Click me</button>
+
+</div>
+{% endblock %}
+{% block extra_javascript %}
+
+<script src="/static/libs/select2/select2.min.js"></script>
+<script src="/static/dynamic_formsets/jquery.formset.js"></script>
+<script src="/static/django_select2/django_select2.js"></script>
+
+
+
+    <script src="/static/libs/select2/select2.min.js"></script>
+    <script src="/static/libs/dropify/dropify.min.js"></script>
+
+{{ event_formset.media }}
+<script type="text/javascript">
+
+
+
+$(document).ready(function(){
+  activaTab('general');
+});
+
+function activaTab(tab){
+  $('.nav-tabs a[href="#' + tab + '"]').tab('show');
+};
+
+
+
+
+$( "#id_uom" ).prop( "disabled", true );
+$(function () {
+    $('#id_category').select2({
+        width: '100%',
+        templateSelection: function (data) {
+            if (data.id === '') {
+              return 'Select';
+            }
+        return data.text;
+        }
+    });
+    $('#id_brand').select2({
+        width: '100%',
+        templateSelection: function (data) {
+            if (data.id === '') {
+              return 'Select';
+            }
+        return data.text;
+        }
+    });
+});
+
+
+var subtotalval = 0;
+function get_total(){
+        var subtotalfield1 = $(this).attr('name');
+        var subtotalval =  parseInt(subtotalval) + parseInt($("#id_m" + subtotalfield1).val());
+        var total = 0;
+        for (i = 0; i <= 12; i++){
+            if($("input[name=m" + i + "]").val()){
+                total += parseFloat($("input[name=m" + i + "]").val());
+            }
+            else{
+                total += 0;
+            }
+        }
+        $("#id_m_total").val(parseInt(total));
+};
+    $("input[name*='m']").change(function () {
+        get_total()
+    });
+
+
+$(function() {
+   $('#submitbtn').click(function() {
+    if(parseInt($("#id_m_total").val()) < 100){
+        alert('Total of Product Seasonality has to be equal to 100%');
+    }if(parseInt($("#id_m_total").val()) > 100){
+        alert('Total of Product Seasonality has to be equal to 100%');
+    }
+   });
+});
+
+    $(document).ready(function(){
+        // Basic
+        $('.dropify').dropify();
+
+        $('.dropify-fr').dropify({
+
+            messages: {
+                default: 'Drag and drop a file here or click',
+                replace: 'Drag and drop a file or click to replace',
+                remove:  'Remove',
+                error:   'Sorry, the file is too large'
+            }
+        });
+
+
+    });
+
+    $('#table_pln_id tbody').formset({
+    animateForms: true,
+    uiText: {
+        addPrompt: 'Add Area',         // Text used on the 'add a new form' control.
+        removePrompt: '',        // Text used on the 'delete this existing form' control.
+    },
+    addButtonHolder:'.buttonHolderpln',
+    addCssClass: "add-rowpln btn btn-primary waves-effect waves-light ",
+    deleteCssClass: "delete-row btn btn-danger waves-effect mdi mdi-close",
+    prefix: '{{ itemsseasonality.prefix }}',
+    });
+
+
+
+    $('#table_loc_id tbody').formset({
+    animateForms: true,
+    uiText: {
+        addPrompt: 'Add Location',         // Text used on the 'add a new form' control.
+        removePrompt: '',        // Text used on the 'delete this existing form' control.
+    },
+    addButtonHolder:'.buttonHolderloc',
+    addCssClass: "add-row btn btn-primary waves-effect waves-light ",
+    deleteCssClass: "delete-row btn btn-danger waves-effect mdi mdi-close",
+    prefix: '{{ itemsinvlocations.prefix }}',
+    });
+
+
+    $('#table_uom_id tbody').formset({
+    animateForms: true,
+    uiText: {
+        addPrompt: 'Add Unit',         // Text used on the 'add a new form' control.
+        removePrompt: '',        // Text used on the 'delete this existing form' control.
+    },
+    addButtonHolder:'.buttonHolderuom',
+    addCssClass: "add-row btn btn-primary waves-effect waves-light ",
+    deleteCssClass: "delete-row btn btn-danger waves-effect mdi mdi-close",
+    prefix: '{{ itemsuom.prefix }}',
+    });
+
+
+
+
+</script>
+
+<style type="text/css">
+
+.card-header:first-child {
+    height: 28px !important;
+}
+h5.card-title.mb-0.text-white {
+    line-height: 0 !important;
+}
+.card-widgets {
+    line-height: 0 !important;
+}
+.card-widgets>a {
+    line-height: 0px !important;
+}
+
+
+      a:hover,a:focus{
+    outline: none;
+    text-decoration: none;
+}
+.tab .nav-tabs{
+    position: relative;
+    border-bottom: none;
+}
+.tab .nav-tabs li{
+    margin-right: 3px;
+}
+.tab .nav-tabs li a{
+    padding: 15px 25px;
+    font-size: 15px;
+    font-weight: 600;
+    color: #22272c;
+    text-transform: uppercase;
+    background: #fff;
+    margin-right: 0;
+    border-radius: 0;
+    border: 1px solid #c9cba3;
+    position: relative;
+    transition: all 0.5s ease 0s;
+}
+.tab .nav-tabs li a:before{
+    content: "";
+    width: 100%;
+    height: 3px;
+    background: #c9cba3;
+    position: absolute;
+    top: 0;
+    left: 0;
+}
+.tab .nav-tabs li a:hover{
+    border: 1px solid #63d7d9;
+}
+.tab .nav-tabs li.active a{
+    border-color: #14c6c9;
+}
+.tab .nav-tabs li.active a:before{
+    background: #14c6c9;
+}
+.tab .tab-content{
+    font-size: 14px;
+    color: #808080;
+    line-height: 26px;
+    padding: 10px 0;
+    margin-top: 10px;
+}
+.tab .tab-content h3{
+    font-size: 22px;
+    color: #5b5a5a;
+}
+@media only screen and (max-width: 480px){
+    .tab .nav-tabs li{
+        width: 100%;
+        text-align: center;
+        margin-bottom: 8px;
+    }
+}
+
+
+
+.form-group {
+    margin-bottom: .1rem !important;
+}
+
+.delete-row{
+width: 30px;
+    height: 30px;
+    padding-left: 7px;
+    top: 4px;
+    padding-top: 4px;
+}
+
+
+</style>
+
+{% endblock %}
+
+

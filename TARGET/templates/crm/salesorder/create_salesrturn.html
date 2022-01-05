@@ -1,0 +1,376 @@
+{% extends "auth_base.html" %}
+{% load i18n %}
+{% load django_tables2 %}
+{% load widget_tweaks %}
+{% load crispy_forms_tags %}
+{% block content %}
+<link href="/static/libs/select2/select2.min.css" rel="stylesheet" />
+<div class="container-fluid">
+    <!-- start page title -->
+    <div class="row">
+        <div class="col-12">
+            <div class="page-title-box">
+                <h4 class="page-title">{% trans "Create Sales Return Order" %}</h4>
+            </div>
+        </div>
+    </div>
+    <head>
+        <meta charset="utf-8" />
+        <title>saleseorder_form</title>
+    </head>
+    <div class="row">
+        <div class="col-xl-12">
+            <div class="card">
+                <div class="card-body">
+                    <form data-customers-url="{% url 'crm:ajax_load_customers' %}" data-days-url="{% url 'crm:ajax_load_days' %}" data-unitprice-url="{% url 'crm:ajax_load_unitprice' %}" data-duedate-url="{% url 'crm:ajax_load_duedate' %}" data-salesman-url="{% url 'crm:ajax_load_saleman' %}" data-uom-url="{% url 'crm:ajax_load_uom' %}" id="SOForm" action="" method="post" >
+                        {{ salesproducts.management_form }}
+                        {% csrf_token %}
+                        {{ form.id }}
+                        <div class="row">
+                            <div class="col-12">
+                                <div class="sub-header">
+                                    <h5 class="page-title">{% trans "Sales Return Order Details" %}</h5>
+                                </div>
+                            </div>
+                        </div>
+
+                        <table class="table table-bordered ">
+                            <div class="{% if form.non_field_errors %}invalid{% endif %} mb-2">
+                              {% if form.non_field_errors %}
+                                {{ error }}
+                                {% endif %}
+                            </div>
+                            <tbody style="background-color: white;">
+                                <tr>
+                                    <td  width="70%" colspan = "7">
+                                        <div class="input-group">
+                                            <div class="col-2" style="padding-right:0px; padding-left:0px">
+                                                    <label class="col-form-label" id="">{% trans "Customer" %}</label>
+                                            </div>
+
+                                            <div class="col-10">
+                                                <span class="form-control">{{form.instance.customer}}</span>
+                                            </div>
+                                            <div hidden class="col-10">
+                                                {{ form.customer }}
+                                            </div>
+                                        </div>
+                                        <div class="input-group" style="margin-top: 4%">
+                                            <div class="col-2" style="padding-right:0px; padding-left:0px">
+                                                    <label class="col-form-label" id="">{% trans "Salesman" %}</label>
+                                            </div>
+                                            <div class="col-4">
+                                                <select type="text" name="salesman1" id="id_salesman1" class="form-control" value="{{ form.salesman }}
+                                                </select>
+                                            </div>
+                                            <div class="col-2" style="padding-right:0px; padding-left:0px">
+                                                    <label class="col-form-label" id="">{% trans "Warehouse" %}</label>
+                                            </div>
+                                            <div hidden class="col-4">
+                                                <select  name="salesman" id="id_salesman" class="form-control" value="{{ form.salesman }}">
+                                                </select>
+                                            </div>
+                                            <div class="col-4">
+                                                <select name="warehouse" id="warehouse_id" class="form-control" value="{{ form.warehouse }}
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div class="input-group" style="margin-top: 4%">
+                                            <div hidden class="col-10">
+                                                {{ form.payment_terms }}
+                                            </div>
+                                            <div hidden class="col-10">
+                                                {{ form.payment_days }}
+                                            </div>
+                                        </div>
+
+                                    </td>
+                                    <td colspan = "3">
+                                        <div class="input-group">
+                                            <div class="input-group-prepend">
+                                                <span class="input-group-text" id="basic-addon1">{% trans "SO No" %}</span>
+                                            </div>
+                                            <INPUT TYPE="TEXT" NAME="id" class="form-control" value="{{ form.instance.pk }}" disabled >
+                                        </div>
+                                            <div hidden class="col-10">
+                                                {{ form.duedate }}
+                                            </div>
+                                            <div class="col-10">
+                                                {{ form.returned }}
+                                            </div>
+                                    </td>
+                                </tr>
+
+                                <tr>
+                                    <td colspan = "10" style="vertical-align: middle">
+                                        <div class="input-group">
+                                            <div class="input-group-prepend">
+                                                <span class="input-group-text" id="basic-addon11">{% trans "Subject" %}</span>
+                                            </div>
+                                            <INPUT TYPE="TEXT" id="id_subject" NAME="subject" class="form-control" data-value="{{ form.subject }}
+                                        </div>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        <div class="row">
+                            <div class="col-12">
+                                <div class="sub-header">
+                                    <h5 class="page-title">{% trans "Product Details" %}</h5>
+                                    <a style="float:right" class="buttonHolder" id="add-row"></a>
+                               </div>
+                            </div>
+                        </div>
+                        <table id="table_id" class="table table-bordered table-hover table-sm mb-0">
+                                <thead class="thead-light">
+                                    <tr>
+                                        <th>{% trans "Product" %}</th>
+                                        <th>{% trans "Qty" %}</th>
+                                        <th>{% trans "Price" %}</th>
+                                        <th>{% trans "Unit" %}</th>
+                                        <th hidden>UOM</th>
+                                        <th>{% trans "Discount" %}</th>
+                                        <th>{% trans "Subtotal" %}</th>
+                                        <th style="text-align: center">{% trans "Delete" %}</th>
+                                    </tr>
+                                </thead>
+                                <tbody class="formset_row">
+                                    {% for form in salesproducts %}
+                                        {{ form.id }}
+                                        <tr style="padding: 0px !important;" class="rowclass">
+                                                <td style="padding: 0rem !important;width:300px;" ><span class="form-control">{{form.instance.product}}</span></td>
+
+                                                <td hidden style="padding: 0rem !important;width:300px;" >{{ form.product }}</td>
+                                                <td style="padding: 0rem !important;width:100px;">{{ form.qty|as_crispy_field }}</td>
+                                                <td style="padding: 0rem !important;width:100px;">{{ form.price|as_crispy_field }}</td>
+                                                <td style="padding: 0rem !important;width:100px;">{{ form.uom|as_crispy_field }}</td>
+                                                <td style="padding: 0rem !important;width:70px;">{{ form.discount|as_crispy_field }}</td>
+                                                <td style="padding: 0rem !important;width:100px;">{{ form.subtotal|as_crispy_field }}</td>
+                                                <td class="checkbox checkbox-danger checkbox-single" style="width:20px;text-align: center">
+                                                    {{ form.deleted }}<label></label>
+                                                </td>
+
+
+                                        </tr>
+                                                <div hidden>{{ form.DELETE }}</div>
+                                    {% endfor %}
+                                </tbody>
+                                <tr>
+                                    <td colspan="5"><b class="float-right">{% trans "Total:" %} </b></td>
+                                    <td style="padding: 0rem" colspan="1"><INPUT TYPE="number" id="id_total" NAME="total" placeholder="total" class="form-control" data-value="{{form.total}}</td>
+                                </tr>
+                        </table>
+
+
+                        <br><br>
+                        <div class="modal-footer">
+                            <a class="btn btn-secondary waves-effect" href="{% url 'crm:salesorder' %}">{% trans "Cancel" %}</a>
+                            <input type="submit" class="submit-btn btn-danger btn btn-primary" value="{% trans "Create" %}"/>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_javascript %}
+
+<script src="/static/dynamic_formsets/jquery.formset.js"></script>
+    <script src="/static/libs/select2/select2.min.js"></script>
+<script src="/static/django_select2/django_select2.js"></script>
+
+<script type="text/javascript">
+
+$("input[name=returned]").prop("checked",true);
+var subtotalval = 0;
+    var dayss = 30;
+    $("#id_customer").change(function () {
+          var url = $("#SOForm").attr("data-customers-url");
+          var customerId = $(this).val();
+
+          $.ajax({
+                url: url,
+                data: {
+                    'customer': customerId
+                    },
+                    success: function (data) {
+                        $("#id_payment_terms").html(data);
+                        $("#id_payment_terms1").html(data);
+                }
+          });
+
+
+          var urldd = $("#SOForm").attr("data-duedate-url");
+          $.ajax({
+                url: urldd,
+                data: {
+                    'customer': customerId
+                    },
+                    success: function (data) {
+                        $("#id_dueddate").val(data);
+                }
+          });
+
+          var url1 = $("#SOForm").attr("data-days-url");
+          $.ajax({
+                url: url1,
+                data: {
+                    'customer': customerId
+                    },
+                    success: function (data) {
+                        $("#id_payment_days").val(data);
+                }
+          });
+
+          var url2 = $("#SOForm").attr("data-salesman-url");
+          $.ajax({
+                url: url2,
+                data: {
+                    'customer': customerId
+                    },
+                    success: function (data) {
+                        $("#id_salesman1").html(data);
+                        $("#id_salesman").html(data);
+                }
+          });
+
+    });
+$( "#id_customer1" ).prop( "disabled", true );
+
+$('#id_payment_days').attr('readonly', true);
+$( "#id_salesman1" ).prop( "disabled", true );
+$('#id_total').attr('readonly', true);
+
+var subtotalval = 0;
+function get_total(){
+        var subtotalfield1 = $(this).attr('name').replace('-qty', '-subtotal');
+        subtotalval = parseInt(subtotalval) + parseInt($("#id_"+subtotalfield1).val());
+
+        var id = parseInt($('#id_salesproduct_set-TOTAL_FORMS').val());
+        var total = 0;
+        for (i = 0; i <= parseInt(id); i++){
+            if($("input[name=salesproduct_set-" + i + "-subtotal]").val()){
+                total += parseFloat($("input[name=salesproduct_set-" + i + "-subtotal]").val());
+            }
+            else{
+                total += 0;
+            }
+        }
+        $("#id_total").val(parseInt(total));
+
+};
+    $("[id*=-deleted]").change(function () {
+        var deletedfield = $(this).attr('name').replace('-deleted', '-DELETE');
+        var subtotalfield = $(this).attr('name').replace('-deleted', '-subtotal');
+        var grangtotal = $("#id_total").val();
+
+
+        if ($("#id_"+$(this).attr('name')).prop('checked')) {
+            $("input[name=" + deletedfield + "]").prop("checked",true);
+            $("#id_total").val(parseInt(grangtotal)-parseInt($("#id_"+subtotalfield).val()));
+        }
+        else {
+            $("input[name=" + deletedfield + "]").prop("checked",false);
+            $("#id_total").val(parseInt(grangtotal)+parseInt($("#id_"+subtotalfield).val()));
+        }
+
+    });
+
+    $("input[name*='qty']").change(function () {
+        var newElement = $('formset_row').clone(true);
+        var subtotalfield = $(this).attr('name').replace('-qty', '-subtotal');
+        var uom1field = $(this).attr('name').replace('-qty', '-uoom');
+        var pricefield = $(this).attr('name').replace('-qty', '-price');
+        var discountfield = $(this).attr('name').replace('-qty', '-discount');
+
+        var deletedfield = $(this).attr('name').replace('-qty', '-deleted');
+        var id = parseInt($('#id_salesproduct_set-TOTAL_FORMS').val());
+        for (i = 0; i <= parseInt(id); i++){
+            $("input[name=salesproduct_set-" + i + "-deleted]").prop("checked",false);
+            $("input[name=salesproduct_set-" + i + "-DELETE]").prop("checked",false);
+
+        }
+
+        var subtotalsum = 0;
+            subtotalsum = subtotalsum + parseInt($(this).val() * $("#id_"+pricefield).val() - $("#id_"+discountfield).val());
+
+
+        $("#id_"+subtotalfield).val(subtotalsum);
+        get_total()
+    });
+    $("input[name*='price']").change(function () {
+        var newElement = $('formset_row').clone(true);
+        var subtotalfield = $(this).attr('name').replace('-price', '-subtotal');
+        var discountfield = $(this).attr('name').replace('-price', '-discount');
+        var qtyfield = $(this).attr('name').replace('-price', '-qty');
+
+        var deletedfield = $(this).attr('name').replace('-qty', '-deleted');
+        var id = parseInt($('#id_salesproduct_set-TOTAL_FORMS').val());
+        for (i = 0; i <= parseInt(id); i++){
+            $("input[name=salesproduct_set-" + i + "-deleted]").prop("checked",false);
+            $("input[name=salesproduct_set-" + i + "-DELETE]").prop("checked",false);
+        }
+
+        var subtotalsum = 0;
+            subtotalsum = subtotalsum + parseInt($(this).val() * $("#id_"+qtyfield).val() - $("#id_"+ discountfield).val());
+        $("#id_"+subtotalfield).val(subtotalsum);
+        get_total()
+    });
+
+    $("input[name*='discount']").change(function () {
+        var newElement = $('formset_row').clone(true);
+        var subtotalfield = $(this).attr('name').replace('-discount', '-subtotal');
+        var pricefield = $(this).attr('name').replace('-discount', '-price');
+        var qtyfield = $(this).attr('name').replace('-discount', '-qty');
+
+        var deletedfield = $(this).attr('name').replace('-qty', '-deleted');
+        var id = parseInt($('#id_salesproduct_set-TOTAL_FORMS').val());
+        for (i = 0; i <= parseInt(id); i++){
+            $("input[name=salesproduct_set-" + i + "-deleted]").prop("checked",false);
+            $("input[name=salesproduct_set-" + i + "-DELETE]").prop("checked",false);
+        }
+
+        var subtotalsum = 0;
+            subtotalsum = subtotalsum + parseInt( $("#id_"+pricefield).val() * $("#id_"+qtyfield).val() - $(this).val());
+        $("#id_"+subtotalfield).val(subtotalsum);
+        get_total()
+    });
+
+
+    $('.formset_row').formset({
+        animateForms: true,
+        uiText: {
+            addPrompt: 'Add Product',         // Text used on the 'add a new form' control.
+            removePrompt: '',        // Text used on the 'delete this existing form' control.
+        },
+        addButtonHolder:'.buttonHolder',
+        addCssClass: "add-row btn btn-primary waves-effect waves-light",
+        deleteCssClass: "delete-row btn btn-danger waves-effect mdi mdi-close",
+        prefix: '{{ salesproducts.prefix }}',
+        callbacks: {
+            onAdd: function () {
+                 $("[name*=-product]").select2();
+                 $("[name*=uoom]").select2();
+            },
+            onRemove: function () {
+                 get_total();
+            }
+        },
+    });
+
+
+
+</script>
+<style>
+a.delete-row.btn.btn-danger.waves-effect.mdi.mdi-close {
+    display: none;
+}
+a.add-row.btn.btn-primary.waves-effect.waves-light {
+    display: none;
+}
+
+</style>
+
+{% endblock %}

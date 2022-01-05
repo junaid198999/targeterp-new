@@ -1,0 +1,31 @@
+[0;1;32m●[0m nginx.service - A high performance web server and a reverse proxy server
+     Loaded: loaded (/lib/systemd/system/nginx.service; enabled; vendor preset: enabled)
+     Active: [0;1;32mactive (running)[0m since Wed 2021-06-23 03:56:05 CEST; 8h ago
+       Docs: man:nginx(8)
+    Process: 24174 ExecStartPre=/usr/sbin/nginx -t -q -g daemon on; master_process on; (code=exited, status=0/SUCCESS)
+    Process: 24179 ExecStart=/usr/sbin/nginx -g daemon on; master_process on; (code=exited, status=0/SUCCESS)
+    Process: 30999 ExecReload=/usr/sbin/nginx -g daemon on; master_process on; -s reload (code=exited, status=0/SUCCESS)
+   Main PID: 24180 (nginx)
+      Tasks: 13 (limit: 57766)
+     Memory: 17.3M
+     CGroup: /system.slice/nginx.service
+             ├─24180 nginx: master process /usr/sbin/nginx -g daemon on; master_process on;
+             ├─31649 nginx: worker process
+             ├─31650 nginx: worker process
+             ├─31651 nginx: worker process
+             ├─31652 nginx: worker process
+             ├─31653 nginx: worker process
+             ├─31654 nginx: worker process
+             ├─31655 nginx: worker process
+             ├─31656 nginx: worker process
+             ├─31657 nginx: worker process
+             ├─31658 nginx: worker process
+             ├─31659 nginx: worker process
+             └─31660 nginx: worker process
+
+Jun 23 03:56:05 vmi608411.contaboserver.net systemd[1]: Starting A high performance web server and a reverse proxy server...
+Jun 23 03:56:05 vmi608411.contaboserver.net systemd[1]: Started A high performance web server and a reverse proxy server.
+Jun 23 03:56:13 vmi608411.contaboserver.net systemd[1]: Reloading A high performance web server and a reverse proxy server.
+Jun 23 03:56:13 vmi608411.contaboserver.net systemd[1]: Reloaded A high performance web server and a reverse proxy server.
+Jun 23 11:30:08 vmi608411.contaboserver.net systemd[1]: Reloading A high performance web server and a reverse proxy server.
+Jun 23 11:30:08 vmi608411.contaboserver.net systemd[1]: Reloaded A high performance web server and a reverse proxy server.

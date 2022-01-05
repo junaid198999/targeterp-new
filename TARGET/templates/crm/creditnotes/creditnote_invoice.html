@@ -1,0 +1,120 @@
+{% extends "auth_base.html" %}
+{% load widgets %}
+{% load i18n %}
+{% load humanize %}
+{% block content %}
+
+                <div class="content">
+
+                    <!-- Start Content-->
+                    <div class="container-fluid">
+                        
+                        <!-- start page title -->
+                        <div class="row">
+                            <div class="col-12">
+                                <div class="page-title-box">
+                                    <div class="page-title-right">
+                                        <ol class="breadcrumb m-0">
+                                            <li class="breadcrumb-item"><a href="javascript: void(0);">TARGET</a></li>
+                                            <li class="breadcrumb-item"><a href="javascript: void(0);">Credit Note</a></li>
+                                            <li class="breadcrumb-item active">Invoice</li>
+                                        </ol>
+                                    </div>
+                                    <h4 class="page-title">{% trans "Credit Note Voucher" %}</h4>
+                                </div>
+                            </div>
+                        </div>     
+                        <!-- end page title --> 
+                        {% for Company in logo %}
+
+                        <div class="row">
+                            <div class="col-12">
+                                <div class="card-box">
+                                    <!-- Logo & title -->
+                                    <div class="clearfix">
+                                        <div class="float-left">
+                                                {% if Company.logo %}
+                                                    <img src="{{ Company.logo.url }}" alt="" height="40">
+                                                {% else %}
+                                                    <img src="/static/images/logo-light.png" alt="" height="40">
+                                                {% endif %}
+                                        </div>
+                                        <div class="float-right">
+                                            <h4 class="m-0 ">{% trans "Credit Note Voucher" %} </h4>
+                                        </div>
+                                    </div>
+                                    <br>
+                                    <br>
+                                    <div class="row">
+                                        <div class="col-md-3">
+                                            <div class="mt-3">
+                                                <p>{% trans "Received from Mr./M/s." %}</p>
+                                                <p >{% trans "The sum of" %} </p>
+                                                <p >{% trans "Description" %} </p>
+                                            </div>
+        
+                                        </div>
+                                        <div class="col-md-5">
+                                            <div class="mt-3">
+                                                <p style="background: aliceblue;"><b style="font-weight: 700;font-size: larger;">{{form.instance.customer}}</b></p>
+                                                <p style="background: aliceblue;"><b style="font-weight: 600;font-size: medium;">{{ total|title  }}</b></p>
+                                                <p style="background: aliceblue;"><b style="font-weight: 600;font-size: medium;">{{ form.instance.description  }}</b></p>
+                                            </div>
+
+                                        </div>
+                                        <div class="col-md-3 offset-md-1">
+                                            <div class="mt-3 float-right">
+                                                <p class="m-b-10"><strong>{% trans "Credit Note Date :" %} </strong> <span class="float-right"> &nbsp;&nbsp;&nbsp;&nbsp; {{form.instance.created_date|date:"Y-m-d"}}</span></p>
+                                                <p class="m-b-10"><strong>{% trans "Credit Note No. :" %} </strong> <span class="float-right">{{form.instance.pk}} </span></p>
+                                                <p class="m-b-10"><strong>{% trans "Amount :" %} </strong><b class="float-right" style="font-weight: 700;font-size: larger;">{{ form.instance.amount|intcomma:False|currency  }}</b></p>
+
+                                            </div>
+                                        </div><!-- end col -->
+                                    </div>
+                                    <br>
+                                    <br>
+                                    <div class="row mt-3">
+                                        <div class="col-sm-6">
+                                            <h6>{% trans "Accountant" %} ....................................</h6>
+                                        </div> <!-- end col -->
+
+                                        <div class="col-sm-6">
+                                            <h6>{% trans "Receiver's Sign" %} ....................................</h6>
+                                        </div> <!-- end col -->
+                                    </div>
+
+                                    <div class="row">
+                                        <div class="col-sm-6">
+                                            <div class="clearfix pt-5">
+                                                <h6 class="text-muted">{% trans "Notes:" %}</h6>
+        
+                                                <small class="text-muted">
+                                                    {{Company.creditnote_footer}}
+                                                </small>
+                                            </div>
+                                        </div> <!-- end col -->
+                                    </div>
+                                    <!-- end row -->
+        
+                                    <div class="mt-4 mb-1">
+                                        <div class="text-right d-print-none">
+                                            <a href="javascript:window.print()" class="btn btn-blue waves-effect waves-light"><i class="mdi mdi-printer mr-1"></i> {% trans "Print" %}</a>
+                                            <a class="btn btn-secondary waves-effect" href="{% url 'crm:creditnotes' %}">{% trans "Close" %}</a>
+                                        </div>
+                                    </div>
+                                </div> <!-- end card-box -->
+                            </div> <!-- end col -->
+                        </div>
+                        <!-- end row --> 
+                        {% endfor %}
+
+                    </div> <!-- container -->
+
+                </div> <!-- content -->
+
+
+{% endblock %}
+
+
+{% block extra_javascript %}
+{% endblock %}

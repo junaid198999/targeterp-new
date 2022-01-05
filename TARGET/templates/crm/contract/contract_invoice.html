@@ -1,0 +1,196 @@
+{% extends "auth_base.html" %}
+{% load widgets %}
+{% load i18n %}
+{% load humanize %}
+{% block content %}
+
+                <div class="content">
+
+                    <!-- Start Content-->
+                    <div class="container-fluid">
+                        
+                        <!-- start page title -->
+                        <div class="row">
+                            <div class="col-12">
+                                <div class="page-title-box">
+                                    <div class="page-title-right">
+                                        <ol class="breadcrumb m-0">
+                                            <li class="breadcrumb-item"><a href="/">TARGET</a></li>
+                                            <li class="breadcrumb-item"><a href="javascript: void(0);">{% trans "Contract" %}</a></li>
+                                            <li class="breadcrumb-item active">{% trans "Contract" %}</li>
+                                        </ol>
+                                    </div>
+                                    <h4 class="page-title">{% trans "Contract" %}</h4>
+                                </div>
+                            </div>
+                        </div>     
+                        <!-- end page title --> 
+
+                        {% for Company in logo %}
+                        <div class="row">
+                            <div class="col-12">
+                                <div class="card-box">
+                                    <!-- Logo & title -->
+                                    <div class="clearfix">
+                                        <div class="float-left">
+                                            {% for Company in logo %}
+                                                {% if  Company.logo %}
+                                                    <img src="{{ Company.logo.url }}" alt="" height="40">
+                                                {% else %}
+                                                    <img src="/static/images/logo-light.png" alt="" height="40">
+                                                {% endif %}
+                                            {% endfor %}
+                                        </div>
+                                        <div class="float-right">
+                                            <h4 class="m-0 ">{% trans "Contract" %}</h4>
+                                        </div>
+                                    </div>
+        
+                                    <div class="row">
+                                        <div class="col-md-3">
+                                            <div class="mt-3">
+                                                <p><b>{% trans "Hello," %} </b></p>
+                                                <p class="text-muted">{{Company.contract_header}}</p>
+                                            </div>
+        
+                                        </div><!-- end col -->
+                                        <div class="col-md-3 offset-md-2">
+                                            <div class="mt-3 float-right">
+                                                <p class="m-b-10"><strong>{% trans "Target 1 Discount :" %} </strong> <span class="float-right"> &nbsp;&nbsp;&nbsp;&nbsp; {{form.instance.target1_discount}}</span></p>
+                                                <p class="m-b-10"><strong>{% trans "Target 2 Discount :" %} </strong> <span class="float-right">{{form.instance.target2_discount}}</span></p>
+                                                <p class="m-b-10"><strong>{% trans "Target 3 Discount :" %} </strong> <span class="float-right">{{form.instance.target3_discount}}</span></p>
+                                            </div>
+                                        </div><!-- end col -->
+                                        <div class="col-md-3 offset-md-1">
+                                            <div class="mt-3 float-right">
+                                                <p class="m-b-10"><strong>{% trans "Contract No. :" %} </strong> <span class="float-right">{{form.instance.contract_number}} </span></p>
+                                                <p class="m-b-10"><strong>{% trans "Status :" %} </strong> <span>
+                                                    {% if form.instance.status == 1 %} <span class="badge bg-soft-success text-success float-right">{% trans "Active" %}</span>
+                                                    {% elif form.instance.status == 2 %} <span class="badge bg-soft-dark text-white float-right">{% trans "Inactive" %}</span>
+                                                    {% elif form.instance.status == 3 %} <span class="badge bg-soft-warning text-warning float-right">{% trans "Hold" %}</span>
+                                                    {% elif form.instance.status == 4 %} <span class="badge bg-soft-danger text-danger float-right">{% trans "Canceled" %}</span>
+                                                    {% endif %}</span></p>
+                                                <p class="m-b-10"><strong>{% trans "Payment Terms :" %} </strong> <span class="float-right">
+                                                    {% if form.instance.payment_terms == 1 %}  {% trans "Cash" %}</span>
+                                                    {% elif form.instance.payment_terms == 2 %}  {% trans "Credit" %}</span>
+                                                    {% endif %}</p>
+                                                <p class="m-b-10"><strong>{% trans "Start Date :" %} </strong> <span class="float-right"> &nbsp;&nbsp;&nbsp;&nbsp; {{form.instance.startdate}}</span></p>
+                                                <p class="m-b-10"><strong>{% trans "End Date :" %} </strong> <span class="float-right">{{form.instance.enddate}}</span></p>
+                                            </div>
+                                        </div><!-- end col -->
+                                    </div>
+                                    <hr/>
+                                    <div class="row">
+                                        <div class="col-md-3">
+                                            <div class="mt-3">
+                                                <p><strong>{% trans "Commercial Terms" %}</strong></p>
+                                            </div>
+
+                                        </div><!-- end col -->
+                                        <div class="col-md-3 offset-md-2">
+                                            <div class="mt-3 float-right">
+                                                <p class="m-b-10"><strong>{% trans "Invoice Discount 1 :" %} </strong> <span class="float-right"> &nbsp;&nbsp;&nbsp;&nbsp; {{form.instance.inv_dis1}}</span></p>
+                                                <p class="m-b-10"><strong>{% trans "Invoice Discount 2 :" %} </strong> <span class="float-right">{{form.instance.inv_dis2}}</span></p>
+                                                <p class="m-b-10"><strong>{% trans "Bonus % :" %} </strong> <span class="float-right">{{form.instance.bonus}}</span></p>
+                                                <p class="m-b-10"><strong>{% trans "Bonus Unit :" %} </strong> <span class="float-right">{{form.instance.bonus_uint}}</span></p>
+                                            </div>
+                                        </div><!-- end col -->
+                                        <div class="col-md-3 offset-md-1">
+                                            <div class="mt-3 float-right">
+                                                <p class="m-b-10"><strong>{% trans "Rebate % :" %} </strong> <span class="float-right"> &nbsp;&nbsp;&nbsp;&nbsp; {{form.instance.rebate}} </span></p>
+                                                <p class="m-b-10"><strong>{% trans "Marketing Support :" %} </strong> <span class="float-right"> &nbsp;&nbsp;&nbsp;&nbsp; {{form.instance.marketing_support}} </span></p>
+                                                <p class="m-b-10"><strong>{% trans "Scientific Support :" %} </strong> <span class="float-right">{{form.instance.scientific_support}} </span></p>
+                                                <p class="m-b-10"><strong>{% trans "Training :" %} </strong> <span class="float-right">{{form.instance.training}} </span></p>
+                                            </div>
+                                        </div><!-- end col -->
+                                    </div>
+                                    <!-- end row -->
+                                    <hr/>
+
+                                    <div class="row mt-3">
+                                        <div class="col-sm-6">
+                                            <h6>{% trans "Billing Address" %}</h6>
+                                            <address>
+                                                {% for Customer in customers %}
+                                                {{Customer.address}}<br>
+                                                {{Customer.city}}<br>
+                                                {{Customer.country}}
+                                                {% endfor %}
+                                            </address>
+                                        </div> <!-- end col -->
+        
+                                        <div class="col-sm-6">
+                                            <h6>{% trans "Shipping Address" %}</h6>
+                                            <address>
+                                                {{address}}
+                                            </address>
+                                        </div> <!-- end col -->
+                                    </div> 
+                                    <!-- end row -->
+        
+                                    <div class="row">
+                                        <div class="col-12">
+                                            <div class="table-responsive">
+                                                <table class="table mt-4 table-centered">
+                                                    <thead>
+                                                    <tr><th>{% trans "Product" %}</th>
+                                                        <th>{% trans "Retail Price" %}</th>
+                                                        <th style="width: 10%">{% trans "Distributor Price" %}</th>
+                                                        <th style="width: 10%">{% trans "Invoice Discount 1" %}</th>
+                                                        <th style="width: 10%">{% trans "Invoice Discount 2" %}</th>
+                                                        <th style="width: 10%">{% trans "Bonus" %}</th>
+                                                        <th style="width: 10%">{% trans "Bonus Unit" %}</th>
+                                                    </tr></thead>
+                                                    <tbody>
+                                                        {% for form in contractproducts %}
+                                                            <tr>
+                                                                <td>{{ form.instance.product }}</td>
+                                                                <td>{{ form.instance.retail_price|intcomma:False|currency }}</td>
+                                                                <td>{{ form.instance.distributor_price|intcomma:False|currency }}</td>
+                                                                <td>{{ form.instance.inv_discount1 }}</td>
+                                                                <td>{{ form.instance.inv_discount2 }}</td>
+                                                                <td>{{ form.instance.p_bonus }}</td>
+                                                                <td>{{ form.instance.p_bonus_uint }}</td>
+                                                            </tr>
+                                                        {% endfor %}
+                                                   </tbody>
+                                                </table>
+                                            </div> <!-- end table-responsive -->
+                                        </div> <!-- end col -->
+                                    </div>
+                                    <!-- end row -->
+                                    <!-- end row -->
+                                    <div class="row">
+                                        <div class="col-sm-12">
+                                            <div class="clearfix pt-5">
+                                                <h6 class="text-muted">{% trans "Notes:" %}</h6>
+
+                                                <small class="text-muted">
+                                                    {{Company.contract_footer}}
+                                                </small>
+                                            </div>
+                                        </div> <!-- end col -->
+                                    </div>
+                                    <div class="mt-4 mb-1">
+                                        <div class="text-right d-print-none">
+                                            <a href="javascript:window.print()" class="btn btn-blue waves-effect waves-light"><i class="mdi mdi-printer mr-1"></i> {% trans "Print" %}</a>
+                                            <a class="btn btn-secondary waves-effect" href="{% url 'crm:contract' %}">{% trans "Close" %}</a>
+                                        </div>
+                                    </div>
+                                </div> <!-- end card-box -->
+                            </div> <!-- end col -->
+                        </div>
+                        {% endfor %}
+                        <!-- end row -->
+                        
+                    </div> <!-- container -->
+
+                </div> <!-- content -->
+
+
+
+{% endblock %}
+
+
+{% block extra_javascript %}
+{% endblock %}

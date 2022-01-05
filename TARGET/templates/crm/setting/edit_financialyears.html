@@ -1,0 +1,124 @@
+{% load i18n %}
+{% load widget_tweaks %}
+{% load crispy_forms_tags %}
+{% block content %}
+
+<form id="ProductForm" align="left" method="post" action="">
+    {% if LANGUAGE_CODE == 'ar' %}
+        <link href="/static/libs/select2/select2-rtl.min.css" rel="stylesheet" />
+    {% else %}
+        <link href="/static/libs/select2/select2.min.css" rel="stylesheet" />
+    {% endif %}
+  {% csrf_token %}
+    <div class="modal-header" style="background: #f7b84b;">
+      <h3 class="modal-title" style="color: white;">{% trans "Update Financial Year" %}</h3>
+      <button style="color:white; font-size: 2rem;" type="button" class="close" data-dismiss="modal" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+
+        <div class="row">
+            <div class="modal-body">
+                 <table>
+                      <div class="form-row">
+                            <div class="form-group col-md-12 mb-0">
+                                      <div class="form-group col-md-12 mb-0">
+                                            <div class="form-row">
+                                                  <div class="form-group col-md-4 mb-0">
+                                                        {{ form.m1|as_crispy_field }}
+                                                  </div>
+                                                  <div class="form-group col-md-4 mb-0">
+                                                        {{ form.m2|as_crispy_field }}
+                                                  </div>
+                                                  <div class="form-group col-md-4 mb-0">
+                                                        {{ form.m3|as_crispy_field }}
+                                                  </div>
+                                            </div>
+                                      </div>
+                                      <div class="form-group col-md-12 mb-0">
+                                            <div class="form-row">
+                                                  <div class="form-group col-md-4 mb-0">
+                                                        {{ form.m4|as_crispy_field }}
+                                                  </div>
+                                                  <div class="form-group col-md-4 mb-0">
+                                                        {{ form.m5|as_crispy_field }}
+                                                  </div>
+                                                  <div class="form-group col-md-4 mb-0">
+                                                        {{ form.m6|as_crispy_field }}
+                                                  </div>
+                                            </div>
+                                      </div>
+                                      <div class="form-group col-md-12 mb-0">
+                                            <div class="form-row">
+                                                  <div class="form-group col-md-4 mb-0">
+                                                        {{ form.m7|as_crispy_field }}
+                                                  </div>
+                                                  <div class="form-group col-md-4 mb-0">
+                                                        {{ form.m8|as_crispy_field }}
+                                                  </div>
+                                                  <div class="form-group col-md-4 mb-0">
+                                                        {{ form.m9|as_crispy_field }}
+                                                  </div>
+                                            </div>
+                                      </div>
+                                      <div class="form-group col-md-12 mb-0">
+                                            <div class="form-row">
+                                                  <div class="form-group col-md-4 mb-0">
+                                                        {{ form.m10|as_crispy_field }}
+                                                  </div>
+                                                  <div class="form-group col-md-4 mb-0">
+                                                        {{ form.m11|as_crispy_field }}
+                                                  </div>
+                                                  <div class="form-group col-md-4 mb-0">
+                                                        {{ form.m12|as_crispy_field }}
+                                                  </div>
+                                            </div>
+                                      </div>
+                                </div>
+                            </div>
+                 </table>
+            </div>
+  </div>
+
+  <div class="modal-footer">
+    <button type="button" class="btn btn-secondary waves-effect" data-dismiss="modal">{% trans "Cancel" %}</button>
+    <button type="button" class="submit-btn btn-danger btn btn-primary">{% trans "Save" %}</button>
+  </div>
+
+</form>
+    <script src="/static/libs/select2/select2.min.js"></script>
+
+<script type="text/javascript">
+var subtotalval = 0;
+function get_total(){
+        var subtotalfield1 = $(this).attr('name');
+        var subtotalval =  parseInt(subtotalval) + parseInt($("#id_m" + subtotalfield1).val());
+        var total = 0;
+        for (i = 0; i <= 12; i++){
+            if($("input[name=m" + i + "]").val()){
+                total += parseFloat($("input[name=m" + i + "]").val());
+            }
+            else{
+                total += 0;
+            }
+        }
+        $("#id_m_total").val(parseInt(total));
+};
+    $("input[name*='m']").change(function () {
+        get_total()
+    });
+
+
+$(function() {
+   $('#submitbtn').click(function() {
+    if(parseInt($("#id_m_total").val()) < 100){
+        alert('Total of Product Seasonality has to be equal to 100%');
+    }if(parseInt($("#id_m_total").val()) > 100){
+        alert('Total of Product Seasonality has to be equal to 100%');
+    }
+   });
+});
+
+</script>
+
+{% endblock %}
