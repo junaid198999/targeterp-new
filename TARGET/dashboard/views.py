@@ -39,6 +39,8 @@ class DashboardView(LoginRequiredMixin, TemplateView):
         else:
             current_month = int(current_month1)
 
+        cmonths = None
+
         for financialyear in financialyears:
             Quarter1 = [financialyear.m1, financialyear.m2, financialyear.m3]
             Quarter2 = [financialyear.m4, financialyear.m5, financialyear.m6]
@@ -59,6 +61,10 @@ class DashboardView(LoginRequiredMixin, TemplateView):
             numberofdaysFH = 31+28+31+30+31+30
             numberofdaysSH = 31+31+30+31+30+31
             numberofdaysFY = 31+28+31+30+31+30+31+31+30+31+30+31
+
+            monthn = None
+            
+
             if financialyear.m1 == current_month:
                 cmonths = 'm1'
                 monthn = '1'
@@ -123,6 +129,9 @@ class DashboardView(LoginRequiredMixin, TemplateView):
         currentY = timezone.now().year
         lastYear = timezone.now().year - 1
         print('jjnjj' , date_id)
+
+        monthn = 0
+
         if year_id == lastYear and date_id == 9999999:
             monthn = [1,2,3,4,5,6,7,8,9,10,11,12]
             Quarter = "None"
@@ -267,7 +276,6 @@ class DashboardView(LoginRequiredMixin, TemplateView):
         custcount = Customer.objects.all().count()
         chcount = Channel.objects.all().count()
         citycount = City.objects.all().count()
-
 
         if self.request.user.is_superuser:
             if date_id == 44 or date_id == 55 or date_id == 66 or date_id == 77 or date_id == 88 or date_id == 99:
