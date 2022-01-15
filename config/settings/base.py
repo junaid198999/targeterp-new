@@ -70,9 +70,9 @@ DATABASES = {
      'default': {
          'ENGINE': 'django.db.backends.postgresql_psycopg2',
          'HOST': 'localhost',
-         'NAME': 'hqerp_targeterp',
-         'USER': 'hqerp_targeterp1',
-         'PASSWORD': "secure@010",
+         'NAME': 'targeterp',
+         'USER': 'postgres',
+         'PASSWORD': "Admin@123$$",
          'PORT': 5432,
      }
 }

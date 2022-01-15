@@ -1,6 +1,10 @@
 import os
 import sys
 # set variables
+
+APP = '/home/targetserp/project/env/bin/python3'
+if sys.executable != APP: os.execl(APP, APP, *sys.argv)
+
 sys.path.append(os.getcwd())
 os.environ['DJANGO_SETTINGS_MODULE'] = 'config.settings.local'
 #setup django application
