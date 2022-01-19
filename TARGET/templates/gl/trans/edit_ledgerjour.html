@@ -228,7 +228,7 @@
                                     <td colspan="2"><b class="float-right">{% trans "Total:" %} </b></td>
                                     <td style="padding: 0rem" colspan="1"><INPUT TYPE="number" id="id_totaldebit" NAME="totaldebit" placeholder="Total Debit" class="form-control"  readonly="true"></td>
                                     <td style="padding: 0rem" colspan="1"><INPUT TYPE="number" id="id_totalcredit" NAME="totalcredit" placeholder="Total Credit" class="form-control"  readonly="true" ></td>
-
+                                    <input type="number" hidden="true" id="id_totalamount" name="totalamount" />
                                 </tr>
                         </table>
 
@@ -249,11 +249,13 @@
 
 
 <script type="text/javascript">
-
-
 $('#id_journaldate').prop( "min", '{{ mindate }}' );
 $('#id_journaldate').prop( "max", '{{ maxdate }}' );
 $('#id_total').attr('readonly', true);
+
+
+var grand_total = null;
+
 
 
 function get_total(){
@@ -261,7 +263,7 @@ function get_total(){
 
         var dbttot = 0;
         var crttot = 0;
-
+        console.log(id);
         for (i = 0; i <= parseInt(id); i++){
 
             if($("input[name=ledgerjourline_set-" + i + "-debitamount]").val() ){
@@ -277,25 +279,22 @@ function get_total(){
                 crttot += 0;
             }
         }
-
         $("#id_totaldebit").val(dbttot.toFixed(1));
         $("#id_totalcredit").val(crttot.toFixed(1));
 
         if ( crttot == dbttot ) {
-            document.getElementById("save_id").disabled = false;
-            console.log('false');
+            document.getElementById("create_id").disabled = false;
         }
 
         if ( crttot != dbttot ) {
-            document.getElementById("save_id").disabled = true;
-            console.log('true');
+            document.getElementById("create_id").disabled = true;
         }
 
+        var total_amount = $('#id_totaldebit').val();
 
-
-
-
+        $('#id_totalamount').val(total_amount);
 };
+
 
 
     $("input[name*='debitamount']").change(function () {
@@ -307,9 +306,14 @@ function get_total(){
         get_total()
     });
 
-document.addEventListener('DOMContentLoaded', function() {
-    get_total();
-}, false);
+// document.addEventListener('DOMContentLoaded', function() {
+//     get_total();
+// }, false);
+
+
+
+
+
 
 
    $('.delete-row').on("click", function(){
@@ -330,12 +334,22 @@ document.addEventListener('DOMContentLoaded', function() {
         callbacks: {
             onAdd: function () {
                  $("[name*=-ledger]").select2();
+
             },
+            onChange: function () {
+            },
+            Select: function () {
+            },
+
             onRemove: function () {
                  get_total();
             }
         },
     });
+
+
+
+
 
 {% comment %}
       $(function () {
@@ -344,6 +358,14 @@ document.addEventListener('DOMContentLoaded', function() {
         });
       });
 {% endcomment %}
+
+
+$(document).ready(function(){
+     $("[name*=-ledger]").select2();
+
+    get_total();
+});
+
 
 
 </script>

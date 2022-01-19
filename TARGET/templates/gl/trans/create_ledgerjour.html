@@ -38,7 +38,7 @@
         <div class="col-xl-12">
             <div class="card" style="top: 46px; ">
                 <div class="card-body" style="padding:0.5rem;padding-bottom: 0px;">
-                    <form  id="LJForm" action="" method="post"  data-transtypes-url="{% url 'gl:ajax_load_transtypes' %}" >
+                    <form  id="LJForm" action="#" method="post"  data-transtypes-url="{% url 'gl:ajax_load_transtypes' %}" >
                         {{ ledgerjourlines.management_form }}
                         {% csrf_token %}
                         {{ form.id }}
@@ -51,48 +51,33 @@
                             <tbody style="background-color: white;">
                                 <tr>
                                     <td  width="70%" colspan = "7">
-                                          <div class="input-group">
-<!--                                            <div class="col-2" style="padding-right:0px; padding-left:0px">-->
-<!--                                                <label class="col-form-label" >{% trans "Trans Type" %}</label>-->
-<!--                                            </div>-->
-<!--                                            <div class="col-10" >-->
-<!--                                                <select name="transtype" id="id_transtypes" class="form-control" value="{{ form.transtype }}-->
-<!--                                                </select>-->
-<!--                                            </div>-->
-
-
-
-                                        <INPUT TYPE="TEXT" id="id_transtype" NAME="transtype" class="form-control" hidden  >
-
-                                            <div class="form-group col-md-6 mb-0">
-                                                {{ form.transtype|as_crispy_field }}
-                                                <div class="{% if form.transtype.errors %} invalid{% endif %}">
-                                                    {% if error in form.transtype.errors %}
-                                                    <p class="help-block">{{ error }}</p>
-                                                    {% endif %}
+                                            <div class="input-group">                                            
+                                                <input type="text" id="id_transtype" NAME="transtype" class="form-control" hidden  />
+                                                <div class="form-group col-md-6 mb-0">
+                                                    {{ form.transtype|as_crispy_field }}
+                                                    <div class="{% if form.transtype.errors %} invalid{% endif %}">
+                                                        {% if error in form.transtype.errors %}
+                                                        <p class="help-block">{{ error }}</p>
+                                                        {% endif %}
+                                                    </div>
+                                                </div>
+                                                <div class="form-group col-md-3 mb-0">
+                                                    {{ form.status|as_crispy_field }}
+                                                    <div class="{% if form.status.errors %} invalid{% endif %}">
+                                                        {% if error in form.status.errors %}
+                                                        <p class="help-block">{{ error }}</p>
+                                                        {% endif %}
+                                                    </div>
+                                                </div>
+                                                <div class="form-group col-md-3 mb-0">
+                                                    {{ form.statusdate|as_crispy_field }}
+                                                    <div class="{% if form.statusdate.errors %} invalid{% endif %}">
+                                                        {% if error in form.statusdate.errors %}
+                                                        <p class="help-block">{{ error }}</p>
+                                                        {% endif %}
+                                                    </div>
                                                 </div>
                                             </div>
-
-
-
-                                            <div class="form-group col-md-3 mb-0">
-                                                {{ form.status|as_crispy_field }}
-                                                <div class="{% if form.status.errors %} invalid{% endif %}">
-                                                    {% if error in form.status.errors %}
-                                                    <p class="help-block">{{ error }}</p>
-                                                    {% endif %}
-                                                </div>
-                                            </div>
-                                            <div class="form-group col-md-3 mb-0">
-                                                {{ form.statusdate|as_crispy_field }}
-                                                <div class="{% if form.statusdate.errors %} invalid{% endif %}">
-                                                    {% if error in form.statusdate.errors %}
-                                                    <p class="help-block">{{ error }}</p>
-                                                    {% endif %}
-                                                </div>
-                                            </div>
-
-                                        </div>
                                     </td>
                                     <td colspan = "6">
                                         <div class="input-group">
@@ -108,8 +93,6 @@
                                             </div>
                                             <INPUT id="id_journaldate" type="date" NAME="journaldate" class="form-control" {% if journaldate != ''  %} value="{{currentdate}}" {% endif %} >
                                         </div>
-
-
                                     </td>
                                 </tr>
                             </tbody>
@@ -166,24 +149,27 @@
                             </tbody>
                         </table>
 
-                        <div class="row">
+                        <div class="row mb-3">
                             <div class="col-12">
                                 <div class="sub-header">
                                     <a style="float:right" class="buttonHolder" id="add-row"></a>
                                </div>
                             </div>
                         </div>
+
                         <table id="table_id" class="table table-bordered table-hover table-sm mb-0">
                                 <thead class="thead-light">
                                     <tr>
                                         <th>{% trans "Ledger " %}</th>
+                                        
                                         {% if usecostcenter1 == True  %}
-                                        <th>{% trans "Cost C 1" %}</th>
+                                            <th>{% trans "Cost C 1" %}</th>
                                         {% endif %}
 
                                         {% if usecostcenter1 == True and comusecostcenter1 == True %}
-                                        <th>{% trans "Cost C 2" %}</th>
+                                            <th>{% trans "Cost C 2" %}</th>
                                         {% endif %}
+
                                         <th>{% trans "Eng. Desc" %}</th>
                                         <th>{% trans "Debit" %}</th>
                                         <th>{% trans "Credit" %}</th>
@@ -194,55 +180,37 @@
                                     {% for form in ledgerjourlines %}
                                         {{ form.id }}
                                         <tr style="padding: 0px !important;" class="rowclass">
-<!--
-                                                <td style="padding: 0rem !important;width:300px;">
-                                                    <select name="uoom" class="form-control" id="id_ledgerjouline_set-0-uoom" style="width:100%">
-                                                         {% for led in ledger %}
-                                                            <option >{{ led.code }} -  {{ led.engname }}</option>
-                                                        {% endfor %}
-                                                    </select>
-                                                </td>
--->
-                                                <td style="padding: 0rem !important;width:100px;">{{ form.ledger|as_crispy_field }}</td>
+                                            <td style="padding: 0rem !important;width:100px;">{{ form.ledger|as_crispy_field }}</td>
 
-                                                {% if usecostcenter1 == True  %}
+                                            {% if usecostcenter1 == True  %}
                                                 <td style="padding: 0rem !important;width:100px;">{{ form.costcenter1|as_crispy_field }}</td>
-                                                {% endif %}
+                                            {% endif %}
 
-                                                {% if usecostcenter1 == True and comusecostcenter1 == True %}
+                                            {% if usecostcenter1 == True and comusecostcenter1 == True %}
                                                 <td style="padding: 0rem !important;width:100px;">{{ form.costcenter2|as_crispy_field }}</td>
-                                                {% endif %}
+                                            {% endif %}
 
-                                                <td style="padding: 0rem !important;width:100px;">{{ form.engdesc|as_crispy_field }}</td>
-                                                <td style="padding: 0rem !important;width:70px;">{{ form.debitamount|as_crispy_field }}</td>
-                                                <td style="padding: 0rem !important;width:70px;">{{ form.creditamount|as_crispy_field }}</td>
-                                                <td style="padding: 0rem !important;width:10px; text-align: center;"></td>
+                                            <td style="padding: 0rem !important;width:100px;">{{ form.engdesc|as_crispy_field }}</td>
+                                            <td style="padding: 0rem !important;width:70px;">{{ form.debitamount|as_crispy_field }}</td>
+                                            <td style="padding: 0rem !important;width:70px;">{{ form.creditamount|as_crispy_field }}</td>
+                                            <td style="padding: 0rem !important;width:10px; text-align: center;"></td>
                                         </tr>
                                     {% endfor %}
-
-
-
                                 </tbody>
 
                         </table>
-                        <table id="table_idfoot" class="table table-bordered table-hover table-sm mb-0">
+                        <table id="table_idfoot" class="table table-bordered table-hover table-sm mb-3 pb-3">
                             <tr>
                                 <td colspan="5" width="45%"><b class="float-right" > </b></td>
                                 <td colspan="5"><b class="float-right" >{% trans "Total Debit : " %} </b></td>
                                 <td class="float-right" style="padding: 0rem" colspan="1"><INPUT style="text-align:right" TYPE="number" id="id_totaldebit" NAME="totaldebit" placeholder="Total Debit"  class="form-control" readonly="true"></td>
                                 <td colspan="5"><b class="float-right" >{% trans "Total Credit : " %} </b></td>
-                                <td class="float-right" style="padding: 0rem" colspan="1"><INPUT style="text-align:right" TYPE="number" id="id_totalcredit" NAME="totalcredit" placeholder="Total Credit" class="form-control" readonly="true" ></td>
+                                <td class="float-right" style="padding: 0rem" colspan="1">
+                                    <INPUT style="text-align:right" TYPE="number" id="id_totalcredit" NAME="totalcredit" placeholder="Total Credit" class="form-control" readonly="true" ></td>
+                                    <input type="number" hidden="true" id="id_totalamount" name="totalamount">
                                 <td style="padding: 0rem !important;width:260px; text-align: center;"></td>
-
-
-
                             </tr>
-                        </table>
-
-
-
-                        <br><br>
-
+                        </table>                        
                     </form>
                 </div>
             </div>
@@ -270,7 +238,7 @@ $('#id_journaldate').prop( "max", '{{ maxdate }}' );
 $('#id_total').attr('readonly', true);
 
 
-
+var grand_total = null;
 
 
 
@@ -306,7 +274,9 @@ function get_total(){
             document.getElementById("create_id").disabled = true;
         }
 
+        var total_amount = $('#id_totaldebit').val();
 
+        $('#id_totalamount').val(total_amount);
 };
 
 
@@ -320,9 +290,9 @@ function get_total(){
         get_total()
     });
 
-document.addEventListener('DOMContentLoaded', function() {
-    get_total();
-}, false);
+// document.addEventListener('DOMContentLoaded', function() {
+//     get_total();
+// }, false);
 
 
 
@@ -376,6 +346,8 @@ document.addEventListener('DOMContentLoaded', function() {
 
 $(document).ready(function(){
      $("[name*=-ledger]").select2();
+
+    get_total();
 });
 
 
