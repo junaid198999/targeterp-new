@@ -258,7 +258,7 @@ class LedgerJour(models.Model):
     assetstranshead = models.IntegerField( blank=True, null=True, verbose_name=_("Assets Trans Head"))
     remarks = models.CharField(max_length=100, blank=True, null=True, unique=False, verbose_name=_("Remarks"))
     fiscalyearperiod = models.IntegerField( blank=True, null=True, verbose_name=_("Fiscal Year Period"))
-    created_by = models.ForeignKey(User, blank=False, null=True,related_name='LedgerJour_created_by', on_delete=models.CASCADE, verbose_name =_("Created By"))
+    # created_by = models.ForeignKey(User, blank=False, null=True,related_name='LedgerJour_created_by', on_delete=models.CASCADE, verbose_name =_("Created By"))
     paymentid = models.IntegerField( blank=True, null=True,  verbose_name=_("Ledger Payment ID"))
     status = models.ForeignKey(LookUp,related_name='LedgerJour_Status', limit_choices_to={'keyname': 'RecordStatus'}, blank=True, null=True, on_delete=models.PROTECT, verbose_name=_("Payment Status"))
     statusdate = models.DateField(blank=True, null=True, verbose_name =_("Status Date"))

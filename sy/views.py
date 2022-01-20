@@ -97,6 +97,8 @@ class FiscalYearsCreateView(LoginRequiredMixin,  CreateView):
     success_message = 'Success: Fiscal Years  was created.'
     success_url = reverse_lazy('sy:list-fiscalyears')
 
+    maxid = 0
+
 
     def get_context_data(self, **kwargs):
         context = super(FiscalYearsCreateView, self).get_context_data(**kwargs)
@@ -106,39 +108,42 @@ class FiscalYearsCreateView(LoginRequiredMixin,  CreateView):
         except:
             maxid = 1
 
+        # context['maxid'] = maxid
+        # context['mindate'] = '2020-12-05'
 
-        context['maxid'] = maxid
-        context['mindate'] = '2020-12-05'
+        # trant_id = 'none'
+        # context['trant_id'] = trant_id
 
-        trant_id = 'none'
-        context['trant_id'] = trant_id
-
-        context['maxdate'] = '2020-12-25'
-
-
-
-        if self.request.POST:
-            context['fiscalyearsperiods'] = FiscalYearsPeriodsFormSet(self.request.POST, instance=self.object)
-            context['fiscalyearsperiods'].full_clean()
-        else:
-            context['fiscalyearsperiods'] = FiscalYearsPeriodsFormSet(instance=self.object)
+        # context['maxdate'] = '2020-12-25'
+        # if self.request.POST:
+        #     context['fiscalyearsperiods'] = FiscalYearsPeriodsFormSet(self.request.POST, instance=self.object)
+        #     context['fiscalyearsperiods'].full_clean()
+        # else:
+        #     context['fiscalyearsperiods'] = FiscalYearsPeriodsFormSet(instance=self.object)
+        # print(context)
         return context
 
-    def form_valid(self, form):
-        context = self.get_context_data(form=form)
-        fiscalyearsperiods = context['fiscalyearsperiods']
+    # def form_valid(self, form):
+    #     context = self.get_context_data(form=form)
+    #     fiscalyearsperiods = context['fiscalyearsperiods']
 
-        if fiscalyearsperiods.is_valid():
-            response = super().form_valid(form)
-            fiscalyearsperiods.instance = self.object
-            form.save()
-            fiscalyearsperiods.save()
-        else:
-            context['fiscalyearsperiods'] = FiscalYearsPeriodsFormSet()
-            maxid = int(FiscalYears.objects.latest('pk').pk) + 1
-            context['maxid'] = maxid
+    #     print(fiscalyearsperiods)       
 
-        return response
+    #     # response = None
+    #     if fiscalyearsperiods.is_valid():
+    #         print("valid")
+    #         response = super().form_valid(form)
+    #         fiscalyearsperiods.instance = self.object
+    #         print(fiscalyearsperiods.instance)
+    #         form.save()
+    #         fiscalyearsperiods.save()
+    #         return response
+    #     else:
+    #         print("invalid")
+    #         context['fiscalyearsperiods'] = FiscalYearsPeriodsFormSet()
+    #         maxid = int(FiscalYears.objects.latest('pk').pk) + 1
+    #         context['maxid'] = maxid
+    #         return super().form_invalid(form)
 
 
 

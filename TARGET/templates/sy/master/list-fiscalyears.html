@@ -59,7 +59,7 @@
                         </div>
 
 
-                        <table id="table_id" class="table activate-select table-hover nowrap" style="width:100%">
+                        <table id="DT_FYEARS" class="table activate-select table-hover nowrap" style="width:100%">
                             <thead class="thead-light" >
                                 <tr>
                                     <th>{% trans "Code" %}</th>
@@ -122,20 +122,8 @@
       $(function () {
         // Create fiscalyears button
             $(".create-fiscalyears").modalForm({formURL: "{% url 'sy:create_fiscalyears' %}"});
-        // Update fiscalyears buttons
-            $(".edit-fiscalyears").each(function () {
-              $(this).modalForm({formURL: "{% url 'sy:edit_fiscalyears' 227 %}"});
-            });
-            $(".edit_fiscalyears").each(function () {
-              $(this).modalForm({formURL: "{% url 'sy:edit_fiscalyears' 227 %}"});
-            });
-        // Delete fiscalyears button
-            $(".delete-fiscalyears").each(function () {
-              $(this).modalForm({formURL: $(this).data('id')});
-            });
 
-            var table = $('#table_id').DataTable( {
-                "deferRender": true,
+            var table = $('#DT_FYEARS').DataTable( {
                 language: {
                     buttons: {
                         "collection": "{% trans "Columns" %}",
@@ -189,12 +177,12 @@
                         'print',
                     {% endif %}
                 ],
+                stateSave: true,
                 "pagingType": "full_numbers",
                 responsive: true,
-                stateSave: true,
                 columnDefs: [
                     { responsivePriority: 1, targets: 0 },
-                    { responsivePriority: 2, targets: 8 },
+                    { responsivePriority: 2, targets: 3 },
 
                 ]
             } );
@@ -202,6 +190,7 @@
             new $.fn.dataTable.ColReorder( table, {
                 colReorder: true,
             } );
+
             table
                 .buttons()
                 .container()

@@ -48,7 +48,7 @@
                                             <div class="input-group-prepend">
                                                 <span class="input-group-text" id="basic-addon1">{% trans "Code" %}</span>
                                             </div>
-                                            <INPUT TYPE="TEXT" NAME="code" id="id_code" class="form-control" value={{form.instance.code}}>
+                                            <INPUT TYPE="TEXT" NAME="code" id="id_code" class="form-control" value="{{ form.instance.code }}">
                                         </div>
                                     </td>
 
@@ -58,7 +58,7 @@
                                             <div class="input-group-prepend">
                                                 <span class="input-group-text" id="basic-addon2">{% trans "Eng. Name" %}</span>
                                             </div>
-                                            <INPUT TYPE="TEXT" NAME="engname" id="id_engname" class="form-control" value={{form.instance.engname}} >
+                                            <INPUT TYPE="TEXT" NAME="engname" id="id_engname" class="form-control" value="{{ form.instance.engname }}" >
                                         </div>
                                     </td>
                                 </tr>
@@ -68,13 +68,13 @@
                                             <div class="input-group-prepend">
                                                 <span class="input-group-text" id="basic-addon3">{% trans "Arb. Name" %}</span>
                                             </div>
-                                            <INPUT TYPE="TEXT" NAME="arbname" id="id_arbname" class="form-control" value={{form.instance.arbname}}>
+                                            <INPUT TYPE="TEXT" NAME="arbname" id="id_arbname" class="form-control" value="{{ form.instance.arbname }}">
                                         </div>
                                     </td>
                                 </tr>
                             </tbody>
                         </table>
-                        <div class="row">
+                        <div class="row mb-3">
                             <div class="col-12">
                                 <div class="sub-header">
                                     <h5 class="page-title">{% trans "Fiscal Years" %}</h5>
@@ -105,8 +105,6 @@
                                                 <td style="padding: 0rem !important;width:100px;">{{ form.todate|as_crispy_field }}</td>
                                                 <td style="padding: 0rem !important;width:100px;">{{ form.rank|as_crispy_field }}</td>
                                                 <td style="padding: 0rem !important;width:30px;">{{ form.periodtype|as_crispy_field }}</td>
-
-
                                                 <td style="padding: 0rem !important;width:10px; text-align: center;"></td>
                                         </tr>
                                     {% endfor %}

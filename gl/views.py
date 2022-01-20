@@ -332,37 +332,40 @@ class LedgerJourCreateView(LoginRequiredMixin,  CreateView):
 
         posperiod = FiscalYearsPeriodsModules.objects.filter(module__code='AR',closedate =None
                                      ).exclude(opendate=None).aggregate(Min('fiscalyearperiod__fromdate'),Max('fiscalyearperiod__todate'))
-        mindate= posperiod['fiscalyearperiod__fromdate__min'].strftime('%Y-%m-%d')
-        maxdate= posperiod['fiscalyearperiod__todate__max'].strftime('%Y-%m-%d')
+        mindate= posperiod['fiscalyearperiod__fromdate__min']
+        maxdate= posperiod['fiscalyearperiod__todate__max']
+        if mindate:
+            mindate = mindate.strftime('%Y-%m-%d')
+        else:
+            mindate = datetime.today()
+        if maxdate:
+            mixdate = maxdate.strftime('%Y-%m-%d')
+        else:
+            maxdate = datetime.today()
+        
         context['mindate'] = mindate
         context['maxdate'] = maxdate
 
 
         companyprofile=CompanyProfile.objects.values('id','usecostcenter1','usecostcenter2','usecostcenter3','usecostcenter4').first()
+
         context['comusecostcenter1'] = companyprofile['usecostcenter1']
         context['comusecostcenter2'] = companyprofile['usecostcenter2']
         context['comusecostcenter3'] = companyprofile['usecostcenter3']
         context['comusecostcenter4'] = companyprofile['usecostcenter4']
 
-
         if self.request.POST:
-            print('post')
             context['maxid'] = maxid
             context['ledgerjourlines'] = LedgerJourLineFormSet(self.request.POST, instance=self.object)
-            context['ledgerjourlines'].full_clean()
+            context['ledgerjourlines'].full_clean()            
         else:
-            print('Error')
-            context['ledgerjourlines'] = LedgerJourLineFormSet(instance=self.object)
-
-        print('ddd')
+            context['ledgerjourlines'] = LedgerJourLineFormSet(instance=self.object)        
         return context
 
     def form_valid(self, form):
-        print('validate')
-        context = self.get_context_data(form=form)
 
+        context = self.get_context_data(form=form)
         transtype = TransTypes.objects.all().filter(id=form.instance.transtype_id).values()
-        print(transtype)
         maxid = LedgerJour.objects.all().filter(transtype_id=form.instance.transtype_id).count()
         journum = transtype[0]['code'] + '-' + str(maxid + 1)
 
@@ -410,14 +413,22 @@ class LedgerJourUpdateView(LoginRequiredMixin, UpdateView):
         journaldate =   otype[0]['journaldate'].strftime('%Y-%m-%d')
         transtypeid = otype[0]['transtype_id']
         context['journaldate'] = journaldate
-
         context['journalnumber'] = otype[0]['journalnumber']
 
 
         posperiod = FiscalYearsPeriodsModules.objects.filter(module__code='AR',closedate =None
                                      ).exclude(opendate=None).aggregate(Min('fiscalyearperiod__fromdate'),Max('fiscalyearperiod__todate'))
-        mindate= posperiod['fiscalyearperiod__fromdate__min'].strftime('%Y-%m-%d')
-        maxdate= posperiod['fiscalyearperiod__todate__max'].strftime('%Y-%m-%d')
+        mindate= posperiod['fiscalyearperiod__fromdate__min']
+        maxdate= posperiod['fiscalyearperiod__todate__max']
+        if mindate:
+            mindate = mindate.strftime('%Y-%m-%d')
+        else:
+            mindate = datetime.today()
+        if maxdate:
+            mixdate = maxdate.strftime('%Y-%m-%d')
+        else:
+            maxdate = datetime.today()
+        
         context['mindate'] = mindate
         context['maxdate'] = maxdate
 
@@ -427,38 +438,40 @@ class LedgerJourUpdateView(LoginRequiredMixin, UpdateView):
         context['comusecostcenter3'] = companyprofile['usecostcenter3']
         context['comusecostcenter4'] = companyprofile['usecostcenter4']
 
-        model = apps.get_model('crm', 'UserBusinessRoles')
-        transrole = model.objects.filter(user_id = self.request.user.pk ).values('id')
-        userbusrole_id = transrole[0]['id']
+        # model = apps.get_model('crm', 'UserBusinessRoles')
+        # transrole = model.objects.filter(user_id = self.request.user.pk ).values('id')
+        # userbusrole_id = None
+        # if transrole:
+        #     userbusrole_id = transrole[0]['id']
 
-        model = apps.get_model('crm', 'UserBusinessRolesttline')
-        transrole = model.objects.filter(userbusinessrole_id = userbusrole_id , transtype_id = transtypeid ).values()
+        # model = apps.get_model('crm', 'UserBusinessRolesttline')
+        # transrole = model.objects.filter(transtype_id = transtypeid )
+        # if userbusrole_id:
+        #     transrole = transrole.filter(userbusinessrole_id = userbusrole_id).values('id')
 
-        if transrole == None or transrole.count() ==  0 :
-            context['cancreate'] = 'False'
-            context['canedit'] = 'False'
-            context['canview'] = 'False'
-            context['cansubmit'] = 'False'
-            context['canapprove'] = 'False'
-            context['canpost'] = 'False'
-            context['canrejct'] = 'False'
-        else:
-            context['cancreate'] =str( to_bool(transrole[0]['cancreate']))
-            context['canedit'] =str(to_bool( transrole[0]['canedit']))
-            context['canview'] =str(to_bool( transrole[0]['canview']))
-            context['cansubmit'] =str(to_bool( transrole[0]['cansubmit']))
-            context['canapprove'] =str(to_bool( transrole[0]['canapprove']))
-            context['canpost'] = str(to_bool(transrole[0]['canpost']))
-            context['canrejct'] = str(to_bool(transrole[0]['canrejct']))
-            print('before post')
-
+        # if transrole == None or transrole.count() ==  0 :
+        #     context['cancreate'] = 'False'
+        #     context['canedit'] = 'False'
+        #     context['canview'] = 'False'
+        #     context['cansubmit'] = 'False'
+        #     context['canapprove'] = 'False'
+        #     context['canpost'] = 'False'
+        #     context['canrejct'] = 'False'
+        # else:
+        #     print(transrole[0])
+        #     context['cancreate'] =str( to_bool(transrole[0]['cancreate']))
+        #     context['canedit'] =str(to_bool( transrole[0]['canedit']))
+        #     context['canview'] =str(to_bool( transrole[0]['canview']))
+        #     context['cansubmit'] =str(to_bool( transrole[0]['cansubmit']))
+        #     context['canapprove'] =str(to_bool( transrole[0]['canapprove']))
+        #     context['canpost'] = str(to_bool(transrole[0]['canpost']))
+        #     context['canrejct'] = str(to_bool(transrole[0]['canrejct']))
 
         if self.request.POST:
             context['ledgerjourlines'] = LedgerJourLineFormSet(self.request.POST, instance=self.object)
             context['ledgerjourlines'].full_clean()
         else:
             context['ledgerjourlines'] = LedgerJourLineFormSet(instance=self.object)
-
         return context
 
 
@@ -472,15 +485,12 @@ class LedgerJourUpdateView(LoginRequiredMixin, UpdateView):
 
 
         if ledgerjourlines.is_valid():
-            print('suc')
             response = super().form_valid(form)
             ledgerjourlines.instance = self.object
             form.save()
             ledgerjourlines.save()
             return response
-        elif ledgerjourlines.is_valid() == False:
-            print(ledgerjourlines.errors)
-            print('faild')
+        elif ledgerjourlines.is_valid() == False:            
             return super().form_invalid(form)
 
 
