@@ -3,6 +3,13 @@
 {% load widget_tweaks %}
 {% load django_tables2 %}
 {% block content %}
+{% if error %}
+    <script>
+        var error_message = "{% trans 'Can\'t Delete This Trans Types Because this is releted Somewhere else' %}";
+        alert(error_message);
+        location.href="{% url 'gl:list-transtypes' %}";
+    </script>
+{% endif %}
     <div class="container-fluid">
         <!-- start page title -->
         <div class="row">

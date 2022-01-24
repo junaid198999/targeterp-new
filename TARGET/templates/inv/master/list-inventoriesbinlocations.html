@@ -3,6 +3,12 @@
 {% load widget_tweaks %}
 {% load django_tables2 %}
 {% block content %}
+{% if protected_error %}
+    <script>
+        alert("Couldn't be deleted Inventory Bin Loacation because it's already aligned with others");
+        location.href= "/inv/inventoriesbinlocations/";
+    </script>
+{% endif %}
     <div class="container-fluid">
         <!-- start page title -->
         <div class="row">

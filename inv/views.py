@@ -491,6 +491,13 @@ class InventoriesBinLocationsDeleteView(LoginRequiredMixin, BSModalDeleteView):
     template_name = 'inv/master/delete_inventoriesbinlocations.html'
     success_message = 'Success: Inventorie Bin Location was deleted.'
     success_url = reverse_lazy('inv:list-inventoriesbinlocations')
+
+    def post(self, request, *args, **kwargs):
+        try:
+            return super(InventoriesBinLocationsDeleteView, self).delete(*args, **kwargs)
+        except:
+            return render(request, 'inv/master/list-inventoriesbinlocations.html', {"protected_error": "Couldn't be deleted Inventory Bin Loacation because it's already aligned with others"})
+
 ######### End InventoriesBinLocations
 
 
@@ -666,7 +673,7 @@ class GenericNamesCategoriesDeleteView(LoginRequiredMixin, BSModalDeleteView):
 ######### GenericNames
 
 class GenericNamesListView(LoginRequiredMixin, generic.ListView):
-    model = GenericNamesCategories
+    model = GenericNames
     context_object_name = 'genericnames'
     template_name = 'inv/master/list-genericnames.html'
 
@@ -1006,8 +1013,7 @@ class AgenciesUpdateView(LoginRequiredMixin, UpdateView):
     fields = '__all__'
     template_name = 'inv/setting/edit_agencies.html'
     success_message = 'Success: Agencies was updated.'
-    success_url = reverse_lazy("inv:edit_agencies")
-
+    success_url = reverse_lazy("inv:list-agencies")
 
     def get_context_data(self, **kwargs):
         context = super(AgenciesUpdateView, self).get_context_data(**kwargs)
@@ -1022,24 +1028,15 @@ class AgenciesUpdateView(LoginRequiredMixin, UpdateView):
         context = self.get_context_data(form=form)
         agenciesexpensesline = context['agenciesexpensesline']
         agenciesexpensesline.clean()
-        print('validate')
         if agenciesexpensesline.is_valid():
-            try:
-                print('suc')
-                response = super().form_valid(form)
-                agenciesexpensesline.instance = self.object
-                form.save()
-                agenciesexpensesline.save()
-
-                return response
-            except Exception as e:
-                print(e)
-
-                #print('error')
+            response = super().form_valid(form)
+            agenciesexpensesline.instance = self.object
+            form.save()
+            agenciesexpensesline.save()
+            return response
 
         elif agenciesexpensesline.is_valid() == False:
             messages.error(self.request, "Error")
-            print(agenciesexpensesline.errors)
             return super().form_invalid(form)
 
 class AgenciesDeleteView(LoginRequiredMixin, BSModalDeleteView):
@@ -2293,7 +2290,7 @@ class WFGroupsUpdateView(LoginRequiredMixin, UpdateView):
     fields = '__all__'
     template_name = 'inv/setting/edit_wfgroups.html'
     success_message = 'Success: wfgroups was updated.'
-    success_url = reverse_lazy("inv:edit_wfgroups")
+    success_url = reverse_lazy("inv:list-wfgroups")
 
 
     def get_context_data(self, **kwargs):
@@ -2311,18 +2308,11 @@ class WFGroupsUpdateView(LoginRequiredMixin, UpdateView):
         wfgroupsusers.clean()
         print('validate')
         if wfgroupsusers.is_valid():
-            try:
-                print('suc')
-                response = super().form_valid(form)
-                wfgroupsusers.instance = self.object
-                form.save()
-                wfgroupsusers.save()
-
-                return response
-            except Exception as e:
-                print(e)
-
-                #print('error')
+            response = super().form_valid(form)
+            wfgroupsusers.instance = self.object
+            form.save()
+            wfgroupsusers.save()
+            return response
 
         elif wfgroupsusers.is_valid() == False:
             messages.error(self.request, "Error")

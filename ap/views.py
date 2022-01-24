@@ -326,27 +326,17 @@ class VendorsJourCreateView(LoginRequiredMixin,  CreateView):
             context['vendorsjourline'] = VendorsJourLineFormSet(instance=self.object)
         return context
 
-
-
-
-
-    def form_valid(self, form):
-
-        print('validate')
+    def form_valid(self, form):        
         context = self.get_context_data(form=form)
-        vendorsjourline = context['vendorsjourline']
-        print('validate')
+        vendorsjourline = context['vendorsjourline']        
         response = super().form_valid(form)
-        if vendorsjourline.is_valid():
-            print('validate vendorsjourline')
+        if vendorsjourline.is_valid():        
             response = super().form_valid(form)
-            vendorsjourline.instance = self.object
-
+            vendorsjourline.instance = self.object        
             vendorsjourline.save()
             form.save()
 
         else:
-            print(vendorsjourline.errors)
             context['vendorsjourline'] = VendorsJourLineFormSet()
 
 

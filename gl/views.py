@@ -294,7 +294,15 @@ class TransTypesDeleteView(LoginRequiredMixin, BSModalDeleteView):
     model = TransTypes
     template_name = 'gl/master/delete_transtypes.html'
     success_message = 'Success: Trans Types  was deleted.'
-    success_url = reverse_lazy('gl:list-transtypes')
+    success_url = reverse_lazy('gl:list-transtypes')    
+
+    def post(self, request, *args, **kwargs):
+        try:
+            return self.delete(request, *args, **kwargs)
+        except:
+            # context = { "error" : "Can't delete this Trans Type Becasue it's releted somewhere" }
+            return render(request, "gl/master/list-transtypes.html" , {"error": "Can't delete this Trans Type Becasue it's releted somewhere"})
+
 
 
 ######### End Trans Types
@@ -677,8 +685,8 @@ class TreasuriesOrdersApprovalUpdateView(LoginRequiredMixin, BSModalUpdateView):
 
     def post(self,request,*args, **kwargs):
         TreasuriesOrder = TreasuriesOrders.objects.get(pk=kwargs['pk'])
-        TreasuriesOrder.save
-#        print("call gl_TreasuriesOrdersApproval(" + str(TreasuriesOrder.pk) + "," + str(self.request.user.pk) + "  );")
+        TreasuriesOrder.save()
+        print("call gl_TreasuriesOrdersApproval(" + str(TreasuriesOrder.pk) + "," + str(self.request.user.pk) + "  );")
         cursor = connection.cursor()
         cursor.execute("call gl_TreasuriesOrdersApproval(" + str(TreasuriesOrder.pk) + "," + str(self.request.user.pk) + "  );")
         path = "gl:list-treasuriesordersapproval"

@@ -273,10 +273,14 @@ class CustomersJourCreateView(LoginRequiredMixin,  CreateView):
 
         posperiod = FiscalYearsPeriodsModules.objects.filter(module__code='AR',closedate =None
                                      ).exclude(opendate=None).aggregate(Min('fiscalyearperiod__fromdate'),Max('fiscalyearperiod__todate'))
-        mindate= posperiod['fiscalyearperiod__fromdate__min'].strftime('%Y-%m-%d')
-        maxdate= posperiod['fiscalyearperiod__todate__max'].strftime('%Y-%m-%d')
-        context['mindate'] = mindate
-        context['maxdate'] = maxdate
+        if all([posperiod['fiscalyearperiod__fromdate__min'], posperiod['fiscalyearperiod__todate__max']]):
+            mindate= posperiod['fiscalyearperiod__fromdate__min'].strftime('%Y-%m-%d')
+            maxdate= posperiod['fiscalyearperiod__todate__max'].strftime('%Y-%m-%d')
+            context['mindate'] = mindate
+            context['maxdate'] = maxdate
+        else:
+            context['mindate'] = datetime.today()
+            context['maxdate'] = datetime.today()
 
         companyprofile=CompanyProfile.objects.values('id','usecostcenter1','usecostcenter2','usecostcenter3','usecostcenter4').first()
         context['comusecostcenter1'] = companyprofile['usecostcenter1']
@@ -353,10 +357,14 @@ class CustomersJourUpdateView(LoginRequiredMixin, UpdateView):
 
         posperiod = FiscalYearsPeriodsModules.objects.filter(module__code='AR',closedate =None
                                      ).exclude(opendate=None).aggregate(Min('fiscalyearperiod__fromdate'),Max('fiscalyearperiod__todate'))
-        mindate= posperiod['fiscalyearperiod__fromdate__min'].strftime('%Y-%m-%d')
-        maxdate= posperiod['fiscalyearperiod__todate__max'].strftime('%Y-%m-%d')
-        context['mindate'] = mindate
-        context['maxdate'] = maxdate
+        if all([posperiod['fiscalyearperiod__fromdate__min'], posperiod['fiscalyearperiod__todate__max']]):
+            mindate= posperiod['fiscalyearperiod__fromdate__min'].strftime('%Y-%m-%d')
+            maxdate= posperiod['fiscalyearperiod__todate__max'].strftime('%Y-%m-%d')
+            context['mindate'] = mindate
+            context['maxdate'] = maxdate
+        else:
+            context['mindate'] = datetime.today()
+            context['maxdate'] = datetime.today()
 
         companyprofile=CompanyProfile.objects.values('id','usecostcenter1','usecostcenter2','usecostcenter3','usecostcenter4').first()
         context['comusecostcenter1'] = companyprofile['usecostcenter1']
@@ -367,10 +375,14 @@ class CustomersJourUpdateView(LoginRequiredMixin, UpdateView):
 
         model = apps.get_model('crm', 'UserBusinessRoles')
         transrole = model.objects.filter(user_id = self.request.user.pk ).values('id')
-        userbusrole_id = transrole[0]['id']
+        if transrole:
+            userbusrole_id = transrole[0]['id']
+            model = apps.get_model('crm', 'UserBusinessRolesttline')
+            transrole = model.objects.filter(userbusinessrole_id = userbusrole_id , transtype_id = transtypeid ).values()
+        else:
+            model = apps.get_model('crm', 'UserBusinessRolesttline')
+            transrole = model.objects.filter(transtype_id = transtypeid ).values()
 
-        model = apps.get_model('crm', 'UserBusinessRolesttline')
-        transrole = model.objects.filter(userbusinessrole_id = userbusrole_id , transtype_id = transtypeid ).values()
 
         if transrole == None or transrole.count() ==  0 :
             context['cancreate'] = 'False'
@@ -555,13 +567,8 @@ class CollectionsCreateView(LoginRequiredMixin,  CreateView):
 
         collector = Salesmans.objects.filter(user=self.request.user ).values('id','code','engname','arbname')
         if collector == None or collector.count() ==  0 :
-            messages.error(self.request, "You are not a Collector")
-            
-            #return render(self.request, "ar/trans/create_collections.html")
-
-
-
-
+            messages.error(self.request, "You are not a Collector")            
+            return context
         context['collector'] = collector
         context['collector_id'] =  collector[0]['id']
 

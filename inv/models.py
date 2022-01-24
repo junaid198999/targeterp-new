@@ -135,9 +135,9 @@ class InventoriesLocations(models.Model):
 
     def __str__(self):
         if get_language() == 'ar':
-            return self.code + ' - ' + self.arbname
+            return str(self.code + ' - ' + self.arbname)
         else:
-            return self.code + ' - ' + self.engname
+            return str(self.code + ' - ' + self.engname)
 
 
 class InventoriesBinLocations(models.Model):
@@ -157,7 +157,7 @@ class InventoriesBinLocations(models.Model):
         default_permissions = ('add', 'change', 'delete', 'view')
 
     def __str__(self):
-            return self.code
+            return str(self.code)
 
 
 
@@ -263,7 +263,7 @@ class GenericNames(models.Model):
     code = models.CharField(max_length=20,blank=True, null=True, verbose_name =_("Code"))
     engname = models.CharField(max_length=100,blank=True, null=True, verbose_name =_("Eng Name"))
     arbname = models.CharField(max_length=100,blank=True, null=True, verbose_name=_("Arb Name"))
-    genericcategory = models.ForeignKey(CostCenters, blank=True, null=True, on_delete=models.PROTECT, verbose_name=_("Generic Category"))
+    genericcategory = models.ForeignKey(GenericNamesCategories, blank=True, null=True, on_delete=models.PROTECT, verbose_name=_("Generic Category"))
     remarks = models.CharField(max_length=100,blank=True, null=True, verbose_name=_("Remarks"))
     #created_date = models.DateTimeField(blank=True,auto_now_add=True, verbose_name =_("Created Date"))
 

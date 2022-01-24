@@ -69,7 +69,10 @@
                                             </div>
 
                                             <div class="form-group col-md-3 mb-0">
-                                                {{ form.statusdate|as_crispy_field }}
+                                                <label for="id_engname" class="col-form-label  requiredField">
+                                                    {% trans 'Status Date' %} <span class="asteriskField">*</span>
+                                                </label>
+                                                {{ form.statusdate }}
                                                 <div class="{% if form.statusdate.errors %} invalid{% endif %}">
                                                     {% if error in form.statusdate.errors %}
                                                     <p class="help-block">{{ error }}</p>
@@ -500,6 +503,8 @@
 
 $(document).ready(function(){
   activaTab('general');
+
+  $('#id_statusdate').attr('type', 'date').attr('class', 'form-control');
 });
 
 function activaTab(tab){

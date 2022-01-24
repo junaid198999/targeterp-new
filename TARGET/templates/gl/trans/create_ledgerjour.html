@@ -53,30 +53,14 @@
                                     <td  width="70%" colspan = "7">
                                             <div class="input-group">                                            
                                                 <input type="text" id="id_transtype" NAME="transtype" class="form-control" hidden  />
-                                                <div class="form-group col-md-6 mb-0">
+                                                <div class="form-group col-md-12 mb-0">
                                                     {{ form.transtype|as_crispy_field }}
                                                     <div class="{% if form.transtype.errors %} invalid{% endif %}">
                                                         {% if error in form.transtype.errors %}
                                                         <p class="help-block">{{ error }}</p>
                                                         {% endif %}
                                                     </div>
-                                                </div>
-                                                <div class="form-group col-md-3 mb-0">
-                                                    {{ form.status|as_crispy_field }}
-                                                    <div class="{% if form.status.errors %} invalid{% endif %}">
-                                                        {% if error in form.status.errors %}
-                                                        <p class="help-block">{{ error }}</p>
-                                                        {% endif %}
-                                                    </div>
-                                                </div>
-                                                <div class="form-group col-md-3 mb-0">
-                                                    {{ form.statusdate|as_crispy_field }}
-                                                    <div class="{% if form.statusdate.errors %} invalid{% endif %}">
-                                                        {% if error in form.statusdate.errors %}
-                                                        <p class="help-block">{{ error }}</p>
-                                                        {% endif %}
-                                                    </div>
-                                                </div>
+                                                </div>                                                                                            
                                             </div>
                                     </td>
                                     <td colspan = "6">
@@ -195,21 +179,14 @@
                                             <td style="padding: 0rem !important;width:70px;">{{ form.creditamount|as_crispy_field }}</td>
                                             <td style="padding: 0rem !important;width:10px; text-align: center;"></td>
                                         </tr>
-                                    {% endfor %}
+                                    {% endfor %}                                    
                                 </tbody>
-
-                        </table>
-                        <table id="table_idfoot" class="table table-bordered table-hover table-sm mb-3 pb-3">
-                            <tr>
-                                <td colspan="5" width="45%"><b class="float-right" > </b></td>
-                                <td colspan="5"><b class="float-right" >{% trans "Total Debit : " %} </b></td>
-                                <td class="float-right" style="padding: 0rem" colspan="1"><INPUT style="text-align:right" TYPE="number" id="id_totaldebit" NAME="totaldebit" placeholder="Total Debit"  class="form-control" readonly="true"></td>
-                                <td colspan="5"><b class="float-right" >{% trans "Total Credit : " %} </b></td>
-                                <td class="float-right" style="padding: 0rem" colspan="1">
-                                    <INPUT style="text-align:right" TYPE="number" id="id_totalcredit" NAME="totalcredit" placeholder="Total Credit" class="form-control" readonly="true" ></td>
-                                    <input type="number" hidden="true" id="id_totalamount" name="totalamount">
-                                <td style="padding: 0rem !important;width:260px; text-align: center;"></td>
-                            </tr>
+                                <tr>
+                                    <td colspan="2"><b class="float-right">{% trans "Total:" %} </b></td>
+                                    <td style="padding: 0rem" colspan="1"><INPUT TYPE="number" id="id_totaldebit" NAME="totaldebit" placeholder="Total Debit" class="form-control"  readonly="true"></td>
+                                    <td style="padding: 0rem" colspan="1"><INPUT TYPE="number" id="id_totalcredit" NAME="totalcredit" placeholder="Total Credit" class="form-control"  readonly="true" ></td>
+                                    <input type="number" hidden="true" id="id_totalamount" name="totalamount" />
+                                </tr>
                         </table>                        
                     </form>
                 </div>
