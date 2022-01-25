@@ -348,10 +348,6 @@ function get_total(){
         },
     });
 
-
-
-
-
 {% comment %}
       $(function () {
         $("#datetimepicker1").datepicker({
@@ -363,47 +359,8 @@ function get_total(){
 
 $(document).ready(function(){
      $("[name*=-ledger]").select2();
-
     get_total();
 });
-
-
-if ( '{{ canedit }}' == 'False') {
-    $("#create_id").hide();
-    }
-    else if ( '{{ canedit }}' == 'True') {
-    $("#create_id").show();
-    }
-
-if ( '{{ cansubmit }}'== 'False') {
-    $("#submit_id").hide();
-    }
-    else if ( '{{ cansubmit }}' == 'True') {
-    $("#submit_id").show();
-    }
-
-if ( '{{ canapprove }}'== 'False') {
-    $("#approve_id").hide();
-    }
-    else if ( '{{ canapprove }}'== 'True') {
-    $("#approve_id").show();
-    }
-
-if ( '{{ canpost }}'== 'False') {
-
-    $("#post_id").hide();
-    }
-    else if ( '{{ canpost }}'== 'True') {
-    $("#post_id").show();
-    }
-
-if ( '{{ canrejct }}'== 'False') {
-    $("#reject_id").hide();
-    }
-    else if ( '{{ canrejct }}' == 'True') {
-    $("#reject_id").show();
-    }
-
 
 </script>
 
