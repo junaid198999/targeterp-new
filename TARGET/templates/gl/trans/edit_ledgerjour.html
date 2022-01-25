@@ -19,13 +19,13 @@
         </div>
         <div class="col-5" >
             <div class="buttons" style="margin-top:8px;float: left; ">
-                <button type="submit" name="approve"  id="approve_id" form="LJForm" class="btn btn-primary btn-lg btn-sm" style="width: 105px;" >Approve</button>
+                
+                <!-- <button type="submit" name="approve"  id="approve_id" form="LJForm" class="btn btn-primary btn-lg btn-sm" style="width: 105px;" >Approve</button>
                 <button type="submit" name="post"  id="post_id" form="LJForm" class="btn btn-warning btn-lg btn-sm" style="width: 105px;">Post</button>
                 <button type="submit" name="reject"  id="reject_id" form="LJForm" class="btn btn-info btn-lg btn-sm" style="width: 105px;" >Reject</button>
-                <input type="submit" name="submit" id="submit_id" form="LJForm" style="width: 105px;" class="submit-btn btn-success btn btn-sm" value="{% trans "Submit" %}"/>
+                <input type="submit" name="submit" id="submit_id" form="LJForm" style="width: 105px;" class="submit-btn btn-success btn btn-sm" value="{% trans "Submit" %}"/> -->
                 <input type="submit" name="save"  id="create_id" form="LJForm" style="width: 105px;" class="submit-btn btn-danger btn btn-sm" value="{% trans "Save" %}"/>
                 <a style="width: 105px;" class="btn btn-secondary btn-lg btn-sm"  href={% url "gl:list-ledgerjour"  %}   >{% trans "Cancel" %}</a>
-
            </div>
         </div>
 
@@ -69,6 +69,7 @@
                                         <INPUT TYPE="TEXT" id="id_transtype" NAME="transtype" class="form-control" hidden  >
 
                                             <div class="form-group col-md-6 mb-0">
+                                                {{ canpost }}
                                                 {{ form.transtype|as_crispy_field }}
                                                 <div class="{% if form.transtype.errors %} invalid{% endif %}">
                                                     {% if error in form.transtype.errors %}
@@ -366,6 +367,42 @@ $(document).ready(function(){
     get_total();
 });
 
+
+if ( '{{ canedit }}' == 'False') {
+    $("#create_id").hide();
+    }
+    else if ( '{{ canedit }}' == 'True') {
+    $("#create_id").show();
+    }
+
+if ( '{{ cansubmit }}'== 'False') {
+    $("#submit_id").hide();
+    }
+    else if ( '{{ cansubmit }}' == 'True') {
+    $("#submit_id").show();
+    }
+
+if ( '{{ canapprove }}'== 'False') {
+    $("#approve_id").hide();
+    }
+    else if ( '{{ canapprove }}'== 'True') {
+    $("#approve_id").show();
+    }
+
+if ( '{{ canpost }}'== 'False') {
+
+    $("#post_id").hide();
+    }
+    else if ( '{{ canpost }}'== 'True') {
+    $("#post_id").show();
+    }
+
+if ( '{{ canrejct }}'== 'False') {
+    $("#reject_id").hide();
+    }
+    else if ( '{{ canrejct }}' == 'True') {
+    $("#reject_id").show();
+    }
 
 
 </script>

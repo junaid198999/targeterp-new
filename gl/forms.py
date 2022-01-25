@@ -102,7 +102,7 @@ class LedgerJourForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super(LedgerJourForm, self).__init__(*args, **kwargs)
         self.helper = FormHelper()
-        self.fields['status'].disabled = True
+        self.fields['status'].disabled = False
 
         if self.instance.transtype_id == None:
             self.fields['transtype'].disabled = False
