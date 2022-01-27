@@ -224,7 +224,27 @@
 </form>
     <script src="/static/libs/select2/select2.min.js"></script>
 <script type="text/javascript">
+    $(document).ready(function(){
+        
+        
+    });
 
+    function save(value) {
+        var code = value;
 
-  </script>
+        if(code.length < 1) {
+            $(".submit-btn.btn-danger.btn.btn-primary").prop('disabled', true);            
+        }
+        else {
+            $(".submit-btn.btn-danger.btn.btn-primary").prop('disabled', false);
+        }
+    }
+
+    $("#id_code").on('keypress', function(){
+        save($(this).val());
+    })
+    $("#id_code").on('change', function(){
+        save($(this).val());
+    })
+    </script>
 {% endblock %}

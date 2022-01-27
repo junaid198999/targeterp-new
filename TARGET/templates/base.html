@@ -19,16 +19,16 @@
 
     {% if LANGUAGE_CODE == 'ar' %}
         <link href="https://fonts.googleapis.com/css?family=Tajawal&display=swap" rel="stylesheet">
-        <link href="{% static 'css/icons-rtl.min.css' %}" rel="stylesheet" type="text/css" />
-        <link href="{% static 'css/bootstrap-rtl.min.css' %}" rel="stylesheet" type="text/css"  />
+        <link href="{% static 'css/icons-rtl.min.css' %}?version=1" rel="stylesheet" type="text/css" />
+        <link href="{% static 'css/bootstrap-rtl.min.css' %}?version=1" rel="stylesheet" type="text/css"  />
         <link href="{% static 'css/app-rtl.min.css' %}?version=1" rel="stylesheet" type="text/css" />
-        <link rel="stylesheet" type="text/css" href="{% static 'css/bootstrap-rtl-select.min.css' %}" media="all">
+        <link rel="stylesheet" type="text/css" href="{% static 'css/bootstrap-rtl-select.min.css' %}?version=1" media="all">
 
-        <link href="{% static 'libs/bootstrap-table/bootstrap-table.min.css' %}" rel="stylesheet" type="text/css" />
-        <link href="{% static 'libs/datatables/dataTables.bootstrap4-rtl.css' %}" rel="stylesheet" type="text/css" />
-        <link href="{% static 'libs/datatables/buttons.bootstrap4-rtl.css' %}" rel="stylesheet" type="text/css" />
-        <link href="{% static 'libs/datatables/responsive.bootstrap4-rtl.css' %}" rel="stylesheet" type="text/css" />
-        <link href="{% static 'libs/datatables/select.bootstrap4-rtl.css' %}" rel="stylesheet" type="text/css" />
+        <link href="{% static 'libs/bootstrap-table/bootstrap-table.min.css' %}?version=1" rel="stylesheet" type="text/css" />
+        <link href="{% static 'libs/datatables/dataTables.bootstrap4-rtl.css' %}?version=1" rel="stylesheet" type="text/css" />
+        <link href="{% static 'libs/datatables/buttons.bootstrap4-rtl.css' %}?version=1" rel="stylesheet" type="text/css" />
+        <link href="{% static 'libs/datatables/responsive.bootstrap4-rtl.css' %}?version=1" rel="stylesheet" type="text/css" />
+        <link href="{% static 'libs/datatables/select.bootstrap4-rtl.css' %}?version=1" rel="stylesheet" type="text/css" />
     {% else %}
         <link href="{% static 'css/dash_1.css' %}?version=1" rel="stylesheet" type="text/css" />
         {% load notifications_tags %}
@@ -37,31 +37,31 @@
             {% for UserS in settings %}
                 {% if UserS.darktheme == 1 %}
                 <link href="{% static 'css/app-dark.min.css' %}?version=2" rel="stylesheet" type="text/css" />
-                <link href="{% static 'css/icons-dark.min.css' %}" rel="stylesheet" type="text/css" />
-                <link href="{% static 'css/bootstrap-dark.min.css' %}" rel="stylesheet" type="text/css"  />
+                <link href="{% static 'css/icons-dark.min.css' %}?version=1" rel="stylesheet" type="text/css" />
+                <link href="{% static 'css/bootstrap-dark.min.css' %}?version=1" rel="stylesheet" type="text/css"  />
                 {% else %}
-                <link href="{% static 'css/icons.min.css' %}" rel="stylesheet" type="text/css" />
-                <link href="{% static 'css/bootstrap.min.css' %}" rel="stylesheet" type="text/css"  />
+                <link href="{% static 'css/icons.min.css' %}?version=1" rel="stylesheet" type="text/css" />
+                <link href="{% static 'css/bootstrap.min.css' %}?version=1" rel="stylesheet" type="text/css"  />
                 <link href="{% static 'css/app.min.css' %}?version=1" rel="stylesheet" type="text/css" />
                 {% endif %}
             {% endfor %}
         {% else %}
-            <link href="{% static 'css/icons.min.css' %}" rel="stylesheet" type="text/css" />
-            <link href="{% static 'css/bootstrap.min.css' %}" rel="stylesheet" type="text/css"  />
+            <link href="{% static 'css/icons.min.css' %}?version=1" rel="stylesheet" type="text/css" />
+            <link href="{% static 'css/bootstrap.min.css' %}?version=1" rel="stylesheet" type="text/css"  />
             <link href="{% static 'css/app.min.css' %}?version=1" rel="stylesheet" type="text/css" />
         {% endif %}
-        <link rel="stylesheet" type="text/css" href="{% static 'css/bootstrap-select.min.css' %}" media="all">
+        <link rel="stylesheet" type="text/css" href="{% static 'css/bootstrap-select.min.css' %}?version=1" media="all">
 
-        <link href="{% static 'libs/bootstrap-table/bootstrap-table.min.css' %}" rel="stylesheet" type="text/css" />
-        <link href="{% static 'libs/datatables/dataTables.bootstrap4.css' %}" rel="stylesheet" type="text/css" />
-        <link href="{% static 'libs/datatables/buttons.bootstrap4.css' %}" rel="stylesheet" type="text/css" />
-        <link href="{% static 'libs/datatables/responsive.bootstrap4.css' %}" rel="stylesheet" type="text/css" />
-        <link href="{% static 'libs/datatables/select.bootstrap4.css' %}" rel="stylesheet" type="text/css" />
+        <link href="{% static 'libs/bootstrap-table/bootstrap-table.min.css' %}?version=1" rel="stylesheet" type="text/css" />
+        <link href="{% static 'libs/datatables/dataTables.bootstrap4.css' %}?version=1" rel="stylesheet" type="text/css" />
+        <link href="{% static 'libs/datatables/buttons.bootstrap4.css' %}?version=1" rel="stylesheet" type="text/css" />
+        <link href="{% static 'libs/datatables/responsive.bootstrap4.css' %}?version=1" rel="stylesheet" type="text/css" />
+        <link href="{% static 'libs/datatables/select.bootstrap4.css' %}?version=1" rel="stylesheet" type="text/css" />
     {% endif %}
-    <link href="{% static 'DataTables/ColReorder-1.5.2/css/colReorder.dataTables.min.css' %}" rel="stylesheet" />
-    <link href="{% static 'DataTables/Buttons-1.6.0/css/buttons.dataTables.min.css' %}" rel="stylesheet" />
-    <link href="{% static 'libs/toastr/jquery.toast.css' %}" rel="stylesheet" type="text/css" />
-    <link href="{% static 'libs/hopscotch/hopscotch.min.css' %}" rel="stylesheet" type="text/css" />
+    <link href="{% static 'DataTables/ColReorder-1.5.2/css/colReorder.dataTables.min.css' %}?version=1" rel="stylesheet" />
+    <link href="{% static 'DataTables/Buttons-1.6.0/css/buttons.dataTables.min.css' %}?version=1" rel="stylesheet" />
+    <link href="{% static 'libs/toastr/jquery.toast.css' %}?version=1" rel="stylesheet" type="text/css" />
+    <link href="{% static 'libs/hopscotch/hopscotch.min.css' %}?version=1" rel="stylesheet" type="text/css" />
 
 
 

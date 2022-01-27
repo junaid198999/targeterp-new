@@ -289,6 +289,9 @@ class TransTypesUpdateView(LoginRequiredMixin, BSModalUpdateView):
         TransTypes = form.save()
         TransTypes.save
         return super(TransTypesUpdateView, self).form_valid(form)
+    
+    def form_invalid(self, form):
+        return render(self.request, 'gl/master/list-transtypes.html', {"error": "code is requuired"})
 
 class TransTypesDeleteView(LoginRequiredMixin, BSModalDeleteView):
     model = TransTypes
