@@ -369,9 +369,9 @@ class Items(models.Model):
 
     def __str__(self):
         if get_language() == 'ar':
-            return self.code + ' - ' + self.arbname
+            return str(self.code) + ' - ' + str(self.arbname)
         else:
-            return self.code + ' - ' + self.engname
+            return str(self.code) + ' - ' + str(self.engname)
 
 
 """ Insert into next table One record for Base unit and factor is 1 to make relation direct with Item Identifier"""
