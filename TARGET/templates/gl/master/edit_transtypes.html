@@ -223,28 +223,40 @@
 
 </form>
     <script src="/static/libs/select2/select2.min.js"></script>
-<script type="text/javascript">
-    $(document).ready(function(){
-        
-        
-    });
-
-    function save(value) {
-        var code = value;
-
-        if(code.length < 1) {
-            $(".submit-btn.btn-danger.btn.btn-primary").prop('disabled', true);            
+<script>
+  function check_validation(control) {
+        if($(control).val().length < 1) {
+            $(control).css("border", "1px solid red");
+            $(control).focus();            
+        } else {
+            $(control).css("border", "1px solid black");
         }
-        else {
-            $(".submit-btn.btn-danger.btn.btn-primary").prop('disabled', false);
+        if(($("#id_code").val().length < 1) || ($("#id_engname").val().length < 1)) {
+            $(".submit-btn.btn-danger.btn.btn-primary").prop("disabled", true);            
+        } else {
+            $(".submit-btn.btn-danger.btn.btn-primary").prop("disabled", false);
         }
     }
 
-    $("#id_code").on('keypress', function(){
-        save($(this).val());
-    })
-    $("#id_code").on('change', function(){
-        save($(this).val());
-    })
-    </script>
+    $("#id_code").on('keyup keypress change blur', function(){
+        check_validation(this);
+    });
+
+    $("#id_engname").on('keyup keypress change blur', function(){
+        check_validation(this);
+    });
+
+    $("#id_transkind").on('change', function() {
+        var v = $(this).val();
+        if(v == null || v == "") {
+            $(".submit-btn.btn-danger.btn.btn-primary").prop("disabled", true);
+            $(this).focus();
+            $(this).css("border", "1px solid red");
+        } else {
+            $(".submit-btn.btn-danger.btn.btn-primary").prop("disabled", false);
+            $(this).css("border", "1px solid black");
+        }
+    });
+        
+</script>
 {% endblock %}

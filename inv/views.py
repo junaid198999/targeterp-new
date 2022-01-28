@@ -797,18 +797,14 @@ class ItemsCreateView(LoginRequiredMixin,  CreateView):
             print('validate itemsuom')
             response = super().form_valid(form)
             Itemslines.instance = self.object
-
             Itemslines.save()
-
-
         else:
             print(Itemslines.errors)
             context['itemsuom'] = ItemsUOMFormSet()
             #return response
 
         cursor = connection.cursor()
-        cursor.execute(
-            "call in_ItemsAfterSave(" + str(new_id) + "  );")
+        cursor.execute("call in_ItemsAfterSave(" + str(new_id) + "  );")
 
         if itemsseason.is_valid():
             print('validate itemsseason')
@@ -822,8 +818,6 @@ class ItemsCreateView(LoginRequiredMixin,  CreateView):
             return response
 
         return HttpResponseRedirect(self.get_success_url())
-
-        #return response
 
 class ItemsUpdateView(LoginRequiredMixin, UpdateView):
     model = Items

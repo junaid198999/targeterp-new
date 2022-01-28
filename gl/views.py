@@ -291,7 +291,8 @@ class TransTypesUpdateView(LoginRequiredMixin, BSModalUpdateView):
         return super(TransTypesUpdateView, self).form_valid(form)
     
     def form_invalid(self, form):
-        return render(self.request, 'gl/master/list-transtypes.html', {"error": "code is requuired"})
+        context = self.get_context_data(form=form)
+        return render(self.request, 'gl/master/list-transtypes.html', {"update_error": "code is requuired"})
 
 class TransTypesDeleteView(LoginRequiredMixin, BSModalDeleteView):
     model = TransTypes
