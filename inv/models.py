@@ -273,9 +273,9 @@ class GenericNames(models.Model):
 
     def __str__(self):
         if get_language() == 'ar':
-            return self.code + ' - ' + self.arbname
+            return str(self.code) + ' - ' + str(self.arbname)
         else:
-            return self.code + ' - ' + self.engname
+            return str(self.code) + ' - ' + str(self.engname)
 
 
 
