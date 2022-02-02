@@ -690,11 +690,9 @@ class TreasuriesOrdersApprovalUpdateView(LoginRequiredMixin, BSModalUpdateView):
     def post(self,request,*args, **kwargs):
         TreasuriesOrder = TreasuriesOrders.objects.get(pk=kwargs['pk'])
         TreasuriesOrder.save()
-        print("call gl_TreasuriesOrdersApproval(" + str(TreasuriesOrder.pk) + "," + str(self.request.user.pk) + "  );")
-        cursor = connection.cursor()
-        cursor.execute("call gl_TreasuriesOrdersApproval(" + str(TreasuriesOrder.pk) + "," + str(self.request.user.pk) + "  );")
+        cursor = connection.cursor()        
+        cursor.execute("call gl_TreasuriesOrdersApproval(" + str(TreasuriesOrder.pk) + "," + str(self.request.user.pk) + ");")
         path = "gl:list-treasuriesordersapproval"
-
         return redirect(path)
 
 
