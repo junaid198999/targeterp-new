@@ -72,7 +72,7 @@ DATABASES = {
          'HOST': 'localhost',
          'NAME': 'targeterp',
          'USER': 'postgres',
-         'PASSWORD': "Admin@123$$$",
+         'PASSWORD': "Admin@123$$",
          'PORT': 5432,
      }
 }
