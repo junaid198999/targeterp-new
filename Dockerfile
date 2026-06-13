@@ -17,6 +17,7 @@ COPY requirements.txt /app/
 RUN pip install --no-cache-dir "setuptools<58.0.0"
 RUN pip install --no-cache-dir -r requirements.txt
 RUN echo "__version__ = '3.1.0'" >> /usr/local/lib/python3.9/site-packages/jquery/__init__.py
+RUN python -c "with open('/usr/local/lib/python3.9/site-packages/django/db/backends/postgresql/utils.py', 'w') as f: f.write('from datetime import timedelta\nfrom django.utils.timezone import utc\n\ndef utc_tzinfo_factory(offset):\n    if offset != 0 and offset != timedelta(0):\n        raise AssertionError(\"database connection isn\'t set to UTC\")\n    return utc\n')"
 
 COPY . /app/
 
