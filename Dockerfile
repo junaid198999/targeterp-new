@@ -16,6 +16,7 @@ WORKDIR /app
 COPY requirements.txt /app/
 RUN pip install --no-cache-dir "setuptools<58.0.0"
 RUN pip install --no-cache-dir -r requirements.txt
+RUN echo "__version__ = '3.1.0'" >> /usr/local/lib/python3.9/site-packages/jquery/__init__.py
 
 COPY . /app/
 
