@@ -1,0 +1,1242 @@
+{% extends "auth_base.html" %}
+{% load i18n %}
+{% load widget_tweaks %}
+{% load widgets %}
+
+{% block content %}
+{% comment %}
+{% if messages %}}
+    {% for message in messages %}
+        <div>
+            <strong>{{message|safe}}</strong>
+        </div>
+    {% endfor %}
+{% endif %}
+{% endcomment %}
+    {% if LANGUAGE_CODE == 'ar' %}
+        <link href="/static/libs/select2/select2-rtl.min.css" rel="stylesheet" />
+    {% else %}
+        <link href="/static/libs/select2/select2.min.css" rel="stylesheet" />
+    {% endif %}
+<link href="/static/libs/sweetalert2/sweetalert2.min.css" rel="stylesheet" type="text/css" />
+    <div class="container-fluid">
+        <!-- start page title -->
+    <div class="row" style="position: fixed;top:70px;z-index:2; overflow: hidden;width: 100%; ">
+        <div class="col-6" >
+            <div class="page-title" style="background: #e81919;height:45px;text-align: left;padding-top: 1px;padding-left: 5px;">
+                <h4 class="page-title" style="margin:4px; font-size: 2rem;color: white;">{% trans "Import "  %}  </h4>
+            </div>
+        </div>
+        <div class="col-6" >
+            <div class="buttons" style="margin-top:8px;float: left; ">
+                <input type="submit" name="save" id="create_id" form="ImpForm" style="width: 105px;" class="submit-btn btn-danger btn btn-sm" value="{% trans "Import" %}"/>
+                <a style="width: 105px;" class="btn btn-secondary btn-lg btn-sm"  href="{% url 'crm:import' %}"   >{% trans "Cancel" %}</a>
+
+           </div>
+        </div>
+
+    </div>
+
+        {% if request.user.is_superuser %}
+
+        <div class="row" >
+            <div class="col-xl-12">
+                <div class="card">
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-12">
+                                <h4 class="header-title mb-0">{% trans "Import Source from .CSV file" %}</h4>
+                                <br>
+                                <form id="ImpForm" method="post" enctype="multipart/form-data" class="mt-3">
+                                    {% csrf_token %}
+                                    <span>{% blocktrans %}Select the source:{% endblocktrans %}</span>
+                                    <br>
+                                    <div class="form-group mb-3">
+                                        <select name="source" class="form-control" id="id_source" style="width:100%">
+                                            <option value="SystemModules">{% trans "Modules" %}</option>
+                                            <option value="SystemLookUp">{% trans "System LookUp" %}</option>
+                                            <option value="PricesLevels">{% trans "Prices Levels" %}</option>
+                                            <option value="PaymentsMethods">{% trans "Payments Methods" %}</option>
+                                            <option value="PaymentsTearms">{% trans "Payments Tearms" %}</option>
+                                            <option value="TransTypes">{% trans "Transactions Types" %}</option>
+                                            <option value="Taxes">{% trans "Taxes" %}</option>
+                                            <option value="Units">{% trans "Units" %}</option>
+                                            <option value="Warehouses">{% trans "Warehouses" %}</option>
+                                            <option value="StorageMethodsTypes">{% trans "Storage Methods Types" %}</option>
+                                            <option value="InventoriesLocationsTypes">{% trans "Inventories Locations Types" %}</option>
+                                            <option value="ItemsTypes">{% trans "Items Types" %}</option>
+                                            <option value="ItemsClasses">{% trans "Items Classes" %}</option>
+                                            <option value="InventoriesLocations">{% trans "Inventories Locations" %}</option>
+                                            <option value="OperationsTypes">{% trans "Operations Types" %}</option>
+                                            <option value="Items">{% trans "Items" %}</option>
+                                            <option value="ItemsUOM">{% trans "Items Packing (UOM)" %}</option>
+
+
+                                            <option value="LedgersTypes">{% trans "Ledger Types" %}</option>
+                                            <option value="Ledger">{% trans "Ledger" %}</option>
+                                            <option value="LedgerBalance">{% trans "Ledger Balances" %}</option>
+                                            <option value="APVendors">{% trans "AP Vendors" %}</option>
+                                            <option value="VendorBalance">{% trans "AP Vendors Balances" %}</option>
+                                            <option value="ARCustomers">{% trans "AR Customers" %}</option>
+                                            <option value="CustomerBalance">{% trans "AR Customers Balances" %}</option>
+                                            <option value="Reports">{% trans "Reports" %}</option>
+                                            <option value="ItemsPlan">{% trans "Items Plan (Seasonality)" %}</option>
+                                            <option value="TargetUpDown">{% trans "Item Target Up Down" %}</option>
+                                            <option value="TargetByChannel">{% trans "Items Target By Channel" %}</option>
+
+
+                                        </select>
+                                    </div>
+                                    <span>{% blocktrans %}Select a file on your computer that contains the data that you would like to import, or download the template to get a head start on creating the import file.{% endblocktrans %}</span>
+                                    <br>
+                                    <div id="SystemModules_Div">
+                                        <a href="/media/import/sy_Modules.csv">{% trans "Download Import File Template" %}</a>
+                                    </div>
+
+
+                                    <div id="SystemLookUp_Div">
+                                        <a href="/media/import/SystemLookUp.csv">{% trans "Download Import File Template" %}</a>
+                                    </div>
+
+                                    <div id="PricesLevels_Div">
+                                        <a href="/media/import/sy_pricelevels.csv">{% trans "Download Import File Template" %}</a>
+                                    </div>
+
+                                    <div id="PaymentsMethods_Div">
+                                        <a href="/media/import/sy_PaymentsMethods.csv">{% trans "Download Import File Template" %}</a>
+                                    </div>
+
+                                    <div id="PaymentsTearms_Div">
+                                        <a href="/media/import/sy_PaymentsTearms.csv">{% trans "Download Import File Template" %}</a>
+                                    </div>
+
+                                    <div id="TransTypes_Div">
+                                        <a href="/media/import/gl_TransTypes.csv">{% trans "Download Import File Template" %}</a>
+                                    </div>
+
+                                    <div id="Taxes_Div">
+                                        <a href="/media/import/sy_taxes.csv">{% trans "Download Import File Template" %}</a>
+                                    </div>
+
+                                    <div id="Units_Div">
+                                        <a href="/media/import/in_Units.csv">{% trans "Download Import File Template" %}</a>
+                                    </div>
+
+                                    <div id="Warehouses_Div">
+                                        <a href="/media/import/in_Warehouses.csv">{% trans "Download Import File Template" %}</a>
+                                    </div>
+
+                                    <div id="StorageMethodsTypes_Div">
+                                        <a href="/media/import/in_StorageMethods.csv">{% trans "Download Import File Template" %}</a>
+                                    </div>
+
+                                    <div id="InventoriesLocationsTypes_Div">
+                                        <a href="/media/import/in_inventorieslocationstypes.csv">{% trans "Download Import File Template" %}</a>
+                                    </div>
+
+                                    <div id="ItemsTypes_Div">
+                                        <a href="/media/import/in_itemsTypes.csv">{% trans "Download Import File Template" %}</a>
+                                    </div>
+
+                                    <div id="ItemsClasses_Div">
+                                        <a href="/media/import/in_itemsclasses.csv">{% trans "Download Import File Template" %}</a>
+                                    </div>
+
+                                    <div id="InventoriesLocations_Div">
+                                        <a href="/media/import/in_InventoriesLocations.csv">{% trans "Download Import File Template" %}</a>
+                                    </div>
+
+                                    <div id="OperationsTypes_Div">
+                                        <a href="/media/import/in_OperationsTypes.csv">{% trans "Download Import File Template" %}</a>
+                                    </div>
+
+                                    <div id="Items_Div">
+                                        <a href="/media/import/in_items.csv">{% trans "Download Import File Template" %}</a>
+                                    </div>
+
+                                    <div id="ItemsUOM_Div">
+                                        <a href="/media/import/in_itemsUOM.csv">{% trans "Download Import File Template" %}</a>
+                                    </div>
+
+
+                                    <div id="LedgersTypes_Div">
+                                        <a href="/media/import/gl_LedgersTypes.csv">{% trans "Download Import File Template" %}</a>
+                                    </div>
+
+                                    <div id="Ledger_Div">
+                                        <a href="/media/import/Ledger.csv">{% trans "Download Import File Template" %}</a>
+                                    </div>
+                                    <div id="LedgerBalance_Div">
+                                        <a href="/media/import/LedgerBalance.csv">{% trans "Download Import File Template Ledger Balance" %}</a>
+                                    </div>
+                                    <div id="APVendors_Div">
+                                        <a href="/media/import/APVendors.csv">{% trans "Download Import File Template AP Vendors" %}</a>
+                                    </div>
+                                    <div id="APVendorBalance_Div">
+                                        <a href="/media/import/APVendorOpeningBalance.csv">{% trans "Download Import File Template AP Vendor Opening Balance" %}</a>
+                                    </div>
+                                    <div id="ARCustomers_Div">
+                                        <a href="/media/import/ARCustomers.csv">{% trans "Download Import File Template AR Customers" %}</a>
+                                    </div>
+                                    <div id="ARCustomerBalance_Div">
+                                        <a href="/media/import/ARCustomerOpeningBalance.csv">{% trans "Download Import File Template AR Customer Opening Balance" %}</a>
+                                    </div>
+
+                                    <div id="Reports_Div">
+                                        <a href="/media/import/rp_reports.csv">{% trans "Download Import File Template Reports" %}</a>
+                                    </div>
+
+                                    <div id="ItemsPlan_Div">
+                                        <a href="/media/import/in_ItemsPlan.csv">{% trans "Download Import File Template Reports" %}</a>
+                                    </div>
+
+                                    <div id="TargetUpDown_Div">
+                                        <a href="/media/import/TargetUpDown.csv">{% trans "Download Import File Template Reports" %}</a>
+                                    </div>
+
+                                    <div id="TargetByChannel_Div">
+                                        <a href="/media/import/TargetByChannel.csv">{% trans "Download Import File Template Reports" %}</a>
+                                    </div>
+
+
+                                    <br>
+                                    <br>
+                                    <div class="form-group mb-3">
+                                        <label for="example-fileinput">{% trans "Select file:" %}</label>
+                                        <input name="file" type="file" id="example-fileinput" class="form-control-file">
+                                    </div>
+
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row" >
+            <div class="col-xl-12">
+                <div class="card">
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-xl-12 mt-3 mt-xl-0">
+                                <h4 class="header-title">{% trans "Import Instructions:" %}</h4>
+                                            <ul class="list-unstyled mt-3">
+                                                <li>
+                                                    - {% blocktrans %}This is a sample import file which provides an example of the expected contents of a file that is ready for import.{% endblocktrans %}
+                                                </li>
+                                                <li>
+                                                    - {% blocktrans %}The header row is the top-most row in the file and contains the field labels as you would see them in the application.{% endblocktrans %}
+                                                </li>
+                                                <li>
+                                                    - {% blocktrans %}These labels are used for mapping the data in the file to the fields in the application.{% endblocktrans %}
+                                                </li>
+                                                <li>
+                                                    - {% blocktrans %}The column order is critical{% endblocktrans %} <strong>{% trans "PLEASE DO NOT CHANGE IT." %}</strong>
+                                                </li>
+                                            </ul>
+
+
+                                <p class="sub-header">
+                                    {% blocktrans %}To use this file as a template, do the following:{% endblocktrans %}
+                                </p>
+
+
+                                <ol>
+                                    <li>
+                                        {% blocktrans %}Remove the sample rows of data{% endblocktrans %}
+                                    </li>
+                                    <li>
+                                        {% blocktrans %}Input your own data into the appropriate rows and columns{% endblocktrans %}
+                                    </li>
+                                    <li>
+                                        {% blocktrans %}Save the file to a known location on your system{% endblocktrans %}
+                                    </li>
+                                    <li>
+                                        {% blocktrans %}Click on Choose File button, choose  the CSV to upload file, then click on Upload.{% endblocktrans %}
+                                    </li>
+                                </ol>
+                            </div> <!-- end col -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% else %}
+        <div class="row" >
+            <div class="col-xl-12">
+                <div class="card">
+                    <div class="card-body">
+                            <STRONG> {% trans "You Don't have a permission to access this page." %} </STRONG>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endif %}
+
+    </div>
+{% endblock %}
+{% block extra_javascript %}
+<script src="/static/libs/select2/select2.min.js"></script>
+<script src="/static/libs/sweetalert2/sweetalert2.min.js"></script>
+<script type="text/javascript">
+$(function () {
+    $('#id_source').select2({
+        width: '100%',
+        templateSelection: function (data) {
+            if (data.id === '') {
+              return 'Select';
+            }
+        return data.text;
+        }
+    });
+});
+var Modules = document.getElementById("SystemModules_Div");
+var LookUp = document.getElementById("SystemLookUp_Div");
+var PriceLevels = document.getElementById("PricesLevels_Div");
+
+var PayMethod = document.getElementById("PaymentsMethods_Div");
+var PaymentTearm = document.getElementById("PaymentsTearms_Div");
+
+var TransType = document.getElementById("TransTypes_Div");
+var LedgerType = document.getElementById("LedgersTypes_Div");
+var Taxes = document.getElementById("Taxes_Div");
+var Units = document.getElementById("Units_Div");
+var Warehouses = document.getElementById("Warehouses_Div");
+var StorageMethodsTypes = document.getElementById("StorageMethodsTypes_Div");
+var InventoriesLocationsTypes = document.getElementById("InventoriesLocationsTypes_Div");
+var ItemsTypes = document.getElementById("ItemsTypes_Div");
+var ItemsClasses = document.getElementById("ItemsClasses_Div");
+var InventoriesLocations = document.getElementById("InventoriesLocations_Div");
+var OperationsTypes = document.getElementById("OperationsTypes_Div");
+var Items = document.getElementById("Items_Div");
+var ItemsUOM = document.getElementById("ItemsUOM_Div");
+
+var led = document.getElementById("Ledger_Div");
+var ledbal = document.getElementById("LedgerBalance_Div");
+var APVend = document.getElementById("APVendors_Div");
+var vendbal = document.getElementById("APVendorBalance_Div");
+var ARCus = document.getElementById("ARCustomers_Div");
+var custbal = document.getElementById("ARCustomerBalance_Div");
+var report = document.getElementById("Reports_Div");
+var itemplan = document.getElementById("ItemsPlan_Div");
+var targetupdown = document.getElementById("TargetUpDown_Div");
+var targetbychannel = document.getElementById("TargetByChannel_Div");
+
+
+
+Modules.style.display = "none";
+LookUp.style.display = "none";
+PriceLevels.style.display = "none";
+PayMethod.style.display = "none";
+PaymentTearm.style.display = "none";
+
+TransType.style.display = "none";
+LedgerType.style.display = "none";
+Taxes.style.display = "none";
+Units.style.display = "none";
+Warehouses.style.display = "none";
+StorageMethodsTypes.style.display = "none";
+InventoriesLocationsTypes.style.display = "none";
+ItemsTypes.style.display = "none";
+ItemsClasses.style.display = "none";
+InventoriesLocations.style.display = "none";
+OperationsTypes.style.display = "none";
+Items.style.display = "none";
+ItemsUOM.style.display = "none";
+
+
+led.style.display = "none";
+ledbal.style.display = "none";
+APVend.style.display = "none";
+vendbal.style.display = "none";
+ARCus.style.display = "none";
+custbal.style.display = "none";
+report.style.display = "none";
+itemplan.style.display = "none";
+targetupdown.style.display = "none";
+targetbychannel.style.display = "none";
+
+
+$("#id_source").change(function () {
+    if ($("#id_source").val() == 'SystemLookUp') {
+        LookUp.style.display = "block";
+        PriceLevels.style.display = "none";
+        Modules.style.display = "none";
+        PayMethod.style.display = "none";
+        PaymentTearm.style.display = "none";
+        TransType.style.display = "none";
+        LedgerType.style.display = "none";
+        Taxes.style.display = "none";
+        Units.style.display = "none";
+        Warehouses.style.display = "none";
+        StorageMethodsTypes.style.display = "none";
+        InventoriesLocationsTypes.style.display = "none";
+        ItemsTypes.style.display = "none";
+        ItemsClasses.style.display = "none";
+        InventoriesLocations.style.display = "none";
+        OperationsTypes.style.display = "none";
+        Items.style.display = "none";
+        ItemsUOM.style.display = "none";
+        led.style.display = "none";
+        ledbal.style.display = "none";
+        APVend.style.display = "none";
+        vendbal.style.display = "none";
+        ARCus.style.display = "none";
+        custbal.style.display = "none";
+        report.style.display = "none";
+        itemplan.style.display = "none";
+        targetupdown.style.display = "none";
+        targetbychannel.style.display = "none";
+
+    } else if ($("#id_source").val() == 'PricesLevels') {
+        Modules.style.display = "none";
+        led.style.display = "none";
+        PayMethod.style.display = "none";
+        PaymentTearm.style.display = "none";
+        TransType.style.display = "none";
+        Taxes.style.display = "none";
+        Units.style.display = "none";
+        Warehouses.style.display = "none";
+        StorageMethodsTypes.style.display = "none";
+        InventoriesLocationsTypes.style.display = "none";
+        ItemsTypes.style.display = "none";
+        ItemsClasses.style.display = "none";
+        InventoriesLocations.style.display = "none";
+        OperationsTypes.style.display = "none";
+        Items.style.display = "none";
+        ItemsUOM.style.display = "none";
+        LookUp.style.display = "none";
+        PriceLevels.style.display = "block";
+        LedgerType.style.display = "none";
+        ledbal.style.display = "none";
+        APVend.style.display = "none";
+        vendbal.style.display = "none";
+        ARCus.style.display = "none";
+        custbal.style.display = "none";
+        report.style.display = "none";
+        itemplan.style.display = "none";
+        targetupdown.style.display = "none";
+        targetbychannel.style.display = "none";
+
+
+    } else if ($("#id_source").val() == 'SystemModules') {
+        Modules.style.display = "block";
+        led.style.display = "none";
+        PayMethod.style.display = "none";
+        PaymentTearm.style.display = "none";
+        TransType.style.display = "none";
+        Taxes.style.display = "none";
+        Units.style.display = "none";
+        Warehouses.style.display = "none";
+        StorageMethodsTypes.style.display = "none";
+        InventoriesLocationsTypes.style.display = "none";
+        ItemsTypes.style.display = "none";
+        ItemsClasses.style.display = "none";
+        InventoriesLocations.style.display = "none";
+        OperationsTypes.style.display = "none";
+        Items.style.display = "none";
+        ItemsUOM.style.display = "none";
+        LookUp.style.display = "none";
+        PriceLevels.style.display = "none";
+        LedgerType.style.display = "none";
+        ledbal.style.display = "none";
+        APVend.style.display = "none";
+        vendbal.style.display = "none";
+        ARCus.style.display = "none";
+        custbal.style.display = "none";
+        report.style.display = "none";
+        itemplan.style.display = "none";
+        targetupdown.style.display = "none";
+        targetbychannel.style.display = "none";
+
+    } else if ($("#id_source").val() == 'PaymentsMethods') {
+        PayMethod.style.display = "block";
+        PaymentTearm.style.display = "none";
+        Modules.style.display = "none";
+        TransType.style.display = "none";
+        led.style.display = "none";
+        LookUp.style.display = "none";
+        PriceLevels.style.display = "none";
+        LedgerType.style.display = "none";
+        Taxes.style.display = "none";
+        Units.style.display = "none";
+        Warehouses.style.display = "none";
+        StorageMethodsTypes.style.display = "none";
+        InventoriesLocationsTypes.style.display = "none";
+        OperationsTypes.style.display = "none";
+        Items.style.display = "none";
+        ItemsUOM.style.display = "none";
+        ItemsTypes.style.display = "none";
+        ItemsClasses.style.display = "none";
+        InventoriesLocations.style.display = "none";
+        ledbal.style.display = "none";
+        APVend.style.display = "none";
+        vendbal.style.display = "none";
+        ARCus.style.display = "none";
+        custbal.style.display = "none";
+        report.style.display = "none";
+        itemplan.style.display = "none";
+        targetupdown.style.display = "none";
+        targetbychannel.style.display = "none";
+
+    } else if ($("#id_source").val() == 'TransTypes') {
+        Taxes.style.display = "none";
+        Units.style.display = "none";
+        Warehouses.style.display = "none";
+        InventoriesLocationsTypes.style.display = "none";
+        StorageMethodsTypes.style.display = "none";
+        ItemsTypes.style.display = "none";
+        TransType.style.display = "block";
+        ItemsClasses.style.display = "none";
+        InventoriesLocations.style.display = "none";
+        OperationsTypes.style.display = "none";
+        Items.style.display = "none";
+        ItemsUOM.style.display = "none";
+        PayMethod.style.display = "none";
+        PaymentTearm.style.display = "none";
+        Modules.style.display = "none";
+        led.style.display = "none";
+        LookUp.style.display = "none";
+        PriceLevels.style.display = "none";
+        LedgerType.style.display = "none";
+        ledbal.style.display = "none";
+        APVend.style.display = "none";
+        vendbal.style.display = "none";
+        ARCus.style.display = "none";
+        custbal.style.display = "none";
+        report.style.display = "none";
+        itemplan.style.display = "none";
+        targetupdown.style.display = "none";
+        targetbychannel.style.display = "none";
+
+    } else if ($("#id_source").val() == 'Taxes') {
+        Taxes.style.display = "block";
+        Units.style.display = "none";
+        Warehouses.style.display = "none";
+        StorageMethodsTypes.style.display = "none";
+        ItemsTypes.style.display = "none";
+        ItemsClasses.style.display = "none";
+        InventoriesLocations.style.display = "none";
+        OperationsTypes.style.display = "none";
+        Items.style.display = "none";
+        ItemsUOM.style.display = "none";
+        TransType.style.display = "none";
+        PayMethod.style.display = "none";
+        PaymentTearm.style.display = "none";
+        Modules.style.display = "none";
+        led.style.display = "none";
+        LookUp.style.display = "none";
+        PriceLevels.style.display = "none";
+        LedgerType.style.display = "none";
+        ledbal.style.display = "none";
+        APVend.style.display = "none";
+        vendbal.style.display = "none";
+        ARCus.style.display = "none";
+        custbal.style.display = "none";
+        report.style.display = "none";
+        itemplan.style.display = "none";
+        targetupdown.style.display = "none";
+        targetbychannel.style.display = "none";
+
+
+    } else if ($("#id_source").val() == 'Units') {
+        Taxes.style.display = "none";
+        Units.style.display = "block";
+        Warehouses.style.display = "none";
+        StorageMethodsTypes.style.display = "none";
+        ItemsTypes.style.display = "none";
+        ItemsClasses.style.display = "none";
+        InventoriesLocations.style.display = "none";
+        OperationsTypes.style.display = "none";
+        Items.style.display = "none";
+        ItemsUOM.style.display = "none";
+        TransType.style.display = "none";
+        PayMethod.style.display = "none";
+        PaymentTearm.style.display = "none";
+        Modules.style.display = "none";
+        led.style.display = "none";
+        LookUp.style.display = "none";
+        PriceLevels.style.display = "none";
+        LedgerType.style.display = "none";
+        ledbal.style.display = "none";
+        APVend.style.display = "none";
+        vendbal.style.display = "none";
+        ARCus.style.display = "none";
+        custbal.style.display = "none";
+        report.style.display = "none";
+        itemplan.style.display = "none";
+        targetupdown.style.display = "none";
+        targetbychannel.style.display = "none";
+
+
+    } else if ($("#id_source").val() == 'Warehouses') {
+        Taxes.style.display = "none";
+        Units.style.display = "none";
+        Warehouses.style.display = "block";
+        StorageMethodsTypes.style.display = "none";
+        InventoriesLocationsTypes.style.display = "none";
+        ItemsTypes.style.display = "none";
+        ItemsClasses.style.display = "none";
+        InventoriesLocations.style.display = "none";
+        OperationsTypes.style.display = "none";
+        Items.style.display = "none";
+        ItemsUOM.style.display = "none";
+        TransType.style.display = "none";
+        PayMethod.style.display = "none";
+        PaymentTearm.style.display = "none";
+        Modules.style.display = "none";
+        led.style.display = "none";
+        LookUp.style.display = "none";
+        PriceLevels.style.display = "none";
+        LedgerType.style.display = "none";
+        ledbal.style.display = "none";
+        APVend.style.display = "none";
+        vendbal.style.display = "none";
+        ARCus.style.display = "none";
+        custbal.style.display = "none";
+        report.style.display = "none";
+        itemplan.style.display = "none";
+        targetupdown.style.display = "none";
+        targetbychannel.style.display = "none";
+
+    } else if ($("#id_source").val() == 'StorageMethodsTypes') {
+        Taxes.style.display = "none";
+        Units.style.display = "none";
+        Warehouses.style.display = "none";
+        StorageMethodsTypes.style.display = "block";
+        InventoriesLocationsTypes.style.display = "none";
+        ItemsTypes.style.display = "none";
+        ItemsClasses.style.display = "none";
+        InventoriesLocations.style.display = "none";
+        OperationsTypes.style.display = "none";
+        Items.style.display = "none";
+        ItemsUOM.style.display = "none";
+        TransType.style.display = "none";
+        PayMethod.style.display = "none";
+        PaymentTearm.style.display = "none";
+        Modules.style.display = "none";
+        led.style.display = "none";
+        LookUp.style.display = "none";
+        PriceLevels.style.display = "none";
+        LedgerType.style.display = "none";
+        ledbal.style.display = "none";
+        APVend.style.display = "none";
+        vendbal.style.display = "none";
+        ARCus.style.display = "none";
+        custbal.style.display = "none";
+        report.style.display = "none";
+        itemplan.style.display = "none";
+        targetupdown.style.display = "none";
+        targetbychannel.style.display = "none";
+
+
+    } else if ($("#id_source").val() == 'InventoriesLocationsTypes') {
+        Taxes.style.display = "none";
+        Units.style.display = "none";
+        Warehouses.style.display = "none";
+        StorageMethodsTypes.style.display = "none";
+        InventoriesLocationsTypes.style.display = "block";
+        ItemsTypes.style.display = "none";
+        ItemsClasses.style.display = "none";
+        InventoriesLocations.style.display = "none";
+        OperationsTypes.style.display = "none";
+        Items.style.display = "none";
+        ItemsUOM.style.display = "none";
+        TransType.style.display = "none";
+        PayMethod.style.display = "none";
+        PaymentTearm.style.display = "none";
+        Modules.style.display = "none";
+        led.style.display = "none";
+        LookUp.style.display = "none";
+        PriceLevels.style.display = "none";
+        LedgerType.style.display = "none";
+        ledbal.style.display = "none";
+        APVend.style.display = "none";
+        vendbal.style.display = "none";
+        ARCus.style.display = "none";
+        custbal.style.display = "none";
+        report.style.display = "none";
+        itemplan.style.display = "none";
+        targetupdown.style.display = "none";
+        targetbychannel.style.display = "none";
+
+    } else if ($("#id_source").val() == 'ItemsTypes') {
+        Taxes.style.display = "none";
+        Units.style.display = "none";
+        Warehouses.style.display = "none";
+        StorageMethodsTypes.style.display = "none";
+        InventoriesLocationsTypes.style.display = "none";
+        ItemsTypes.style.display = "block";
+        ItemsClasses.style.display = "none";
+        InventoriesLocations.style.display = "none";
+        OperationsTypes.style.display = "none";
+        Items.style.display = "none";
+        ItemsUOM.style.display = "none";
+        TransType.style.display = "none";
+        PayMethod.style.display = "none";
+        PaymentTearm.style.display = "none";
+        Modules.style.display = "none";
+        led.style.display = "none";
+        LookUp.style.display = "none";
+        PriceLevels.style.display = "none";
+        LedgerType.style.display = "none";
+        ledbal.style.display = "none";
+        APVend.style.display = "none";
+        vendbal.style.display = "none";
+        ARCus.style.display = "none";
+        custbal.style.display = "none";
+        report.style.display = "none";
+        itemplan.style.display = "none";
+        targetupdown.style.display = "none";
+        targetbychannel.style.display = "none";
+
+
+    } else if ($("#id_source").val() == 'ItemsClasses') {
+        Taxes.style.display = "none";
+        Units.style.display = "none";
+        Warehouses.style.display = "none";
+        StorageMethodsTypes.style.display = "none";
+        InventoriesLocationsTypes.style.display = "none";
+        ItemsTypes.style.display = "none";
+        ItemsClasses.style.display = "block";
+        InventoriesLocations.style.display = "none";
+        OperationsTypes.style.display = "none";
+        Items.style.display = "none";
+        ItemsUOM.style.display = "none";
+        TransType.style.display = "none";
+        PayMethod.style.display = "none";
+        Modules.style.display = "none";
+        led.style.display = "none";
+        LookUp.style.display = "none";
+        PriceLevels.style.display = "none";
+        LedgerType.style.display = "none";
+        ledbal.style.display = "none";
+        APVend.style.display = "none";
+        vendbal.style.display = "none";
+        ARCus.style.display = "none";
+        custbal.style.display = "none";
+        report.style.display = "none";
+        itemplan.style.display = "none";
+        targetupdown.style.display = "none";
+        targetbychannel.style.display = "none";
+        PaymentTearm.style.display = "none";
+
+    } else if ($("#id_source").val() == 'InventoriesLocations') {
+        Taxes.style.display = "none";
+        Units.style.display = "none";
+        Warehouses.style.display = "none";
+        StorageMethodsTypes.style.display = "none";
+        InventoriesLocationsTypes.style.display = "none";
+        ItemsTypes.style.display = "none";
+        ItemsClasses.style.display = "none";
+        InventoriesLocations.style.display = "block";
+        OperationsTypes.style.display = "none";
+        Items.style.display = "none";
+        ItemsUOM.style.display = "none";
+        TransType.style.display = "none";
+        PayMethod.style.display = "none";
+        Modules.style.display = "none";
+        led.style.display = "none";
+        LookUp.style.display = "none";
+        PriceLevels.style.display = "none";
+        LedgerType.style.display = "none";
+        ledbal.style.display = "none";
+        APVend.style.display = "none";
+        vendbal.style.display = "none";
+        ARCus.style.display = "none";
+        custbal.style.display = "none";
+        report.style.display = "none";
+        itemplan.style.display = "none";
+        targetupdown.style.display = "none";
+        targetbychannel.style.display = "none";
+        PaymentTearm.style.display = "none";
+
+
+    } else if ($("#id_source").val() == 'OperationsTypes') {
+        Taxes.style.display = "none";
+        Units.style.display = "none";
+        Warehouses.style.display = "none";
+        StorageMethodsTypes.style.display = "none";
+        InventoriesLocationsTypes.style.display = "none";
+        ItemsTypes.style.display = "none";
+        ItemsClasses.style.display = "none";
+        InventoriesLocations.style.display = "none";
+        OperationsTypes.style.display = "block";
+        Items.style.display = "none";
+        ItemsUOM.style.display = "none";
+        TransType.style.display = "none";
+        PayMethod.style.display = "none";
+        Modules.style.display = "none";
+        led.style.display = "none";
+        LookUp.style.display = "none";
+        PriceLevels.style.display = "none";
+        LedgerType.style.display = "none";
+        ledbal.style.display = "none";
+        APVend.style.display = "none";
+        vendbal.style.display = "none";
+        ARCus.style.display = "none";
+        custbal.style.display = "none";
+        report.style.display = "none";
+        itemplan.style.display = "none";
+        targetupdown.style.display = "none";
+        targetbychannel.style.display = "none";
+        PaymentTearm.style.display = "none";
+
+
+    } else if ($("#id_source").val() == 'Items') {
+        Taxes.style.display = "none";
+        Units.style.display = "none";
+        Warehouses.style.display = "none";
+        StorageMethodsTypes.style.display = "none";
+        InventoriesLocationsTypes.style.display = "none";
+        ItemsTypes.style.display = "none";
+        ItemsClasses.style.display = "none";
+        InventoriesLocations.style.display = "none";
+        OperationsTypes.style.display = "none";
+        Items.style.display = "block";
+        ItemsUOM.style.display = "none";
+        TransType.style.display = "none";
+        PayMethod.style.display = "none";
+        Modules.style.display = "none";
+        led.style.display = "none";
+        LookUp.style.display = "none";
+        PriceLevels.style.display = "none";
+        LedgerType.style.display = "none";
+        ledbal.style.display = "none";
+        APVend.style.display = "none";
+        vendbal.style.display = "none";
+        ARCus.style.display = "none";
+        custbal.style.display = "none";
+        report.style.display = "none";
+        itemplan.style.display = "none";
+        targetupdown.style.display = "none";
+        targetbychannel.style.display = "none";
+        PaymentTearm.style.display = "none";
+
+
+    } else if ($("#id_source").val() == 'ItemsUOM') {
+        Taxes.style.display = "none";
+        Units.style.display = "none";
+        Warehouses.style.display = "none";
+        StorageMethodsTypes.style.display = "none";
+        InventoriesLocationsTypes.style.display = "none";
+        ItemsTypes.style.display = "none";
+        ItemsClasses.style.display = "none";
+        InventoriesLocations.style.display = "none";
+        OperationsTypes.style.display = "none";
+        Items.style.display = "none";
+        ItemsUOM.style.display = "block";
+        TransType.style.display = "none";
+        PayMethod.style.display = "none";
+        Modules.style.display = "none";
+        led.style.display = "none";
+        LookUp.style.display = "none";
+        PriceLevels.style.display = "none";
+        LedgerType.style.display = "none";
+        ledbal.style.display = "none";
+        APVend.style.display = "none";
+        vendbal.style.display = "none";
+        ARCus.style.display = "none";
+        custbal.style.display = "none";
+        report.style.display = "none";
+        itemplan.style.display = "none";
+        targetupdown.style.display = "none";
+        targetbychannel.style.display = "none";
+        PaymentTearm.style.display = "none";
+
+
+    } else if ($("#id_source").val() == 'LedgersTypes') {
+        Taxes.style.display = "none";
+        LedgerType.style.display = "block";
+        TransType.style.display = "none";
+        Modules.style.display = "none";
+        Units.style.display = "none";
+        Warehouses.style.display = "none";
+        StorageMethodsTypes.style.display = "none";
+        InventoriesLocationsTypes.style.display = "none";
+        OperationsTypes.style.display = "none";
+        Items.style.display = "none";
+        ItemsUOM.style.display = "none";
+        ItemsTypes.style.display = "none";
+        ItemsClasses.style.display = "none";
+        InventoriesLocations.style.display = "none";
+        led.style.display = "none";
+        LookUp.style.display = "none";
+        PriceLevels.style.display = "none";
+        PayMethod.style.display = "none";
+        ledbal.style.display = "none";
+        APVend.style.display = "none";
+        vendbal.style.display = "none";
+        ARCus.style.display = "none";
+        custbal.style.display = "none";
+        report.style.display = "none";
+        itemplan.style.display = "none";
+        targetupdown.style.display = "none";
+        targetbychannel.style.display = "none";
+        PaymentTearm.style.display = "none";
+
+    } else if ($("#id_source").val() == 'Ledger') {
+        led.style.display = "block";
+        LookUp.style.display = "none";
+        PriceLevels.style.display = "none";
+        Modules.style.display = "none";
+        PayMethod.style.display = "none";
+        TransType.style.display = "none";
+        ItemsClasses.style.display = "none";
+        InventoriesLocations.style.display = "none";
+        OperationsTypes.style.display = "none";
+        Items.style.display = "none";
+        ItemsUOM.style.display = "none";
+        Taxes.style.display = "none";
+        Units.style.display = "none";
+        Warehouses.style.display = "none";
+        StorageMethodsTypes.style.display = "none";
+        InventoriesLocationsTypes.style.display = "none";
+        ItemsTypes.style.display = "none";
+        LedgerType.style.display = "none";
+        ledbal.style.display = "none";
+        APVend.style.display = "none";
+        vendbal.style.display = "none";
+        ARCus.style.display = "none";
+        custbal.style.display = "none";
+        report.style.display = "none";
+        itemplan.style.display = "none";
+        targetupdown.style.display = "none";
+        targetbychannel.style.display = "none";
+        PaymentTearm.style.display = "none";
+
+
+    } else if ($("#id_source").val() == 'LedgerBalance') {
+        Taxes.style.display = "none";
+        ledbal.style.display = "block";
+        Modules.style.display = "none";
+        PayMethod.style.display = "none";
+        TransType.style.display = "none";
+        LedgerType.style.display = "none";
+        Units.style.display = "none";
+        Warehouses.style.display = "none";
+        StorageMethodsTypes.style.display = "none";
+        InventoriesLocationsTypes.style.display = "none";
+        OperationsTypes.style.display = "none";
+        Items.style.display = "none";
+        ItemsUOM.style.display = "none";
+        ItemsTypes.style.display = "none";
+        ItemsClasses.style.display = "none";
+        InventoriesLocations.style.display = "none";
+        led.style.display = "none";
+        LookUp.style.display = "none";
+        PriceLevels.style.display = "none";
+        APVend.style.display = "none";
+        vendbal.style.display = "none";
+        ARCus.style.display = "none";
+        custbal.style.display = "none";
+        report.style.display = "none";
+        itemplan.style.display = "none";
+        targetupdown.style.display = "none";
+        targetbychannel.style.display = "none";
+        PaymentTearm.style.display = "none";
+
+
+    } else if ($("#id_source").val() == 'APVendors') {
+        APVend.style.display = "block";
+        Modules.style.display = "none";
+        PayMethod.style.display = "none";
+        TransType.style.display = "none";
+        Taxes.style.display = "none";
+        Units.style.display = "none";
+        Warehouses.style.display = "none";
+        StorageMethodsTypes.style.display = "none";
+        InventoriesLocationsTypes.style.display = "none";
+        OperationsTypes.style.display = "none";
+        Items.style.display = "none";
+        ItemsUOM.style.display = "none";
+        ItemsTypes.style.display = "none";
+        ItemsClasses.style.display = "none";
+        InventoriesLocations.style.display = "none";
+        LedgerType.style.display = "none";
+        ledbal.style.display = "none";
+        led.style.display = "none";
+        LookUp.style.display = "none";
+        PriceLevels.style.display = "none";
+        vendbal.style.display = "none";
+        ARCus.style.display = "none";
+        custbal.style.display = "none";
+        report.style.display = "none";
+        itemplan.style.display = "none";
+        targetupdown.style.display = "none";
+        targetbychannel.style.display = "none";
+        PaymentTearm.style.display = "none";
+
+    } else if ($("#id_source").val() == 'VendorBalance') {
+        vendbal.style.display = "block";
+        Modules.style.display = "none";
+        PayMethod.style.display = "none";
+        TransType.style.display = "none";
+        Taxes.style.display = "none";
+        Units.style.display = "none";
+        Warehouses.style.display = "none";
+        StorageMethodsTypes.style.display = "none";
+        InventoriesLocationsTypes.style.display = "none";
+        OperationsTypes.style.display = "none";
+        Items.style.display = "none";
+        ItemsUOM.style.display = "none";
+        ItemsTypes.style.display = "none";
+        ItemsClasses.style.display = "none";
+        InventoriesLocations.style.display = "none";
+        LedgerType.style.display = "none";
+        APVend.style.display = "none";
+        ledbal.style.display = "none";
+        led.style.display = "none";
+        LookUp.style.display = "none";
+        PriceLevels.style.display = "none";
+        ARCus.style.display = "none";
+        custbal.style.display = "none";
+        report.style.display = "none";
+        itemplan.style.display = "none";
+        targetupdown.style.display = "none";
+        targetbychannel.style.display = "none";
+        PaymentTearm.style.display = "none";
+
+
+    } else if ($("#id_source").val() == 'ARCustomers') {
+        ARCus.style.display = "block";
+        Modules.style.display = "none";
+        PayMethod.style.display = "none";
+        TransType.style.display = "none";
+        Taxes.style.display = "none";
+        Units.style.display = "none";
+        Warehouses.style.display = "none";
+        StorageMethodsTypes.style.display = "none";
+        InventoriesLocationsTypes.style.display = "none";
+        OperationsTypes.style.display = "none";
+        Items.style.display = "none";
+        ItemsUOM.style.display = "none";
+        ItemsTypes.style.display = "none";
+        ItemsClasses.style.display = "none";
+        InventoriesLocations.style.display = "none";
+        LedgerType.style.display = "none";
+        vendbal.style.display = "none";
+        APVend.style.display = "none";
+        ledbal.style.display = "none";
+        led.style.display = "none";
+        LookUp.style.display = "none";
+        PriceLevels.style.display = "none";
+        custbal.style.display = "none";
+        report.style.display = "none";
+        itemplan.style.display = "none";
+        targetupdown.style.display = "none";
+        targetbychannel.style.display = "none";
+        PaymentTearm.style.display = "none";
+
+    } else if ($("#id_source").val() == 'CustomerBalance') {
+        custbal.style.display = "block";
+        TransType.style.display = "none";
+        LedgerType.style.display = "none";
+        Taxes.style.display = "none";
+        Units.style.display = "none";
+        Warehouses.style.display = "none";
+        StorageMethodsTypes.style.display = "none";
+        InventoriesLocationsTypes.style.display = "none";
+        OperationsTypes.style.display = "none";
+        Items.style.display = "none";
+        ItemsUOM.style.display = "none";
+        ItemsTypes.style.display = "none";
+        ItemsClasses.style.display = "none";
+        InventoriesLocations.style.display = "none";
+        PayMethod.style.display = "none";
+        Modules.style.display = "none";
+        ARCus.style.display = "none";
+        vendbal.style.display = "none";
+        APVend.style.display = "none";
+        ledbal.style.display = "none";
+        led.style.display = "none";
+        LookUp.style.display = "none";
+        PriceLevels.style.display = "none";
+        report.style.display = "none";
+        itemplan.style.display = "none";
+        targetupdown.style.display = "none";
+        targetbychannel.style.display = "none";
+        PaymentTearm.style.display = "none";
+
+    } else if ($("#id_source").val() == 'ItemsPlan') {
+        custbal.style.display = "none";
+        TransType.style.display = "none";
+        LedgerType.style.display = "none";
+        Taxes.style.display = "none";
+        Units.style.display = "none";
+        Warehouses.style.display = "none";
+        StorageMethodsTypes.style.display = "none";
+        InventoriesLocationsTypes.style.display = "none";
+        OperationsTypes.style.display = "none";
+        Items.style.display = "none";
+        ItemsUOM.style.display = "none";
+        ItemsTypes.style.display = "none";
+        ItemsClasses.style.display = "none";
+        InventoriesLocations.style.display = "none";
+        PayMethod.style.display = "none";
+        Modules.style.display = "none";
+        ARCus.style.display = "none";
+        vendbal.style.display = "none";
+        APVend.style.display = "none";
+        ledbal.style.display = "none";
+        led.style.display = "none";
+        LookUp.style.display = "none";
+        PriceLevels.style.display = "none";
+        report.style.display = "none";
+        itemplan.style.display = "block";
+        targetupdown.style.display = "none";
+        targetbychannel.style.display = "none";
+        PaymentTearm.style.display = "none";
+
+    } else if ($("#id_source").val() == 'TargetUpDown') {
+        custbal.style.display = "none";
+        TransType.style.display = "none";
+        LedgerType.style.display = "none";
+        Taxes.style.display = "none";
+        Units.style.display = "none";
+        Warehouses.style.display = "none";
+        StorageMethodsTypes.style.display = "none";
+        InventoriesLocationsTypes.style.display = "none";
+        OperationsTypes.style.display = "none";
+        Items.style.display = "none";
+        ItemsUOM.style.display = "none";
+        ItemsTypes.style.display = "none";
+        ItemsClasses.style.display = "none";
+        InventoriesLocations.style.display = "none";
+        PayMethod.style.display = "none";
+        Modules.style.display = "none";
+        ARCus.style.display = "none";
+        vendbal.style.display = "none";
+        APVend.style.display = "none";
+        ledbal.style.display = "none";
+        led.style.display = "none";
+        LookUp.style.display = "none";
+        PriceLevels.style.display = "none";
+        report.style.display = "none";
+        itemplan.style.display = "none";
+        targetupdown.style.display = "block";
+        targetbychannel.style.display = "none";
+        PaymentTearm.style.display = "none";
+
+
+    } else if ($("#id_source").val() == 'TargetByChannel') {
+        custbal.style.display = "none";
+        TransType.style.display = "none";
+        LedgerType.style.display = "none";
+        Taxes.style.display = "none";
+        Units.style.display = "none";
+        Warehouses.style.display = "none";
+        StorageMethodsTypes.style.display = "none";
+        InventoriesLocationsTypes.style.display = "none";
+        OperationsTypes.style.display = "none";
+        Items.style.display = "none";
+        ItemsUOM.style.display = "none";
+        ItemsTypes.style.display = "none";
+        ItemsClasses.style.display = "none";
+        InventoriesLocations.style.display = "none";
+        PayMethod.style.display = "none";
+        Modules.style.display = "none";
+        ARCus.style.display = "none";
+        vendbal.style.display = "none";
+        APVend.style.display = "none";
+        ledbal.style.display = "none";
+        led.style.display = "none";
+        LookUp.style.display = "none";
+        PriceLevels.style.display = "none";
+        report.style.display = "none";
+        itemplan.style.display = "none";
+        targetupdown.style.display = "none";
+        targetbychannel.style.display = "block";
+        PaymentTearm.style.display = "none";
+
+    } else if ($("#id_source").val() == 'PaymentsTearms') {
+        custbal.style.display = "none";
+        TransType.style.display = "none";
+        LedgerType.style.display = "none";
+        Taxes.style.display = "none";
+        Units.style.display = "none";
+        Warehouses.style.display = "none";
+        StorageMethodsTypes.style.display = "none";
+        InventoriesLocationsTypes.style.display = "none";
+        OperationsTypes.style.display = "none";
+        Items.style.display = "none";
+        ItemsUOM.style.display = "none";
+        ItemsTypes.style.display = "none";
+        ItemsClasses.style.display = "none";
+        InventoriesLocations.style.display = "none";
+        PayMethod.style.display = "none";
+        Modules.style.display = "none";
+        ARCus.style.display = "none";
+        vendbal.style.display = "none";
+        APVend.style.display = "none";
+        ledbal.style.display = "none";
+        led.style.display = "none";
+        LookUp.style.display = "none";
+        PriceLevels.style.display = "none";
+        report.style.display = "none";
+        itemplan.style.display = "none";
+        targetupdown.style.display = "none";
+        targetbychannel.style.display = "none";
+        PaymentTearm.style.display = "block";
+
+
+
+    } else if ($("#id_source").val() == 'Reports') {
+        report.style.display = "block";
+        custbal.style.display = "none";
+        TransType.style.display = "none";
+        LedgerType.style.display = "none";
+        Taxes.style.display = "none";
+        Units.style.display = "none";
+        Warehouses.style.display = "none";
+        StorageMethodsTypes.style.display = "none";
+        InventoriesLocationsTypes.style.display = "none";
+        OperationsTypes.style.display = "none";
+        Items.style.display = "none";
+        ItemsUOM.style.display = "none";
+        ItemsTypes.style.display = "none";
+        ItemsClasses.style.display = "none";
+        InventoriesLocations.style.display = "none";
+        PayMethod.style.display = "none";
+        Modules.style.display = "none";
+        ARCus.style.display = "none";
+        vendbal.style.display = "none";
+        APVend.style.display = "none";
+        ledbal.style.display = "none";
+        led.style.display = "none";
+        LookUp.style.display = "none";
+        PriceLevels.style.display = "none";
+        itemplan.style.display = "none";
+        targetupdown.style.display = "none";
+        targetbychannel.style.display = "none";
+        PaymentTearm.style.display = "none";
+    }
+
+
+
+});
+
+$(document).on("click", ":submit", function (e) {
+    if (!$('#example-fileinput').val()) {
+        Swal.fire({
+            type: "error",
+            title: "Oops...",
+            text: "{% trans 'Please select file' %}",
+            confirmButtonClass: "btn btn-confirm mt-2",
+        })
+        e.preventDefault();
+    }
+});
+{% if success == 1 %}
+        Swal.fire({
+            type: "success",
+            title: "Done",
+            text: "{% trans 'Leads uploaded Successfully' %}",
+            confirmButtonClass: "btn btn-confirm mt-2",
+        }).then(function(t){
+            location.href = '/crm/import/';
+        })
+{% endif %}
+</script>
+{% endblock %}
+

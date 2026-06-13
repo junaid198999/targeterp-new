@@ -1,0 +1,822 @@
+{% extends "auth_base.html" %}
+{% load i18n %}
+{% load django_tables2 %}
+{% load widget_tweaks %}
+{% load crispy_forms_tags %}
+{% block content %}
+{% load humanize %}
+
+<!-- {% if error.message == "You are not a Collector" %} -->
+<script>
+    alert('{{ error }}');
+</script>
+<!-- {% endif %} -->
+
+
+<link href="/static/libs/select2/select2.min.css" rel="stylesheet" />
+<link href="/static/libs/sweetalert2/sweetalert2.min.css" rel="stylesheet" type="text/css" />
+<link href="/static/libs/dropify/dropify.min.css" rel="stylesheet">
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+
+
+<div class="container-fluid">
+    <!-- start page title -->
+    <div class="row" style="position: fixed;top:70px;z-index:2; overflow: hidden;width: 100%; ">
+        <div class="col-6" >
+            <div class="page-title" style="background: #60b4fd;height:45px;text-align: left;padding-top: 1px;padding-left: 5px;">
+                <h4 class="page-title" style="margin:4px; font-size: 2rem;color: white;">{% trans "Create Collection"  %}  </h4>
+            </div>
+        </div>
+        <div class="col-6" >
+            <div class="buttons" style="margin-top:8px;float: left; ">
+                <button type="submit" name="approve"  id="approve_id" form="LJForm" class="btn btn-primary btn-lg btn-sm" style="width: 105px;" >Approve</button>
+                <button type="submit" name="post"  id="post_id" form="LJForm" class="btn btn-warning btn-lg btn-sm" style="width: 105px;">Post</button>
+                <button type="submit" name="reject"  id="reject_id" form="LJForm" class="btn btn-info btn-lg btn-sm" style="width: 105px;" >Reject</button>
+                <input type="submit" name="Submit" id="submit_id" form="LJForm" style="width: 105px;" class="submit-btn btn-success btn btn-sm" value="{% trans "Submit" %}"/>
+                <input type="submit" name="save" id="create_id" form="LJForm" style="width: 105px;" class="submit-btn btn-danger btn btn-sm" value="{% trans "Save" %}"/>
+                <a style="width: 105px;" class="btn btn-secondary btn-lg btn-sm"  href={% url "ar:list-collections"  %}   >{% trans "Cancel" %}</a>
+
+           </div>
+        </div>
+
+    </div>
+
+
+    <head>
+        <meta charset="utf-8" />
+        <title>collections_form</title>
+    </head>
+    <div class="row" >
+        <div class="col-xl-12">
+            <div class="card" style="top: 46px; ">
+                <div class="card-body" style="padding:0.5rem;padding-bottom: 0px;">
+                    <form  id="LJForm" action="" method="post"    data-duepayment-lines-count-url="{% url 'ar:ajax_load-duepayment-lines-count' %}"   data-duepayment-lines-url="{% url 'ar:ajax_load-duepayment-lines' %}"    >
+                        {% csrf_token %}
+                        <table class="table table-bordered ">
+                            <div class="{% if form.non_field_errors %}invalid{% endif %} mb-2">
+                              {% if form.non_field_errors %}
+                                {{ error }}
+                                {% endif %}
+                            </div>
+                            <tbody style="background-color: inherit;">
+                                    <td width="80%" colspan = "2" style="vertical-align: middle">
+                                        <div class="input-group">
+
+
+                                            <div class="col-1" style="padding-right:0px; padding-left:0px">
+                                                    <label class="col-form-label">{% trans "Customer" %}</label>
+                                            </div>
+
+                                            <div class="col-4">
+                                                <select name="customer" id="id_customer" class="form-control" style="">
+                                                    <option value="0">---------</option>
+                                                        {% for cust in customers %}
+                                                            <option value="{{ cust.id }}">No. #{{ cust.code }} | - | Name: #{{ cust.engname }}  </option>
+                                                        {% endfor %}
+                                                </select>
+                                            </div>
+
+
+                                            <div class="col-2" style="padding-right:0px; padding-left:0px">
+                                                    <label class="col-form-label">{% trans "Payment Method" %}</label>
+                                            </div>
+
+                                            <div class="col-4">
+                                                <select name="paymentmethod" id="id_paymentmethod" class="form-control" style="">
+                                                    <option value="0">---------</option>
+                                                        {% for pay in paymentmethod %}
+                                                            <option value="{{ pay.id }}">No. #{{ pay.code }} | - | Name: #{{ pay.engname }}  </option>
+                                                        {% endfor %}
+                                                </select>
+                                            </div>
+
+<!--                                            <div class="col-1" style="padding-right:0px; padding-left:0px">-->
+<!--                                                <label class="col-form-label">{% trans "Collector" %}</label>-->
+<!--                                            </div>-->
+
+<!--                                            <div class="col-2">-->
+<!--                                                <select name="collector" id="id_collector" class="form-control" style="" disabled>-->
+<!--                                                    <option value="0">-&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;</option>-->
+<!--                                                        {% for col in collector %}-->
+<!--                                                            <option value="{{ col.id }}">No. #{{ col.code }} | - | Name: #{{ col.engname }}  </option>-->
+<!--                                                        {% endfor %}-->
+<!--                                                </select>-->
+<!--                                            </div>-->
+
+                                                <div class="form-group col-md-2 mb-0">
+                                                    {{ form.collector|as_crispy_field }}
+                                                    <div class="{% if form.collector.errors %} invalid{% endif %}">
+                                                        {% if error in form.collector.errors %}
+                                                        <p class="help-block">{{ error }}</p>
+                                                        {% endif %}
+                                                    </div>
+                                                </div>
+
+
+
+
+                                            <div class="form-group col-md-2 mb-0">
+                                                {{ form.status|as_crispy_field }}
+                                                <div class="{% if form.status.errors %} invalid{% endif %}">
+                                                    {% if error in form.status.errors %}
+                                                    <p class="help-block">{{ error }}</p>
+                                                    {% endif %}
+                                                </div>
+                                            </div>
+                                            <div class="form-group col-md-2 mb-0">
+                                                {{ form.statusdate|as_crispy_field }}
+                                                <div class="{% if form.statusdate.errors %} invalid{% endif %}">
+                                                    {% if error in form.statusdate.errors %}
+                                                    <p class="help-block">{{ error }}</p>
+                                                    {% endif %}
+                                                </div>
+                                            </div>
+
+                                            <div class="form-group col-md-2 mb-0">
+                                                {{ form.currency|as_crispy_field }}
+                                                <div class="{% if form.currency.errors %} invalid{% endif %}">
+                                                    {% if error in form.currency.errors %}
+                                                    <p class="help-block">{{ error }}</p>
+                                                    {% endif %}
+                                                </div>
+                                            </div>
+
+
+
+                                        </div>
+                                    </td>
+                                    <td style="vertical-align: center"  >
+                                        <div class="input-group" >
+
+                                        <div class="input-group" >
+                                            <div class="input-group-prepend">
+                                                <span class="input-group-text" id="basic-addon1">{% trans " No." %}</span>
+                                            </div>
+                                            <INPUT TYPE="TEXT" NAME="number" id="id_number" class="form-control" value="{{ lastnumber }}" readonly  >
+                                        </div>
+
+
+
+                                        <div class="input-group" style="margin-top: 2%">
+                                            <div class="input-group-prepend">
+                                                <span class="input-group-text" >{% trans "Date" %}</span>
+                                            </div>
+                                            <INPUT id="id_collectiondate" type="date" NAME="collectiondate" class="form-control"  value=  "{{ currentdate}}"  readonly  >
+                                        </div>
+
+                                        <div class="input-group" style="margin-top: 2%; ">
+                                            <div class="input-group-prepend">
+                                                <span style="color:red;" class="input-group-text" >{% trans "Total Due Amount" %}</span>
+                                            </div>
+                                            <INPUT id="id_totaldueamount" type="number" NAME="totaldueamount" class="form-control"  value=  "0"   readonly >
+                                        </div>
+
+                                        <div class="input-group" style="margin-top: 2%; ">
+                                            <div class="input-group-prepend">
+                                                <span style="color:red;" class="input-group-text" >{% trans "Amount" %}</span>
+                                            </div>
+                                            <INPUT id="id_amount" type="number" NAME="amount" class="form-control"  value=  "{{ amount}}"    >
+                                        </div>
+
+                                        <div class="input-group" style="margin-top: 2%; ">
+                                            <div class="input-group-prepend">
+                                                <span style="color:red;" class="input-group-text" >{% trans "Remaining" %}</span>
+                                            </div>
+                                            <INPUT id="id_remain" type="number" NAME="remain" class="form-control"  value=  ""    readonly >
+                                        </div>
+
+
+                                        </div>
+                                    </td>
+
+                            </tbody>
+                        </table>
+
+
+                        <div class="tab" role="tabpanel" id="tabs">
+                            <ul class="nav nav-tabs" role="tablist">
+                                <li  class="active"><a href="#duepay"   role="tab" data-toggle="pill">Due Payments</a></li>
+                                <li  id="id_chequeinfo" style=" visibility: hidden;"  ><a href="#chequeinfo"  role="tab" data-toggle="tab">Cheque Info.</a ></li>
+                                <li  id="id_remittanceinfo" style=" visibility: hidden;" ><a href="#remittanceinfo"  role="tab" data-toggle="tab">Remittance Info.</a></li>
+                                <li  id="id_creditcardinfo" style=" visibility: hidden;" ><a href="#creditcardinfo"  role="tab" data-toggle="tab">Credit Card Info.</a></li>
+                            </ul>
+
+                            <div class="tab-content">
+                                <div id="duepay" class="tab-pane fade in active">
+                                      {{ collectionsduepayments.management_form }}
+                                        {{ form.id }}
+
+                                        <div class="row">
+                                            <div class="col-12">
+                                                <div class="sub-header">
+                                                    <a style="float:right" class="buttonHolder" id="add-row" hidden></a>
+                                               </div>
+                                            </div>
+                                        </div>
+
+
+                                        <table id="table_id" class="table table-bordered table-hover table-sm mb-0" >
+                                                <thead class="thead-light">
+                                                    <tr>
+                                                        <th>{% trans "Customer Due Payment " %}</th>
+                                                        <th>{% trans "Number " %}</th>
+                                                        <th>{% trans "Due Date " %}</th>
+                                                        <th>{% trans "Due Amount" %}</th>
+                                                        <th>{% trans "Paid Amount" %}</th>
+                                                        <th>{% trans "Actions" %}</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody class="formset_row">
+
+                                                    {% for form in collectionsduepayments %}
+                                                        {{ form.id }}
+
+                                                        <tr style="padding: 0px !important;" class="rowclass">
+
+                                                            <td style="padding: 0rem !important;width:200px;" >{{ form.customerpaymentschedule|as_crispy_field }}</td>
+                                                            <td style="padding: 0rem !important;width:100px;" >{{ form.operationnumber|as_crispy_field }}</td>
+                                                            <td style="padding: 0rem !important;width:100px;" >{{ form.duedate|as_crispy_field }}</td>
+                                                            <td style="padding: 0rem !important;width:100px;" >{{ form.dueamount|as_crispy_field }}</td>
+                                                            <td style="padding: 0rem !important;width:100px;" >{{ form.paidamount|as_crispy_field }}</td>
+                                                            <td style="padding: 0rem !important;width:10px; text-align: center;"></td>
+
+                                                        </tr>
+                                                    {% endfor %}
+                                                </tbody>
+                                        </table>
+                                </div>
+
+
+                                <div id="chequeinfo" class="tab-pane fade in active">
+                                        <table class="table table-bordered ">
+                                            <div class="{% if form.non_field_errors %}invalid{% endif %} mb-2">
+                                              {% if form.non_field_errors %}
+                                                {{ error }}
+                                                {% endif %}
+                                            </div>
+                                            <tbody style="background-color: inherit;">
+
+                                                <tr>
+                                                    <td width="100%" colspan = "7">
+                                                        <div class="input-group" >
+                                                            <div class="form-group col-md-2 mb-0" >
+                                                                {{ form.chequenumber|as_crispy_field }}
+                                                                <div class="{% if form.chequenumber.errors %} invalid{% endif %}">
+                                                                    {% if error in form.chequenumber.errors %}
+                                                                    <p class="help-block">{{ error }}</p>
+                                                                    {% endif %}
+                                                                </div>
+                                                            </div>
+
+
+                                                            <div class="form-group col-md-2 mb-0">
+                                                                {{ form.chequebankname|as_crispy_field }}
+                                                                <div class="{% if form.chequebankname.errors %} invalid{% endif %}">
+                                                                    {% if error in form.chequebankname.errors %}
+                                                                    <p class="help-block">{{ error }}</p>
+                                                                    {% endif %}
+                                                                </div>
+                                                            </div>
+
+                                                            <div class="form-group col-md-2 mb-0">
+                                                                {{ form.duedate|as_crispy_field }}
+                                                                <div class="{% if form.duedate.errors %} invalid{% endif %}">
+                                                                    {% if error in form.duedate.errors %}
+                                                                    <p class="help-block">{{ error }}</p>
+                                                                    {% endif %}
+                                                                </div>
+                                                            </div>
+
+                                                            <div class="form-group col-md-2 mb-0">
+                                                                {{ form.beneficiaryname|as_crispy_field }}
+                                                                <div class="{% if form.beneficiaryname.errors %} invalid{% endif %}">
+                                                                    {% if error in form.beneficiaryname.errors %}
+                                                                    <p class="help-block">{{ error }}</p>
+                                                                    {% endif %}
+                                                                </div>
+                                                            </div>
+
+                                                            <div class="form-group col-md-2 mb-0">
+                                                                {{ form.bankchequedestination|as_crispy_field }}
+                                                                <div class="{% if form.bankchequedestination.errors %} invalid{% endif %}">
+                                                                    {% if error in form.bankchequedestination.errors %}
+                                                                    <p class="help-block">{{ error }}</p>
+                                                                    {% endif %}
+                                                                </div>
+                                                            </div>
+
+
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                                <div hidden><INPUT TYPE="TEXT" id="id_linecount" NAME="linecount" class="form-control"></div>
+
+                                            </tbody>
+                                        </table>
+                                </div>
+
+
+                                <div id="remittanceinfo" class="tab-pane fade in active">
+                                        <table class="table table-bordered ">
+                                            <div class="{% if form.non_field_errors %}invalid{% endif %} mb-2">
+                                              {% if form.non_field_errors %}
+                                                {{ error }}
+                                                {% endif %}
+                                            </div>
+                                            <tbody style="background-color: inherit;">
+                                                <tr>
+                                                    <td width="100%" colspan = "7">
+                                                        <div class="input-group" >
+                                                            <div class="form-group col-md-2 mb-0" >
+                                                                {{ form.remittanceno|as_crispy_field }}
+                                                                <div class="{% if form.remittanceno.errors %} invalid{% endif %}">
+                                                                    {% if error in form.remittanceno.errors %}
+                                                                    <p class="help-block">{{ error }}</p>
+                                                                    {% endif %}
+                                                                </div>
+                                                            </div>
+
+
+                                                            <div class="form-group col-md-2 mb-0">
+                                                                {{ form.fromaccountno|as_crispy_field }}
+                                                                <div class="{% if form.fromaccountno.errors %} invalid{% endif %}">
+                                                                    {% if error in form.fromaccountno.errors %}
+                                                                    <p class="help-block">{{ error }}</p>
+                                                                    {% endif %}
+                                                                </div>
+                                                            </div>
+
+                                                            <div class="form-group col-md-2 mb-0">
+                                                                {{ form.frombankname|as_crispy_field }}
+                                                                <div class="{% if form.frombankname.errors %} invalid{% endif %}">
+                                                                    {% if error in form.frombankname.errors %}
+                                                                    <p class="help-block">{{ error }}</p>
+                                                                    {% endif %}
+                                                                </div>
+                                                            </div>
+
+                                                            <div class="form-group col-md-2 mb-0">
+                                                                {{ form.remittancedate|as_crispy_field }}
+                                                                <div class="{% if form.remittancedate.errors %} invalid{% endif %}">
+                                                                    {% if error in form.remittancedate.errors %}
+                                                                    <p class="help-block">{{ error }}</p>
+                                                                    {% endif %}
+                                                                </div>
+                                                            </div>
+
+                                                            <div class="form-group col-md-2 mb-0">
+                                                                {{ form.bankdestination|as_crispy_field }}
+                                                                <div class="{% if form.bankdestination.errors %} invalid{% endif %}">
+                                                                    {% if error in form.bankdestination.errors %}
+                                                                    <p class="help-block">{{ error }}</p>
+                                                                    {% endif %}
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </td>
+                                                </tr>
+
+                                            </tbody>
+                                        </table>
+                                </div>
+
+                                <div id="creditcardinfo" class="tab-pane fade in active">
+                                        <table class="table table-bordered ">
+                                            <div class="{% if form.non_field_errors %}invalid{% endif %} mb-2">
+                                              {% if form.non_field_errors %}
+                                                {{ error }}
+                                                {% endif %}
+                                            </div>
+                                            <tbody style="background-color: inherit;">
+                                                <tr>
+                                                    <td width="100%" colspan = "7">
+                                                        <div class="input-group" >
+                                                            <div class="form-group col-md-2 mb-0" >
+                                                                {{ form.creditcardtype|as_crispy_field }}
+                                                                <div class="{% if form.creditcardtype.errors %} invalid{% endif %}">
+                                                                    {% if error in form.creditcardtype.errors %}
+                                                                    <p class="help-block">{{ error }}</p>
+                                                                    {% endif %}
+                                                                </div>
+                                                            </div>
+
+
+                                                            <div class="form-group col-md-2 mb-0">
+                                                                {{ form.creditcardnumber|as_crispy_field }}
+                                                                <div class="{% if form.creditcardnumber.errors %} invalid{% endif %}">
+                                                                    {% if error in form.creditcardnumber.errors %}
+                                                                    <p class="help-block">{{ error }}</p>
+                                                                    {% endif %}
+                                                                </div>
+                                                            </div>
+
+                                                            <div class="form-group col-md-2 mb-0">
+                                                                {{ form.cvnumber|as_crispy_field }}
+                                                                <div class="{% if form.cvnumber.errors %} invalid{% endif %}">
+                                                                    {% if error in form.cvnumber.errors %}
+                                                                    <p class="help-block">{{ error }}</p>
+                                                                    {% endif %}
+                                                                </div>
+                                                            </div>
+
+                                                            <div class="form-group col-md-2 mb-0">
+                                                                {{ form.expiredate|as_crispy_field }}
+                                                                <div class="{% if form.expiredate.errors %} invalid{% endif %}">
+                                                                    {% if error in form.expiredate.errors %}
+                                                                    <p class="help-block">{{ error }}</p>
+                                                                    {% endif %}
+                                                                </div>
+                                                            </div>
+
+                                                        </div>
+                                                    </td>
+                                                </tr>
+
+                                            </tbody>
+                                        </table>
+                                </div>
+
+                            </div>
+                        </div>
+
+
+                        <br><br>
+
+                    </form>
+
+                </div>
+            </div>
+        </div>
+    </div>
+    <button hidden type="button" class="btn btn-info btn-xs" id="sa-error">Click me</button>
+
+</div>
+{% endblock %}
+{% block extra_javascript %}
+
+<script src="/static/libs/select2/select2.min.js"></script>
+<script src="/static/dynamic_formsets/jquery.formset.js"></script>
+<script src="/static/django_select2/django_select2.js"></script>
+<script src="/static/libs/sweetalert2/sweetalert2.min.js"></script>
+
+<script src="/static/libs/dropify/dropify.min.js"></script>
+
+
+{{ event_formset.media }}
+<script type="text/javascript">
+
+//$('#id_collector').val({{collector_id}});
+//$(`#d_collector option[value="{{collector_id}}"]`).prop('selected', true);
+//$('#id_collector').selectOption({{collector_id}});
+//$('#id_collector').val({{collector_id}}).change();
+
+$('#id_customer').select2();
+$('#id_paymentmethod').select2();
+
+
+$("input[name*='amount']").change(function () {
+      get_total();
+
+});
+
+$("input[name*='paidamount']").dblclick(function () {
+        var dueamountname = $(this).attr('name').replace('-paidamount', '-dueamount');
+        var dueamountval =$("#id_"+dueamountname).val();
+        $(this).val(dueamountval);
+        get_total();
+
+});
+
+$("input[name*='paidamount']").change(function () {
+        var dueamountname = $(this).attr('name').replace('-paidamount', '-dueamount');
+        var dueamountval =$("#id_"+dueamountname).val();
+        var paidamount =$(this).val();
+        if (  parseFloat(paidamount) > parseFloat(dueamountval)) {
+            $(this).val(0);
+        }
+
+
+      get_total();
+    });
+
+
+function get_total(){
+        var total = 0;
+        var totaldue = 0 ;
+        var id = parseInt($('#id_collectionsduepayments_set-TOTAL_FORMS').val());
+
+        var dueamountval = $("#id_amount").val();
+        for (i = 0; i <= parseInt(id); i++){
+            var paidamount = $("input[name=collectionsduepayments_set-" + i + "-paidamount]").val();
+            var dueamount = $("input[name=collectionsduepayments_set-" + i + "-dueamount]").val();
+            console.log(paidamount);
+            console.log(dueamount);
+
+            if (paidamount== '' || paidamount==undefined) {
+                paidamount = 0
+            }
+
+            if (dueamount== ''  || dueamount==undefined) {
+                dueamount = 0
+            }
+            total += parseFloat(paidamount);
+            totaldue += parseFloat(dueamount);
+
+        }
+        console.log(totaldue);
+        $("#id_remain").val( dueamountval -  total);
+        $("#id_totaldueamount").val( totaldue );
+
+};
+
+
+
+
+$("select[name*='paymentmethod']").change(function () {
+        val = $("#id_paymentmethod option:selected").text();
+
+        $('#id_chequeinfo').css({
+            visibility: "hidden",
+            display: ""
+          });
+        $('#id_remittanceinfo').css({
+            visibility: "hidden",
+            display: ""
+          });
+        $('#id_creditcardinfo').css({
+            visibility: "hidden",
+            display: ""
+          });
+
+        $('#creditcardinfo').css({
+            visibility: "hidden",
+            display: ""
+          });
+
+        $('#remittanceinfo').css({
+            visibility: "hidden",
+            display: ""
+          });
+
+        $('#chequeinfo').css({
+            visibility: "hidden",
+            display: ""
+          });
+
+        if ( val.includes("CREDITCARD") == true  ) {
+            console.log('1');
+
+            $('#id_creditcardinfo').css({
+                visibility: "visible",
+                display: ""
+              });
+
+            $('#creditcardinfo').css({
+                visibility: "visible",
+                display: ""
+              });
+
+
+        }
+        else if ( val.includes("REMITTANCE") == true    ) {
+            $('#id_remittanceinfo').css({
+                visibility: "visible",
+                display: ""
+              });
+            $('#remittanceinfo').css({
+                visibility: "visible",
+                display: ""
+              });
+
+        }
+        else if ( val.includes("CHECK") == true  ) {
+            $('#id_chequeinfo').css({
+                visibility: "visible",
+                display: ""
+              });
+            $('#chequeinfo').css({
+                visibility: "visible",
+                display: ""
+              });
+
+        }
+
+    }
+    );
+
+
+
+$("#id_customer").change(function () {
+      var parentval = $(this).val();
+      custval =   parseInt($("#id_customer").val());
+         var url = $("#LJForm").attr("data-duepayment-lines-count-url");
+          $.ajax({
+                async: false,
+                url: url,
+                data: {
+                    'custid': custval
+                    },
+                    success: function (data) {
+                        console.log(data);
+                        $(".delete-row").each(function() {
+                            $( this ).click();
+                        });
+                        $("#id_linecount").val(data);
+                        for (i = 0; i < data; i++) {
+                        	$('.add-row').click();
+                        };
+                    }
+          });
+
+          var url = $("#LJForm").attr("data-duepayment-lines-url");
+          $.ajax({
+                async: false,
+                url: url,
+                data: {
+                    'custid': custval
+                    },
+                    success: function (data) {
+                        console.log(data);
+                        $("select[name*='-customerpaymentschedule']").html(data);
+                        get_total();
+                        }
+          });
+
+
+
+    });
+
+
+$(document).ready(function(){
+  activaTab('duepay');
+
+
+});
+
+function activaTab(tab){
+  $('.nav-tabs a[href="#' + tab + '"]').tab('show');
+};
+
+
+
+
+
+
+    $('#table_id tbody').formset({
+    animateForms: true,
+    uiText: {
+        addPrompt: 'Add Item',         // Text used on the 'add a new form' control.
+        removePrompt: '',        // Text used on the 'delete this existing form' control.
+    },
+    addButtonHolder:'.buttonHolder',
+    addCssClass: "add-row btn btn-primary waves-effect waves-light ",
+    deleteCssClass: "delete-row btn btn-danger waves-effect mdi mdi-close",
+    prefix: '{{ collectionsduepayments.prefix }}',
+    });
+
+
+
+
+
+if ( '{{ cancreate }}' == 'False') {
+    $("#create_id").hide();
+    }
+    else if ( '{{ cancreate }}' == 'True') {
+    $("#create_id").show();
+    }
+
+if ( '{{ cansubmit }}'== 'False') {
+    $("#submit_id").hide();
+    }
+    else if ( '{{ cansubmit }}' == 'True') {
+    $("#submit_id").show();
+    }
+
+if ( '{{ canapprove }}'== 'False') {
+    $("#approve_id").hide();
+    }
+    else if ( '{{ canapprove }}'== 'True') {
+    $("#approve_id").show();
+    }
+
+if ( '{{ canpost }}'== 'False') {
+
+    $("#post_id").hide();
+    }
+    else if ( '{{ canpost }}'== 'True') {
+    $("#post_id").show();
+    }
+
+if ( '{{ canrejct }}'== 'False') {
+    $("#reject_id").hide();
+    }
+    else if ( '{{ canrejct }}' == 'True') {
+    $("#reject_id").show();
+    }
+
+if ( '{{ cancancel }}'== 'False') {
+    $("#cancel_id").hide();
+    }
+    else if ( '{{ cancancel }}' == 'True') {
+    $("#cancel_id").show();
+    }
+
+
+
+</script>
+
+<style type="text/css">
+
+.card-header:first-child {
+    height: 28px !important;
+}
+h5.card-title.mb-0.text-white {
+    line-height: 0 !important;
+}
+.card-widgets {
+    line-height: 0 !important;
+}
+.card-widgets>a {
+    line-height: 0px !important;
+}
+
+
+      a:hover,a:focus{
+    outline: none;
+    text-decoration: none;
+}
+.tab .nav-tabs{
+    position: relative;
+    border-bottom: none;
+}
+.tab .nav-tabs li{
+    margin-right: 3px;
+}
+.tab .nav-tabs li a{
+    padding: 15px 25px;
+    font-size: 15px;
+    font-weight: 600;
+    color: inherit;
+    text-transform: uppercase;
+    background: inherit;
+    margin-right: 0;
+    border-radius: 0;
+    border: 1px solid #c9cba3;
+    position: relative;
+    transition: all 0.5s ease 0s;
+}
+.tab .nav-tabs li a:before{
+    content: "";
+    width: 100%;
+    height: 3px;
+    background: #c9cba3;
+    position: absolute;
+    top: 0;
+    left: 0;
+}
+.tab .nav-tabs li a:hover{
+    border: 1px solid #63d7d9;
+}
+.tab .nav-tabs li.active a{
+    border-color: #14c6c9;
+}
+.tab .nav-tabs li.active a:before{
+    background: #14c6c9;
+}
+.tab .tab-content{
+    font-size: 14px;
+    color: #808080;
+    line-height: 26px;
+    padding: 10px 0;
+    margin-top: 10px;
+}
+.tab .tab-content h3{
+    font-size: 22px;
+    color: #5b5a5a;
+}
+@media only screen and (max-width: 480px){
+    .tab .nav-tabs li{
+        width: 100%;
+        text-align: center;
+        margin-bottom: 8px;
+    }
+}
+
+.form-group {
+    margin-bottom: .1rem !important;
+}
+
+.delete-row{
+width: 30px;
+    height: 30px;
+    padding-left: 7px;
+    top: 4px;
+    padding-top: 4px;
+}
+
+
+</style>
+
+{% endblock %}
+
+

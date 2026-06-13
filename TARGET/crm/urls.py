@@ -127,6 +127,7 @@ urlpatterns = [
     path("notifications/read/", views.note_read, name="note_read"),
     path("notifications/read/", views.note_read_top, name="note_read_top"),
     path("notifications/clearall/", views.note_clear_all, name="note_clear_all"),
+    path('notifications/delete/',views.deletenotifications, name="delete_notifications"),
 
     path("todolist/add/", views.todo_add, name="todo_add"),
     path("todolist/save/", views.todo_save, name="todo_save"),
@@ -178,15 +179,18 @@ urlpatterns = [
     path("users/create/", views.UserCreateView.as_view(), name="create_user"),
     path("users/<int:pk>/delete/", views.UserDeleteView.as_view(), name="delete_user"),
     path("users/update/<int:pk>", views.UserUpdateView.as_view(), name="edit_user"),
+    path('users/delete/',views.deleteusers, name="delete_users"),
 
     path("groups/", views.GroupListView.as_view(), name="groups"),
     path("groups/create/", views.GroupCreateView.as_view(), name="create_group"),
     path("groups/<int:pk>/delete/", views.GroupDeleteView.as_view(), name="delete_group"),
     path("groups/update/<int:pk>", views.GroupUpdateView.as_view(), name="edit_group"),
+    path('groups/delete/',views.deletegroups, name="delete_groups"),
+    
     path("group_permission/update/<int:pk>", views.GroupPermissionUpdateView.as_view(), name="edit_group_permission"),
 
     path("users_permission/update/<int:pk>", views.UserPermissionUpdateView.as_view(), name="edit_user_permission"),
-
+    
 
     path("channels/", views.ChannelListView.as_view(), name="channels"),
     path("channels/create/", views.ChannelCreateView.as_view(), name="create_channel"),
@@ -204,16 +208,19 @@ urlpatterns = [
     path("expenses/approve/<int:pk>", views.ExpenseApproveView.as_view(), name="approve_expense"),
     path("expenses/update/<int:pk>", views.ExpenseUpdateView.as_view(), name="edit_expense"),
 
+    #salesman
     path("salesmans/", views.SalesmanListView.as_view(), name="salesmans"),
     path("salesmans/create/", views.SalesmanCreateView.as_view(), name="create_salesman"),
     path("salesmans/<int:pk>/delete/", views.SalesmanDeleteView.as_view(), name="delete_salesman"),
     path("salesmans/update/<int:pk>", views.SalesmanUpdateView.as_view(), name="edit_salesman"),
+    path('salesmans/delete/',views.deletesalesmans, name="delete_salesmans"),
 
+    #salesmangroup
     path("salesmangroups/", views.SalesmanGroupsListView.as_view(), name="salesmangroups"),
     path("salesmangroups/create/", views.SalesmanGroupsCreateView.as_view(), name="create_salesmangroup"),
     path("salesmangroups/<int:pk>/delete/", views.SalesmanGroupsDeleteView.as_view(), name="delete_salesmangroup"),
     path("salesmangroups/update/<int:pk>", views.SalesmanGroupsUpdateView.as_view(), name="edit_salesmangroup"),
-
+    path('salesmangroups/delete/',views.deletesalesmangroups, name="delete_salesmangroups"),
 
 
     path("ajax/load-cities/", views.load_cities, name="ajax_load_cities"),
@@ -361,6 +368,7 @@ urlpatterns = [
          name="edit_targetcategorychannels"),
     path("targetcategorychannels/rebuild/", views.TargetCategoryChannelsRebuildView.as_view(),
          name="rebuild_targetcategorychannels"),
+    path('targetcategorychannels/delete/',views.deletetargetcategorychannels, name="delete_targetcategorychannels"),
     # Reports
     path("ajax/load-cities-r/", views.load_cities_r, name="ajax_load_cities_r"),
     path("salesrep/", views.SalesRepView.as_view(), name="salesrep"),
@@ -396,6 +404,7 @@ urlpatterns = [
     path("currencies/create/", views.CurrencyCreateView.as_view(), name="create_currency"),
     path("currencies/<int:pk>/delete/", views.CurrencyDeleteView.as_view(), name="delete_currency"),
     path("currencies/update/<int:pk>", views.CurrencyUpdateView.as_view(), name="edit_currency"),
+    path('currencies/delete/',views.deletecurrencies, name="delete_currencies"),
 
     path("import/", views.Import, name="import"),
     path("export/", views.Export, name="export"),
@@ -406,6 +415,7 @@ urlpatterns = [
     path("newsubdomain/<int:pk>/delete/", views.SubDomainDeleteView.as_view(), name="delete_demoaccounts"),
     path("newsubdomain/stop/<int:pk>", views.SubDomainStopView.as_view(), name="stop_demoaccounts"),
     path("newsubdomain/activate/<int:pk>", views.SubDomainActiveView.as_view(), name="activate_demoaccounts"),
+    path('newsubdomain/delete/',views.deletenewsubdomain, name="delete_newsubdomain"),
 
     path("leads/", views.LeadListView.as_view(), name="leads"),
     path("leads/upload/", views.contact_upload, name="contact_upload"),
@@ -428,6 +438,7 @@ urlpatterns = [
     path("commissions/", views.CommissionListView.as_view(), name="commissions"),
     path("commissions/create/", views.CommissionCreateView.as_view(), name="create_commission"),
     path("commissions/update/<int:pk>", views.CommissionUpdateView.as_view(), name="edit_commission"),
+    path('commissions/delete/',views.deletecommissions, name="delete_commissions"),
 
     path("commissions_calc/", views.Commission_CalcListView.as_view(), name="commissions_calc"),
     path("commissions_calc/calc", views.CommissionCreate_Calc, name="create_commission_calc"),
@@ -458,12 +469,13 @@ urlpatterns = [
     path("useradditionalprofile/create/", views.UserAdditionalProfileCreateView.as_view(), name="create_useradditionalprofile"),
     path("useradditionalprofile/<int:pk>/delete/", views.UserAdditionalProfileDeleteView.as_view(), name="delete_useradditionalprofile"),
     path("useradditionalprofile/update/<int:pk>", views.UserAdditionalProfileUpdateView.as_view(), name="edit_useradditionalprofile"),
+    path('useradditionalprofile/delete/',views.deleteuseradditionalprofile, name="delete_useradditionalprofile"),
 
     path("userbusinessroles/", views.UserBusinessRolesListView.as_view(),name="list-userbusinessroles"),
     path("userbusinessroles/create/", views.UserBusinessRolesCreateView.as_view(),name="create_userbusinessroles"),
     path("userbusinessroles/update/<int:pk>", views.UserBusinessRolesUpdateView.as_view(),name="edit_userbusinessroles"),
     path("userbusinessroles/<int:pk>/delete/", views.UserBusinessRolesDeleteView.as_view(),name="delete_userbusinessroles"),
-
+    path('userbusinessroles/delete/',views.deleteuserbusinessroles, name="delete_userbusinessroles"),
                   #---------------------End khaldoun
 
 

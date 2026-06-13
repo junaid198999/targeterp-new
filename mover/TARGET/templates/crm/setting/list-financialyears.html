@@ -1,0 +1,150 @@
+{% extends "auth_base.html" %}
+{% load i18n %}
+{% load widget_tweaks %}
+{% load django_tables2 %}
+{% block content %}
+    <div class="container-fluid">
+        <!-- start page title -->
+        <div class="row">
+            <div class="col-12">
+                <div class="page-title-box">
+                    <div class="page-title-right">
+                        <ol class="breadcrumb m-0">
+                            <li class="breadcrumb-item"><a href="/">TARGET</a></li>
+                            <li class="breadcrumb-item active">{% trans "Financial Year" %}</li>
+                        </ol>
+                    </div>
+                    <h4 class="page-title">{% trans "Financial Year" %}</h4>
+                </div>
+            </div>
+        </div>
+        <!-- end page title -->
+        {% if request.user.is_superuser %}
+
+        <div class="row">
+            <div class="col-xl-12">
+                <div class="card">
+                    <div class="card-body">
+                        <div class="row mb-2">
+                            <div class="col-sm-12">
+                                <div class="text-sm-right">
+                                    <div class="modal fade" tabindex="-1" role="dialog" id="modal">
+                                          <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
+                                                <div class="modal-content"></div>
+                                          </div>
+                                    </div>
+                                    <!-- Create Product button -->
+                                </div><!-- end col-->
+                            </div>
+                        </div>
+
+                        <table id="table_id" class="table nowrap" style="width:100%">
+                            <thead class="thead-light" >
+                                <tr>
+                                    <th>{% trans "M1" %}</th>
+                                    <th>{% trans "M2" %}</th>
+                                    <th>{% trans "M3" %}</th>
+                                    <th>{% trans "M4" %}</th>
+                                    <th>{% trans "M5" %}</th>
+                                    <th>{% trans "M6" %}</th>
+                                    <th>{% trans "M7" %}</th>
+                                    <th>{% trans "M8" %}</th>
+                                    <th>{% trans "M9" %}</th>
+                                    <th>{% trans "M10" %}</th>
+                                    <th>{% trans "M11" %}</th>
+                                    <th>{% trans "M12" %}</th>
+                                    <th width="30">{% trans "Action" %}</th>
+                                </tr>
+                            </thead>
+
+                            <tbody>
+                                {% for form in financialyears %}
+                                <tr>
+                                        <td>
+                                            {% if form.m1 == 1 %}JAN{% elif form.m1 == 2 %}FEB{% elif form.m1 == 3 %}MAR {% elif form.m1 == 4 %}APR {% elif form.m1 == 5 %}MAY {% elif form.m1 == 6 %}JUN {% elif form.m1 == 7 %}JUL {% elif form.m1 == 8 %}AUG {% elif form.m1 == 9 %}SEP {% elif form.m1 == 10 %}OCT {% elif form.m1 == 11 %}NOV {% elif form.m1 == 12 %}DEC {% endif %}
+                                        </td>
+                                        <td>
+                                            {% if form.m2 == 1 %}JAN{% elif form.m2 == 2 %}FEB{% elif form.m2 == 3 %}MAR {% elif form.m2 == 4 %}APR {% elif form.m2 == 5 %}MAY {% elif form.m2 == 6 %}JUN {% elif form.m2 == 7 %}JUL {% elif form.m2 == 8 %}AUG {% elif form.m2 == 9 %}SEP {% elif form.m2 == 10 %}OCT {% elif form.m2 == 11 %}NOV {% elif form.m2 == 12 %}DEC {% endif %}
+                                        </td>
+                                        <td>
+                                            {% if form.m3 == 1 %}JAN{% elif form.m3 == 2 %}FEB{% elif form.m3 == 3 %}MAR {% elif form.m3 == 4 %}APR {% elif form.m3 == 5 %}MAY {% elif form.m3 == 6 %}JUN {% elif form.m3 == 7 %}JUL {% elif form.m3 == 8 %}AUG {% elif form.m3 == 9 %}SEP {% elif form.m3 == 10 %}OCT {% elif form.m3 == 11 %}NOV {% elif form.m3 == 12 %}DEC {% endif %}
+                                        </td>
+                                        <td>
+                                            {% if form.m4 == 1 %}JAN{% elif form.m4 == 2 %}FEB{% elif form.m4 == 3 %}MAR {% elif form.m4 == 4 %}APR {% elif form.m4 == 5 %}MAY {% elif form.m4 == 6 %}JUN {% elif form.m4 == 7 %}JUL {% elif form.m4 == 8 %}AUG {% elif form.m4 == 9 %}SEP {% elif form.m4 == 10 %}OCT {% elif form.m4 == 11 %}NOV {% elif form.m4 == 12 %}DEC {% endif %}
+                                        </td>
+                                        <td>
+                                            {% if form.m5 == 1 %}JAN{% elif form.m5 == 2 %}FEB{% elif form.m5 == 3 %}MAR {% elif form.m5 == 4 %}APR {% elif form.m5 == 5 %}MAY {% elif form.m5 == 6 %}JUN {% elif form.m5 == 7 %}JUL {% elif form.m5 == 8 %}AUG {% elif form.m5 == 9 %}SEP {% elif form.m5 == 10 %}OCT {% elif form.m5 == 11 %}NOV {% elif form.m5 == 12 %}DEC {% endif %}
+                                        </td>
+                                        <td>
+                                            {% if form.m6 == 1 %}JAN{% elif form.m6 == 2 %}FEB{% elif form.m6 == 3 %}MAR {% elif form.m6 == 4 %}APR {% elif form.m6 == 5 %}MAY {% elif form.m6 == 6 %}JUN {% elif form.m6 == 7 %}JUL {% elif form.m6 == 8 %}AUG {% elif form.m6 == 9 %}SEP {% elif form.m6 == 10 %}OCT {% elif form.m6 == 11 %}NOV {% elif form.m6 == 12 %}DEC {% endif %}
+                                        </td>
+                                        <td>
+                                            {% if form.m7 == 1 %}JAN{% elif form.m7 == 2 %}FEB{% elif form.m7 == 3 %}MAR {% elif form.m7 == 4 %}APR {% elif form.m7 == 5 %}MAY {% elif form.m7 == 6 %}JUN {% elif form.m7 == 7 %}JUL {% elif form.m7 == 8 %}AUG {% elif form.m7 == 9 %}SEP {% elif form.m7 == 10 %}OCT {% elif form.m7 == 11 %}NOV {% elif form.m7 == 12 %}DEC {% endif %}
+                                        </td>
+                                        <td>
+                                            {% if form.m8 == 1 %}JAN{% elif form.m8 == 2 %}FEB{% elif form.m8 == 3 %}MAR {% elif form.m8 == 4 %}APR {% elif form.m8 == 5 %}MAY {% elif form.m8 == 6 %}JUN {% elif form.m8 == 7 %}JUL {% elif form.m8 == 8 %}AUG {% elif form.m8 == 9 %}SEP {% elif form.m8 == 10 %}OCT {% elif form.m8 == 11 %}NOV {% elif form.m8 == 12 %}DEC {% endif %}
+                                        </td>
+                                        <td>
+                                            {% if form.m9 == 1 %}JAN{% elif form.m9 == 2 %}FEB{% elif form.m9 == 3 %}MAR {% elif form.m9 == 4 %}APR {% elif form.m9 == 5 %}MAY {% elif form.m9 == 6 %}JUN {% elif form.m9 == 7 %}JUL {% elif form.m9 == 8 %}AUG {% elif form.m9 == 9 %}SEP {% elif form.m9 == 10 %}OCT {% elif form.m9 == 11 %}NOV {% elif form.m9 == 12 %}DEC {% endif %}
+                                        </td>
+                                        <td>
+                                            {% if form.m10 == 1 %}JAN{% elif form.m10 == 2 %}FEB{% elif form.m10 == 3 %}MAR {% elif form.m10 == 4 %}APR {% elif form.m10 == 5 %}MAY {% elif form.m10 == 6 %}JUN {% elif form.m10 == 7 %}JUL {% elif form.m10 == 8 %}AUG {% elif form.m10 == 9 %}SEP {% elif form.m10 == 10 %}OCT {% elif form.m10 == 11 %}NOV {% elif form.m10 == 12 %}DEC {% endif %}
+                                        </td>
+                                        <td>
+                                            {% if form.m11 == 1 %}JAN{% elif form.m11 == 2 %}FEB{% elif form.m11 == 3 %}MAR {% elif form.m11 == 4 %}APR {% elif form.m11 == 5 %}MAY {% elif form.m11 == 6 %}JUN {% elif form.m11 == 7 %}JUL {% elif form.m11 == 8 %}AUG {% elif form.m11 == 9 %}SEP {% elif form.m11 == 10 %}OCT {% elif form.m11 == 11 %}NOV {% elif form.m11 == 12 %}DEC {% endif %}
+                                        </td>
+                                        <td>
+                                            {% if form.m12 == 1 %}JAN{% elif form.m12 == 2 %}FEB{% elif form.m12 == 3 %}MAR {% elif form.m12 == 4 %}APR {% elif form.m12 == 5 %}MAY {% elif form.m12 == 6 %}JUN {% elif form.m12 == 7 %}JUL {% elif form.m12 == 8 %}AUG {% elif form.m12 == 9 %}SEP {% elif form.m12 == 10 %}OCT {% elif form.m12 == 11 %}NOV {% elif form.m12 == 12 %}DEC {% endif %}
+                                        </td>
+
+                                        <td>
+                                            <button type="button" class="edit-financialyears btn btn-outline-warning effect waves-light btn-xs" data-id="{% url 'crm:edit_financialyears' form.pk %}" title="{% trans "Edit" %}"><i class="mdi mdi-square-edit-outline"></i></button>
+                                        </td>
+
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+
+                    </div> <!-- end card-->
+                </div> <!-- end col -->
+
+            </div>
+        <!-- end row -->
+
+        </div> <!-- container -->
+        {% else %}
+        <div class="row" >
+            <div class="col-xl-12">
+                <div class="card">
+                    <div class="card-body">
+                            <STRONG> {% trans "You Don't have a permission to access this page." %} </STRONG>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endif %}
+
+    </div>
+{% endblock %}
+
+
+{% block extra_javascript %}
+    <script type="text/javascript">
+      $(function () {
+        // Create Product button
+            // Update product buttons
+            $(".edit-financialyears").each(function () {
+              $(this).modalForm({formURL: $(this).data('id')});
+            });
+                // Delete Product button
+            $(".delete-product").each(function () {
+              $(this).modalForm({formURL: $(this).data('id')});
+            });
+
+        });
+
+    </script>
+
+
+{% endblock %}

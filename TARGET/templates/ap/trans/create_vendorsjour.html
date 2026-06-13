@@ -175,10 +175,9 @@
                                                     {% endfor %}
                                                 </tbody>
                                                 <tr>
-                                                    <td colspan="6"><b class="float-right">{% trans "Total:" %} </b></td>
+                                                    <td colspan="4"><b class="float-right">{% trans "Total:" %} </b></td>
                                                     <td style="padding: 0rem" colspan="1"><INPUT TYPE="number" id="id_totaldebit" NAME="totaldebit" placeholder="Total Debit" class="form-control"  readonly="true"></td>
                                                     <td style="padding: 0rem" colspan="1"><INPUT TYPE="number" id="id_totalcredit" NAME="totalcredit" placeholder="Total Credit" class="form-control"  readonly="true" ></td>
-                                                    <input type="text" hidden="true" name="totalamount" id="id_totalamount" />
                                                 </tr>
                                         </table>
 
@@ -212,13 +211,108 @@
 
 
 $(document).ready(function(){
-    activaTab('lines');
+  activaTab('lines');
 });
 
 function activaTab(tab){
   $('.nav-tabs a[href="#' + tab + '"]').tab('show');
 };
-   
+
+
+
+$('.formset_row').formset({
+    animateForms: true,
+    uiText: {
+        addPrompt: 'Add Line',         // Text used on the 'add a new form' control.
+        removePrompt: '',        // Text used on the 'delete this existing form' control.
+    },
+    addButtonHolder:'.buttonHolder',
+    addCssClass: "add-row btn btn-primary waves-effect waves-light ",
+    deleteCssClass: "delete-row btn btn-danger waves-effect mdi mdi-close",
+    prefix: '{{ vendorsjourline.prefix }}',
+        callbacks: {
+            onAdd: function () {
+                 $("[name*=-ledger]").select2();
+                 $("[name*=vendor]").select2();
+            },
+            onRemove: function () {
+            }
+        },
+
+
+    });
+
+
+
+
+$('#id_journaldate').prop( "min", '{{ mindate }}' );
+$('#id_journaldate').prop( "max", '{{ maxdate }}' );
+$('#id_total').attr('readonly', true);
+
+
+
+function get_total(){
+        var id = parseInt($('#id_vendorsjourline_set-TOTAL_FORMS').val());
+
+        var dbttot = 0;
+        var crttot = 0;
+        console.log(id);
+        for (i = 0; i <= parseInt(id); i++){
+
+            if($("input[name=vendorsjourline_set-" + i + "-debitamount]").val() ){
+                dbttot += parseFloat($("input[name=vendorsjourline_set-" + i + "-debitamount]").val(),1);
+            }
+            else{
+                dbttot += 0;
+            }
+            if($("input[name=vendorsjourline_set-" + i + "-creditamount]").val() ){
+                crttot += parseFloat($("input[name=vendorsjourline_set-" + i + "-creditamount]").val(),1);
+            }
+            else{
+                crttot += 0;
+            }
+        }
+        $("#id_totaldebit").val(dbttot.toFixed(1));
+        $("#id_totalcredit").val(crttot.toFixed(1));
+
+        if ( crttot == dbttot ) {
+            document.getElementById("create_id").disabled = false;
+            console.log('false');
+        }
+
+        if ( crttot != dbttot ) {
+            document.getElementById("create_id").disabled = true;
+            console.log('true');
+        }
+
+
+};
+
+
+    $("input[name*='debitamount']").change(function () {
+        get_total()
+
+    });
+
+    $("input[name*='creditamount']").change(function () {
+        get_total()
+        console.log('Select ');
+    });
+
+document.addEventListener('DOMContentLoaded', function() {
+    get_total();
+    console.log('Select 1');
+}, false);
+
+
+
+
+
+
+   $('.delete-row').on("click", function(){
+        get_total()
+    });
+
 
 
 {% comment %}
@@ -228,120 +322,39 @@ function activaTab(tab){
         });
       });
 {% endcomment %}
-   
-
-
-    $("select[name*='-ledger']").change(function () {
-            var ledidfield = $(this).attr('name').replace('-ledger', '-ledid');
-            var ledfield = $(this).attr('name').replace('-ledger', '-ledger');
-            ledid_value = $(this).val();
-            $("#id_"+ledidfield).val(ledid_value);
-
-    });
-
-
-    $("select[name*='-vendor']").change(function () {
-            var custidfield = $(this).attr('name').replace('-vendor', '-vendor_id');
-            var custfield = $(this).attr('name').replace('-vendor', '-vendor');
-            custid_value = $(this).val();
-            $("#id_"+custidfield).val(custid_value);
-    });
 
 
 
-    $("select[name*='-accounttype']").change(function () {
-            var led = $(this).attr('name').replace('-accounttype', '-ledger');
-            var cust = $(this).attr('name').replace('-accounttype', '-vendor');
+$("select[name*='-accounttype']").change(function () {
+        var led = $(this).attr('name').replace('-accounttype', '-ledger');
+        var cust = $(this).attr('name').replace('-accounttype', '-vendor');
 
-            var id = $(this).attr('id');
-            type_value = $(this).val();
-            type_value = $(this).children("option:selected").text();
-            if (type_value.includes("L - ")) {
-                console.log(led)
-                $("#id_"+ led).prop("disabled",false);
-                $("#id_"+ cust).prop("disabled",true);
-                $("#id_"+ cust).val($("#id_"+ cust + " option:first").val()).change();
-            } else if(type_value.includes("V - ")) {
-                $("#id_"+ cust).prop("disabled",false);
-                $("#id_"+ led).prop("disabled",true);
-                $("#id_"+ led).val($("#id_"+ led + " option:first").val()).change();
+
+        var id = $(this).attr('id');
+        type_value = $(this).val();
+        type_value = $(this).children("option:selected").text();
+        console.log(id)
+        if (type_value.includes("L - ")) {
+            console.log(1)
+            console.log(type_value);
+            document.getElementById("id_" + led).disabled = false;
+            document.getElementById("id_" + vend).disabled = true;
+            var s = document.getElementById("id_" + vend);
+            s.value = "---------";
             } else {
-                $("#id_"+ cust).prop("disabled",true);
-                $("#id_"+ led).prop("disabled",true);
-                $("#id_"+ led).val($("#id_"+ led + " option:first").val()).change();
-                $("#id_"+ cust).val($("#id_"+ cust + " option:first").val()).change();
+            console.log(2)
+            console.log(type_value);
+            document.getElementById("id_" + led).disabled = true;
+            document.getElementById("id_" + vend).disabled = false;
+            var s = document.getElementById("id_" + led);
+            s.value = "---------";
+
             }
-    });
 
+});
 
-    function get_total(){
-        var total_debit_amount = 0;
-        var total_credit_amount = 0;
-
-        $("input[id$='-debitamount']").each(function(i, e) {
-            if($(e).val() != NaN) {
-                total_debit_amount += parseFloat($(e).val());
-            }
-        });
-
-        $("input[id$='-creditamount']").each(function(i, e) {
-            if($(e).val() != NaN) {
-                total_credit_amount += parseFloat($(e).val());
-            }
-        });
-
-        $("#id_totaldebit").val(total_debit_amount.toFixed(1));
-        $("#id_totalcredit").val(total_credit_amount.toFixed(1));
-
-        if (total_credit_amount == total_debit_amount ) {
-            document.getElementById("create_id").disabled = false;
-            $("#id_totalamount").val(total_credit_amount.toFixed(1));                
-        }
-
-        if ( total_credit_amount != total_debit_amount ) {
-            document.getElementById("create_id").disabled = true;            
-        }
-    };
-
-    $("input[name*='debitamount']").change(function () {
-        get_total()
-    });
-
-    $("input[name*='creditamount']").change(function () {
-        get_total()
-    });
-
-document.addEventListener('DOMContentLoaded', function() {
-    get_total();
-}, false);
-
-
-   $('.delete-row').on("click", function(){
-        get_total()
-    });
-
-    $('.formset_row').formset({
-        animateForms: true,
-        uiText: {
-            addPrompt: 'Add Line',         // Text used on the 'add a new form' control.
-            removePrompt: '',        // Text used on the 'delete this existing form' control.
-        },
-        addButtonHolder:'.buttonHolder',
-        addCssClass: "add-row btn btn-primary waves-effect waves-light",
-        deleteCssClass: "delete-row btn btn-danger waves-effect mdi mdi-close",
-        prefix: '{{ customersjourlines.prefix }}',
-
-        callbacks: {
-            onAdd: function () {
-                 $("[name*=-accounttype]").select2();
-                 $("[name*=-ledger]").select2();
-                 $("[name*=-vendor]").select2();
-            },
-            onRemove: function () {
-                 get_total();
-            }
-        },
-    });
+     $("[name*=ledger]").select2();
+     $("[name*=vendor]").select2();
 
 
 </script>

@@ -1,0 +1,226 @@
+{% load i18n %}
+{% load widget_tweaks %}
+{% load crispy_forms_tags %}
+{% block content %}
+
+<form align="left" id="CustomerForm" method="post" action="" data-areas-url="{% url 'crm:ajax_load_areas' %}" data-cities-url="{% url 'crm:ajax_load_cities' %}">
+    {% if LANGUAGE_CODE == 'ar' %}
+        <link href="/static/libs/select2/select2-rtl.min.css" rel="stylesheet" />
+    {% else %}
+        <link href="/static/libs/select2/select2.min.css" rel="stylesheet" />
+    {% endif %}
+  {% csrf_token %}
+
+    <div class="modal-header" style="background: #f7b84b;">
+      <h3 class="modal-title" style="color: white;">{% trans "Update Doctor" %}</h3>
+      <button style="color:white; font-size: 2rem;" type="button" class="close" data-dismiss="modal" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+
+        <div class="modal-body">
+            <table>
+                <div class="{% if form.non_field_errors %}invalid{% endif %} mb-2">
+                          {% if form.non_field_errors %}
+                            {{ error }}
+                            {% endif %}
+                    </div>
+                <div class="form-row">
+                    <div class="form-group col-md-4 mb-0">
+                        <div class="form-row">
+                              <div class="form-group col-md-12 mb-0">
+                                  {{ form.name|as_crispy_field }}
+                                    <div class="{% if form.name.errors %} invalid{% endif %}">
+                                        {% if error in form.name.errors %}
+                                            <p class="help-block">{{ error }}</p>
+                                            {% endif %}
+                                    </div>
+                                </div>
+                              <div class="form-group col-md-12 mb-0">
+                                  {{ form.dgree|as_crispy_field }}
+                                    <div class="{% if form.dgree.errors %} invalid{% endif %}">
+                                        {% if error in form.dgree.errors %}
+                                            <p class="help-block">{{ error }}</p>
+                                            {% endif %}
+                                    </div>
+                              </div>
+                              <div class="form-group col-md-12 mb-0">
+                                    {{ form.specialty|as_crispy_field }}
+                                    <div class="{% if form.specialty.errors %} invalid{% endif %}">
+                                        {% if error in form.specialty.errors %}
+                                            <p class="help-block">{{ error }}</p>
+                                            {% endif %}
+                                    </div>
+                              </div>
+                        </div>
+                    </div>
+                    <div class="form-group col-md-4 mb-0">
+                        <div class="form-row">
+                              <div class="form-group col-md-12 mb-2">
+                                    <label class="col-form-label" id="">{% trans "Class" %}* {{ form.doctor_category.id }}</label>
+                                        <select name="doctor_category" class="form-control" id="id_doctor_category" style="width:100%" required>
+                                            <option value="">Select</option>
+                                            {% for Class in clases %}
+                                                <option {% if Class.id == category_id %} selected {% endif %} value="{{ Class.id }}">{{ Class.name }}</option>
+                                            {% endfor %}
+                                        </select>
+                                    <div class="{% if form.doctor_category.errors %} invalid{% endif %}">
+                                        {% if error in form.doctor_category.errors %}
+                                            <p class="help-block">{{ error }}</p>
+                                            {% endif %}
+                                    </div>
+                              </div>
+                              <div class="form-group col-md-12 mb-0">
+                                  {{ form.account1|as_crispy_field }}
+                                    <div class="{% if form.account1.errors %} invalid{% endif %}">
+                                        {% if error in form.account1.errors %}
+                                            <p class="help-block">{{ error }}</p>
+                                            {% endif %}
+                                    </div>
+                              </div>
+                              <div class="form-group col-md-12 mb-0">
+                                  {{ form.account2|as_crispy_field }}
+                              </div>
+                        </div>
+                    </div>
+                    <div class="form-group col-md-4 mb-0">
+                        <div class="form-row">
+                              <div class="form-group col-md-6 mb-0">
+                                  {{ form.salesman|as_crispy_field }}
+                                    <div class="{% if form.salesman.errors %} invalid{% endif %}">
+                                        {% if error in form.salesman.errors %}
+                                            <p class="help-block">{{ error }}</p>
+                                            {% endif %}
+                                    </div>
+                              </div>
+                              <div class="form-group col-md-6 mb-0">
+                                  {{ form.monthly_target|as_crispy_field }}
+                              </div>
+                              <div class="form-group col-md-12 mb-0">
+                                  {{ form.note|as_crispy_field }}
+                              </div>
+                        </div>
+                    </div>
+                </div>
+            </table>
+        </div>
+
+  <div class="modal-footer">
+    <button type="button" class="btn btn-secondary waves-effect" data-dismiss="modal">{% trans "Cancel" %}</button>
+    <button type="button" class="submit-btn btn-danger btn btn-primary">{% trans "Save" %}</button>
+  </div>
+
+</form>
+    <script src="/static/libs/select2/select2.min.js"></script>
+<script type="text/javascript">
+    $("#id_country").change(function () {
+      var url = $("#CustomerForm").attr("data-areas-url");  // get the url of the `load_cities` view
+      var countryId = $(this).val();  // get the selected country ID from the HTML input
+
+      $.ajax({                       // initialize an AJAX request
+        url: url,                    // set the url of the request (= localhost:8000/hr/ajax/load-cities/)
+        data: {
+          'country': countryId       // add the country id to the GET parameters
+        },
+        success: function (data) {   // `data` is the return of the `load_cities` view function
+          $("#id_area").html(data);  // replace the contents of the city input with the data that came from the server
+          $("#id_city").html(data);  // replace the contents of the city input with the data that came from the server
+        }
+      });
+
+    });
+
+    $("#id_area").change(function () {
+      var url = $("#CustomerForm").attr("data-cities-url");  // get the url of the `load_cities` view
+      var areaId = $(this).val();  // get the selected country ID from the HTML input
+
+      $.ajax({                       // initialize an AJAX request
+        url: url,                    // set the url of the request (= localhost:8000/hr/ajax/load-cities/)
+        data: {
+          'area': areaId       // add the country id to the GET parameters
+        },
+        success: function (data) {   // `data` is the return of the `load_cities` view function
+          $("#id_city").html(data);  // replace the contents of the city input with the data that came from the server
+        }
+      });
+    });
+
+    $(function () {
+        $('#id_doctor_category').select2({
+            width: '100%',
+            templateSelection: function (data) {
+                if (data.id === '') {
+                  return 'Select';
+                }
+            return data.text;
+            }
+        });
+        $('#id_customer_size').select2({
+            width: '100%',
+            templateSelection: function (data) {
+                if (data.id === '') {
+                  return 'Select';
+                }
+            return data.text;
+            }
+        });
+        $('#id_channel').select2({
+            width: '100%',
+            templateSelection: function (data) {
+                if (data.id === '') {
+                  return 'Select';
+                }
+            return data.text;
+            }
+        });
+        $('#id_salesman').select2({
+            width: '100%',
+            templateSelection: function (data) {
+                if (data.id === '') {
+                  return 'Select';
+                }
+            return data.text;
+            }
+        });
+        $('#id_specialty').select2({
+            width: '100%',
+            templateSelection: function (data) {
+                if (data.id === '') {
+                  return 'Select';
+                }
+            return data.text;
+            }
+        });
+        $('#id_account1').select2({
+            width: '100%',
+            templateSelection: function (data) {
+                if (data.id === '') {
+                  return 'Select';
+                }
+            return data.text;
+            }
+        });
+        $('#id_account2').select2({
+            width: '100%',
+            templateSelection: function (data) {
+                if (data.id === '') {
+                  return 'Select';
+                }
+            return data.text;
+            }
+        });
+        $('#id_city').select2({
+            width: '100%',
+            templateSelection: function (data) {
+                if (data.id === '') {
+                  return 'Select';
+                }
+            return data.text;
+            }
+        });
+    });
+
+
+
+  </script>
+{% endblock %}

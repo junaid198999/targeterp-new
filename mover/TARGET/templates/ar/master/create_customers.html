@@ -1,0 +1,570 @@
+{% extends "auth_base.html" %}
+{% load i18n %}
+{% load django_tables2 %}
+{% load widget_tweaks %}
+{% load crispy_forms_tags %}
+{% block content %}
+{% load humanize %}
+<link href="/static/libs/select2/select2.min.css" rel="stylesheet" />
+<link href="/static/libs/sweetalert2/sweetalert2.min.css" rel="stylesheet" type="text/css" />
+<div class="container-fluid">
+    <!-- start page title -->
+    <div class="row">
+        <div class="col-12">
+            <div class="page-title" style="background: #60b4fd;height:60px;text-align: left;padding-top: 3px;padding-left: 5px;">
+                <h4 class="page-title" style="font-size: 2rem;color: white;">{% trans "Create Customer" %}</h4>
+            </div>
+        </div>
+    </div>
+    <head>
+        <meta charset="utf-8" />
+        <title>Customer_form</title>
+    </head>
+    <div class="row">
+        <div class="col-xl-12" >
+            <div class="card">
+                <div class="card-body" style="padding:0.5rem;padding-bottom: 0px;">
+                    <form  id="LJForm" action="" method="post" data-transtypes-url="{% url 'gl:ajax_load_transtypes' %}" >
+                        {{ customersaddress.management_form }}
+                        {% csrf_token %}
+                        {{ form.id }}
+
+
+                <table class="table table-bordered ">
+                    <div class="{% if form.non_field_errors %}invalid{% endif %} mb-2">
+                      {% if form.non_field_errors %}
+                        {{ error }}
+                        {% endif %}
+                    </div>
+                    <tbody style="background-color: white;">
+                            <td colspan = "2" style="vertical-align: middle">
+                                <div class="input-group">
+                                    <div class="form-group col-md-12 mb-0">
+                                        {{ form.code|as_crispy_field }}
+                                        <div class="{% if form.code.errors %} invalid{% endif %}">
+                                            {% if error in form.code.errors %}
+                                            <p class="help-block">{{ error }}</p>
+                                            {% endif %}
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group col-md-4 mb-0">
+                                        {{ form.engname|as_crispy_field }}
+                                        <div class="{% if form.engname.errors %} invalid{% endif %}">
+                                            {% if error in form.engname.errors %}
+                                            <p class="help-block">{{ error }}</p>
+                                            {% endif %}
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group col-md-4 mb-0">
+                                        {{ form.arbname|as_crispy_field }}
+                                        <div class="{% if form.arbname.errors %} invalid{% endif %}">
+                                            {% if error in form.arbname.errors %}
+                                            <p class="help-block">{{ error }}</p>
+                                            {% endif %}
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group col-md-2 mb-0">
+                                        {{ form.shortengname|as_crispy_field }}
+                                        <div class="{% if form.shortengname.errors %} invalid{% endif %}">
+                                            {% if error in form.shortengname.errors %}
+                                            <p class="help-block">{{ error }}</p>
+                                            {% endif %}
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group col-md-2 mb-0">
+                                        {{ form.shortarbname|as_crispy_field }}
+                                        <div class="{% if form.shortarbname.errors %} invalid{% endif %}">
+                                            {% if error in form.shortarbname.errors %}
+                                            <p class="help-block">{{ error }}</p>
+                                            {% endif %}
+                                        </div>
+                                    </div>
+
+
+                                </div>
+                            </td>
+                    </tbody>
+                </table>
+
+
+            <div class="tab" role="tabpanel">
+            <ul class="nav nav-tabs" role="tablist">
+                <li   class="active" ><a href="#general"   role="tab" data-toggle="pill">General</a></li>
+                <li  ><a href="#addresses"  role="tab" data-toggle="tab">Addresses</a></li>
+                <li  ><a href="#contacts"  role="tab" data-toggle="tab">Contacts</a></li>
+            </ul>
+            </div>
+
+
+
+              <div class="tab-content">
+                <div id="general" class="tab-pane fade in active">
+
+
+                        <table class="table table-bordered ">
+                            <div class="{% if form.non_field_errors %}invalid{% endif %} mb-2">
+                              {% if form.non_field_errors %}
+                                {{ error }}
+                                {% endif %}
+                            </div>
+                            <tbody style="background-color: white;">
+
+                                <tr>
+                                    <td width="100%" colspan = "7">
+                                        <div class="input-group" >
+
+                                            <div class="form-group col-md-2 mb-0">
+                                                {{ form.parent|as_crispy_field }}
+                                                <div class="{% if form.parent.errors %} invalid{% endif %}">
+                                                    {% if error in form.parent.errors %}
+                                                    <p class="help-block">{{ error }}</p>
+                                                    {% endif %}
+                                                </div>
+                                            </div>
+
+
+                                            <div class="form-group col-md-2 mb-0">
+                                                {{ form.salesperson|as_crispy_field }}
+                                                <div class="{% if form.salesperson.errors %} invalid{% endif %}">
+                                                    {% if error in form.salesperson.errors %}
+                                                    <p class="help-block">{{ error }}</p>
+                                                    {% endif %}
+                                                </div>
+                                            </div>
+
+                                            <div class="form-group col-md-2 mb-0" >
+                                                {{ form.currency|as_crispy_field }}
+                                                <div class="{% if form.currency.errors %} invalid{% endif %}">
+                                                    {% if error in form.currency.errors %}
+                                                    <p class="help-block">{{ error }}</p>
+                                                    {% endif %}
+                                                </div>
+                                            </div>
+
+                                            <div class="form-group col-md-2 mb-0">
+                                                {{ form.language|as_crispy_field }}
+                                                <div class="{% if form.language.errors %} invalid{% endif %}">
+                                                    {% if error in form.language.errors %}
+                                                    <p class="help-block">{{ error }}</p>
+                                                    {% endif %}
+                                                </div>
+                                            </div>
+
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td width="100%" colspan = "7">
+                                        <div class="input-group">
+
+                                            <div class="form-group col-md-2 mb-0">
+                                                {{ form.status|as_crispy_field }}
+                                                <div class="{% if form.status.errors %} invalid{% endif %}">
+                                                    {% if error in form.status.errors %}
+                                                    <p class="help-block">{{ error }}</p>
+                                                    {% endif %}
+                                                </div>
+                                            </div>
+
+
+                                            <div class="form-group col-md-2 mb-0">
+                                                {{ form.statuschangedby|as_crispy_field }}
+                                                <div class="{% if form.statuschangedby.errors %} invalid{% endif %}">
+                                                    {% if error in form.statuschangedby.errors %}
+                                                    <p class="help-block">{{ error }}</p>
+                                                    {% endif %}
+                                                </div>
+                                            </div>
+
+
+                                            <div class="form-group col-md-2 mb-0">
+                                                {{ form.statusdate|as_crispy_field }}
+                                                <div class="{% if form.statusdate.errors %} invalid{% endif %}">
+                                                    {% if error in form.statusdate.errors %}
+                                                    <p class="help-block">{{ error }}</p>
+                                                    {% endif %}
+                                                </div>
+                                            </div>
+
+                                            <div class="form-group col-md-2 mb-0">
+                                                {{ form.statusreason|as_crispy_field }}
+                                                <div class="{% if form.statusreason.errors %} invalid{% endif %}">
+                                                    {% if error in form.statusreason.errors %}
+                                                    <p class="help-block">{{ error }}</p>
+                                                    {% endif %}
+                                                </div>
+                                            </div>
+
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td width="100%" colspan = "7">
+                                        <div class="input-group">
+
+                                            <div class="form-group col-md-2 mb-0">
+                                                {{ form.customerclass|as_crispy_field }}
+                                                <div class="{% if form.customerclass.errors %} invalid{% endif %}">
+                                                    {% if error in form.customerclass.errors %}
+                                                    <p class="help-block">{{ error }}</p>
+                                                    {% endif %}
+                                                </div>
+                                            </div>
+
+
+                                            <div class="form-group col-md-2 mb-0">
+                                                {{ form.customercategory|as_crispy_field }}
+                                                <div class="{% if form.customercategory.errors %} invalid{% endif %}">
+                                                    {% if error in form.customercategory.errors %}
+                                                    <p class="help-block">{{ error }}</p>
+                                                    {% endif %}
+                                                </div>
+                                            </div>
+
+                                            <div class="form-group col-md-2 mb-0">
+                                                {{ form.accountsize|as_crispy_field }}
+                                                <div class="{% if form.accountsize.errors %} invalid{% endif %}">
+                                                    {% if error in form.accountsize.errors %}
+                                                    <p class="help-block">{{ error }}</p>
+                                                    {% endif %}
+                                                </div>
+                                            </div>
+
+
+                                            <div class="form-group col-md-2 mb-0">
+                                                {{ form.businessactivitytype|as_crispy_field }}
+                                                <div class="{% if form.businessactivitytype.errors %} invalid{% endif %}">
+                                                    {% if error in form.businessactivitytype.errors %}
+                                                    <p class="help-block">{{ error }}</p>
+                                                    {% endif %}
+                                                </div>
+                                            </div>
+
+
+                                            <div class="form-group col-md-2 mb-0">
+                                                {{ form.noofemployees|as_crispy_field }}
+                                                <div class="{% if form.noofemployees.errors %} invalid{% endif %}">
+                                                    {% if error in form.noofemployees.errors %}
+                                                    <p class="help-block">{{ error }}</p>
+                                                    {% endif %}
+                                                </div>
+                                            </div>
+
+                                            <div class="form-group col-md-2 mb-0">
+                                                {{ form.startbusinessdate|as_crispy_field }}
+                                                <div class="{% if form.startbusinessdate.errors %} invalid{% endif %}">
+                                                    {% if error in form.startbusinessdate.errors %}
+                                                    <p class="help-block">{{ error }}</p>
+                                                    {% endif %}
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </td>
+                                <tr>
+                                    <td width="100%" colspan = "7">
+                                        <div class="input-group">
+                                            <div class="form-group col-md-2 mb-0">
+                                                {{ form.paymenttearm|as_crispy_field }}
+                                                <div class="{% if form.paymenttearm.errors %} invalid{% endif %}">
+                                                    {% if error in form.paymenttearm.errors %}
+                                                    <p class="help-block">{{ error }}</p>
+                                                    {% endif %}
+                                                </div>
+                                            </div>
+
+                                            <div class="form-group col-md-2 mb-0">
+                                                {{ form.creditlimit|as_crispy_field }}
+                                                <div class="{% if form.creditlimit.errors %} invalid{% endif %}">
+                                                    {% if error in form.creditlimit.errors %}
+                                                    <p class="help-block">{{ error }}</p>
+                                                    {% endif %}
+                                                </div>
+                                            </div>
+
+                                            <div class="form-group col-md-2 mb-0">
+                                                {{ form.arledger|as_crispy_field }}
+                                                <div class="{% if form.arledger.errors %} invalid{% endif %}">
+                                                    {% if error in form.arledger.errors %}
+                                                    <p class="help-block">{{ error }}</p>
+                                                    {% endif %}
+                                                </div>
+                                            </div>
+
+                                            <div class="form-group col-md-1 mb-0">
+                                                {{ form.mandatorycreditlimit|as_crispy_field }}
+                                                <div class="{% if form.mandatorycreditlimit.errors %} invalid{% endif %}">
+                                                    {% if error in form.mandatorycreditlimit.errors %}
+                                                    <p class="help-block">{{ error }}</p>
+                                                    {% endif %}
+                                                </div>
+                                            </div>
+                                            <div class="form-group col-md-1 mb-0">
+                                                {{ form.iscash|as_crispy_field }}
+                                                <div class="{% if form.iscash.errors %} invalid{% endif %}">
+                                                    {% if error in form.iscash.errors %}
+                                                    <p class="help-block">{{ error }}</p>
+                                                    {% endif %}
+                                                </div>
+                                            </div>
+                                            <div class="form-group col-md-1 mb-0">
+                                                {{ form.iscredit|as_crispy_field }}
+                                                <div class="{% if form.iscredit.errors %} invalid{% endif %}">
+                                                    {% if error in form.iscredit.errors %}
+                                                    <p class="help-block">{{ error }}</p>
+                                                    {% endif %}
+                                                </div>
+                                            </div>
+                                            <div class="form-group col-md-1 mb-0">
+                                                {{ form.allowaccountentry|as_crispy_field }}
+                                                <div class="{% if form.allowaccountentry.errors %} invalid{% endif %}">
+                                                    {% if error in form.allowaccountentry.errors %}
+                                                    <p class="help-block">{{ error }}</p>
+                                                    {% endif %}
+                                                </div>
+                                            </div>
+
+                                        </div>
+                                    </td>
+                                </tr>
+
+                                </tr>
+
+                            </tbody>
+                        </table>
+              </div>
+
+
+                <div id="addresses" class="tab-pane fade in active">
+                        <div class="row">
+                            <div class="col-12">
+                                <div class="sub-header">
+                                    <h5 class="page-title">{% trans "Addresses" %}</h5>
+                                    <a style="float:right" class="buttonHolder" id="add-rowaddr"></a>
+                               </div>
+                            </div>
+                        </div>
+                        <table id="table_id" class="table table-bordered table-hover table-sm mb-0">
+                                <thead class="thead-light">
+                                    <tr>
+                                        <th>{% trans "Addr. Type" %}</th>
+                                        <th>{% trans "Country" %}</th>
+                                        <th>{% trans "City" %}</th>
+                                        <th>{% trans "District" %}</th>
+                                        <th>{% trans "Addrrss 1" %}</th>
+                                        <th>{% trans "Address 2 " %}</th>
+                                        <th>{% trans "Street" %}</th>
+                                        <th>{% trans "Actions" %}</th>
+
+                                    </tr>
+                                </thead>
+                                <tbody class="formset_row">
+
+                                    {% for form in customersaddress %}
+                                        {{ form.id }}
+
+                                        <tr style="padding: 0px !important;" class="rowclass">
+                                            <td style="padding: 0rem !important;width:300px;" >{{ form.addresstype }}</td>
+                                            <td style="padding: 0rem !important;width:100px;">{{ form.country }}</td>
+                                            <td style="padding: 0rem !important;width:100px;">{{ form.city }}</td>
+                                            <td style="padding: 0rem !important;width:100px;">{{ form.district }}</td>
+                                            <td style="padding: 0rem !important;width:70px;">{{ form.address1 }}</td>
+                                            <td style="padding: 0rem !important;width:70px;">{{ form.address2 }}</td>
+                                            <td style="padding: 0rem !important;width:70px;">{{ form.street }}</td>
+                                            <td style="padding: 0rem !important;width:10px; text-align: center;"></td>
+                                        </tr>
+                                    {% endfor %}
+                                </tbody>
+                        </table>
+                        </div>
+                <div id="contacts" class="tab-pane fade">
+                        <div class="row">
+                            <div class="col-12">
+                                <div class="sub-header">
+                                    <h5 class="page-title">{% trans "Contacts " %}</h5>
+                                    <a style="float:right" class="buttonHolder" id="add-rowcont"></a>
+                               </div>
+                            </div>
+                        </div>
+                        <table id="contact_id" class="table table-bordered table-hover table-sm mb-0">
+                                <thead class="thead-light">
+                                    <tr>
+                                        <th>{% trans "Contact. Type" %}</th>
+                                        <th>{% trans "Value" %}</th>
+                                        <th>{% trans "Inactive" %}</th>
+                                        <th>{% trans "Remarks" %}</th>
+                                        <th>{% trans "Actions" %}</th>
+                                    </tr>
+                                </thead>
+                                <tbody class="formset_row">
+                                    {% for form in customerscontact %}
+                                        {{ form.id }}
+                                        <tr style="padding: 0px !important;" class="rowclass">
+                                            <td style="padding: 0rem !important;width:300px;" >{{ form.contacttype}}</td>
+                                            <td style="padding: 0rem !important;width:100px;">{{ form.value }}</td>
+                                            <td style="padding: 0rem !important;width:100px;">{{ form.inactive }}</td>
+                                            <td style="padding: 0rem !important;width:100px;">{{ form.remarks }}</td>
+                                            <td style="padding: 0rem !important;width:10px; text-align: center;"></td>
+                                        </tr>
+                                    {% endfor %}
+                                </tbody>
+                        </table>
+
+                </div>
+                        <br><br>
+                        <div class="modal-footer">
+                            <a class="btn btn-secondary waves-effect" href="{% url 'ar:list-customers' %}">{% trans "Cancel" %}</a>
+                            <input type="submit" id="create_id" class="submit-btn btn-danger btn btn-primary" value="{% trans "Create" %}"/>
+                        </div>
+                    </form>
+
+                </div>
+            </div>
+        </div>
+    </div>
+    <button hidden type="button" class="btn btn-info btn-xs" id="sa-error">Click me</button>
+
+</div>
+{% endblock %}
+{% block extra_javascript %}
+
+<script src="/static/libs/select2/select2.min.js"></script>
+<script src="/static/dynamic_formsets/jquery.formset.js"></script>
+<script src="/static/django_select2/django_select2.js"></script>
+
+
+<script type="text/javascript">
+
+
+$(document).ready(function(){
+  activaTab('general');
+});
+
+function activaTab(tab){
+  $('.nav-tabs a[href="#' + tab + '"]').tab('show');
+};
+
+
+
+        $('.formset_row').formset({
+        animateForms: true,
+        uiText: {
+            addPrompt: 'Add Line',         // Text used on the 'add a new form' control.
+            removePrompt: '',        // Text used on the 'delete this existing form' control.
+        },
+        addButtonHolder:'.buttonHolder',
+        addCssClass: "add-row btn btn-primary waves-effect waves-light",
+        deleteCssClass: "delete-row btn btn-danger waves-effect mdi mdi-close",
+        prefix: '{{ customeraddresses.prefix }}',
+
+        callbacks: {
+            onAdd: function () {
+                 $("[name*=-addresstype]").select2();
+            },
+            onRemove: function () {
+            }
+        },
+    });
+
+
+    $('#table_cnt_id tbody').formset({
+    animateForms: true,
+    uiText: {
+        addPrompt: 'Add Cantact',         // Text used on the 'add a new form' control.
+        removePrompt: '',        // Text used on the 'delete this existing form' control.
+    },
+    addButtonHolder:'.buttonHoldercnt',
+    addCssClass: "add-row btn btn-primary waves-effect waves-light ",
+    deleteCssClass: "delete-row btn btn-danger waves-effect mdi mdi-close",
+    prefix: '{{ customerscontacts.prefix }}',
+    });
+
+
+</script>
+
+<style type="text/css">
+
+.card-header:first-child {
+    height: 28px !important;
+}
+h5.card-title.mb-0.text-white {
+    line-height: 0 !important;
+}
+.card-widgets {
+    line-height: 0 !important;
+}
+.card-widgets>a {
+    line-height: 0px !important;
+}
+
+
+      a:hover,a:focus{
+    outline: none;
+    text-decoration: none;
+}
+.tab .nav-tabs{
+    position: relative;
+    border-bottom: none;
+}
+.tab .nav-tabs li{
+    margin-right: 3px;
+}
+.tab .nav-tabs li a{
+    padding: 15px 25px;
+    font-size: 15px;
+    font-weight: 600;
+    color: #22272c;
+    text-transform: uppercase;
+    background: #fff;
+    margin-right: 0;
+    border-radius: 0;
+    border: 1px solid #c9cba3;
+    position: relative;
+    transition: all 0.5s ease 0s;
+}
+.tab .nav-tabs li a:before{
+    content: "";
+    width: 100%;
+    height: 3px;
+    background: #c9cba3;
+    position: absolute;
+    top: 0;
+    left: 0;
+}
+.tab .nav-tabs li a:hover{
+    border: 1px solid #63d7d9;
+}
+.tab .nav-tabs li.active a{
+    border-color: #14c6c9;
+}
+.tab .nav-tabs li.active a:before{
+    background: #14c6c9;
+}
+.tab .tab-content{
+    font-size: 14px;
+    color: #808080;
+    line-height: 26px;
+    padding: 10px 0;
+    margin-top: 10px;
+}
+.tab .tab-content h3{
+    font-size: 22px;
+    color: #5b5a5a;
+}
+@media only screen and (max-width: 480px){
+    .tab .nav-tabs li{
+        width: 100%;
+        text-align: center;
+        margin-bottom: 8px;
+    }
+}
+
+
+</style>
+
+{% endblock %}
+
+

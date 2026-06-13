@@ -1,0 +1,4 @@
+<option value="">Select</option>
+{% for area in areas %}
+<option value="{{ area.pk }}">{% if LANGUAGE_CODE == 'ar' %}{{ area.name_l2 }}{% else %}{{ area.name }}{% endif %}</option>
+{% endfor %}

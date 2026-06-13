@@ -105,12 +105,12 @@
                                             <div class="input-group-prepend">
                                                 <span class="input-group-text" >{% trans "Journal Date" %}</span>
                                             </div>
-                                            <INPUT id="id_journaldate" type="date" NAME="journaldate" class="form-control" {% if journaldate != ''  %} value="{{currentdate}}" {% endif %} >
+                                            <INPUT id="id_journaldate" type="date" NAME="journaldate" class="form-control datecurrent" value="">
                                         </div>
 
                                         </div>
                                     </td>
-                                </tr>
+                                </tr>   
                             </tbody>
                         </table>
                         <table class="table table-bordered ">
@@ -178,13 +178,6 @@
                                         <th>{% trans "Account Type" %}</th>
                                         <th>{% trans "Ledger " %}</th>
                                         <th>{% trans "Customer " %}</th>
-                                        {% if usecostcenter1 == True  %}
-                                        <th>{% trans "Cost C 1" %}</th>
-                                        {% endif %}
-
-                                        {% if usecostcenter1 == True and comusecostcenter1 == True %}
-                                        <th>{% trans "Cost C 2" %}</th>
-                                        {% endif %}
                                         <th>{% trans "Eng. Desc" %}</th>
                                         <th>{% trans "Debit" %}</th>
                                         <th>{% trans "Credit" %}</th>
@@ -192,7 +185,7 @@
                                     </tr>
                                 </thead>
                                 <tbody class="formset_row">
-                                    {% for form in customersjourlines %}
+                                    {% for form in customersjourline %}
                                         {{ form.id }}
                                         <tr style="padding: 0px !important;" class="rowclass">
                                                 <td style="padding: 0rem !important;width:100px;" >{{ form.accounttype|as_crispy_field}}</td>
@@ -207,14 +200,6 @@
 -->
                                                 <td style="padding: 0rem !important;width:100px;">{{ form.ledger|as_crispy_field }}</td>
                                                 <td style="padding: 0rem !important;width:100px;">{{ form.customer|as_crispy_field }}</td>
-
-                                                {% if usecostcenter1 == True  %}
-                                                <td style="padding: 0rem !important;width:100px;">{{ form.costcenter1|as_crispy_field }}</td>
-                                                {% endif %}
-
-                                                {% if usecostcenter1 == True and comusecostcenter1 == True %}
-                                                <td style="padding: 0rem !important;width:100px;">{{ form.costcenter2|as_crispy_field }}</td>
-                                                {% endif %}
 
                                                 <td style="padding: 0rem !important;width:100px;">{{ form.engdesc|as_crispy_field }}</td>
                                                 <td style="padding: 0rem !important;width:70px;">{{ form.debitamount|as_crispy_field }}</td>
@@ -240,7 +225,6 @@
 
 </div>
 {% endblock %}
-
 {% block extra_javascript %}
 
 <script src="/static/libs/select2/select2.min.js"></script>
@@ -248,50 +232,74 @@
 <script src="/static/django_select2/django_select2.js"></script>
 <script src="/static/libs/sweetalert2/sweetalert2.min.js"></script>
 
+<script src="/static/libs/select2/select2.min.js"></script>
 <script src="/static/libs/dropify/dropify.min.js"></script>
 
+{{ event_formset.media }}
 <script type="text/javascript">
 
 
-$('#id_journaldate').prop( "min", '{{ mindate }}' );
-$('#id_journaldate').prop( "max", '{{ maxdate }}' );
+
+$(document).ready(function(){
+  activaTab('lines');
+});
+
+function activaTab(tab){
+  $('.nav-tabs a[href="#' + tab + '"]').tab('show');
+};
+
+
+
+$('.formset_row').formset({
+    animateForms: true,
+    uiText: {
+        addPrompt: 'Add Line',         // Text used on the 'add a new form' control.
+        removePrompt: '',        // Text used on the 'delete this existing form' control.
+    },
+    addButtonHolder:'.buttonHolder',
+    addCssClass: "add-row btn btn-primary waves-effect waves-light ",
+    deleteCssClass: "delete-row btn btn-danger waves-effect mdi mdi-close",
+    prefix: '{{ customersjourline.prefix }}',
+        callbacks: {
+            onAdd: function () {
+                 $("[name*=-ledger]").select2();
+                 $("[name*=customer]").select2();
+            },
+            onRemove: function () {
+            }
+        },
+
+
+    });
+
+
+
+
+//$('#id_journaldate').prop( "min", '{{ mindate }}' );
+//$('#id_journaldate').prop( "max", '{{ maxdate }}' );
 $('#id_total').attr('readonly', true);
 
 
-
-$("select[name*='-accounttype']").change(function () {
-        var led = $(this).attr('name').replace('-accounttype', '-ledger');
-        var cust = $(this).attr('name').replace('-accounttype', '-customer');
-
-        var id = $(this).attr('id');
-        type_value = $(this).val();
-        type_value = $(this).children("option:selected").text();
-        if (type_value.includes("L - ")) {
-            console.log(led)
-            $("#id_"+ led).prop("disabled",false);
-            $("#id_"+ cust).prop("disabled",true);
-            $("#id_"+ cust).val($("#id_"+ cust + " option:first").val()).change();
-        } else if(type_value.includes("C - ")) {
-            $("#id_"+ cust).prop("disabled",false);
-            $("#id_"+ led).prop("disabled",true);
-            $("#id_"+ led).val($("#id_"+ led + " option:first").val()).change();
-        } else {
-            $("#id_"+ cust).prop("disabled",true);
-            $("#id_"+ led).prop("disabled",true);
-            $("#id_"+ led).val($("#id_"+ led + " option:first").val()).change();
-            $("#id_"+ cust).val($("#id_"+ cust + " option:first").val()).change();
-
-
-            }
-
-});
 
 
 
 
 
 function get_total(){
-        var id = parseInt($('#id_customersjourline_set-TOTAL_FORMS').val());
+    let now = new Date();
+    //let month_cur=(now.getMonth() <= 9 ? '0' : '') + now.getMonth();
+    let month_cur=("0" + (now.getMonth() + 1)).slice(-2);
+    
+
+    //let today = now.getDate()  + '-' + (now.getMonth() + 1) + '-' + now.getFullYear();
+    let today = now.getFullYear()  + '-' + (month_cur) + '-' + (now.getDate() < 10 ? '0' : '') + now.getDate();
+
+    console.log(now.getDate());
+    // alert(month_cur);
+   // $('.datecurrent').set(today);
+   document.getElementById("id_journaldate").value = today;
+
+        var id = parseInt($('#id_customersjourline_set-0-debitamount').val());
 
         var dbttot = 0;
         var crttot = 0;
@@ -316,14 +324,17 @@ function get_total(){
 
         if ( crttot == dbttot ) {
             document.getElementById("create_id").disabled = false;
+            console.log('false');
         }
 
         if ( crttot != dbttot ) {
             document.getElementById("create_id").disabled = true;
+            console.log('true');
         }
 
 
 };
+
 
 
 
@@ -334,12 +345,13 @@ function get_total(){
 
     $("input[name*='creditamount']").change(function () {
         get_total()
+        console.log('Select ');
     });
 
 document.addEventListener('DOMContentLoaded', function() {
     get_total();
+    console.log('Select 1');
 }, false);
-
 
 
 
@@ -349,37 +361,6 @@ document.addEventListener('DOMContentLoaded', function() {
    $('.delete-row').on("click", function(){
         get_total()
     });
-
-    $('.formset_row').formset({
-        animateForms: true,
-        uiText: {
-            addPrompt: 'Add Line',         // Text used on the 'add a new form' control.
-            removePrompt: '',        // Text used on the 'delete this existing form' control.
-        },
-        addButtonHolder:'.buttonHolder',
-        addCssClass: "add-row btn btn-primary waves-effect waves-light",
-        deleteCssClass: "delete-row btn btn-danger waves-effect mdi mdi-close",
-        prefix: '{{ customersjourlines.prefix }}',
-
-        callbacks: {
-            onAdd: function () {
-                 $("[name*=-accounttype]").select2();
-                 $("[name*=-ledger]").select2();
-                 $("[name*=-customer]").select2();
-
-            },
-            onChange: function () {
-            },
-            Select: function () {
-            },
-
-            onRemove: function () {
-                 get_total();
-            }
-        },
-    });
-
-
 
 
 
@@ -393,21 +374,43 @@ document.addEventListener('DOMContentLoaded', function() {
 
 
 
-//     $("[name*=-ledger]").select2();
-//     $("[name*=-customer]").select2();
+$("select[name*='-accounttype']").change(function () {
+        var led = $(this).attr('name').replace('-accounttype', '-ledger');
+        var cust = $(this).attr('name').replace('-accounttype', '-customer');
 
-$(document).ready(function(){
-        $("[name*=-ledger]").prop("disabled",true);
-        $("[name*=-customer]").prop("disabled",true);
-        $("[name*=-ledger]").select2();
-        $("[name*=-customer]").select2();
+
+        var id = $(this).attr('id');
+        type_value = $(this).val();
+        type_value = $(this).children("option:selected").text();
+        console.log(id)
+        if (type_value.includes("Ledger")) {
+            console.log(1)
+            console.log(type_value);
+            document.getElementById("id_" + led).disabled = false;
+            document.getElementById("id_" + cust).disabled = true;
+            var s = document.getElementById("id_" + vend);
+            s.value = "---------";
+            } else {
+            console.log(2)
+            console.log(type_value);
+            document.getElementById("id_" + led).disabled = true;
+            document.getElementById("id_" + vend).disabled = false;
+            var s = document.getElementById("id_" + led);
+            s.value = "---------";
+
+            }
+
 });
 
+     $("[name*=ledger]").select2();
+     $("[name*=customer]").select2();
 
+  
 
 </script>
 
-<style>
+<style type="text/css">
+
 .card-header:first-child {
     height: 28px !important;
 }
@@ -421,6 +424,67 @@ h5.card-title.mb-0.text-white {
     line-height: 0px !important;
 }
 
+
+      a:hover,a:focus{
+    outline: none;
+    text-decoration: none;
+}
+.tab .nav-tabs{
+    position: relative;
+    border-bottom: none;
+}
+.tab .nav-tabs li{
+    margin-right: 3px;
+}
+.tab .nav-tabs li a{
+    padding: 15px 25px;
+    font-size: 15px;
+    font-weight: 600;
+    color: #22272c;
+    text-transform: uppercase;
+    background: #fff;
+    margin-right: 0;
+    border-radius: 0;
+    border: 1px solid #c9cba3;
+    position: relative;
+    transition: all 0.5s ease 0s;
+}
+.tab .nav-tabs li a:before{
+    content: "";
+    width: 100%;
+    height: 3px;
+    background: #c9cba3;
+    position: absolute;
+    top: 0;
+    left: 0;
+}
+.tab .nav-tabs li a:hover{
+    border: 1px solid #63d7d9;
+}
+.tab .nav-tabs li.active a{
+    border-color: #14c6c9;
+}
+.tab .nav-tabs li.active a:before{
+    background: #14c6c9;
+}
+.tab .tab-content{
+    font-size: 14px;
+    color: #808080;
+    line-height: 26px;
+    padding: 10px 0;
+    margin-top: 10px;
+}
+.tab .tab-content h3{
+    font-size: 22px;
+    color: #5b5a5a;
+}
+@media only screen and (max-width: 480px){
+    .tab .nav-tabs li{
+        width: 100%;
+        text-align: center;
+        margin-bottom: 8px;
+    }
+}
 
 
 .form-group {
@@ -439,4 +503,6 @@ width: 30px;
 </style>
 
 {% endblock %}
+
+
 

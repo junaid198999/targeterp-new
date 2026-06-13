@@ -1,0 +1,56 @@
+{% load i18n %}
+{% load widget_tweaks %}
+{% load crispy_forms_tags %}
+{% block content %}
+<link href="/static/libs/sweetalert2/sweetalert2.min.css" rel="stylesheet" type="text/css" />
+
+    <form id="SOForm" data-check-status="{% url 'crm:check_sales_status' %}" align="left" method="post" action="#"  novalidate>
+	{% csrf_token %}
+    <div class="modal-header bg-success">
+      <h3 class="modal-title" style="color: white;">{% trans "Approve Sample Order" %}</h3>
+      <button style="color:white; font-size: 2rem;" type="button" class="close" data-dismiss="modal" aria-label="Close">
+
+      </button>
+    </div>
+
+		<div class="modal-body">
+		<p class="lead"> {% trans "Are you sure you want to Approve Sample Order"%}: {{object.sampleorder_number}}</p>
+		</div>
+		<div class="modal-footer">
+		<button type="button" class="btn btn-secondary" data-dismiss="modal">{% trans "Close" %}</button>
+		<button type="submit" class="btn btn-success">{% trans "Approve" %}</button>
+		</div>
+</form>
+{% endblock %}
+
+{% block extra_javascript %}
+
+<script src="/static/libs/sweetalert2/sweetalert2.min.js"></script>
+
+<script type="text/javascript">
+function goodbye(e) {
+          var oppId = $(".approve-sample").attr("id");
+          var urlup = $("#SOForm").attr("data-check-status");
+
+          $.ajax({
+                url: urlup,
+                data: {
+                    'pk': oppId,
+                    },
+                    success: function (data) {
+                        $("#id_").val(parseInt(data));
+                        if ( parseInt(data) == 2) {
+                            Swal.fire({
+                                type: "success",
+                                title: "Done...",
+                                text: "{% trans 'Sample Order has Successfully Approved' %}",
+                                confirmButtonClass: "btn btn-confirm mt-2",
+                            })
+                        }
+                    }
+                })
+};
+
+</script>
+
+{% endblock %}

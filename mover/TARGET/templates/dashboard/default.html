@@ -1,0 +1,816 @@
+{% extends "auth_base.html" %}
+{% load humanize %}
+{% load static i18n %}
+
+{% block extra_css %}
+    <link href="{% static 'libs/sweetalert2/sweetalert2.min.css' %}" rel="stylesheet" />
+    <link href="{% static 'charts/Chart.min.css' %}" rel="stylesheet" />
+    <link href="{% static 'charts/morris.css' %}" rel="stylesheet" />
+    <link href="{% static 'libs/flatpickr/flatpickr.min.css' %}" rel="stylesheet" />
+
+{% endblock %}
+
+{% block content %}
+
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-12">
+                <div class="page-title-box">
+                    <div class="page-title-right">
+                        <ol class="breadcrumb m-0">
+                            <li class="breadcrumb-item"><a href="javascript: void(0);">TARGET</a></li>
+                            <li class="breadcrumb-item active">Main Dashboard</li>
+                        </ol>
+                    </div>
+                    <h4 class="page-title">Main Dashboard</h4>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-6 col-xl-3">
+                <div class="card-box">
+                    <div class="row">
+                        <div class="col-6">
+                            <div class="avatar-sm bg-blue rounded">
+                                <i class="fe-aperture avatar-title font-22 text-white"></i>
+                            </div>
+                        </div>
+                        <div class="col-6">
+                            <div class="text-right">
+                                <h3 class="text-dark my-1">SR <span data-plugin="counterup">{{ totalmonthlysaless|intcomma }}</span></h3>
+                                <p class="text-muted mb-1 text-truncate">Income</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="mt-3">
+                        <h6 class="text-uppercase">Target <span class="float-right">60%</span></h6>
+                        <div class="progress progress-sm m-0">
+                            <div class="progress-bar bg-blue" role="progressbar" aria-valuenow="60" aria-valuemin="0" aria-valuemax="100" style="width: 60%">
+                                <span class="sr-only">60% Complete</span>
+                            </div>
+                        </div>
+                    </div>
+                </div> <!-- end card-box-->
+            </div> <!-- end col -->
+
+            <div class="col-md-6 col-xl-3">
+                <div class="card-box">
+                    <div class="row">
+                        <div class="col-6">
+                            <div class="avatar-sm bg-success rounded">
+                                <i class="fe-shopping-cart avatar-title font-22 text-white"></i>
+                            </div>
+                        </div>
+                        <div class="col-6">
+                            <div class="text-right">
+                                <h3 class="text-dark my-1"><span data-plugin="counterup">{{ netpurchase|intcomma }}</span></h3>
+                                <p class="text-muted mb-1 text-truncate">January's Sales</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="mt-3">
+                        <h6 class="text-uppercase">Target <span class="float-right">49%</span></h6>
+                        <div class="progress progress-sm m-0">
+                            <div class="progress-bar bg-success" role="progressbar" aria-valuenow="49" aria-valuemin="0" aria-valuemax="100" style="width: 49%">
+                                <span class="sr-only">49% Complete</span>
+                            </div>
+                        </div>
+                    </div>
+                </div> <!-- end card-box-->
+            </div> <!-- end col -->
+
+            <div class="col-md-6 col-xl-3">
+                <div class="card-box">
+                    <div class="row">
+                        <div class="col-6">
+                            <div class="avatar-sm bg-warning rounded">
+                                <i class="fe-bar-chart-2 avatar-title font-22 text-white"></i>
+                            </div>
+                        </div>
+                        <div class="col-6">
+                            <div class="text-right">
+                                <h3 class="text-dark my-1">$<span data-plugin="counterup">{{ netpurchase|intcomma }}</span></h3>
+                                <p class="text-muted mb-1 text-truncate">Payouts</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="mt-3">
+                        <h6 class="text-uppercase">Target <span class="float-right">18%</span></h6>
+                        <div class="progress progress-sm m-0">
+                            <div class="progress-bar bg-warning" role="progressbar" aria-valuenow="18" aria-valuemin="0" aria-valuemax="100" style="width: 18%">
+                                <span class="sr-only">18% Complete</span>
+                            </div>
+                        </div>
+                    </div>
+                </div> <!-- end card-box-->
+            </div> <!-- end col -->
+
+            <div class="col-md-6 col-xl-3">
+                <div class="card-box">
+                    <div class="row">
+                        <div class="col-6">
+                            <div class="avatar-sm bg-info rounded">
+                                <i class="fe-cpu avatar-title font-22 text-white"></i>
+                            </div>
+                        </div>
+                        <div class="col-6">
+                            <div class="text-right">
+                                <h3 class="text-dark my-1"><span data-plugin="counterup">{{ctrqty|intcomma}}</span></h3>
+                                <p class="text-muted mb-1 text-truncate">Available Stock</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="mt-3">
+                        <h6 class="text-uppercase">Target <span class="float-right">74%</span></h6>
+                        <div class="progress progress-sm m-0">
+                            <div class="progress-bar bg-info" role="progressbar" aria-valuenow="74" aria-valuemin="0" aria-valuemax="100" style="width: 74%">
+                                <span class="sr-only">74% Complete</span>
+                            </div>
+                        </div>
+                    </div>
+                </div> <!-- end card-box-->
+            </div> <!-- end col -->
+        </div>
+        <div class="row">
+            <div class="col-xl-4">
+                <div class="card">
+                        <div class="card-body" dir="ltr">
+                            <div class="card-widgets">
+                                <a href="javascript: void(0);" data-toggle="reload"><i class="mdi mdi-refresh"></i></a>
+                                <a data-toggle="collapse" href="#cardCollpase1" role="button" aria-expanded="false" aria-controls="cardCollpase1"><i class="mdi mdi-minus"></i></a>
+                                <a href="javascript: void(0);" data-toggle="remove"><i class="mdi mdi-close"></i></a>
+                            </div>
+                            <h4 class="header-title mb-0">Projections vs Sales</h4>
+
+                            <div id="cardCollpase1" class="collapse pt-3 show" style="height:315px">
+                                <div class="text-center">
+                                    <div class="row mt-2">
+                                        <div class="col-6">
+                                            <h3 data-plugin="counterup">{{ totalmonthlysaless|intcomma }}</h3>
+                                            <p class="text-muted font-13 mb-0 text-truncate">Total Sales</p>
+                                        </div>
+                                        <div class="col-6">
+                                            <h3 data-plugin="counterup">{{ totalmonthlytargets|intcomma }}</h3>
+                                            <p class="text-muted font-13 mb-0 text-truncate">Target</p>
+                                        </div>
+                                    </div> <!-- end row -->
+                                    <div style="height:100%">
+                                        <input class="dial"  data-width="180" data-height="180" data-linecap=round data-fgColor="{% if totalmonthlytargetsperc == 0 %}#0088cc{% else %}#f1556c{% endif %}" value="{% if totalmonthlytargetsperc == 0 %} {{totalmonthlysalessperc}} {% else %} {{totalmonthlytargetsperc}} {% endif %}" data-skin="tron" data-angleOffset="180" data-readOnly=true data-thickness=".2"/>
+                                        {% if totalmonthlytargetsperc == 0 %}
+                                            <h4 style="color: #0088cc!important" class="text-muted font-15 mb-0 text-truncate">Over Target</h4>
+                                        {% else %}
+                                            <h4 style="color: #f1556c!important" class="text-muted font-15 mb-0 text-truncate">Achievement</h4>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                            </div> <!-- end collapse-->
+                        </div> <!-- end card-body-->
+                    </div> <!-- end card-->
+            </div> <!-- end col-->
+ <!-- end card-->
+            <div class="col-xl-5">
+                <div class="card">
+                    <div class="card-body" dir="ltr">
+                        <div class="card-widgets">
+                            <a href="javascript: void(0);" data-toggle="reload"><i class="mdi mdi-refresh"></i></a>
+                            <a data-toggle="collapse" href="#cardCollpase3" role="button" aria-expanded="false" aria-controls="cardCollpase3"><i class="mdi mdi-minus"></i></a>
+                            <a href="javascript: void(0);" data-toggle="remove"><i class="mdi mdi-close"></i></a>
+                        </div>
+                        <h4 class="header-title mb-0">Projections vs Sales</h4>
+                        <div id="cardCollpase3" class="collapse pt-3 show" >
+                            <div id="myChartSalesH" ></div>
+                            <div class="text-center">
+                                <div id="sparkline1"></div>
+                                <div class="row mt-4">
+                                    <div class="col-4">
+                                        <p class="text-muted font-15 mb-1 text-truncate">Target</p>
+                                        <h4><i class="fe-arrow-up text-success mr-1"></i>641</h4>
+                                    </div>
+                                    <div class="col-4">
+                                        <p class="text-muted font-15 mb-1 text-truncate">Last week</p>
+                                        <h4><i class="fe-arrow-down text-danger mr-1"></i>234</h4>
+                                    </div>
+                                    <div class="col-4">
+                                        <p class="text-muted font-15 mb-1 text-truncate">Last Month</p>
+                                        <h4><i class="fe-arrow-up text-success mr-1"></i>3201</h4>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div> <!-- end card-body-->
+                </div>
+            </div>
+            <div class="col-xl-3" >
+                <div class="card">
+                    <div class="card-body" dir="ltr">
+                        <div class="card-widgets">
+                            <a href="javascript: void(0);" data-toggle="reload"><i class="mdi mdi-refresh"></i></a>
+                            <a data-toggle="collapse" href="#cardCollpase33" role="button" aria-expanded="false" aria-controls="cardCollpase33"><i class="mdi mdi-minus"></i></a>
+                            <a href="javascript: void(0);" data-toggle="remove"><i class="mdi mdi-close"></i></a>
+                        </div>
+                        <h4 class="header-title mb-0">Time Spent</h4>
+                        <div id="cardCollpase33" class="collapse pt-3 show" style="height:310px">
+                            <div  id="charttime" style="height:180px"></div>
+                            <div class="text-center">
+                                <div id="sparkline2"></div>
+                                <div class="row mt-4">
+                                    <div class="col-4">
+                                        <p class="text-muted font-15 mb-1 text-truncate">Target</p>
+                                        <h4><i class="fe-arrow-up text-success mr-1"></i>641</h4>
+                                    </div>
+                                    <div class="col-4">
+                                        <p class="text-muted font-15 mb-1 text-truncate">Last week</p>
+                                        <h4><i class="fe-arrow-down text-danger mr-1"></i>234</h4>
+                                    </div>
+                                    <div class="col-4">
+                                        <p class="text-muted font-15 mb-1 text-truncate">Last Month</p>
+                                        <h4><i class="fe-arrow-up text-success mr-1"></i>3201</h4>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div> <!-- end collapse-->
+                </div> <!-- end card-->
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-xl-8">
+                <div class="card">
+                        <div class="card-body" dir="ltr">
+                            <div class="card-widgets">
+                                <a href="javascript: void(0);" data-toggle="reload"><i class="mdi mdi-refresh"></i></a>
+                                <a data-toggle="collapse" href="#cardCollpase34" role="button" aria-expanded="false" aria-controls="cardCollpase34"><i class="mdi mdi-minus"></i></a>
+                                <a href="javascript: void(0);" data-toggle="remove"><i class="mdi mdi-close"></i></a>
+                            </div>
+                            <h4 class="header-title mb-0">Channel - Target vs Actual</h4>
+                            <div id="cardCollpase34" class="collapse pt-3 show" >
+                                <div id="myChartChannel1" ></div>
+                            </div>
+                        </div> <!-- end card-body-->
+                    </div> <!-- end card-->
+            </div> <!-- end col-->
+            <div class="col-xl-4">
+                <div class="card">
+                        <div class="card-body" dir="ltr">
+                            <div class="card-widgets">
+                                <a href="javascript: void(0);" data-toggle="reload"><i class="mdi mdi-refresh"></i></a>
+                                <a data-toggle="collapse" href="#cardCollpase35" role="button" aria-expanded="false" aria-controls="cardCollpase35"><i class="mdi mdi-minus"></i></a>
+                                <a href="javascript: void(0);" data-toggle="remove"><i class="mdi mdi-close"></i></a>
+                            </div>
+                            <h4 class="header-title mb-0">Channel Sales</h4>
+                            <div id="cardCollpase35" class="collapse pt-3 show" >
+                                <div id="ChannelsCharsD" style="width: 100%; height: 270px;"></div>
+                                <div class="text-center">
+                                        <div id="sparkline4"></div>
+                                        <div class="row">
+                                            <div class="col-6">
+                                                <p class="text-muted font-15 mb-1 text-truncate">Target</p>
+                                                <h4><i class="fe-arrow-up text-success mr-1"></i>641</h4>
+                                            </div>
+                                            <div class="col-6">
+                                                <p class="text-muted font-15 mb-1 text-truncate">Last week</p>
+                                                <h4><i class="fe-arrow-down text-danger mr-1"></i>234</h4>
+                                            </div>
+                                        </div>
+                                </div>
+                            </div>
+                        </div> <!-- end card-body-->
+                    </div> <!-- end card-->
+            </div> <!-- end col-->
+        </div>
+        <div class="row">
+            <div class="col-xl-4">
+                <div class="card">
+                        <div class="card-body" dir="ltr">
+                            <div class="card-widgets">
+                                <a href="javascript: void(0);" data-toggle="reload"><i class="mdi mdi-refresh"></i></a>
+                                <a data-toggle="collapse" href="#cardCollpase42" role="button" aria-expanded="false" aria-controls="cardCollpase42"><i class="mdi mdi-minus"></i></a>
+                                <a href="javascript: void(0);" data-toggle="remove"><i class="mdi mdi-close"></i></a>
+                            </div>
+                            <h4 class="header-title mb-0">Product Categories - Target vs Actual</h4>
+
+                        <div id="cardCollpase42" class="collapse pt-3 show">
+                                <div id="myChartCategory" style="width:100%"></div>
+
+                            </div> <!-- end collapse-->
+                        </div> <!-- end card-body-->
+                    </div> <!-- end card-->
+            </div> <!-- end col-->
+            <div class="col-xl-8">
+                <div class="card">
+                        <div class="card-body" dir="ltr">
+                            <div class="card-widgets">
+                                <a href="javascript: void(0);" data-toggle="reload"><i class="mdi mdi-refresh"></i></a>
+                                <a data-toggle="collapse" href="#cardCollpase41" role="button" aria-expanded="false" aria-controls="cardCollpase41"><i class="mdi mdi-minus"></i></a>
+                                <a href="javascript: void(0);" data-toggle="remove"><i class="mdi mdi-close"></i></a>
+                            </div>
+                            <h4 class="header-title mb-0">Salesman - Target vs Actual</h4>
+
+                            <div id="cardCollpase41" class="collapse pt-3 show">
+                                <div id="myChartSalesman1"></div>
+
+                            </div> <!-- end collapse-->
+                        </div> <!-- end card-body-->
+                    </div> <!-- end card-->
+            </div> <!-- end col-->
+            <div class="col-xl-6">
+                <div class="card">
+                    <div class="card-body">
+                        <div class="card-widgets">
+                            <a href="javascript: void(0);" data-toggle="reload"><i class="mdi mdi-refresh"></i></a>
+                            <a data-toggle="collapse" href="#cardCollpase4" role="button" aria-expanded="false" aria-controls="cardCollpase4"><i class="mdi mdi-minus"></i></a>
+                            <a href="javascript: void(0);" data-toggle="remove"><i class="mdi mdi-close"></i></a>
+                        </div>
+                        <h4 class="header-title mb-0">Best Salesman / Channel</h4>
+
+                        <div id="cardCollpase4" class="collapse pt-3 show">
+                            <div class="table-responsive">
+                                <table class="table table-borderless table-sm table-hover table-centered m-0">
+                                    <thead>
+                                        <tr class="table-info">
+                                            <th>Salesman</th>
+                                            <th>Channel</th>
+                                            <th>Sales</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                    {% for Salesman in chsmqs1 %}
+                                        <tr>
+                                            <td>{{ Salesman.salesman }}</td>
+                                            <td>{{ Salesman.channel }}</td>
+                                            <td>SAR {{ Salesman.total|intcomma }}</td>
+                                        </tr>
+                                    {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div> <!-- end table responsive-->
+                        </div> <!-- collapsed end -->
+                    </div> <!-- end card-body -->
+                </div> <!-- end card-->
+            </div> <!-- end col -->
+            <div class="col-xl-6">
+                <div class="card">
+                    <div class="card-body">
+                        <div class="card-widgets">
+                            <a href="javascript: void(0);" data-toggle="reload"><i class="mdi mdi-refresh"></i></a>
+                            <a data-toggle="collapse" href="#cardCollpase5" role="button" aria-expanded="false" aria-controls="cardCollpase5"><i class="mdi mdi-minus"></i></a>
+                            <a href="javascript: void(0);" data-toggle="remove"><i class="mdi mdi-close"></i></a>
+                        </div>
+                        <h4 class="header-title mb-0">Best Customer / Channel</h4>
+
+                        <div id="cardCollpase5" class="collapse pt-3 show">
+                            <div class="table-responsive">
+                                <table class="table table-borderless table-sm table-hover table-centered m-0 nowrap">
+                                    <thead>
+                                        <tr class="table-warning">
+                                            <th>Customer</th>
+                                            <th>Channel</th>
+                                            <th>Sales</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                    {% for Salesman in chq1 %}
+                                        <tr>
+                                            <td>{{ Salesman.customer }}</td>
+                                            <td>{{ Salesman.channel }}</td>
+                                            <td>SAR {{ Salesman.total|intcomma }}</td>
+                                        </tr>
+                                    {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div> <!-- end table responsive-->
+                        </div> <!-- collapsed end -->
+                    </div> <!-- end card-body -->
+                </div> <!-- end card-->
+            </div> <!-- end col -->
+        </div>
+
+        <div class="row">
+             <div class="col-xl-12">
+                <div class="card">
+                    <div class="card-body" dir="ltr">
+                        <div class="card-widgets">
+                            <a href="javascript: void(0);" data-toggle="reload"><i class="mdi mdi-refresh"></i></a>
+                            <a data-toggle="collapse" href="#cardCollpase6" role="button" aria-expanded="false" aria-controls="cardCollpase6"><i class="mdi mdi-minus"></i></a>
+                            <a href="javascript: void(0);" data-toggle="remove"><i class="mdi mdi-close"></i></a>
+                        </div>
+                        <h4 class="header-title mb-0">Yearly Sales vs Target</h4>
+
+                            <div id="cardCollpase6" class="collapse pt-3 show">
+                                <div id="myChartSalesM" style="width: 95%; height: 400px"></div>
+                            </div>
+                        </div> <!-- end collapse-->
+                    </div> <!-- end card-body-->
+            </div>
+        </div>
+       <div class="row">
+            <div class="col-xl-4">
+                <div class="card-box">
+                    <h4 class="header-title mb-3">Inbox</h4>
+
+                    <div class="inbox-widget slimscroll" style="max-height: 404px;">
+                        <div class="inbox-item">
+                            <div class="inbox-item-img"><img src="/static/images/users/user-2.jpg" class="rounded-circle" alt=""></div>
+                            <p class="inbox-item-author">Tomaslau</p>
+                            <p class="inbox-item-text">I've finished it! See you so...</p>
+                            <p class="inbox-item-date">
+                                <a href="javascript:(0);" class="btn btn-sm btn-link text-info font-13"> Reply </a>
+                            </p>
+                        </div>
+                        <div class="inbox-item">
+                            <div class="inbox-item-img"><img src="/static/images/users/user-3.jpg" class="rounded-circle" alt=""></div>
+                            <p class="inbox-item-author">Stillnotdavid</p>
+                            <p class="inbox-item-text">This theme is awesome!</p>
+                            <p class="inbox-item-date">
+                                <a href="javascript:(0);" class="btn btn-sm btn-link text-info font-13"> Reply </a>
+                            </p>
+                        </div>
+                        <div class="inbox-item">
+                            <div class="inbox-item-img"><img src="/static/images/users/user-4.jpg" class="rounded-circle" alt=""></div>
+                            <p class="inbox-item-author">Kurafire</p>
+                            <p class="inbox-item-text">Nice to meet you</p>
+                            <p class="inbox-item-date">
+                                <a href="javascript:(0);" class="btn btn-sm btn-link text-info font-13"> Reply </a>
+                            </p>
+                        </div>
+
+                        <div class="inbox-item">
+                            <div class="inbox-item-img"><img src="/static/images/users/user-5.jpg" class="rounded-circle" alt=""></div>
+                            <p class="inbox-item-author">Shahedk</p>
+                            <p class="inbox-item-text">Hey! there I'm available...</p>
+                            <p class="inbox-item-date">
+                                <a href="javascript:(0);" class="btn btn-sm btn-link text-info font-13"> Reply </a>
+                            </p>
+                        </div>
+                        <div class="inbox-item">
+                            <div class="inbox-item-img"><img src="/static/images/users/user-6.jpg" class="rounded-circle" alt=""></div>
+                            <p class="inbox-item-author">Adhamdannaway</p>
+                            <p class="inbox-item-text">This theme is awesome!</p>
+                            <p class="inbox-item-date">
+                                <a href="javascript:(0);" class="btn btn-sm btn-link text-info font-13"> Reply </a>
+                            </p>
+                        </div>
+
+                        <div class="inbox-item">
+                            <div class="inbox-item-img"><img src="/static/images/users/user-3.jpg" class="rounded-circle" alt=""></div>
+                            <p class="inbox-item-author">Stillnotdavid</p>
+                            <p class="inbox-item-text">This theme is awesome!</p>
+                            <p class="inbox-item-date">
+                                <a href="javascript:(0);" class="btn btn-sm btn-link text-info font-13"> Reply </a>
+                            </p>
+                        </div>
+                        <div class="inbox-item">
+                            <div class="inbox-item-img"><img src="/static/images/users/user-4.jpg" class="rounded-circle" alt=""></div>
+                            <p class="inbox-item-author">Kurafire</p>
+                            <p class="inbox-item-text">Nice to meet you</p>
+                            <p class="inbox-item-date">
+                                <a href="javascript:(0);" class="btn btn-sm btn-link text-info font-13"> Reply </a>
+                            </p>
+                        </div>
+                    </div> <!-- end inbox-widget -->
+
+                </div> <!-- end card-box-->
+            </div> <!-- end col -->
+            <div class="col-xl-4">
+                <div class="card-box">
+                    <h4 class="header-title mb-3">Chat</h4>
+
+                    <div class="chat-conversation">
+                        <ul class="conversation-list slimscroll" style="max-height: 350px;">
+                            <li class="clearfix">
+                                <div class="chat-avatar">
+                                    <img src="/static/images/users/user-5.jpg" alt="male">
+                                    <i>10:00</i>
+                                </div>
+                                <div class="conversation-text">
+                                    <div class="ctext-wrap">
+                                        <i>John Deo</i>
+                                        <p>
+                                            Hello!
+                                        </p>
+                                    </div>
+                                </div>
+                            </li>
+                            <li class="clearfix odd">
+                                <div class="chat-avatar">
+                                    <img src="/static/images/users/user-1.jpg" alt="Female">
+                                    <i>10:01</i>
+                                </div>
+                                <div class="conversation-text">
+                                    <div class="ctext-wrap">
+                                        <i>Geneva</i>
+                                        <p>
+                                            Hi, How are you? What about our next meeting?
+                                        </p>
+                                    </div>
+                                </div>
+                            </li>
+                            <li class="clearfix">
+                                <div class="chat-avatar">
+                                    <img src="/static/images/users/user-5.jpg" alt="male">
+                                    <i>10:01</i>
+                                </div>
+                                <div class="conversation-text">
+                                    <div class="ctext-wrap">
+                                        <i>John Deo</i>
+                                        <p>
+                                            Yeah everything is fine
+                                        </p>
+                                    </div>
+                                </div>
+                            </li>
+                            <li class="clearfix odd">
+                                <div class="chat-avatar">
+                                    <img src="/static/images/users/user-1.jpg" alt="male">
+                                    <i>10:02</i>
+                                </div>
+                                <div class="conversation-text">
+                                    <div class="ctext-wrap">
+                                        <i>Geneva</i>
+                                        <p>
+                                            Wow that's great
+                                        </p>
+                                    </div>
+                                </div>
+                            </li>
+                        </ul>
+                        <div class="row">
+                            <div class="col">
+                                <input type="text" class="form-control chat-input" placeholder="Enter your text">
+                            </div>
+                            <div class="col-auto">
+                                <button type="submit" class="btn btn-danger chat-send btn-block waves-effect waves-light">Send</button>
+                            </div>
+                        </div>
+                    </div> <!-- .chat-conversation -->
+                </div> <!-- end card-box-->
+            </div> <!-- end col-->
+            <div class="col-xl-4">
+                <div class="card-box">
+                    <h4 class="header-title mb-3">Todo</h4>
+                    <div class="todoapp">
+                        <div class="row">
+                            <div class="col">
+                                <h5 id="todo-message"><span id="todo-remaining"></span> of <span id="todo-total"></span> remaining</h5>
+                            </div>
+                            <div class="col-auto">
+                                <a href="" class="float-right btn btn-light btn-xs waves-effect waves-light" id="btn-archive">Archive</a>
+                            </div>
+                        </div>
+
+                        <ul class="list-group list-group-flush slimscroll todo-list" style="max-height: 330px" id="todo-list"></ul>
+
+                        <form name="todo-form" id="todo-form">
+                            <div class="row">
+                                <div class="col">
+                                    <input type="text" id="todo-input-text" name="todo-input-text" class="form-control" placeholder="Add new todo">
+                                </div>
+                                <div class="col-auto">
+                                    <button class="btn-primary btn-md btn-block btn waves-effect waves-light" type="button" id="todo-btn-submit">Add</button>
+                                </div>
+                            </div>
+                        </form>
+                    </div> <!-- .todoapp -->
+                </div> <!-- end card-box-->
+            </div> <!-- end col -->
+        </div>
+    </div>
+
+
+{% endblock %}
+
+{% block extra_javascript %}
+
+    <script type="text/javascript" src="//cdn.fusioncharts.com/fusioncharts/latest/fusioncharts.js"></script>
+    <script type="text/javascript" src="//cdn.fusioncharts.com/fusioncharts/latest/themes/fusioncharts.theme.fusion.js"></script>
+    <script src="{% static 'libs/chart-js/Chart.bundle.min.js' %}"></script>
+    <script src="{% static 'libs/moment/moment.min.js' %}"></script>
+    <script src="{% static 'libs/jquery-scrollto/jquery.scrollTo.min.js' %}"></script>
+    <script src="{% static 'libs/sweetalert2/sweetalert2.min.js' %}"></script>
+    <script src="{% static 'js/pages/jquery.chat.js' %}"></script>
+    <script src="{% static 'js/pages/jquery.todo.js' %}"></script>
+    <script src="{% static 'js/pages/dashboard-3.init.js' %}"></script>
+    <script src="{% static 'libs/jquery-knob/jquery.knob.min.js' %}"></script>
+    <script src="{% static 'libs/flatpickr/flatpickr.min.js' %}"></script>
+
+    <script src="{% static 'charts/morris.min.js' %}"></script>
+    <script src="{% static 'charts/raphael-min.js' %}"></script>
+    <script src="{% static 'charts/Chart.min.js' %}"></script>
+
+
+
+<script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+<script type="text/javascript">
+
+    $(function() {
+        $(".dial").knob();
+
+    });
+
+google.charts.load('current', {packages: ['corechart']});
+google.charts.setOnLoadCallback(drawChartsalesman);
+
+    function drawChartsalesman() {
+      var data = google.visualization.arrayToDataTable([
+        ["Salesman", "Sales", "Target" ],
+        {% for i in salesmanTotal %} ["{{ i.salesman }}", {{ i.total }}, {{ i.target }} ], {% endfor %}
+      ]);
+
+      var options = {
+        isStacked:true,
+        chartArea:{left:150,top:50,right:50,bottom:50,width: '70%', height: '70%'},
+        height: 340,
+        legend: { position: "none" },
+        colors:['#0088cc','#62b58f'],
+      };
+      var chart = new google.visualization.BarChart(document.getElementById("myChartSalesman1"));
+      chart.draw(data, options);
+  }
+
+
+google.charts.load('current', {packages: ['corechart']});
+google.charts.setOnLoadCallback(drawChartSalesvsTarget);
+
+    function drawChartSalesvsTarget() {
+      var data = google.visualization.arrayToDataTable([
+        ["Sales", "Target", { role: "style" }],
+        ["Sales", {{ totalmonthlysaless }}, '#0088cc'],
+        ["Target", {{ totalmonthlytargets }}, '#f1556c'],
+      ]);
+
+      var options = {
+        chartArea:{left:50,top:50,right:50,bottom:50,width: '70%', height: '70%'},
+        height: 190,
+        legend: { position: "none" },
+      };
+      var chart = new google.visualization.BarChart(document.getElementById("myChartSalesH"));
+      chart.draw(data, options);
+  }
+
+FusionCharts.ready(function() {
+  var myChart = new FusionCharts({
+    type: "angulargauge",
+    renderAt: "charttime",
+    width: "100%",
+    height: "100%",
+    dataFormat: "json",
+    dataSource
+  }).render();
+});
+const dataSource = {
+  chart: {
+    lowerlimit: "0",
+    upperlimit: "100",
+    showvalue: "1",
+    numbersuffix: "%",
+    theme: "fusion",
+    showtooltip: "0"
+  },
+  colorrange: {
+    color: [
+      {
+        minvalue: "0",
+        maxvalue: "50",
+        code: "#62B58F"
+      },
+      {
+        minvalue: "50",
+        maxvalue: "75",
+        code: "#FFC533"
+      },
+      {
+        minvalue: "75",
+        maxvalue: "100",
+        code: "#F2726F"
+      }
+    ]
+  },
+  dials: {
+    dial: [
+      {
+        value: {{daysspent}}
+      }
+    ]
+  }
+};
+
+google.charts.load('current', {packages: ['corechart']});
+google.charts.setOnLoadCallback(drawChartchannels);
+
+    function drawChartchannels() {
+      var data = google.visualization.arrayToDataTable([
+        ["Channel", "Sales", "Target" ],
+        {% for i in channelsales %} ["{{ i.channel }}", {{ i.salest }}, {{ i.target }} ], {% endfor %}
+      ]);
+
+      var options = {
+        isStacked:true,
+        chartArea:{left:150,top:50,right:50,bottom:50,width: '70%', height: '70%'},
+        height: 340,
+        legend: { position: "none" },
+        colors:['#0088cc','#f7b84b'],
+      };
+      var chart = new google.visualization.BarChart(document.getElementById("myChartChannel1"));
+      chart.draw(data, options);
+  }
+
+google.charts.load('current', {packages: ['corechart']});
+google.charts.setOnLoadCallback(drawChartcategory);
+
+    function drawChartcategory() {
+      var data = google.visualization.arrayToDataTable([
+        ["Element", "Sales", "Target" ],
+        {% for i in categorysalesTotal %} ["{{i.category}}", {{i.sales}}, {{i.target}} ], {% endfor %}
+      ]);
+
+      var options = {
+        isStacked:true,
+        chartArea:{left:100,top:50,right:50,bottom:50,width: '70%', height: '70%'},
+        height: 340,
+        legend: { position: "none" },
+        colors:['#0088cc','#f1556c'],
+      };
+      var chart = new google.visualization.ColumnChart(document.getElementById("myChartCategory"));
+      chart.draw(data, options);
+  }
+
+
+
+
+      $(function () {
+            var table = $('#table_id').DataTable( {
+                buttons: true,
+                stateSave: true,
+                "pagingType": "full_numbers",
+            } );
+
+            table
+                .buttons()
+                .container()
+        });
+
+
+
+      google.charts.load("current", {packages:["corechart"]});
+      google.charts.setOnLoadCallback(drawChartChannel);
+      function drawChartChannel() {
+        var data = google.visualization.arrayToDataTable([
+          ['Channel', 'Sales'],
+
+            {% for i in channelsales %} ["{{i.channel}}", {{i.sales}} ],  {% endfor %}
+        ]);
+
+        var options = {
+          pieHole: 0.5,
+            chartArea:{left:10,top:30,right:10,bottom:30,width: '100%', height: '70%'},
+        legend: { position: "right", alignment: "center" },
+        tooltip: { trigger: 'selection' }
+        };
+        var chart = new google.visualization.PieChart(document.getElementById('ChannelsCharsD'));
+        chart.draw(data, options);
+      }
+
+      google.charts.load('current', {'packages':['line']});
+      google.charts.setOnLoadCallback(drawChartSalesTarget);
+
+        function drawChartSalesTarget() {
+
+          var data = new google.visualization.DataTable();
+          data.addColumn('number', 'Month');
+          data.addColumn('number', 'Sales');
+          data.addColumn('number', 'Target');
+
+        data.addRows([
+            {% for i in allmonthsales %}
+                [
+                    {{ i.month }},
+                    {{ i.sales }},
+                    {{ i.target }}
+                ],
+            {% endfor %}
+        ]);
+
+      var options = {
+        chartArea:{left:200,top:200,right:200,bottom:200,width: 900, height: 300},
+        axes: {
+          x: {
+            0: {side: 'bottom'}
+          }
+        }
+      };
+
+      var chart = new google.charts.Line(document.getElementById('myChartSalesM'));
+
+      chart.draw(data, google.charts.Line.convertOptions(options));
+    }
+
+
+
+
+
+</script>
+
+{% endblock %}
+
+

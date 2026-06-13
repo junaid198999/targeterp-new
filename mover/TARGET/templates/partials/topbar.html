@@ -1,0 +1,554 @@
+{% load static i18n %}
+{% load i18n %}
+{% load notifications_tags %}
+{% load currency %}
+{% load humanize %}
+
+
+<!-- Topbar Start -->
+{% rightsidbar_function as settings%}
+{% Currency_List as curr_list%}
+{% for UserS in settings %}
+    {% if UserS.darktheme == 0 %}
+    <div class="navbar-custom navbar-custom-light" >
+    {% else %}
+    <div class="navbar-custom navbar-custom" >
+    {% endif %}
+{% endfor %}
+    <ul class="list-unstyled topnav-menu float-right mb-0">
+
+            {% comment %}
+            <li class="d-none d-sm-block" >
+                <form class="app-search" method="post">
+                    <div class="app-search-box">
+                        <div class="input-group">
+                            <input type="text" class="form-control" placeholder="{% trans 'Search...' %}">
+                            <div class="input-group-append">
+                                <button class="btn" type="submit">
+                                    <i class="fe-search"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </li>
+            {% endcomment %}
+        <li class="d-none d-sm-block" >
+            <form class="app-search" action="{% url 'crm:set_language' %}" method="post">
+                {% csrf_token %}
+                <div class="app-search-box">
+                    <div class="input-group">
+                        <input name="next" type="hidden" value="{{ redirect_to }}" />
+                        <select class="form-control" name="language" >
+                            {% get_current_language as LANGUAGE_CODE %}
+                            {% get_available_languages as LANGUAGES %}
+                            {% for lang in LANGUAGES %}
+                                <option value="{{ lang.0 }}" {% if lang.0 == LANGUAGE_CODE %} selected="selected"{% endif %}>
+                                    {{ lang.1 }} ({{ lang.0 }})
+                                </option>
+                            {% endfor %}
+                        </select>
+                        <input class="btn" type="submit" value="{% trans 'Go' %}" />
+                    </div>
+                </div>
+            </form>
+        </li>
+        <li class="d-none d-sm-block" >
+            <form id="CurrencyForm" class="app-search" data-currency-change-url="{% url 'crm:ajax_change_currency' %}"  action="#" method="post">
+                {% csrf_token %}
+                <div class="app-search-box">
+                    <div class="input-group">
+                        <select id="id_currency" class="form-control" name="language" >
+                            {% for curr in curr_list %}
+                                <option value="{{ curr.id }}" {% if curr.default == 1 %} selected="selected"{% endif %}>
+                                    {{ curr.code }}
+                                </option>
+                            {% endfor %}
+                        </select>
+                        <input class="currency-change btn" type="button" value="{% trans 'Go' %}"/>
+                    </div>
+                </div>
+            </form>
+        </li>
+
+
+        <li class="dropdown notification-list">
+            <a id="tag_cloud" class="nav-link dropdown-toggle  waves-effect waves-light" data-toggle="dropdown" href="#" role="button"
+                aria-haspopup="false" aria-expanded="false">
+                <i class="fe-bell noti-icon"></i>
+                <span class="badge badge-danger rounded-circle noti-icon-badge">{% not_read_count %}</span>
+            </a>
+            <div class="dropdown-menu dropdown-menu-right dropdown-lg">
+
+                <!-- item-->
+                <div class="dropdown-item noti-title">
+                    <form data-clear-all-url="{% url 'crm:note_clear_all' %}" id="SOForm1" action="" method="post" >
+                    <h5 class="m-0">
+                        <span class="float-right">
+                            <a href="javascript:void(0);" class="clear-all text-dark" id=999999999999>
+                                <small>{% trans "Clear All" %}</small>
+                            </a>
+                        </span>
+                        {% trans "Notification" %}
+
+                    </h5>
+                    </form>
+                </div>
+
+
+                <div id="notescroll" class="slimscroll noti-scroll">
+                    <form data-read-top-url="{% url 'crm:note_read_top' %}" id="SOForm222" action="" method="" >
+                        {% any_function as notifications %}
+
+                        {% for Note in notifications %}
+                            <!-- item-->
+                            {% if request.user == Note.to_user %}
+                            <div id="noterow-{{Note.pk}}" class="row" style="background: #f7f7f7;">
+                                <div class="col-10">
+                                    <a href="{% if Note.source_id is not None  %} {% url Note.url Note.source_id %} {% elif Note.url is not None %} {{ Note.url }} {% else %}javascript:void(0);{% endif %}" class="dropdown-item notify-item active">
+                                        <div class="notify-icon">
+                                            <img src="{% if Note.picture %} {{ Note.picture.url }} {% else %} {% static 'images/users/userimage.png' %} {% endif %}" class="img-fluid rounded-circle" alt="" />
+                                        </div>
+                                        <p class="notify-details">{{Note.from_user}}</p>
+                                        <p class="text-muted mb-0 user-msg">
+                                            <small style="{% if Note.urgent == 1 %}color: red;{% endif %}">{{Note.message}}</small>
+                                        </p>
+                                        <p class="text-muted mb-0 user-msg">
+                                            <small style="{% if Note.urgent == 1 %}color: red;{% endif %}">{% if Note.source_id is not None  %}{{Note.source_id}} |{% endif %} {{Note.source}} </small>
+                                        </p>
+                                    </a>
+                                </div>
+                                <div class="col-2" style="padding-left: 0; align-self: center;">
+                                    <a id="{{Note.pk}}" href="javascript:void(0);" class="note-read-top action-icon"> <i class="mdi mdi-delete" title="{% trans "Read" %}"></i></a>
+                                </div>
+
+                            </div>
+                            {% endif %}
+
+                            <!-- item-->
+
+                        {% endfor %}
+                    </form>
+                </div>
+
+                <!-- All-->
+                <a href="{% url 'crm:notifications' %}" class="dropdown-item text-center text-primary notify-item notify-all">
+                    {% trans "View all" %}
+                    <i class="fi-arrow-right"></i>
+                </a>
+
+            </div>
+        </li>
+
+        <li class="dropdown notification-list">
+            <a class="nav-link dropdown-toggle nav-user mr-0 waves-effect waves-light" data-toggle="dropdown" href="#"
+                role="button" aria-haspopup="false" aria-expanded="false">
+                <img src="{% if request.user.picture %} {{ request.user.picture.url }} {% else %} {% static 'images/users/userimage.png' %} {% endif %}" alt="user-image" class="rounded-circle">
+                <span class="pro-user-name ml-1">
+                    {{ request.user.username }} <i class="mdi mdi-chevron-down"></i>
+                </span>
+            </a>
+            <div class="dropdown-menu dropdown-menu-right profile-dropdown ">
+                <!-- item-->
+                <div class="dropdown-header noti-title">
+                    <h6 class="text-overflow m-0">{% trans "Welcome" %} {{ request.user.username }} !</h6>
+                </div>
+
+                <!-- item-->
+                {% if perms.users.view_users %}
+                <a href="/crm/users/" class="dropdown-item notify-item">
+                    <i class="fe-user"></i>
+                    <span>{% trans "My Account" %}</span>
+                </a>
+                {% endif %}
+
+                {% comment %}
+                <!-- item-->
+                <a href="javascript:void(0);" class="dropdown-item notify-item">
+                    <i class="fe-settings"></i>
+                    <span>Settings</span>
+                </a>
+
+                <!-- item-->
+                <a href="{% url 'crm:lock' %}" class="dropdown-item notify-item">
+                    <i class="fe-lock"></i>
+                    <span>Lock Screen</span>
+                </a>
+                {% endcomment %}
+
+                <div class="dropdown-divider"></div>
+
+                <!-- item-->
+                <a href="{% url 'crm:logout' %}" class="dropdown-item notify-item">
+                    <i class="fe-log-out"></i>
+                    <span>{% trans "Logout" %}</span>
+                </a>
+
+            </div>
+        </li>
+        <li class="dropdown notification-list">
+            <a href="javascript:void(0);" class="nav-link right-bar-toggle waves-effect waves-light">
+                <i class="fe-settings noti-icon"></i>
+            </a>
+        </li>
+
+    </ul>
+
+    <!-- LOGO -->
+    <div class="logo-box">
+    {% for UserS in settings %}
+        {% if UserS.darktheme == 0 %}
+            <a href="/" class="logo text-center">
+                <span class="logo-lg">
+                    <img src="{% static 'images/logo-light.png' %}" alt="" height="30">
+                </span>
+                <span class="logo-sm">
+                    <img src="{% static 'images/logo-sm.png' %}" alt="" height="24">
+                </span>
+            </a>
+        {% else %}
+
+            <a href="/" class="logo text-center">
+                <span class="logo-lg">
+                    <img src="{% static 'images/logo-dark.png' %}" alt="" height="30">
+                </span>
+                <span class="logo-sm">
+                    <img src="{% static 'images/logo-sm.png' %}" alt="" height="24">
+                </span>
+            </a>
+        {% endif %}
+    {% endfor %}
+    </div>
+
+    <ul class="list-unstyled topnav-menu topnav-menu-left m-0">
+        <li>
+            <button class="button-menu-mobile waves-effect waves-light">
+                <i class="fe-menu"></i>
+            </button>
+        </li>
+
+    <li class="dropdown d-none d-lg-block">
+        <a class="nav-link dropdown-toggle waves-effect waves-light" data-toggle="dropdown" href="#" role="button"
+            aria-haspopup="false" aria-expanded="false">
+            {% trans "Main List" %}
+            <i class="mdi mdi-chevron-down"></i>
+        </a>
+        <div class="dropdown-menu">
+            <!-- item-->
+            {% if perms.crm.view_lead %}
+            <a href="/crm/leads/" class="dropdown-item">
+                <i class="icon-magnet mr-1"></i>
+                <span>{% trans "Leads" %}</span>
+            </a>
+            {% endif %}
+            {% if perms.crm.view_opportunity %}
+            <a href="/crm/opportunities/" class="dropdown-item">
+                <i class="icon-puzzle mr-1"></i>
+                <span>{% trans "Opportunities" %}</span>
+            </a>
+            {% endif %}
+            {% if perms.crm.view_activities %}
+            <a href="/crm/activities/" class="dropdown-item">
+                <i class="fe-activity mr-1"></i>
+                <span>{% trans "Activities" %}</span>
+            </a>
+            {% endif %}
+            {% if perms.crm.view_account %}
+            {% endif %}
+            {% if perms.crm.view_customer %}
+            <!-- item-->
+            <a href="/crm/customers/" class="dropdown-item">
+                <i class="dripicons-user-group mr-1"></i>
+                <span>{% trans "Customers" %}</span>
+            </a>
+            {% endif %}
+            {% if perms.crm.view_product %}
+            <!-- item-->
+            <a href="/crm/products/;" class="dropdown-item">
+                <i class="mdi mdi-cube-outline mr-1"></i>
+                <span>{% trans "Products" %}</span>
+            </a>
+            {% endif %}
+            {% if perms.crm.view_category %}
+            <!-- item-->
+            <a href="/crm/categories/" class="dropdown-item">
+                <i class="fe-list mr-1"></i>
+                <span>{% trans "Product Categories" %}</span>
+            </a>
+            {% endif %}
+
+            <div class="dropdown-divider"></div>
+
+            <!-- item-->
+            <a href="http://www.target-tr.com" class="dropdown-item">
+                <i class="fe-headphones mr-1"></i>
+                <span>{% trans "Help & Support" %}</span>
+            </a>
+
+        </div>
+    </li>
+
+        <li class="dropdown dropdown-mega d-none d-lg-block">
+            <a class="nav-link dropdown-toggle waves-effect waves-light" data-toggle="dropdown" href="#" role="button"
+                aria-haspopup="false" aria-expanded="false">
+                {% trans "Reports" %}
+                <i class="mdi mdi-chevron-down"></i>
+            </a>
+            <div class="dropdown-menu dropdown-megamenu">
+                <div class="row">
+                    <div class="col-sm-12">
+
+                        <div class="row">
+                            <div class="col-md-4">
+                                <h5 class="text-dark mt-0">{% trans "Sales Reports" %}</h5>
+                                <ul class="list-unstyled megamenu-list">
+                                    {% if perms.crm.view_salesrep %}
+                                    <li>
+                                        <a href="/crm/salesrep/">{% trans "Montly Sales" %}</a>
+                                    </li>
+                                    {% endif %}
+                                    {% if perms.crm.view_catsalesrep %}
+                                    <li>
+                                        <a href="/crm/catsalesrep/">{% trans "Channel Sales" %}</a>
+                                    </li>
+                                    {% endif %}
+                                    {% if perms.crm.view_areasalesrep %}
+                                    <li>
+                                        <a href="/crm/areasalesrep/">{% trans "Area Sales" %}</a>
+                                    </li>
+                                    {% endif %}
+                                    {% if perms.crm.view_customersalesrep %}
+                                    <li>
+                                        <a href="/crm/customersalesrep/">{% trans "Customer Sales" %}</a>
+                                    </li>
+                                    {% endif %}
+                                    {% if perms.crm.view_salesmansalesrep %}
+                                    <li>
+                                        <a href="/crm/salesmansalesrep/">{% trans "Salesman Sales" %}</a>
+                                    </li>
+                                    {% endif %}
+                                    {% if perms.crm.view_productsalesrep %}
+                                    <li>
+                                        <a href="/crm/productsalesrep/">{% trans "Product Sales" %}</a>
+                                    </li>
+                                    {% endif %}
+                                </ul>
+                            </div>
+
+                            <div class="col-md-4">
+                                <h5 class="text-dark mt-0">{% trans "Target Reports" %}</h5>
+                                <ul class="list-unstyled megamenu-list">
+                                    {% if perms.crm.view_cattargetrep %}
+                                    <li>
+                                        <a href="/crm/cattargetrep/">{% trans "Category Target" %}</a>
+                                    </li>
+                                    {% endif %}
+                                    {% if perms.crm.view_chatargetrep %}
+                                    <li>
+                                        <a href="/crm/chatargetrep/">{% trans "Channel Target" %}</a>
+                                    </li>
+                                    {% endif %}
+                                    {% if perms.crm.view_areatargetrep %}
+                                    <li>
+                                        <a href="/crm/areatargetrep/">{% trans "Area Target" %}</a>
+                                    </li>
+                                    {% endif %}
+                                    {% if perms.crm.view_custtargetrep %}
+                                    <li>
+                                        <a href="/crm/custtargetrep/">{% trans "Customer Target" %}</a>
+                                    </li>
+                                    {% endif %}
+                                    {% if perms.crm.view_salesmantargetrep %}
+                                    <li>
+                                        <a href="/crm/salesmantargetrep/">{% trans "Salesman Target" %}</a>
+                                    </li>
+                                    {% endif %}
+                                    {% if perms.crm.view_producttargetrep %}
+                                    <li>
+                                        <a href="/crm/producttargetrep/">{% trans "Product Target" %}</a>
+                                    </li>
+                                    {% endif %}
+                                </ul>
+                            </div>
+                            <div class="col-md-4">
+                                <h5 class="text-dark mt-0">{% trans "Others" %}</h5>
+                                <ul class="list-unstyled megamenu-list">
+                                    {% if perms.crm.view_collectionsrep %}
+                                    <li>
+                                        <a href="/crm/collectionsrep/">{% trans "Collections" %}</a>
+                                    </li>
+                                    {% endif %}
+                                    {% if perms.crm.view_storagerep %}
+                                    <li>
+                                        <a href="/crm/storageanalysisrep/">{% trans "STORAGE" %}</a>
+                                    </li>
+                                    {% endif %}
+
+                                </ul>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </li>
+    </ul>
+</div>
+
+{% block extra_javascript %}
+  <script src="{% static 'js/vendor/jquery.min.js' %}"></script>
+{% if request.user.notification == 1 %}
+<script>
+    $(document).ready(function(){
+        if ('{% urgent_count %}' > 0 )  {
+            $.toast({
+                heading: 'Urgent Message/s',
+                text: 'You have {% urgent_count %} urgent message/s',
+                icon: 'error',
+                position: '{% if LANGUAGE_CODE == 'ar' %}top-left{% else %}top-right{% endif %}',
+                hideAfter: false,
+                stack: 200,
+            })
+        };
+        if ('{% not_read_count %}' > 0 )  {
+            $.toast({
+                heading: 'Unread Message/s',
+                text: 'You have {% not_read_count %} unread message/s',
+                icon: 'warning',
+                position: '{% if LANGUAGE_CODE == 'ar' %}top-left{% else %}top-right{% endif %}',
+                hideAfter: 5000,
+                stack: 200,
+            })
+        };
+        if ('{% salesorders_due_count %}' != '')   {
+        {% salesorders_due_count as due_orders %}
+            {% for Duea in due_orders %}
+                {% if forloop.last %}
+                    {% if Duea.totalamount > 0 %}
+                        $.toast({
+                            heading: 'Due Payments',
+                            text: 'You have {{ Duea.count }} due Payment/s, Total of: {{Duea.totalamount|intcomma:False}}',
+                            icon: 'error',
+                            position: '{% if LANGUAGE_CODE == 'ar' %}top-left{% else %}top-right{% endif %}',
+                            hideAfter: false,
+                            stack: 200,
+                        })
+                    {% endif %}
+                {% endif %}
+            {% endfor %}
+        };
+        if ('{% salesorders_due_count %}' != '')   {
+        {% salesorders_due_count as due_orders %}
+            {% for Duea in due_orders %}
+            {% if Duea.balance > 0 %}
+            $.toast({
+                heading: 'Warning',
+                text: 'You have already due Payment/s  {{ Duea.customer }}, Salesman: {{Duea.salesman}}, Amount: {{Duea.balance|intcomma:False}}',
+                icon: 'warning',
+                position: '{% if LANGUAGE_CODE == 'ar' %}top-left{% else %}top-right{% endif %}',
+                hideAfter: 10000,
+                stack: 200,
+            })
+            {% endif %}
+            {% endfor %}
+        };
+    });
+</script>
+{% endif %}
+<script type="text/javascript">
+        $(function () {
+            $(".currency-change").click(function () {
+                  var url = $("#CurrencyForm").attr("data-currency-change-url");
+                  var currencyId = $("#id_currency").val();
+                  $.ajax({
+                        url: url,
+                        data: {
+                            'id': currencyId,
+                            'curl': window.location.href,
+                            },
+                            success: function (data) {
+                                $("#id_s2alesman1").html(data);
+                            }
+                    });
+                    location.reload();
+            });
+            $(".note-read-top").click(function () {
+                  var url = $("#SOForm222").attr("data-read-top-url");
+                  var customerId = $(this).attr("id");
+                  $.ajax({
+                        url: url,
+                        data: {
+                            'pk': customerId,
+                            },
+                            success: function (data) {
+                                $("#id_salesman1").html(data);
+                                $('#noterow-'+customerId).remove();
+                                $('#tag_cloud').load(' #tag_cloud', function(){$(this).children().unwrap()})
+                                    if ('{{request.path}}' == '/crm/notifications/') {
+                                        location.reload();
+                                    }
+
+                        }
+                  });
+
+            });
+
+            $(".clear-all").click(function () {
+                  var url = $("#SOForm1").attr("data-clear-all-url");
+                  var customerId = $(this).attr("id");
+                  $.ajax({
+                        url: url,
+                        data: {
+                            'pk': customerId,
+                            },
+                            success: function (data) {
+                                $("#id_salesman1").html(data);
+                                $("div[id*='noterow-']").remove();
+                        }
+                  });
+
+            });
+
+       });
+</script>
+{% endblock %}
+<style>
+.jq-icon-warning {
+    background-color: #ffa100;
+}
+.jq-icon-error {
+    background-color: #ff1437;
+}
+.close-jq-toast-single {
+    font-size: 19px;
+    background: none;
+}
+.jq-toast-wrap.top-right {
+    top: 70px !important;
+}
+.dropdown-menu.dropdown-megamenu.show {
+    width: 50% !important;
+}
+.dropdown-megamenu {
+    padding: 20px;
+    left: 20px!important;
+    right: 20px!important;
+    background-image: url(/static/images/megamenu-bg1.png);
+    background-position: 100% 100%;
+    background-repeat: no-repeat;
+}
+.left-side-menu-dark .navbar-custom {
+    background-color: #0088cc !important;
+}
+{% for UserS in settings %}
+    {% if UserS.darktheme == 1 %}
+            .navbar-custom .app-search .form-control option {
+                color: black;
+            }
+    {% endif %}
+{% endfor %}
+
+</style>
+
+<!-- end Topbar -->

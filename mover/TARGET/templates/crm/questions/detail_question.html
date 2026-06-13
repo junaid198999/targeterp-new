@@ -1,0 +1,176 @@
+{% extends "auth_base.html" %}
+{% load i18n %}
+{% load widget_tweaks %}
+{% load crispy_forms_tags %}
+
+{% block content %}
+<div class="container-fluid">
+    <!-- start page title -->
+    <div class="row">
+        <div class="col-12">
+            <div class="page-title-box">
+                <h4 class="page-title">{{questions.title}}</h4>
+            </div>
+        </div>
+    </div>
+    <head>
+        <meta charset="utf-8" />
+        <title>opportunity_form</title>
+    </head>
+    <div class="row">
+        <div class="col-xl-12">
+            <div class="card">
+                <div class="card-body">
+                        <div class="row">
+                            <div class="col-sm-6">
+                                <div id="controlPanel" {% if LANGUAGE_CODE == 'ar' %} align="right" {% else %} align="left" {% endif %}></div>
+                            </div>
+                            {% if perms.crm.add_questionfields %}
+                            <div {% if LANGUAGE_CODE == 'ar' %} align="left" {% else %} align="right" {% endif %} class="col-sm-12">
+                                    <button class="btn btn-blue waves-effect waves-light mb-2"  onclick="location.href='{% url 'crm:edit_questionfields' pk=questions.pk %}'" type="button" name="button" data-overlayColor="#38414a">
+                                        <i class="mdi mdi-plus-circle mr-1"></i>  {% trans "Add" %}
+                                    </button>
+                            </div>
+                            {% endif %}
+                        </div>
+                    {% if questions.question_fields.all %}
+                        <table id="table_id" class="table activate-select nowrap" style="width:100%">
+                                <thead class="thead-light">
+                                    <tr>
+                                        <th>{% trans "ID" %}</th>
+                                        <th>{% trans "Questions" %}</th>
+                                        <th>{% trans "Answers" %}</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for QuestionFields in questions.question_fields.all %}
+                                        <tr style="padding: 0px !important;" class="rowclass">
+                                                <td style="width:5%;">{{ QuestionFields.id }}</td>
+                                                <td style="width:60%;">{{ QuestionFields.title }}</td>
+                                                <td style="width:35%;">
+                                                    {% if QuestionFields.question_fields_chiled.all %}
+                                                        {% for QFC in QuestionFields.question_fields_chiled.all %}
+                                                    <div>{{ QFC.title }}</div>
+                                                        {% endfor %}
+                                                    {% else %}
+                                                        (None)
+                                                    {% endif %}
+                                                </td>
+
+                                        </tr>
+                                    {% endfor %}
+                                </tbody>
+                        </table>
+                    {% else %}
+                        <p>This Question has no Fields.</p>
+
+                    {% endif %}
+                    <br><br>
+                    <div class="modal-footer">
+                        <a class="btn btn-secondary waves-effect" href="{% url 'crm:questions' %}">{% trans "Back" %}</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
+
+{% block extra_javascript %}
+
+<script type="text/javascript">
+        {% if request.user.is_superuser %}
+
+        {% else %}
+            $(`select[name="salesman"]`).html(
+            `<option selected value="{{salesmanid}}">{{salesmanname}}</option>`
+            );
+        {% endif %}
+
+      $(function () {
+
+            var table = $('#table_id').DataTable( {
+                language: {
+                    buttons: {
+				        "copy": "{% trans "Copy" %}",
+				        "csv": "{% trans "CSV" %}",
+				        "pdf": "{% trans "PDF" %}",
+				        "print": "{% trans "Print" %}",
+                        copyTitle: '{% trans "Copy to clipboard" %}',
+                        copySuccess: {
+                            _: '{% trans "Copied %d rows to clipboard" %}',
+                            1: '{% trans "Copied one row to clipboard" %}'
+                        }
+                    },
+                    "sEmptyTable":     "{% trans "No data available in table" %}",
+                    "sInfo":           "{% trans "Showing _START_ to _END_ of _TOTAL_ entries" %}",
+                    "sInfoEmpty":      "{% trans "Showing 0 to 0 of 0 entries" %}",
+                    "sInfoFiltered":   "{% trans "(filtered from _MAX_ total entries)" %}",
+                    "sInfoPostFix":    "",
+                    "sInfoThousands":  ",",
+                    "sLengthMenu":     "{% trans "Show _MENU_ entries" %}",
+                    "sLoadingRecords": "{% trans "Loading..." %}",
+                    "sProcessing":     "{% trans "Processing..." %}",
+                    "sSearch":         "{% trans "Search:" %}",
+                    "sZeroRecords":    "{% trans "No matching records found" %}",
+                    "oPaginate": {
+                        "sFirst":    "{% trans "First" %}",
+                        "sLast":     "{% trans "Last" %}",
+                        "sNext":     "{% trans "Next" %}",
+                        "sPrevious": "{% trans "Previous" %}"
+                    },
+                    "oAria": {
+                        "sSortAscending":  "{% trans ": activate to sort column ascending" %}",
+                        "sSortDescending": "{% trans ": activate to sort column descending" %}"
+                    }
+                },
+                buttons: [
+                    {% if perms.crm.can_copy %}
+                        'copy',
+                    {% endif %}
+                    {% if perms.crm.can_csv %}
+                        'csv',
+                    {% endif %}
+                    {% if perms.crm.can_pdf %}
+                        'pdf',
+                    {% endif %}
+                    {% if perms.crm.can_print %}
+                        'print',
+                    {% endif %}
+                ],
+                order: [[ 0, "desc" ]],
+                stateSave: true,
+                "pagingType": "full_numbers",
+                responsive: true,
+                columnDefs: [
+                    { responsivePriority: 1, targets: 0 },
+
+                ]
+                } );
+
+            table
+                .buttons()
+                .container()
+                .appendTo( '#controlPanel' );
+        });
+
+
+
+</script>
+
+<style>
+.card-header:first-child {
+    height: 28px !important;
+}
+h5.card-title.mb-0.text-white {
+    line-height: 0 !important;
+}
+.card-widgets {
+    line-height: 0 !important;
+}
+.card-widgets>a {
+    line-height: 0px !important;
+}
+</style>
+{% endblock %}

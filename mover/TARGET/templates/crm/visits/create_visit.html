@@ -1,0 +1,1410 @@
+{% extends "auth_base.html" %}
+{% load i18n %}
+{% load widget_tweaks %}
+{% load crispy_forms_tags %}
+{% block content %}
+<link href="/static/libs/select2/select2.min.css" rel="stylesheet" />
+<link href="/static/libs/sweetalert2/sweetalert2.min.css" rel="stylesheet" type="text/css" />
+{% comment %}
+<link href="/static/libs/bootstrap-datepicker/bootstrap-datepicker.min.css" rel="stylesheet" type="text/css" />
+{% endcomment %}
+
+<div class="container-fluid">
+    <!-- start page title -->
+    <div class="row">
+        <div class="col-12">
+            <div class="page-title-box">
+                <h4 class="page-title">{% trans "Plan Detail" %}</h4>
+            </div>
+        </div>
+    </div>
+    <head>
+        <meta charset="utf-8" />
+        <title>plan_form</title>
+    </head>
+    <form id="VisitsForm" data-visits-url="{% url 'crm:ajax_save_visits' %}" data-visits-true-url="{% url 'crm:ajax_save_visits_true' %}" data-delete-visits-url="{% url 'crm:ajax_delete_visits' %}" data-save-dates-url="{% url 'crm:ajax_save_dates' %}" data-check-visits-count-url="{% url 'crm:ajax_check_visits_count' %}" action="" method="post">
+        {% csrf_token %}
+        <div class="{% if form.non_field_errors %}invalid{% endif %} ">
+          {% if form.non_field_errors %}
+            {{ error }}
+            {% endif %}
+        </div>
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="card">
+                    <div class="card-header bg-blue py-3 text-white" data-toggle="collapse" href="#cardCollpase1" role="button" aria-expanded="false" aria-controls="cardCollpase1">
+                            <div class="card-widgets">
+                                <a data-toggle="collapse" href="#cardCollpase1" role="button" aria-expanded="false" aria-controls="cardCollpase1"><i class="mdi mdi-minus"></i></a>
+                            </div>
+                            <div class="card-title mb-0 text-white" style="font-size:13, font-weight:500;line-height: 0px !important">{% trans "PLAN DETAILS" %}</div>
+                    </div>
+                    <div class="card-body">
+                        <div id="cardCollpase1" class="collapse pt-1 show">
+
+                            <div class="row">
+                                <div class="form-group col-md-3 mb-0">
+                                    <div class="row">
+                                        <label class="col-4 col-form-label" style="padding-left: 30px; font-weight: 700;">{% trans 'Month' %}:</label>
+                                        <div class="col-8">
+                                            <input type="text" readonly class="form-control-plaintext" id="monthn" value="{{ mon }}">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-group col-md-9 mb-0">
+                                    <div class="row">
+                                        <label class="col-1 col-form-label" style="font-weight: 700;">{% trans 'Days' %}:</label>
+                                        <div class="col-10 mt-1">
+                                            {% for DayV in daysv %}
+                                            <span class="">{{ DayV.day }}, </span>
+                                            {% endfor %}
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="card">
+                    <div class="card-body">
+                        <div class="col-lg-12">
+                            <ul id="source_tab" class="nav nav-pills navtab-bg nav-justified">
+                                <li class="nav-item">
+                                    <a href="#customer1" data-toggle="tab" aria-expanded="true" class="nav-link active">
+                                        {% trans "Customers" %}
+                                    </a>
+                                </li>
+                                <li class="nav-item">
+                                    <a href="#doctor1" data-toggle="tab" aria-expanded="true" class="nav-link">
+                                        {% trans "Doctors" %}
+                                    </a>
+                                </li>
+                                <li class="nav-item">
+                                    <a href="#pharmacy1" data-toggle="tab" aria-expanded="true" class="nav-link">
+                                        {% trans "Pharmacies" %}
+                                    </a>
+                                </li>
+                            </ul>
+                        </div>
+                        <div class="tab-content">
+                            <div class="tab-pane show active" id="customer1">
+                                <div class="col-lg-12">
+                                    <div class="row mb-3 mt-3">
+                                        <div class="col-lg-12">
+                                            <div class="row">
+                                                <div class="col-lg-2">
+                                                    <input value="{{ request.GET.searchp }}" name="search" type="search" class="form-control" id="id_searchp" placeholder="{% trans 'Search...' %}">
+                                                </div>
+                                                <label style="text-align: {% if LANGUAGE_CODE == 'ar' %}left{% else %}right{% endif %};" class="col-sm-1 col-form-label">{% trans "Class" %}</label>
+                                                <div class="col-lg-3">
+                                                    <select value="{{ request.GET.class }}" class="custom-select" name="class" id="id_class">
+                                                        <option selected="" value=999999>{% trans "All" %}</option>
+                                                        {% for Class in classes %}
+                                                            <option {% if Class.id == class_id %} selected {% endif %} value="{{Class.id}}">{{Class.name}}</option>
+                                                        {% endfor %}
+                                                    </select>
+                                                </div>
+                                                <label style="text-align: {% if LANGUAGE_CODE == 'ar' %}left{% else %}right{% endif %};" class="col-sm-1 col-form-label">{% trans "Channel" %}</label>
+                                                <div class="col-lg-3">
+                                                    <select value="{{ request.GET.channel }}" class="custom-select" name="channel" id="id_channel">
+                                                        <option selected="" value=999999>{% trans "All" %}</option>
+                                                        {% for Channel in channels %}
+                                                            <option {% if Channel.id == channel_id %} selected {% endif %} value="{{Channel.id}}">{{Channel.name}}</option>
+                                                        {% endfor %}
+                                                    </select>
+                                                </div>
+                                                <div class="col-lg-2">
+                                                    <div class="text-lg-right mt-3 mt-lg-0">
+                                                        <button id="search_btn" class="btn btn-blue waves-effect waves-light" type="button" name="action">{% trans "Search" %}</button>
+                                                        <button id="clear_filter_id" class="btn btn-blue ml-1" type="button" name="button" data-overlayColor="#38414a">
+                                                            <i class="mdi mdi-filter-variant"></i>
+                                                        </button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="form-group col-md-12 mb-0">
+                                            <div class="row">
+                                                <div class="form-group col-md-12 mb-0">
+                                                    <div class="row">
+                                                        <div class="col-12 mb-2">
+                                                            <span>{% trans '* Click on the date you want to' %}</span> <code>{% trans 'delete!' %}</code>
+                                                        </div>
+                                                        <div class="col-12">
+                                                        <table class="table table-bordered table-sm" id="cus_calendar">
+                                                            <tbody>
+                                                                {% for Customer in customers %}
+                                                                <tr>
+                                                                    <td style="width:5%"><button type="button" name="{{ Customer.id}}" id="customer_n_{{ Customer.id}}" count="0" class="customer_n btn btn-blue btn-rounded waves-effect waves-light"><i class="mdi mdi-plus-circle mr-1"></i></button></td>
+                                                                    <td><div><strong>{{ Customer.name}}</strong></div></td>
+                                                                    <div hidden name="{{ Customer.id}}" id="customer_visits_{{ Customer.id}}" visits="{{ Customer.customer_class.visits}}" class="customer_visits"><strong>{{ Customer.customer_class.visits}}</strong></div>
+                                                                    <td><div name="{{ Customer.id}}" id="customer_n_r_{{ Customer.id}}" count="0" class="customer_n_r_"></div></td>
+                                                                </tr>
+                                                                {% endfor %}
+                                                            </tbody>
+                                                        </table>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="row">
+                                        <nav class="ml-2" aria-label="Page navigation example">
+                                            <ul class="pagination justify-content-center pagination-sm">
+                                                <li class="page-item disabled">
+                                                    <a class="page-link" href="#" tabindex="-1"><small>{% trans "Page" %} <strong>{{ customers.number }}</strong> {% trans "of" %} <strong>{{ customers.paginator.num_pages }}</strong>. {% trans "Showing" %} <strong>{{ customers.object_list|length }}</strong> {% trans "of total" %} <strong>{{ customers.paginator.count }}</strong> {% trans "items" %}.</small></a>
+                                                </li>
+
+                                            </ul>
+                                        </nav>
+                                    <hr>
+                                    <nav aria-label="Page navigation example">
+                                        <ul class="pagination justify-content-center mr-2">
+                                            {% if customers.has_previous %}
+                                                {% if not search %}
+                                                    <li class="page-item">
+                                                        <a class="page-link" href="{% url 'crm:create_visit' %}?page=1&page_n={{page_id}}&searchp={{search_id}}&arr_value={{date_list1}}">{% trans "First" %}</a>
+                                                    </li>
+                                                    <li class="page-item">
+                                                        <a class="page-link" href="{% url 'crm:create_visit' %}?page={{ customers.previous_page_number }}&page_n={{page_id}}&searchp={{search_id}}&arr_value={{date_list1}}" tabindex="-1" aria-label="Previous">
+                                                            <span aria-hidden="true">{% trans "Previous" %}</span>
+                                                            <span class="sr-only">{% trans "Previous" %}</span>
+                                                        </a>
+                                                    </li>
+                                                {% else %}
+                                                    <li class="page-item">
+                                                        <a class="page-link" href="{% url 'crm:create_visit' %}?{{search}}&page={{ customers.previous_page_number }}&page_n={{page_id}}&searchp={{search_id}}&arr_value={{date_list1}}" tabindex="-1">{% trans "Previous" %}</a>
+                                                    </li>
+                                                {% endif %}
+                                            {% else %}
+                                                <li class="page-item disabled">
+                                                    <a class="page-link" href="#">{% trans "First" %}</a>
+                                                </li>
+                                                <li class="page-item disabled">
+                                                    <a class="page-link" href="#" tabindex="-1" aria-label="Previous">
+                                                        <span aria-hidden="true">{% trans "Previous" %}</span>
+                                                        <span class="sr-only">{% trans "Previous" %}</span>
+                                                    </a>
+                                                </li>
+                                            {% endif %}
+
+                                            {% if customers.number|add:'-4' > 1 %}
+                                                <li class="page-item"><a class="page-link" href="?page={{ customers.number|add:'-5' }}">&hellip;</a></li>
+                                            {% endif %}
+                                            {% for i in customers.paginator.page_range %}
+                                                {% if customers.number == i %}
+                                                    <li class="page-item active" aria-current="page">
+                                                        <span class="page-link">
+                                                            {{ i }}
+                                                            <span class="sr-only">(current)</span>
+                                                        </span>
+                                                    </li>
+                                                {% elif i > customers.number|add:'-5' and i < customers.number|add:'5' %}
+                                                     <li class="page-item"><a class="page-link" href="?page={{ i }}&page_n={{page_id}}&searchp={{search_id}}&arr_value={{date_list1}}">{{ i }}</a></li>
+                                                {% endif %}
+                                            {% endfor %}
+
+                                            {% if customers.paginator.num_pages > customers.number|add:'4' %}
+                                                <li class="page-item"><a class="page-link" href="?page={{ customers.number|add:'5' }}">&hellip;</a></li>
+                                            {% endif %}
+
+                                            {% if customers.has_next %}
+                                                    <li class="page-item">
+                                                        <a class="page-link" href="{% url 'crm:create_visit' %}?page={{ customers.next_page_number }}&page_n={{page_id}}&searchp={{search_id}}&arr_value={{date_list1}}" aria-label="Next">
+                                                            <span aria-hidden="true">{% trans "Next" %}</span>
+                                                            <span class="sr-only">{% trans "Next" %}</span>
+                                                        </a>
+                                                    </li>
+                                                    <li class="page-item">
+                                                        <a class="page-link" href="{% url 'crm:create_visit' %}?page={{ customers.paginator.num_pages }}&page_n={{page_id}}&searchp={{search_id}}&arr_value={{date_list1}}">{% trans "Last" %}</a>
+                                                    </li>
+                                            {% else %}
+                                                <li class="page-item disabled">
+                                                    <a class="page-link" href="#" aria-label="Next">
+                                                        <span aria-hidden="true">{% trans "Next" %}</span>
+                                                        <span class="sr-only">{% trans "Next" %}</span>
+                                                    </a>
+                                                </li>
+                                                <li class="page-item disabled">
+                                                    <a class="page-link" href="#">{% trans "Last" %}</a>
+                                                </li>
+                                            {% endif %}
+                                        </ul>
+                                    </nav>
+
+                                    </div>
+                                </div>
+
+                            </div>
+                            <div class="tab-pane show" id="doctor1">
+                                <div class="col-lg-12">
+                                    <div class="row mb-3 mt-3">
+                                        <div class="col-lg-12">
+                                            <div class="row">
+                                                <div class="col-lg-1">
+                                                    <input value="{{ request.GET.searchp_doc }}" name="search_doc" type="search" class="form-control" id="id_searchp_doc" placeholder="{% trans 'Search...' %}">
+                                                </div>
+                                                <label style="text-align: {% if LANGUAGE_CODE == 'ar' %}left{% else %}right{% endif %};" class="col-sm-1 col-form-label">{% trans "Class" %}</label>
+                                                <div class="col-lg-2">
+                                                    <select value="{{ request.GET.class }}" class="custom-select" name="class" id="id_class_doc">
+                                                        <option selected="" value=999999>{% trans "All" %}</option>
+                                                        {% for Class in classes %}
+                                                            <option {% if Class.id == class_doc_id %} selected {% endif %} value="{{Class.id}}">{{Class.name}}</option>
+                                                        {% endfor %}
+                                                    </select>
+                                                </div>
+                                                <label style="text-align: {% if LANGUAGE_CODE == 'ar' %}left{% else %}right{% endif %};" class="col-sm-1 col-form-label">{% trans "Channel" %}</label>
+                                                <div class="col-lg-2">
+                                                    <select value="{{ request.GET.channel }}" class="custom-select" name="channel" id="id_channel_doc">
+                                                        <option selected="" value=999999>{% trans "All" %}</option>
+                                                        {% for Channel in channels %}
+                                                            <option {% if Channel.id == channel_doc_id %} selected {% endif %} value="{{Channel.id}}">{{Channel.name}}</option>
+                                                        {% endfor %}
+                                                    </select>
+                                                </div>
+                                                <label style="text-align: {% if LANGUAGE_CODE == 'ar' %}left{% else %}right{% endif %};" class="col-sm-1 col-form-label">{% trans "Customer" %}</label>
+                                                <div class="col-lg-2">
+                                                    <select value="{{ request.GET.customer }}" class="custom-select" name="customer" id="id_customer_doc">
+                                                        <option selected="" value=999999>{% trans "All" %}</option>
+                                                        {% for Cust in customer_list %}
+                                                            <option {% if Cust.account1 == customer_doc_id %} selected {% endif %} value="{{Cust.account1}}">{{Cust.account1__name}}</option>
+                                                        {% endfor %}
+                                                    </select>
+                                                </div>
+                                                <div class="col-lg-2">
+                                                    <div class="text-lg-right mt-3 mt-lg-0">
+                                                        <button id="search_doc_btn" class="btn btn-blue waves-effect waves-light" type="button" name="action">{% trans "Search" %}</button>
+                                                        <button id="clear_filter_doc_id" class="btn btn-blue ml-1" type="button" name="button" data-overlayColor="#38414a">
+                                                            <i class="mdi mdi-filter-variant"></i>
+                                                        </button>
+
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="form-group col-md-12 mb-0">
+                                            <div class="row">
+                                                <div class="form-group col-md-12 mb-0">
+                                                    <div class="row">
+                                                        <div class="col-12 mb-2">
+                                                            <span>{% trans '* Click on the date you want to' %}</span> <code>{% trans 'delete!' %}</code>
+                                                        </div>
+                                                        <div class="col-12">
+                                                        <table class="table table-bordered table-sm" id="calendar">
+                                                            <tbody>
+                                                                {% for Doctor in doctors %}
+                                                                <tr>
+                                                                    <td style="width:5%"><button type="button"  name="{{ Doctor.id}}" id="doctor_n_{{ Doctor.id}}" count="0" class="doctor_n btn btn-blue btn-rounded waves-effect waves-light"><i class="mdi mdi-plus-circle mr-1"></i></button></td>
+                                                                    <td><div><strong>{{ Doctor.name}}</strong></div></td>
+                                                                    <div hidden name="{{ Doctor.id}}" id="doctor_visits_{{ Doctor.id}}" visits="{{ Doctor.doctor_category.visits}}" class="doctor_visits"><strong>{{ Doctor.doctor_category.visits}}</strong></div>
+                                                                    <td><div name="{{ Doctor.id}}" id="doctor_n_r_{{ Doctor.id}}" count="0" class="doctor_n_r_"></div></td>
+                                                                </tr>
+                                                                {% endfor %}
+                                                            </tbody>
+                                                        </table>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <nav class="ml-2" aria-label="Page navigation example">
+                                            <ul class="pagination justify-content-center pagination-sm">
+                                                <li class="page-item disabled">
+                                                    <a class="page-link" href="#" tabindex="-1"><small>{% trans "Page" %} <strong>{{ doctors.number }}</strong> {% trans "of" %} <strong>{{ doctors.paginator.num_pages }}</strong>. {% trans "Showing" %} <strong>{{ doctors.object_list|length }}</strong> {% trans "of total" %} <strong>{{ doctors.paginator.count }}</strong> {% trans "items" %}.</small></a>
+                                                </li>
+
+                                            </ul>
+                                        </nav>
+                                    <hr>
+                                    <nav aria-label="Page navigation example">
+                                        <ul class="pagination justify-content-center mr-2">
+                                            {% if doctors.has_previous %}
+                                                {% if not search %}
+                                                    <li class="page-item">
+                                                        <a class="page-link" href="{% url 'crm:create_visit' %}?page_doc=1&page_doc_n={{page_doc_id}}&searchp_doc={{search_doc_id}}&arr_value={{date_list1}}">{% trans "First" %}</a>
+                                                    </li>
+                                                    <li class="page-item">
+                                                        <a class="page-link" href="{% url 'crm:create_visit' %}?page={{ doctors.previous_page_number }}&page_doc_n={{page_doc_id}}&searchp_doc={{search_doc_id}}&arr_value={{date_list1}}" tabindex="-1" aria-label="Previous">
+                                                            <span aria-hidden="true">{% trans "Previous" %}</span>
+                                                            <span class="sr-only">{% trans "Previous" %}</span>
+                                                        </a>
+                                                    </li>
+                                                {% else %}
+                                                    <li class="page-item">
+                                                        <a class="page-link" href="{% url 'crm:create_visit' %}?{{search}}&page={{ doctors.previous_page_number }}&page_doc_n={{page_doc_id}}&searchp_doc={{search_doc_id}}&arr_value={{date_list1}}" tabindex="-1">{% trans "Previous" %}</a>
+                                                    </li>
+                                                {% endif %}
+                                            {% else %}
+                                                <li class="page-item disabled">
+                                                    <a class="page-link" href="#">{% trans "First" %}</a>
+                                                </li>
+                                                <li class="page-item disabled">
+                                                    <a class="page-link" href="#" tabindex="-1" aria-label="Previous">
+                                                        <span aria-hidden="true">{% trans "Previous" %}</span>
+                                                        <span class="sr-only">{% trans "Previous" %}</span>
+                                                    </a>
+                                                </li>
+                                            {% endif %}
+
+                                            {% if doctors.number|add:'-4' > 1 %}
+                                                <li class="page-item"><a class="page-link" href="?page_doc={{ doctors.number|add:'-5' }}">&hellip;</a></li>
+                                            {% endif %}
+                                            {% for i in doctors.paginator.page_range %}
+                                                {% if doctors.number == i %}
+                                                    <li class="page-item active" aria-current="page">
+                                                        <span class="page-link">
+                                                            {{ i }}
+                                                            <span class="sr-only">(current)</span>
+                                                        </span>
+                                                    </li>
+                                                {% elif i > doctors.number|add:'-5' and i < doctors.number|add:'5' %}
+                                                     <li class="page-item"><a class="page-link" href="?page_doc={{ i }}&page_doc_n={{page_doc_id}}&searchp_doc={{search_doc_id}}&arr_value={{date_list1}}">{{ i }}</a></li>
+                                                {% endif %}
+                                            {% endfor %}
+
+                                            {% if doctors.paginator.num_pages > doctors.number|add:'4' %}
+                                                <li class="page-item"><a class="page-link" href="?page={{ doctors.number|add:'5' }}">&hellip;</a></li>
+                                            {% endif %}
+
+                                            {% if doctors.has_next %}
+                                                    <li class="page-item">
+                                                        <a class="page-link" href="{% url 'crm:create_visit' %}?page_doc={{ doctors.next_page_number }}&page_doc_n={{page_doc_id}}&searchp_doc={{search_doc_id}}&arr_value={{date_list1}}" aria-label="Next">
+                                                            <span aria-hidden="true">{% trans "Next" %}</span>
+                                                            <span class="sr-only">{% trans "Next" %}</span>
+                                                        </a>
+                                                    </li>
+                                                    <li class="page-item">
+                                                        <a class="page-link" href="{% url 'crm:create_visit' %}?page_doc={{ doctors.paginator.num_pages }}&page_doc_n={{page_doc_id}}&searchp_doc={{search_doc_id}}&arr_value={{date_list1}}">{% trans "Last" %}</a>
+                                                    </li>
+                                            {% else %}
+                                                <li class="page-item disabled">
+                                                    <a class="page-link" href="#" aria-label="Next">
+                                                        <span aria-hidden="true">{% trans "Next" %}</span>
+                                                        <span class="sr-only">{% trans "Next" %}</span>
+                                                    </a>
+                                                </li>
+                                                <li class="page-item disabled">
+                                                    <a class="page-link" href="#">{% trans "Last" %}</a>
+                                                </li>
+                                            {% endif %}
+                                        </ul>
+                                    </nav>
+
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="tab-pane show" id="pharmacy1">
+                                <div class="col-lg-12">
+                                    <div class="row mb-3 mt-3">
+                                        <div class="col-lg-12">
+                                            <div class="row">
+                                                <div class="col-lg-2">
+                                                    <input value="{{ request.GET.searchp_pha }}" name="search_pha" type="search" class="form-control" id="id_searchp_pha" placeholder="{% trans 'Search...' %}">
+                                                </div>
+                                                <label style="text-align: {% if LANGUAGE_CODE == 'ar' %}left{% else %}right{% endif %};" class="col-sm-1 col-form-label">{% trans "Class" %}</label>
+                                                <div class="col-lg-3">
+                                                    <select value="{{ request.GET.class_pha }}" class="custom-select" name="class_pha" id="id_class_pha">
+                                                        <option selected="" value=999999>{% trans "All" %}</option>
+                                                        {% for Class in classes %}
+                                                            <option {% if Class.id == class_pha_id %} selected {% endif %} value="{{Class.id}}">{{Class.name}}</option>
+                                                        {% endfor %}
+                                                    </select>
+                                                </div>
+                                                <label style="text-align: {% if LANGUAGE_CODE == 'ar' %}left{% else %}right{% endif %};" class="col-sm-1 col-form-label">{% trans "Channel" %}</label>
+                                                <div class="col-lg-3">
+                                                    <select value="{{ request.GET.channel_pha }}" class="custom-select" name="channel_pha" id="id_channel_pha">
+                                                        <option selected="" value=999999>{% trans "All" %}</option>
+                                                        {% for Channel in channels %}
+                                                            <option {% if Channel.id == channel_pha_id %} selected {% endif %} value="{{Channel.id}}">{{Channel.name}}</option>
+                                                        {% endfor %}
+                                                    </select>
+                                                </div>
+                                                <div class="col-lg-2">
+                                                    <div class="text-lg-right mt-3 mt-lg-0">
+                                                        <button id="search_pha_btn" class="btn btn-blue waves-effect waves-light" type="button" name="action">{% trans "Search" %}</button>
+                                                        <button id="clear_filter_pha_id" class="btn btn-blue ml-1" type="button" name="button" data-overlayColor="#38414a">
+                                                            <i class="mdi mdi-filter-variant"></i>
+                                                        </button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="form-group col-md-12 mb-0">
+                                            <div class="row">
+                                                <div class="form-group col-md-12 mb-0">
+                                                    <div class="row">
+                                                        <div class="col-12 mb-2">
+                                                            <span>{% trans '* Click on the date you want to' %}</span> <code>{% trans 'delete!' %}</code>
+                                                        </div>
+                                                        <div class="col-12">
+                                                        <table class="table table-bordered table-sm" id="pha_calendar">
+                                                            <tbody>
+                                                                {% for Customer in pharmacies %}
+                                                                <tr>
+                                                                    <td style="width:5%"><button type="button" name="{{ Customer.id}}" id="pharmacy_n_{{ Customer.id}}" count="0" class="pharmacy_n btn btn-blue btn-rounded waves-effect waves-light"><i class="mdi mdi-plus-circle mr-1"></i></button></td>
+                                                                    <td><div><strong>{{ Customer.name}}</strong></div></td>
+                                                                    <div hidden name="{{ Customer.id}}" id="pharmacy_visits_{{ Customer.id}}" visits="{{ Customer.customer_class.visits}}" class="pharmacy_visits"><strong>{{ Customer.customer_class.visits}}</strong></div>
+                                                                    <td><div name="{{ Customer.id}}" id="pharmacy_n_r_{{ Customer.id}}" count="0" class="pharmacy_n_r_"></div></td>
+                                                                </tr>
+                                                                {% endfor %}
+                                                            </tbody>
+                                                        </table>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="row">
+                                        <nav class="ml-2" aria-label="Page navigation example">
+                                            <ul class="pagination justify-content-center pagination-sm">
+                                                <li class="page-item disabled">
+                                                    <a class="page-link" href="#" tabindex="-1"><small>{% trans "Page" %} <strong>{{ pharmacies.number }}</strong> {% trans "of" %} <strong>{{ pharmacies.paginator.num_pages }}</strong>. {% trans "Showing" %} <strong>{{ pharmacies.object_list|length }}</strong> {% trans "of total" %} <strong>{{ pharmacies.paginator.count }}</strong> {% trans "items" %}.</small></a>
+                                                </li>
+
+                                            </ul>
+                                        </nav>
+                                    <hr>
+                                    <nav aria-label="Page navigation example">
+                                        <ul class="pagination justify-content-center mr-2">
+                                            {% if pharmacies.has_previous %}
+                                                {% if not search %}
+                                                    <li class="page-item">
+                                                        <a class="page-link" href="{% url 'crm:create_visit' %}?page=1&page_pha_n={{page_id}}&page_pha={{search_id}}&arr_value={{date_list1}}">{% trans "First" %}</a>
+                                                    </li>
+                                                    <li class="page-item">
+                                                        <a class="page-link" href="{% url 'crm:create_visit' %}?page={{ pharmacies.previous_page_number }}&page_pha_n={{page_id}}&page_pha={{search_id}}&arr_value={{date_list1}}" tabindex="-1" aria-label="Previous">
+                                                            <span aria-hidden="true">{% trans "Previous" %}</span>
+                                                            <span class="sr-only">{% trans "Previous" %}</span>
+                                                        </a>
+                                                    </li>
+                                                {% else %}
+                                                    <li class="page-item">
+                                                        <a class="page-link" href="{% url 'crm:create_visit' %}?{{search}}&page={{ pharmacies.previous_page_number }}&page_pha_n={{page_id}}&page_pha={{search_id}}&arr_value={{date_list1}}" tabindex="-1">{% trans "Previous" %}</a>
+                                                    </li>
+                                                {% endif %}
+                                            {% else %}
+                                                <li class="page-item disabled">
+                                                    <a class="page-link" href="#">{% trans "First" %}</a>
+                                                </li>
+                                                <li class="page-item disabled">
+                                                    <a class="page-link" href="#" tabindex="-1" aria-label="Previous">
+                                                        <span aria-hidden="true">{% trans "Previous" %}</span>
+                                                        <span class="sr-only">{% trans "Previous" %}</span>
+                                                    </a>
+                                                </li>
+                                            {% endif %}
+
+                                            {% if pharmacies.number|add:'-4' > 1 %}
+                                                <li class="page-item"><a class="page-link" href="?page={{ pharmacies.number|add:'-5' }}">&hellip;</a></li>
+                                            {% endif %}
+                                            {% for i in pharmacies.paginator.page_range %}
+                                                {% if pharmacies.number == i %}
+                                                    <li class="page-item active" aria-current="page">
+                                                        <span class="page-link">
+                                                            {{ i }}
+                                                            <span class="sr-only">(current)</span>
+                                                        </span>
+                                                    </li>
+                                                {% elif i > pharmacies.number|add:'-5' and i < pharmacies.number|add:'5' %}
+                                                     <li class="page-item"><a class="page-link" href="?page={{ i }}&page_pha_n={{page_id}}&page_pha={{search_id}}&arr_value={{date_list1}}">{{ i }}</a></li>
+                                                {% endif %}
+                                            {% endfor %}
+
+                                            {% if pharmacies.paginator.num_pages > pharmacies.number|add:'4' %}
+                                                <li class="page-item"><a class="page-link" href="?page={{ pharmacies.number|add:'5' }}">&hellip;</a></li>
+                                            {% endif %}
+
+                                            {% if pharmacies.has_next %}
+                                                    <li class="page-item">
+                                                        <a class="page-link" href="{% url 'crm:create_visit' %}?page={{ pharmacies.next_page_number }}&page_pha_n={{page_id}}&page_pha={{search_id}}&arr_value={{date_list1}}" aria-label="Next">
+                                                            <span aria-hidden="true">{% trans "Next" %}</span>
+                                                            <span class="sr-only">{% trans "Next" %}</span>
+                                                        </a>
+                                                    </li>
+                                                    <li class="page-item">
+                                                        <a class="page-link" href="{% url 'crm:create_visit' %}?page={{ pharmacies.paginator.num_pages }}&page_pha_n={{page_id}}&page_pha={{search_id}}&arr_value={{date_list1}}">{% trans "Last" %}</a>
+                                                    </li>
+                                            {% else %}
+                                                <li class="page-item disabled">
+                                                    <a class="page-link" href="#" aria-label="Next">
+                                                        <span aria-hidden="true">{% trans "Next" %}</span>
+                                                        <span class="sr-only">{% trans "Next" %}</span>
+                                                    </a>
+                                                </li>
+                                                <li class="page-item disabled">
+                                                    <a class="page-link" href="#">{% trans "Last" %}</a>
+                                                </li>
+                                            {% endif %}
+                                        </ul>
+                                    </nav>
+
+                                    </div>
+                                </div>
+
+                            </div>
+                            </div>
+                        </div>
+                        <br><br>
+                        <div class="modal-footer">
+                            <a class="submit-btn btn-danger btn btn-primary" href="{% url 'crm:calendar_visit' %}">{% trans "Back" %}</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </form>
+
+</div>
+
+{% endblock %}
+
+{% block extra_javascript %}
+{% comment %}
+<script src="/static/libs/moment/moment.min.js"></script>
+<script src="/static/libs/bootstrap-datepicker/bootstrap-datepicker.min.js"></script>
+{% endcomment %}
+<script src="/static/libs/select2/select2.min.js"></script>
+<script src="//fast.wistia.net/labs/fresh-url/v1.js" async></script>
+<script src="/static/libs/sweetalert2/sweetalert2.min.js"></script>
+
+<script type="text/javascript">
+
+if (location.hash) {
+  $('a[href=\'' + location.hash + '\']').tab('show');
+}
+var activeTab = localStorage.getItem('activeTab');
+if (activeTab) {
+  $('a[href="' + activeTab + '"]').tab('show');
+}
+
+$('body').on('click', 'a[data-toggle=\'tab\']', function (e) {
+    e.preventDefault()
+    var tab_name = this.getAttribute('href')
+    if (history.pushState) {
+        history.pushState(null, null, tab_name)
+    }
+    else {
+        location.hash = tab_name
+    }
+    localStorage.setItem('activeTab', tab_name)
+
+    $(this).tab('show');
+        window.location.href ="{% url 'crm:create_visit' %}?arr_value={{date_list1}}"
+    return false;
+});
+$(window).on('popstate', function () {
+  var anchor = location.hash ||
+    $('a[data-toggle=\'tab\']').first().attr('href');
+  $('a[href=\'' + anchor + '\']').tab('show');
+});
+
+var newf;
+
+    $("#clear_filter_id").click(function() {
+        window.location.href ="{% url 'crm:create_visit' %}?arr_value={{date_list1}}"
+    });
+    $("#clear_filter_doc_id").click(function() {
+        window.location.href ="{% url 'crm:create_visit' %}?arr_value={{date_list1}}"
+    });
+    $("#clear_filter_pha_id").click(function() {
+        window.location.href ="{% url 'crm:create_visit' %}?arr_value={{date_list1}}"
+    });
+    $("#search_btn").click(function() {
+        search_id = $("#id_searchp").val();
+        class_id = $("#id_class").val();
+        channel_id = $("#id_channel").val();
+        window.location.href = "{% url 'crm:create_visit' %}?searchp="+ search_id +"&class="+ class_id +"&channel="+ channel_id +"&arr_value={{date_list1}}";
+    });
+    $("#search_doc_btn").click(function() {
+        search_id = $("#id_searchp_doc").val();
+        class_id = $("#id_class_doc").val();
+        channel_id = $("#id_channel_doc").val();
+        customer_id = $("#id_customer_doc").val();
+        window.location.href = "{% url 'crm:create_visit' %}?searchp_doc="+ search_id +"&class_doc="+ class_id +"&channel_doc="+ channel_id +"&customer_doc="+ customer_id +"&arr_value={{date_list1}}";
+    });
+    $("#search_pha_btn").click(function() {
+        search_id = $("#id_searchp_pha").val();
+        class_id = $("#id_class_pha").val();
+        channel_id = $("#id_channel_pha").val();
+        window.location.href = "{% url 'crm:create_visit' %}?searchp_pha="+ search_id +"&class_pha="+ class_id +"&channel_pha="+ channel_id +"&arr_value={{date_list1}}";
+    });
+
+        $('#id_channel').select2();
+        $('#id_class').select2();
+        $('#id_channel_pha').select2();
+        $('#id_class_pha').select2();
+        $('#id_customer_doc').select2();
+        $('#id_channel_doc').select2();
+        $('#id_class_doc').select2();
+
+{% comment %}
+      $(function () {
+        $("#datetimepicker1").datepicker({
+            format: 'yyyy/mm/dd',
+        });
+      });
+{% endcomment %}
+    let mylist = [];
+    let myDeletedlist = [];
+    let array = [];
+    let doctor_r_date = '';
+    let Customer_r_date = '';
+    let Pharmacy_r_date = '';
+    let first_date = '';
+    let dates_count = 0;
+
+    let row = document.createElement("div");
+    $(".doctor_n").click(function (e) {
+
+        var radios = document.getElementsByName('radio');
+        var SourceV = 0;
+        var SourceId = "";
+
+        for (var i = 0, length = radios.length; i < length; i++) {
+          if (radios[i].checked) {
+            // do whatever you want with the checked radio
+            SourceV = radios[i].value;
+
+            // only one radio can be logically checked, don't check the rest
+            break;
+          }
+        }
+        if (SourceV == 1) {
+            SourceId = "Customer";
+        } else if (SourceV == 2) {
+            SourceId = "Doctor";
+        } else if (SourceV == 3) {
+            SourceId = "Pharmacy";
+        }
+        newf = e;
+        var doctorId = $(this).attr("name");
+        var url = $("#VisitsForm").attr("data-save-dates-url");
+        $.ajax({
+            async: false,
+            url: url,
+            data: {
+                'doctor': parseInt(doctorId),
+                'date_p': "{{date_list1}}",
+                'source': "doctor",
+                },
+                success: function (data) {
+                    $("#id_customer").html(data);
+                    first_date = data.firstdate
+                    dates_count = data.dat_count
+                    console.log('dates_count' + dates_count);
+                }
+        });
+        console.log(newf);
+        var doctorCount = parseInt($(this).attr("count")) + 1;
+        var mylistL2 = '{{date_list1}}'.split(',');
+        var mylistL = '{{date_list1}}'.split(',');
+        var doctorCount1 = parseInt($(this).attr("count"));
+        var doctorCount2 = parseInt($(this).attr("count"));
+        var countD = parseInt($(this).attr("count")) + 1;
+        var VisitedCount = 0;
+
+        listL = mylistL.length;
+        var visitField = document.getElementById("doctor_visits_" + doctorId );
+        var doctorVisits = parseInt($(visitField).attr("visits"));
+        console.log(parseInt(doctorId));
+        console.log(first_date);
+        var urlV = $("#VisitsForm").attr("data-check-visits-count-url");
+        $.ajax({
+            async: false,
+            url: urlV,
+            data: {
+                'doctor': parseInt(doctorId),
+                'source': "doctor",
+                'arr_value': "{{date_list1}}",
+            },
+                success: function (data) {
+                    $("#id_customer").html(data);
+                    console.log('VisitedCount ',data);
+
+                    VisitedCount = data.visited_count;
+                    console.log('VisitedCount ',VisitedCount);
+                }
+         });
+        var url = $("#VisitsForm").attr("data-visits-url");
+        var i = 0;
+        $.ajax({
+            async: false,
+            url: url,
+            data: {
+                'doctor': parseInt(doctorId),
+                'date_p': first_date,
+                'source': "doctor",
+                'arr_value': "{{date_list1}}",
+            },
+                success: function (data) {
+                    $("#id_customer").html(data);
+                    countD1 = data[0].doc_count
+                    date_to_add = data[0].datetoadd
+                    console.log('count ' + countD);
+                    console.log('dates_count ' + dates_count);
+                    console.log('doctorVisits ' + doctorVisits);
+                    var DateAdd = document.createTextNode(date_to_add);
+                    if (dates_count >= countD) {
+                        if (doctorVisits <= VisitedCount) {
+                            Swal.fire({
+                              title: 'Are you sure?',
+                              text: "You are exceeding the number of visits allowed!",
+                              type: 'warning',
+                              showCancelButton: true,
+                              confirmButtonColor: '#3085d6',
+                              cancelButtonColor: '#d33',
+                              confirmButtonText: 'Yes, add new!'
+                            }).then((result) => {
+                                if (result.value) {
+                                    if (data[i].added == false) {
+                                        console.log(data[i]);
+                                        console.log(data[i].id);
+                                        console.log(data[i].date_p);
+                                        console.log(data[i].doctor);
+                                        console.log(data[i].user);
+                                        console.log(data[i].added);
+                                        var DocId = data[i].id.toString()
+                                        console.log(DocId);
+
+
+                                        $("#arr_value_" + DocId ).val(data[i].date_p);
+                                        let tog = document.createElement("i");
+                                        tog.setAttribute('id', 'tog_r_date_' + data[i].date_p + '_' + DocId);
+                                        tog.setAttribute('name', DocId);
+                                        tog.setAttribute('class', 'mdi mdi-checkbox-blank-circle');
+                                        tog.setAttribute('style', 'color: red;');
+
+                                        let cell = document.createElement("span");
+                                        cell.setAttribute('id', 'doc_r_date_' + data[i].date_p + '_' + DocId);
+                                        cell.setAttribute('name', DocId);
+
+                                        let remove_e = document.createElement("button");
+                                        remove_e.setAttribute('id', data[i].date_p + '_' + DocId);
+                                        remove_e.setAttribute('class', 'btn btn-link');
+                                        remove_e.setAttribute('idd', data[i].date_p);
+                                        remove_e.setAttribute('dateId', 'doc_r_date_' + data[i].date_p + '_' + DocId);
+                                        remove_e.setAttribute('name', DocId);
+                                        remove_e.classList.add('remove_d');
+                                        remove_e.setAttribute('date_r', data[i].date_p + '_' + DocId);
+                                        remove_e.setAttribute('type','button');
+                                        remove_e.setAttribute('value',date_to_add);
+
+                                        remove_e.appendChild(DateAdd);
+
+                                        document.getElementById("doctor_n_r_" + DocId ).appendChild(tog);
+                                        document.getElementById("doctor_n_r_" + DocId ).appendChild(cell);
+                                        document.getElementById("doctor_n_r_" + DocId ).appendChild(remove_e);
+                                        newf.currentTarget.setAttribute('count', countD);
+                                        $("[allow=true]").first().attr("allow", false);
+                                    }
+                                }
+                            })
+                    }else{
+                        console.log(data[i].added);
+                                    if (data[i].added == false) {
+                                        console.log(data[i]);
+                                        console.log(data[i].id);
+                                        console.log(data[i].date_p);
+                                        console.log(data[i].doctor);
+                                        console.log(data[i].user);
+                                        console.log(data[i].added);
+                                        var DocId = data[i].id.toString()
+                                        console.log(DocId);
+
+
+                                        $("#arr_value_" + DocId ).val(data[i].date_p);
+                                        let tog = document.createElement("i");
+                                        tog.setAttribute('id', 'tog_r_date_' + data[i].date_p + '_' + DocId);
+                                        tog.setAttribute('name', DocId);
+                                        tog.setAttribute('class', 'mdi mdi-checkbox-blank-circle');
+                                        tog.setAttribute('style', 'color: orange;');
+
+                                        let cell = document.createElement("span");
+                                        cell.setAttribute('id', 'doc_r_date_' + data[i].date_p + '_' + DocId);
+                                        cell.setAttribute('name', DocId);
+
+                                        let remove_e = document.createElement("button");
+                                        remove_e.setAttribute('id', data[i].date_p + '_' + DocId);
+                                        remove_e.setAttribute('class', 'btn btn-link');
+                                        remove_e.setAttribute('idd', data[i].date_p);
+                                        remove_e.setAttribute('dateId', 'doc_r_date_' + data[i].date_p + '_' + DocId);
+                                        remove_e.setAttribute('name', DocId);
+                                        remove_e.classList.add('remove_d');
+                                        remove_e.setAttribute('date_r', data[i].date_p + '_' + DocId);
+                                        remove_e.setAttribute('type','button');
+                                        remove_e.setAttribute('value',date_to_add);
+
+                                        remove_e.appendChild(DateAdd);
+
+
+                                        document.getElementById("doctor_n_r_" + DocId ).appendChild(tog);
+                                        document.getElementById("doctor_n_r_" + DocId ).appendChild(cell);
+                                        document.getElementById("doctor_n_r_" + DocId ).appendChild(remove_e);
+                                        newf.currentTarget.setAttribute('count', countD);
+                                        $("[allow=true]").first().attr("allow", false);
+                                    }
+                    }
+                }
+            }
+        });
+                    var url = $("#VisitsForm").attr("data-visits-true-url");
+                    $.ajax({
+                        async: false,
+                        url: url,
+                        data: {
+                            'doctor': parseInt(doctorId),
+                            'date_p': first_date,
+                            'source': "doctor",
+                            },
+                            success: function (data) {
+                                $("#id_customer").html(data);
+                            }
+                    });
+
+    });
+    $(".customer_n").click(function (e) {
+        newf = e;
+        var doctorId = $(this).attr("name");
+        var url = $("#VisitsForm").attr("data-save-dates-url");
+        $.ajax({
+            async: false,
+            url: url,
+            data: {
+                'doctor': parseInt(doctorId),
+                'date_p': "{{date_list1}}",
+                'source': "customer",
+                },
+                success: function (data) {
+                    $("#id_customer").html(data);
+                    first_date = data.firstdate
+                    dates_count = data.dat_count
+                    console.log('dates_count' + dates_count);
+                }
+        });
+        console.log(newf);
+        var doctorCount = parseInt($(this).attr("count")) + 1;
+        var mylistL2 = '{{date_list1}}'.split(',');
+        var mylistL = '{{date_list1}}'.split(',');
+        var doctorCount1 = parseInt($(this).attr("count"));
+        var doctorCount2 = parseInt($(this).attr("count"));
+        var countD = parseInt($(this).attr("count")) + 1;
+        var VisitedCount = 0;
+
+        listL = mylistL.length;
+        var visitField = document.getElementById("customer_visits_" + doctorId );
+        var doctorVisits = parseInt($(visitField).attr("visits"));
+        console.log(parseInt(doctorId));
+        console.log('visitField', visitField);
+        console.log('customerVisits', doctorVisits);
+        console.log(first_date);
+        console.log('first_date', first_date);
+        console.log('date_list1888', '{{date_list1}}');
+        var urlV = $("#VisitsForm").attr("data-check-visits-count-url");
+        $.ajax({
+            async: false,
+            url: urlV,
+            data: {
+                'doctor': parseInt(doctorId),
+                'source': "customer",
+                'arr_value': "{{date_list1}}",
+            },
+                success: function (data) {
+                    $("#id_customer").html(data);
+                    console.log('VisitedCount ',data);
+
+                    VisitedCount = data.visited_count;
+                    console.log('VisitedCount ',VisitedCount);
+                }
+         });
+        var url = $("#VisitsForm").attr("data-visits-url");
+        var i = 0;
+        $.ajax({
+            async: false,
+            url: url,
+            data: {
+                'doctor': parseInt(doctorId),
+                'date_p': first_date,
+                'source': "customer",
+                'arr_value': "{{date_list1}}",
+            },
+                success: function (data) {
+                    $("#id_customer").html(data);
+                    countD1 = data[0].cust_count
+                    date_to_add = data[0].datetoadd
+                    console.log('count ' + countD1);
+                    console.log('dates_count ' + dates_count);
+                    console.log('customerVisits ' + doctorVisits);
+                    var DateAdd = document.createTextNode(date_to_add);
+                    if (dates_count >= countD) {
+                        if (doctorVisits <= VisitedCount) {
+                            Swal.fire({
+                              title: 'Are you sure?',
+                              text: "You are exceeding the number of visits allowed!",
+                              type: 'warning',
+                              showCancelButton: true,
+                              confirmButtonColor: '#3085d6',
+                              cancelButtonColor: '#d33',
+                              confirmButtonText: 'Yes, add new!'
+                            }).then((result) => {
+                                if (result.value) {
+                                    if (data[i].added == false) {
+                                        console.log(data[i]);
+                                        console.log(data[i].id);
+                                        console.log(data[i].date_p);
+                                        console.log(data[i].customer);
+                                        console.log(data[i].user);
+                                        console.log(data[i].added);
+                                        var DocId = data[i].id.toString()
+                                        console.log(DocId);
+
+
+                                        $("#arr_value_" + DocId ).val(data[i].date_p);
+                                        let tog = document.createElement("i");
+                                        tog.setAttribute('id', 'tog_cust_r_date_' + data[i].date_p + '_' + DocId);
+                                        tog.setAttribute('name', DocId);
+                                        tog.setAttribute('class', 'mdi mdi-checkbox-blank-circle');
+                                        tog.setAttribute('style', 'color: red;');
+
+                                        let cell = document.createElement("span");
+                                        cell.setAttribute('id', 'cust_r_date_' + data[i].date_p + '_' + DocId);
+                                        cell.setAttribute('name', DocId);
+
+                                        let remove_e = document.createElement("button");
+                                        remove_e.setAttribute('id', data[i].date_p + '_' + DocId);
+                                        remove_e.setAttribute('class', 'btn btn-link');
+                                        remove_e.setAttribute('idd', data[i].date_p);
+                                        remove_e.setAttribute('dateId', 'cust_r_date_' + data[i].date_p + '_' + DocId);
+                                        remove_e.setAttribute('name', DocId);
+                                        remove_e.classList.add('remove_cust_d');
+                                        remove_e.setAttribute('date_cust_r', data[i].date_p + '_' + DocId);
+                                        remove_e.setAttribute('type','button');
+                                        remove_e.setAttribute('value',date_to_add);
+
+                                        remove_e.appendChild(DateAdd);
+
+                                        document.getElementById("customer_n_r_" + DocId ).appendChild(tog);
+                                        document.getElementById("customer_n_r_" + DocId ).appendChild(cell);
+                                        document.getElementById("customer_n_r_" + DocId ).appendChild(remove_e);
+                                        newf.currentTarget.setAttribute('count', countD);
+                                        $("[allow=true]").first().attr("allow", false);
+                                    }
+                                }
+                            })
+                    }else{
+                        console.log(data[i].added);
+                                    if (data[i].added == false) {
+                                        console.log(data[i]);
+                                        console.log(data[i].id);
+                                        console.log(data[i].date_p);
+                                        console.log(data[i].customer);
+                                        console.log(data[i].user);
+                                        console.log(data[i].added);
+                                        var DocId = data[i].id.toString()
+                                        console.log(DocId);
+
+
+                                        $("#arr_value_" + DocId ).val(data[i].date_p);
+                                        let tog = document.createElement("i");
+                                        tog.setAttribute('id', 'tog_cust_r_date_' + data[i].date_p + '_' + DocId);
+                                        tog.setAttribute('name', DocId);
+                                        tog.setAttribute('class', 'mdi mdi-checkbox-blank-circle');
+                                        tog.setAttribute('style', 'color: orange;');
+
+                                        let cell = document.createElement("span");
+                                        cell.setAttribute('id', 'cust_r_date_' + data[i].date_p + '_' + DocId);
+                                        cell.setAttribute('name', DocId);
+
+                                        let remove_e = document.createElement("button");
+                                        remove_e.setAttribute('id', data[i].date_p + '_' + DocId);
+                                        remove_e.setAttribute('class', 'btn btn-link');
+                                        remove_e.setAttribute('idd', data[i].date_p);
+                                        remove_e.setAttribute('dateId', 'cust_r_date_' + data[i].date_p + '_' + DocId);
+                                        remove_e.setAttribute('name', DocId);
+                                        remove_e.classList.add('remove_cust_d');
+                                        remove_e.setAttribute('date_cust_r', data[i].date_p + '_' + DocId);
+                                        remove_e.setAttribute('type','button');
+                                        remove_e.setAttribute('value',date_to_add);
+
+                                        remove_e.appendChild(DateAdd);
+
+
+                                        document.getElementById("customer_n_r_" + DocId ).appendChild(tog);
+                                        document.getElementById("customer_n_r_" + DocId ).appendChild(cell);
+                                        document.getElementById("customer_n_r_" + DocId ).appendChild(remove_e);
+                                        newf.currentTarget.setAttribute('count', countD);
+                                        $("[allow=true]").first().attr("allow", false);
+                                    }
+                    }
+                }
+            }
+        });
+                    var url = $("#VisitsForm").attr("data-visits-true-url");
+                    $.ajax({
+                        async: false,
+                        url: url,
+                        data: {
+                            'doctor': parseInt(doctorId),
+                            'date_p': first_date,
+                            'source': "customer",
+                            },
+                            success: function (data) {
+                                $("#id_customer").html(data);
+                            }
+                    });
+    });
+    $(".pharmacy_n").click(function (e) {
+        newf = e;
+        var doctorId = $(this).attr("name");
+        var url = $("#VisitsForm").attr("data-save-dates-url");
+        $.ajax({
+            async: false,
+            url: url,
+            data: {
+                'doctor': parseInt(doctorId),
+                'date_p': "{{date_list1}}",
+                'source': "pharmacy",
+                },
+                success: function (data) {
+                    $("#id_customer").html(data);
+                    first_date = data.firstdate
+                    dates_count = data.dat_count
+                    console.log('dates_count' + dates_count);
+                }
+        });
+        console.log(newf);
+        var doctorCount = parseInt($(this).attr("count")) + 1;
+        var mylistL2 = '{{date_list1}}'.split(',');
+        var mylistL = '{{date_list1}}'.split(',');
+        var doctorCount1 = parseInt($(this).attr("count"));
+        var doctorCount2 = parseInt($(this).attr("count"));
+        var countD = parseInt($(this).attr("count")) + 1;
+        var VisitedCount = 0;
+
+        listL = mylistL.length;
+        var visitField = document.getElementById("pharmacy_visits_" + doctorId );
+        var doctorVisits = parseInt($(visitField).attr("visits"));
+        console.log(parseInt(doctorId));
+        console.log('visitField', visitField);
+        console.log('customerVisits', doctorVisits);
+        console.log(first_date);
+        console.log('first_date', first_date);
+        console.log('date_list1888', '{{date_list1}}');
+        var urlV = $("#VisitsForm").attr("data-check-visits-count-url");
+        $.ajax({
+            async: false,
+            url: urlV,
+            data: {
+                'doctor': parseInt(doctorId),
+                'source': "pharmacy",
+                'arr_value': "{{date_list1}}",
+            },
+                success: function (data) {
+                    $("#id_customer").html(data);
+                    console.log('VisitedCount ',data);
+
+                    VisitedCount = data.visited_count;
+                    console.log('VisitedCount ',VisitedCount);
+                }
+         });
+        var url = $("#VisitsForm").attr("data-visits-url");
+        var i = 0;
+        $.ajax({
+            async: false,
+            url: url,
+            data: {
+                'doctor': parseInt(doctorId),
+                'date_p': first_date,
+                'source': "pharmacy",
+                'arr_value': "{{date_list1}}",
+            },
+                success: function (data) {
+                    $("#id_customer").html(data);
+                    countD1 = data[0].cust_count
+                    date_to_add = data[0].datetoadd
+                    console.log('count ' + countD1);
+                    console.log('dates_count ' + dates_count);
+                    console.log('customerVisits ' + doctorVisits);
+                    var DateAdd = document.createTextNode(date_to_add);
+                    if (dates_count >= countD) {
+                        if (doctorVisits <= VisitedCount) {
+                            Swal.fire({
+                              title: 'Are you sure?',
+                              text: "You are exceeding the number of visits allowed!",
+                              type: 'warning',
+                              showCancelButton: true,
+                              confirmButtonColor: '#3085d6',
+                              cancelButtonColor: '#d33',
+                              confirmButtonText: 'Yes, add new!'
+                            }).then((result) => {
+                                if (result.value) {
+                                    if (data[i].added == false) {
+                                        console.log(data[i]);
+                                        console.log(data[i].id);
+                                        console.log(data[i].date_p);
+                                        console.log(data[i].pharmacy);
+                                        console.log(data[i].user);
+                                        console.log(data[i].added);
+                                        var DocId = data[i].id.toString()
+                                        console.log(DocId);
+
+
+                                        $("#arr_value_" + DocId ).val(data[i].date_p);
+                                        let tog = document.createElement("i");
+                                        tog.setAttribute('id', 'tog_pha_r_date_' + data[i].date_p + '_' + DocId);
+                                        tog.setAttribute('name', DocId);
+                                        tog.setAttribute('class', 'mdi mdi-checkbox-blank-circle');
+                                        tog.setAttribute('style', 'color: red;');
+
+                                        let cell = document.createElement("span");
+                                        cell.setAttribute('id', 'pha_r_date_' + data[i].date_p + '_' + DocId);
+                                        cell.setAttribute('name', DocId);
+
+                                        let remove_e = document.createElement("button");
+                                        remove_e.setAttribute('id', data[i].date_p + '_' + DocId);
+                                        remove_e.setAttribute('class', 'btn btn-link');
+                                        remove_e.setAttribute('idd', data[i].date_p);
+                                        remove_e.setAttribute('dateId', 'pha_r_date_' + data[i].date_p + '_' + DocId);
+                                        remove_e.setAttribute('name', DocId);
+                                        remove_e.classList.add('remove_pha_d');
+                                        remove_e.setAttribute('date_pha_r', data[i].date_p + '_' + DocId);
+                                        remove_e.setAttribute('type','button');
+                                        remove_e.setAttribute('value',date_to_add);
+
+                                        remove_e.appendChild(DateAdd);
+
+                                        document.getElementById("pharmacy_n_r_" + DocId ).appendChild(tog);
+                                        document.getElementById("pharmacy_n_r_" + DocId ).appendChild(cell);
+                                        document.getElementById("pharmacy_n_r_" + DocId ).appendChild(remove_e);
+                                        newf.currentTarget.setAttribute('count', countD);
+                                        $("[allow=true]").first().attr("allow", false);
+                                    }
+                                }
+                            })
+                    }else{
+                        console.log(data[i].added);
+                                    if (data[i].added == false) {
+                                        console.log(data[i]);
+                                        console.log(data[i].id);
+                                        console.log(data[i].date_p);
+                                        console.log(data[i].pharmacy);
+                                        console.log(data[i].user);
+                                        console.log(data[i].added);
+                                        var DocId = data[i].id.toString()
+                                        console.log(DocId);
+
+
+                                        $("#arr_value_" + DocId ).val(data[i].date_p);
+                                        let tog = document.createElement("i");
+                                        tog.setAttribute('id', 'tog_pha_r_date_' + data[i].date_p + '_' + DocId);
+                                        tog.setAttribute('name', DocId);
+                                        tog.setAttribute('class', 'mdi mdi-checkbox-blank-circle');
+                                        tog.setAttribute('style', 'color: orange;');
+
+                                        let cell = document.createElement("span");
+                                        cell.setAttribute('id', 'pha_r_date_' + data[i].date_p + '_' + DocId);
+                                        cell.setAttribute('name', DocId);
+
+                                        let remove_e = document.createElement("button");
+                                        remove_e.setAttribute('id', data[i].date_p + '_' + DocId);
+                                        remove_e.setAttribute('class', 'btn btn-link');
+                                        remove_e.setAttribute('idd', data[i].date_p);
+                                        remove_e.setAttribute('dateId', 'pha_r_date_' + data[i].date_p + '_' + DocId);
+                                        remove_e.setAttribute('name', DocId);
+                                        remove_e.classList.add('remove_pha_d');
+                                        remove_e.setAttribute('date_pha_r', data[i].date_p + '_' + DocId);
+                                        remove_e.setAttribute('type','button');
+                                        remove_e.setAttribute('value',date_to_add);
+
+                                        remove_e.appendChild(DateAdd);
+
+
+                                        document.getElementById("pharmacy_n_r_" + DocId ).appendChild(tog);
+                                        document.getElementById("pharmacy_n_r_" + DocId ).appendChild(cell);
+                                        document.getElementById("pharmacy_n_r_" + DocId ).appendChild(remove_e);
+                                        newf.currentTarget.setAttribute('count', countD);
+                                        $("[allow=true]").first().attr("allow", false);
+                                    }
+                    }
+                }
+            }
+        });
+                    var url = $("#VisitsForm").attr("data-visits-true-url");
+                    $.ajax({
+                        async: false,
+                        url: url,
+                        data: {
+                            'doctor': parseInt(doctorId),
+                            'date_p': first_date,
+                            'source': "pharmacy",
+                            },
+                            success: function (data) {
+                                $("#id_customer").html(data);
+                            }
+                    });
+    });
+    $(document).on('click', '.remove_d', function () {
+        var doctorId = $(this).attr("name");
+        var doctorfield = document.getElementById("doctor_n_" + doctorId );
+        doctor_r_date = $(this).attr("id");
+        doctor_r_date1 = $(this).attr("idd");
+        var doctorCount1 = parseInt($(doctorfield).attr("count"));
+        var doctorCount = parseInt($(doctorfield).attr("count")) - 1;
+        myDeletedlist.push(doctor_r_date1);
+        myDeletedlist.sort();
+        mylist.splice( mylist.indexOf(doctor_r_date1), 1 );
+        document.getElementById("doctor_n_" + doctorId ).setAttribute("count", doctorCount.toString());
+        document.getElementById(doctor_r_date).remove();
+        document.getElementById("doc_r_date_" + doctor_r_date).remove();
+        document.getElementById("tog_r_date_" + doctor_r_date).remove();
+            if (myDeletedlist.length == 0 ){
+                myDeletedlist = [];
+            }
+                        var url = $("#VisitsForm").attr("data-delete-visits-url");
+                        $.ajax({
+                            async: false,
+                            url: url,
+                            data: {
+                                'doctor': parseInt(doctorId),
+                                'date_p': doctor_r_date1,
+                                'source': "doctor",
+                                },
+                                success: function (data) {
+                                    $("#id_customer").html(data);
+                            }
+                        });
+
+
+   });
+    $(document).on('click', '.remove_cust_d', function () {
+
+        var doctorId = $(this).attr("name");
+        var CustomerId = $(this).attr("name");
+        var Customerfield = document.getElementById("customer_n_" + CustomerId );
+        Customer_r_date = $(this).attr("id");
+        Customer_r_date1 = $(this).attr("idd");
+        var CustomerCount1 = parseInt($(Customerfield).attr("count"));
+        var CustomerCount = parseInt($(Customerfield).attr("count")) - 1;
+        myDeletedlist.push(Customer_r_date1);
+        myDeletedlist.sort();
+        mylist.splice( mylist.indexOf(Customer_r_date1), 1 );
+        document.getElementById("customer_n_" + CustomerId ).setAttribute("count", CustomerCount.toString());
+        document.getElementById(Customer_r_date).remove();
+        document.getElementById("cust_r_date_" + Customer_r_date).remove();
+        document.getElementById("tog_cust_r_date_" + Customer_r_date).remove();
+        console.log(Customer_r_date1);
+            if (myDeletedlist.length == 0 ){
+                myDeletedlist = [];
+            }
+                        var url = $("#VisitsForm").attr("data-delete-visits-url");
+                        $.ajax({
+                            async: false,
+                            url: url,
+                            data: {
+                                'doctor': parseInt(doctorId),
+                                'date_p': Customer_r_date1,
+                                'source': "customer",
+                                },
+                                success: function (data) {
+                                    $("#id_customer").html(data);
+                            }
+                        });
+
+   });
+    $(document).on('click', '.remove_pha_d', function () {
+
+        var doctorId = $(this).attr("name");
+        var CustomerId = $(this).attr("name");
+        var Customerfield = document.getElementById("pharmacy_n_" + CustomerId );
+        Customer_r_date = $(this).attr("id");
+        Pharmacy_r_date1 = $(this).attr("idd");
+        var CustomerCount1 = parseInt($(Customerfield).attr("count"));
+        var CustomerCount = parseInt($(Customerfield).attr("count")) - 1;
+        myDeletedlist.push(Pharmacy_r_date1);
+        myDeletedlist.sort();
+        mylist.splice( mylist.indexOf(Pharmacy_r_date1), 1 );
+        document.getElementById("pharmacy_n_" + CustomerId ).setAttribute("count", CustomerCount.toString());
+        document.getElementById(Customer_r_date).remove();
+        document.getElementById("pha_r_date_" + Customer_r_date).remove();
+        document.getElementById("tog_pha_r_date_" + Customer_r_date).remove();
+        console.log(Pharmacy_r_date1);
+            if (myDeletedlist.length == 0 ){
+                myDeletedlist = [];
+            }
+                        var url = $("#VisitsForm").attr("data-delete-visits-url");
+                        $.ajax({
+                            async: false,
+                            url: url,
+                            data: {
+                                'doctor': parseInt(doctorId),
+                                'date_p': Pharmacy_r_date1,
+                                'source': "pharmacy",
+                                },
+                                success: function (data) {
+                                    $("#id_customer").html(data);
+                            }
+                        });
+
+   });
+
+
+
+
+</script>
+<script>
+</script>
+
+<style>
+.card-header:first-child {
+    height: 28px !important;
+}
+h5.card-title.mb-0.text-white {
+    line-height: 0 !important;
+}
+.card-widgets {
+    line-height: 0 !important;
+}
+.card-widgets>a {
+    line-height: 0px !important;
+}
+button.btn.btn-blue.btn-rounded.waves-effect.waves-light {
+    width: 30px;
+    height: 30px;
+    padding: 10px 7px;
+    border-radius: 23px;
+    font-size: 15px;
+    line-height: 0.33;
+}
+input#filter-title {
+    background-color: transparent;
+    border: 0px;
+    padding: 0px;
+    color: white;
+    margin-top: -8px !important;
+}
+input#cust-filter-title {
+    background-color: transparent;
+    border: 0px;
+    padding: 0px;
+    color: white;
+    margin-top: -8px !important;
+}
+</style>
+{% endblock %}

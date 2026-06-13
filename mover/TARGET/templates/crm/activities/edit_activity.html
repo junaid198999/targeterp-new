@@ -1,0 +1,328 @@
+{% extends "auth_base.html" %}
+{% load i18n %}
+{% load widget_tweaks %}
+{% load crispy_forms_tags %}
+{% block content %}
+<link href="/static/libs/select2/select2.min.css" rel="stylesheet" />
+{% comment %}
+<link href="/static/libs/bootstrap-datepicker/bootstrap-datepicker.min.css" rel="stylesheet" type="text/css" />
+{% endcomment %}
+
+<div class="container-fluid">
+    <!-- start page title -->
+    <div class="row">
+        <div class="col-12">
+            <div class="page-title-box">
+                <h4 class="page-title">{% trans "Update Activity" %}</h4>
+            </div>
+        </div>
+    </div>
+    <head>
+        <meta charset="utf-8" />
+        <title>activity_form</title>
+    </head>
+    <form id="ActivityForm" action="" method="post">
+        {% csrf_token %}
+        <div class="{% if form.non_field_errors %}invalid{% endif %} ">
+          {% if form.non_field_errors %}
+            {{ error }}
+            {% endif %}
+        </div>
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="card">
+                    <div class="card-header bg-warning py-3 text-white" data-toggle="collapse" href="#cardCollpase1" role="button" aria-expanded="false" aria-controls="cardCollpase1">
+                            <div class="card-widgets">
+                                <a data-toggle="collapse" href="#cardCollpase1" role="button" aria-expanded="false" aria-controls="cardCollpase1"><i class="mdi mdi-minus"></i></a>
+                            </div>
+                            <div class="card-title mb-0 text-white" style="font-size:13, font-weight:500;line-height: 0px !important">{% trans "BASIC" %}</div>
+                    </div>
+                    <div class="card-body">
+                        <div id="cardCollpase1" class="collapse pt-3 show">
+
+                            <div class="row">
+                                <div class="form-group col-md-6 mb-0">
+                                    <div class="row">
+                                        <label class="col-3 col-form-label" style="padding-left: 30px; font-weight: 700;">{{form.subject.label}}:</label>
+                                        <div class="col-8">
+                                            {{ form.subject|as_crispy_field }}
+                                            <div class="{% if form.subject.errors %} invalid{% endif %}">
+                                                {% if error in form.subject.errors %}
+                                                    <p class="help-block">{{ error }}</p>
+                                                    {% endif %}
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-group col-md-6 mb-0">
+                                    <div class="row">
+                                        <label class="col-3 col-form-label" style="font-weight: 700;">{{form.status.label}}:</label>
+                                        <div class="col-8">
+                                            {{ form.status|as_crispy_field }}
+                                            <div class="{% if form.status.errors %} invalid{% endif %}">
+                                                {% if error in form.status.errors %}
+                                                    <p class="help-block">{{ error }}</p>
+                                                    {% endif %}
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="form-group col-md-6 mb-0">
+                                    <div class="row">
+                                        <label class="col-3 col-form-label" style="padding-left: 30px; font-weight: 700;">{{form.startdate.label}}:</label>
+                                        <div class="col-4">
+                                             <input id="id_startdate" name="startdate" type="date" class="form-control" data-value="{{form.startdate}}
+                                        </div>
+                                        <div class="col-1">
+                                            <select name="h_starttime" class="form-control" id="id_h_starttime">
+                                                    <option value="0">00</option><option value="1">01</option><option value="2">02</option><option value="3">03</option>
+                                                    <option value="4">04</option><option value="5">05</option><option value="6">06</option><option value="7">07</option>
+                                                    <option value="8">08</option><option value="9">09</option><option value="10">10</option><option value="11">11</option>
+                                                    <option value="12">12</option><option value="13">13</option><option value="14">14</option><option value="15">15</option>
+                                                    <option value="16">16</option><option value="17">17</option><option value="18">18</option><option value="19">19</option>
+                                                    <option value="20">20</option><option value="21">21</option><option value="22">22</option><option value="23">23</option>
+                                            </select>
+                                        </div>
+                                        <div class="col-1">
+                                            <select name="m_starttime" class="form-control" id="id_m_starttime">
+                                                    <option value="0">00</option><option value="1">15</option><option value="2">30</option><option value="3">45</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="form-group col-md-6 mb-0">
+                                    <div class="row">
+                                            <label class="col-3 col-form-label" style="font-weight: 700;">{% trans "Source" %}:</label>
+                                            <div class="form-group col-md-3 mb-0">
+                                                <div id="customer_type_div">
+                                                    {{ form.source|as_crispy_field }}
+                                                </div>
+                                            </div>
+                                            <div class="form-group col-md-5 mb-0">
+                                                <div hidden id="customer_select">
+                                                    <select name="customer" id="id_customer" class="form-control">
+                                                            <option value="">---------</option>
+                                                            {% for Customer in customers %}
+                                                                <option {% if form.instance.customer.id == Customer.id %} selected {% endif %} value="{{ Customer.id }}">{{ Customer.name }}</option>
+                                                            {% endfor %}
+                                                    </select>
+                                                </div>
+                                                <div hidden id="lead_select">
+                                                    <select name="lead" id="id_lead" class="form-control">
+                                                            <option value="">---------</option>
+                                                            {% for Lead in leads %}
+                                                                <option {% if form.instance.lead.id == Lead.id %} selected {% endif %} value="{{ Lead.id }}">{{ Lead.name }}</option>
+                                                            {% endfor %}
+                                                    </select>
+                                                </div>
+                                                <div hidden id="opportunity_select">
+                                                    <select name="opportunity" id="id_opportunity" class="form-control">
+                                                            <option value="">---------</option>
+                                                            {% for Opportunity in opportunities %}
+                                                                <option {% if form.instance.opportunity.id == Lead.id %} selected {% endif %} value="{{ Opportunity.id }}">{{ Opportunity.name }}</option>
+                                                            {% endfor %}
+                                                    </select>
+                                                </div>
+                                            </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="form-group col-md-6 mb-0">
+                                    <div class="row">
+                                        <label class="col-3 col-form-label" style="padding-left: 30px; font-weight: 700;">{{form.duedate.label}}:</label>
+                                        <div class="col-4">
+                                             <input id="id_duedate" name="duedate" type="date" class="form-control" data-value="{{form.duedate}}
+                                        </div>
+                                        <div class="col-1">
+                                            <select name="h_endtime" class="form-control" id="id_h_endtime">
+                                                    <option value="0">00</option><option value="1">01</option><option value="2">02</option><option value="3">03</option>
+                                                    <option value="4">04</option><option value="5">05</option><option value="6">06</option><option value="7">07</option>
+                                                    <option value="8">08</option><option value="9">09</option><option value="10">10</option><option value="11">11</option>
+                                                    <option value="12">12</option><option value="13">13</option><option value="14">14</option><option value="15">15</option>
+                                                    <option value="16">16</option><option value="17">17</option><option value="18">18</option><option value="19">19</option>
+                                                    <option value="20">20</option><option value="21">21</option><option value="22">22</option><option value="23">23</option>
+                                            </select>
+                                        </div>
+                                        <div class="col-1">
+                                            <select name="m_endtime" class="form-control" id="id_m_endtime">
+                                                    <option value="0">00</option><option value="1">15</option><option value="2">30</option><option value="3">45</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-group col-md-6 mb-0">
+                                    <div class="row">
+                                        <label class="col-3 col-form-label" style="font-weight: 700;">{{form.priority.label}}:</label>
+                                        <div class="col-8">
+                                            {{ form.priority|as_crispy_field }}
+                                            <div class="{% if form.priority.errors %} invalid{% endif %}">
+                                                {% if error in form.priority.errors %}
+                                                    <p class="help-block">{{ error }}</p>
+                                                    {% endif %}
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </div>
+
+                            <div class="row">
+                                <div class="form-group col-md-6 mb-0">
+                                    <div class="row">
+                                        <label class="col-3 col-form-label" style="padding-left: 30px; font-weight: 700;">{{form.description.label}}:</label>
+                                        <div class="col-8">
+                                            {{ form.description|as_crispy_field }}
+                                            <div class="{% if form.description.errors %} invalid{% endif %}">
+                                                {% if error in form.description.errors %}
+                                                    <p class="help-block">{{ error }}</p>
+                                                    {% endif %}
+                                            </div>
+                                        </div>
+                                        <div class="col-1">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="card">
+                    <div class="card-header bg-warning py-3 text-white" data-toggle="collapse" href="#cardCollpase3" role="button" aria-expanded="false" aria-controls="cardCollpase3">
+                            <div class="card-widgets">
+                                <a data-toggle="collapse" href="#cardCollpase3" role="button" aria-expanded="false" aria-controls="cardCollpase3"><i class="mdi mdi-minus"></i></a>
+                            </div>
+                            <div class="card-title mb-0 text-white" style="font-size:13, font-weight:500;line-height: 0px !important">{% trans "OTHER" %}</div>
+                    </div>
+                    <div class="card-body">
+                        <div id="cardCollpase3" class="collapse pt-3 show">
+                            <div class="row">
+                                <div class="form-group col-md-6 mb-0">
+                                    <div class="row">
+                                        <label class="col-3 col-form-label" style="padding-left: 30px; font-weight: 700;">{{form.salesman.label}}:</label>
+                                        <div class="col-8">
+                                            <div class="col-8">
+                                            {% if request.user.is_superuser %}
+                                                <div>{{ form.salesman}}</div>
+                                            {% else %}
+                                                <div hidden>{{ form.salesman}}</div>
+                                                <select name="salesman1" class="form-control" id="id_salesman1" style="width:100%" disabled data-value="{{form.salesman}}
+                                                </select>
+                                            {% endif %}
+                                            <div class="{% if form.salesman.errors %} invalid{% endif %}">
+                                                {% if error in form.salesman.errors %}
+                                                    <p class="help-block">{{ error }}</p>
+                                                    {% endif %}
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
+            <div class="modal-footer">
+                <a class="btn btn-secondary waves-effect" href="{% url 'crm:activities' %}">{% trans "Cancel" %}</a>
+                <input type="submit" class="submit-btn btn-danger btn btn-primary" value="{% trans "Save" %}"/>
+            </div>
+
+    </form>
+
+</div>
+
+{% endblock %}
+
+{% block extra_javascript %}
+{% comment %}
+<script src="/static/libs/moment/moment.min.js"></script>
+<script src="/static/libs/bootstrap-datepicker/bootstrap-datepicker.min.js"></script>
+{% endcomment %}
+<script src="/static/libs/select2/select2.min.js"></script>
+
+
+<script type="text/javascript">
+
+        $('#id_customer').select2();
+        $('#id_salesman').select2();
+        $('#id_lead').select2();
+
+        $("#id_source").change(function () {
+            if ($("#id_source").val() == 2) {
+                $("#customer_select").attr('hidden',false)
+                $("#lead_select").attr('hidden',true)
+                $("#id_lead").val('').trigger('change');
+                $("#opportunity_select").attr('hidden',true)
+                $("#id_opportunity").val('').trigger('change');
+            } else if ($("#id_source").val() == 1) {
+                $("#lead_select").attr('hidden',false)
+                $("#customer_select").attr('hidden',true)
+                $("#id_customer").val('').trigger('change');
+                $("#opportunity_select").attr('hidden',true)
+                $("#id_opportunity").val('').trigger('change');
+            } else if ($("#id_source").val() == 3) {
+                $("#opportunity_select").attr('hidden',false)
+                $("#customer_select").attr('hidden',true)
+                $("#id_customer").val('').trigger('change');
+                $("#lead_select").attr('hidden',true)
+                $("#id_lead").val('').trigger('change');
+            } else {
+                $("#lead_select").attr('hidden',true)
+                $("#customer_select").attr('hidden',true)
+                $("#opportunity_select").attr('hidden',true)
+                $("#id_lead").val('').trigger('change');
+                $("#id_customer").val('').trigger('change');
+                $("#id_opportunity").val('').trigger('change');
+
+            }
+
+        });
+
+document.addEventListener("DOMContentLoaded", function(){
+    if ($("#id_source").val() == 2) {
+        $("#customer_select").attr('hidden',false)
+    } else if ($("#id_source").val() == 1) {
+        $("#lead_select").attr('hidden',false)
+    } else if ($("#id_source").val() == 3) {
+        $("#opportunity_select").attr('hidden',false)
+    }
+});
+
+{% comment %}
+      $(function () {
+        $("#datetimepicker1").datepicker({
+            format: 'yyyy/mm/dd',
+        });
+      });
+{% endcomment %}
+
+</script>
+
+<style>
+.card-header:first-child {
+    height: 28px !important;
+}
+h5.card-title.mb-0.text-white {
+    line-height: 0 !important;
+}
+.card-widgets {
+    line-height: 0 !important;
+}
+.card-widgets>a {
+    line-height: 0px !important;
+}
+</style>
+{% endblock %}

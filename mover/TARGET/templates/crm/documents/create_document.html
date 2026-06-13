@@ -1,0 +1,251 @@
+{% extends "auth_base.html" %}
+{% load i18n %}
+{% load widget_tweaks %}
+{% load crispy_forms_tags %}
+{% block content %}
+<link href="/static/libs/select2/select2.min.css" rel="stylesheet" />
+<link href="/static/libs/dropify/dropify.min.css" rel="stylesheet">
+<div class="container-fluid">
+    <!-- start page title -->
+    <div class="row">
+        <div class="col-12">
+            <div class="page-title-box">
+                <h4 class="page-title">{% trans "Create Document" %}</h4>
+            </div>
+        </div>
+    </div>
+    <head>
+        <meta charset="utf-8" />
+        <title>opportunity_form</title>
+    </head>
+    <form id="ActualVisitForm" action="" method="post" data-cust-visit-feedback-url="{% url 'crm:ajax_load_cust_visit_feedback' %}" data-doct-visit-feedback-url="{% url 'crm:ajax_load_doct_visit_feedback' %}" data-salesman-url="{% url 'crm:ajax_load_saleman' %}" enctype="multipart/form-data">
+        {% csrf_token %}
+        <div class="{% if form.non_field_errors %}invalid{% endif %} ">
+          {% if form.non_field_errors %}
+            {{ error }}
+            {% endif %}
+        </div>
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="card">
+                    <div class="card-header bg-blue py-3 text-white" data-toggle="collapse" href="#cardCollpase1" role="button" aria-expanded="false" aria-controls="cardCollpase1">
+                            <div class="card-widgets">
+                                <a data-toggle="collapse" href="#cardCollpase1" role="button" aria-expanded="false" aria-controls="cardCollpase1"><i class="mdi mdi-minus"></i></a>
+                            </div>
+                            <div class="card-title mb-0 text-white" style="font-size:13, font-weight:500;line-height: 0px !important">{% trans "BASIC INFORMATION" %}</div>
+                    </div>
+                    <div class="card-body">
+                        <div id="cardCollpase1" class="collapse pt-3 show">
+
+                            <div class="row">
+                                <div class="form-group col-md-6 mb-0">
+                                    <div class="row">
+                                        <label class="col-3 col-form-label" style="padding-left: 30px; font-weight: 700;">{% trans "Title" %}:</label>
+                                        <div class="form-group col-md-9 mb-0">
+                                            {{ form.title|as_crispy_field }}
+                                        </div>
+                                        <div class="{% if form.title.errors %} invalid{% endif %}">
+                                            {% if error in form.title.errors %}
+                                                <p class="help-block">{{ error }}</p>
+                                            {% endif %}
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-group col-md-6 mb-0">
+                                    <div class="row">
+                                        <label class="col-3 col-form-label" style="font-weight: 700;">{% trans "Assigned To" %}:</label>
+                                        <div class="form-group col-md-9 mb-0">
+                                            {{ form.channel|as_crispy_field }}
+                                        </div>
+                                        <div class="{% if form.channel.errors %} invalid{% endif %}">
+                                            {% if error in form.channel.errors %}
+                                                <p class="help-block">{{ error }}</p>
+                                            {% endif %}
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="card">
+                    <div class="card-header bg-blue py-3 text-white" data-toggle="collapse" href="#cardCollpase3" role="button" aria-expanded="false" aria-controls="cardCollpase3">
+                            <div class="card-widgets">
+                                <a data-toggle="collapse" href="#cardCollpase3" role="button" aria-expanded="false" aria-controls="cardCollpase3"><i class="mdi mdi-minus"></i></a>
+                            </div>
+                            <div class="card-title mb-0 text-white" style="font-size:13, font-weight:500;line-height: 0px !important">{% trans "DESCRIPTION" %}</div>
+                    </div>
+                    <div class="card-body">
+                        <div id="cardCollpase3" class="collapse pt-3 show">
+                            <div class="row">
+                                <div class="form-group col-md-12 mb-0">
+                                    <div class="col-12">
+                                        {{ form.note|as_crispy_field }}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="card">
+                    <div class="card-header bg-blue py-3 text-white" data-toggle="collapse" href="#cardCollpase4" role="button" aria-expanded="false" aria-controls="cardCollpase4">
+                            <div class="card-widgets">
+                                <a data-toggle="collapse" href="#cardCollpase4" role="button" aria-expanded="false" aria-controls="cardCollpase4"><i class="mdi mdi-minus"></i></a>
+                            </div>
+                            <div class="card-title mb-0 text-white" style="font-size:13, font-weight:500;line-height: 0px !important">{% trans "FILE DETAILS" %}</div>
+                    </div>
+                    <div class="card-body">
+                        <div id="cardCollpase4" class="collapse pt-3 show">
+                            <div class="row">
+                                <div class="form-group col-md-6 mb-0">
+                                    <div class="row">
+                                        <label class="col-3 col-form-label" style="padding-left: 30px; font-weight: 700;">{{form.url.label}}:</label>
+                                        <div class="col-8">
+                                            {{ form.url|as_crispy_field }}
+                                            <div class="{% if form.url.errors %} invalid{% endif %}">
+                                                {% if error in form.url.errors %}
+                                                    <p class="help-block">{{ error }}</p>
+                                                    {% endif %}
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-group col-md-6 mb-0">
+                                    <div class="row">
+                                        <label class="col-3 col-form-label" style="font-weight: 700;">{{form.active.label}}:</label>
+                                        <div class="col-2">
+                                            <input style="width: 50%;" type="checkbox" class="form-control" id="id_active" name="active" data-value="{{ form.active }}
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="form-group col-md-6 mb-0">
+                                    <div class="row">
+                                        <label class="col-3 col-form-label" style="padding-left: 30px; font-weight: 700;">{{form.attachment.label}}:</label>
+                                        <div class="col-8">
+                                            <input type="file" id="id_attachment" name="attachment" class="dropify" data-height="110"/>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+            <div class="modal-footer">
+                <a class="btn btn-secondary waves-effect" href="{% url 'crm:documents' %}">{% trans "Cancel" %}</a>
+                <input type="submit" class="submit-btn btn-danger btn btn-primary" value="{% trans "Create" %}"/>
+            </div>
+
+    </form>
+
+</div>
+
+{% endblock %}
+
+{% block extra_javascript %}
+<script src="/static/libs/select2/select2.min.js"></script>
+<script src="/static/libs/dropify/dropify.min.js"></script>
+<script src="https://cdn.tiny.cloud/1/whfwhidllwmxd1u8haqt3o4tqeynl6sf28x45wjvoyb3z91c/tinymce/5/tinymce.min.js" referrerpolicy="origin"></script>
+
+  <script>tinymce.init({selector:'textarea'});</script>
+
+<script type="text/javascript">
+        {% if request.user.is_superuser %}
+
+        {% else %}
+            $(`select[name="salesman"]`).html(
+            `<option selected value="{{salesmanid}}">{{salesmanname}}</option>`
+            );
+        {% endif %}
+
+        $('#id_channel').select2();
+        $('#id_user').select2();
+
+    $("#id_customer").change(function () {
+          var url = $("#ActualVisitForm").attr("data-cust-visit-feedback-url");
+          var customerId = $(this).val();
+          $.ajax({
+                url: url,
+                data: {
+                    'customer': customerId
+                    },
+                    success: function (data) {
+                        console.log(data);
+                        $("#last_feedback").val(data);
+                    },
+                    error: function () {
+                        $("#last_feedback").val('');
+                    }
+          });
+    });
+    $("#id_doctor").change(function () {
+          var url = $("#ActualVisitForm").attr("data-doct-visit-feedback-url");
+          var doctorId = $(this).val();
+          $.ajax({
+                url: url,
+                data: {
+                    'doctor': doctorId
+                    },
+                    success: function (data) {
+                        console.log(data);
+                        $("#last_feedback").val(data);
+                    },
+                    error: function () {
+                        $("#last_feedback").val('');
+                    }
+          });
+    });
+
+    $(document).ready(function(){
+        // Basic
+        $('.dropify').dropify();
+
+        $('.dropify-fr').dropify({
+            messages: {
+                default: 'Glissez-déposez un fichier ici ou cliquez',
+                replace: 'Glissez-déposez un fichier ou cliquez pour remplacer',
+                remove:  'Supprimer',
+                error:   'Désolé, le fichier trop volumineux'
+            }
+        });
+
+
+    });
+
+{% comment %}
+      $(function () {
+        $("#datetimepicker1").datepicker({
+            format: 'yyyy/mm/dd',
+        });
+      });
+{% endcomment %}
+
+</script>
+
+<style>
+.card-header:first-child {
+    height: 28px !important;
+}
+h5.card-title.mb-0.text-white {
+    line-height: 0 !important;
+}
+.card-widgets {
+    line-height: 0 !important;
+}
+.card-widgets>a {
+    line-height: 0px !important;
+}
+</style>
+{% endblock %}

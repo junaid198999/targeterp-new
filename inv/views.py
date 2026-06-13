@@ -17,7 +17,6 @@ from django.views.generic import TemplateView, DetailView, FormView
 
 import _datetime
 from . import signals
-#from . import signals
 from django.apps import apps
 
 from django.views.generic.edit import CreateView
@@ -28,6 +27,10 @@ from django.http import HttpResponse
 from django.contrib import messages
 from django.core.exceptions import ValidationError
 from itertools import chain
+#02-05-2022
+from django.views.decorators.csrf import csrf_exempt
+import json
+from datetime import date
 
 driver = None
 
@@ -63,12 +66,11 @@ def load_accountbalance(request):
         """
     strsql = strsql.replace('accounttypeid', accounttype_id)
     strsql = strsql.replace('accountid', account_id)
-    print(strsql)
     strcursor = connection.cursor()
     strcursor.execute(strsql)
     strrow = strcursor.fetchall()
     accountbalance = strrow[0][0]
-    print(accountbalance)
+ 
     return render(request, 'inv/dropdownlist/accountbalance_dropdown_value.html', {'accountbalance':accountbalance,'credit': 300 } )
 
 
@@ -108,23 +110,51 @@ def load_itembarcode(request):
     itembarcode = ItemsUOM.objects.filter(item_id=item_id,id=uom_id).order_by('pk').values('barcode')
     itmbc=list(itembarcode)
     return render(request, 'inv/dropdownlist/itembarcode_dropdown_value.html', {'barcodes': itmbc})
-
+ 
 ######### End Load Barcode
 
+###########start agency tax #########
+def load_agencytaxvalue(request):
+    from django.http import JsonResponse
+    agency_id = request.GET.get('agency')
+    taxgroupsales_ids = Agencies.objects.filter(id=agency_id).values('taxgroupsales_id','taxgroupsalesincludedprice')
+    # # print(taxgroupsale_ids)
+    taxgrouppurchasesids = Agencies.objects.filter(id=agency_id).values('taxgrouppurchases_id','taxgrouppurchasesincludedprice')
+    taxgroupsales_idslst = list(taxgroupsales_ids)
+    taxgroupsalesid = taxgroupsales_idslst[0]['taxgroupsales_id']
+    taxgroupsalesincludedprice = taxgroupsales_idslst[0]['taxgroupsalesincludedprice']
+    taxids = TaxesGroupsLine.objects.all().filter(taxgroup_id=taxgroupsalesid).values('tax_id','taxgroup_id')
+    taxidslst = list(taxids)
+    taxid=taxidslst[0]['tax_id']
+    taxvalue = TaxesLine.objects.all().filter(tax_id=taxid).values('value').first()
+
+    if taxgroupsalesincludedprice == True:
+        taxsign = -1
+    else:
+        taxsign = 1
+    tax_value = "{:.2f}".format(taxsign * taxvalue['value'])
+    print("tax_value",tax_value)
+    context = {
+            'message' : tax_value,
+        }
+
+    return HttpResponse(tax_value )
+
+######end agency tax ############
 
 ######### Load Items Tax value
 
 def load_itemtaxvalue(request):
 
     vitem_id = request.GET.get('item')
-    print(vitem_id)
+    # print("vitem_id",vitem_id)
     taxgroupsale_ids = Items.objects.filter(id=vitem_id).values('taxgroupsale_id','taxgroupsaleincludedprice')
-    print(taxgroupsale_ids)
+    # print(taxgroupsale_ids)
 
     taxgroupPurchaseids = Items.objects.filter(id=vitem_id).values('taxgroupPurchase_id','taxgroupPurchaseincludedprice')
 
     taxgroupsale_idslst = list(taxgroupsale_ids)
-    print(taxgroupsale_idslst)
+    # print(taxgroupsale_idslst)
     taxgroupsaleid = taxgroupsale_idslst[0]['taxgroupsale_id']
     taxgroupsaleincludedprice = taxgroupsale_idslst[0]['taxgroupsaleincludedprice']
 
@@ -154,7 +184,6 @@ def load_operation_Details_Info(request):
 
     operationdetinfo = Operations.objects.filter(id=currentoperationtype_id).order_by('pk')
 
-
     soarr = []
     print('kkk')
 
@@ -162,7 +191,8 @@ def load_operation_Details_Info(request):
     if operationdetinfo.count() > 0:
         print('Check Before ')
         for so in operationdetinfo:
-            print(so.operationtype.accounttype.keyid)
+            
+            # print(so.operationtype.accounttype.keyid)
             soarr.append({'operation': so.id, 'accounttypekeyid':so.operationtype.accounttype.keyid,  #'accounttype': so.operationtype__accounttype,
                           #'ledger': so.ledger.code + ' - ' + so.ledger.engname,
                           'ledger': so.ledger ,
@@ -180,28 +210,62 @@ def load_operation_Details_Info(request):
                           #'taxpercent': so.taxpercent, 'taxamount': so.taxamount,
                           #'keyid':so.operationtype__accounttype__keyid,
                          })
-
+       
     else:
         messages.warning(request, 'You have to Post All Old Operations Before Create New one')
             #return request.response
 
-        #print(soarr)
     return render(request, 'inv/dropdownlist/operations_Details_Info.html', {'operationsdetinfo': soarr })
 
 ######### End Load Operation Details Info
 
+######03-05-2022 start
+
+
+@csrf_exempt
+def load_invlocation_Details_Info(request):
+
+    from django.http import JsonResponse
+
+    if request.method == "POST":
+        out_ = request.POST.get('field_val')
+        items = ItemsInventoriesLocations.objects.filter(invlocation_id = out_)
+        item_detail = []
+        for item in items:
+            if item.binlocation != None:
+                items_data = Items.objects.filter(id=item.item_id)
+                # print("items_data",items_data)
+                for itm in items_data:
+                    item_detail.append({'code':itm.code,'engname':itm.engname,'id':itm.id})
+        # print("item_detail",item_detail)
+        binlocationinfo = InventoriesBinLocations.objects.filter(inventlocation=out_).order_by('pk')
+        binlst = []
+        for so in binlocationinfo:
+            binlst.append({'invlocation': so.code,'id':so.id})
+        context = {
+            'message' : binlst,
+            'messages': item_detail
+        }
+
+        return JsonResponse(context)
+
+    else:
+        return HttpResponse('Hello world')
+
+
+####03-05-2022 end
+
 
 ######### Load Operation Line
 def load_operation_line(request):
+
     currentoperationtype_id = request.GET.get('curroptypreid')
     operation_id = request.GET.get('parentopid')
 
     operationlines = OperationsLine.objects.filter(operation_id=operation_id).order_by('pk')
-    #print(operationlines.count())
     alloperationlinesdone = OperationsLine.objects.filter(operation__operationtype_id= currentoperationtype_id ,operation__parent_id=operation_id).exclude (operation__status__keyid= 10004 ).order_by('pk')
     soarr = []
     if alloperationlinesdone.count() == 0:
-        #print(operationlines.count())
         if operationlines.count() > 0:
             for so in operationlines:
                 #alloperationlinesdone = OperationsLine.objects.filter(operation__operationtype_id=currentoperationtype_id).filter(item=so.item_id)
@@ -209,27 +273,50 @@ def load_operation_line(request):
                     operation__operationtype_id=currentoperationtype_id, operation__parent_id=operation_id ,item=so.item_id).exclude(
                     operation__status__keyid=10004).order_by('pk')
 
+                #add 29-04-2022
+                if currentoperationtype_id == 6:
+                    itemqtydone = alloperationlinesdone.aggregate(Sum('remainquantity'))
 
+                    if alloperationlinesdone.count() > 0 :
+                        if itemqtydone['quantity__sum'] is not None:
+                            qtydone = itemqtydone['quantity__sum']
+                            if so.remainquantity > qtydone:
+                                
+                                netqty = so.remainquantity - qtydone
 
-                itemqtydone = alloperationlinesdone.aggregate(Sum('quantity'))
+                                soarr.append({'operation': operation_id,'parent': so.id, 'item_id': so.item_id, 'item_name':  so.item.code + ' - ' + so.item.engname,
+                                            'quantity': netqty , 'itemuom_id' :so.itemuom_id , 'price': so.price , 'taxpercent': so.taxpercent , 'taxamount': so.taxamount ,
+                                            'barcode': so.barcode, 'linetotal' : so.linetotal ,
+                                            'itemuom_name':  so.itemuom.unit.code + ' - ' + str(int(so.itemuom.baseunitfactor)) + ' - ' + so.itemuom.barcode } )
+                                
 
-                if alloperationlinesdone.count() > 0 :
-                    if itemqtydone['quantity__sum'] is not None:
-                        qtydone = itemqtydone['quantity__sum']
-                        if so.quantity > qtydone:
-                            netqty = so.quantity - qtydone
-
-                            soarr.append({'operation': operation_id,'parent': so.id, 'item_id': so.item_id, 'item_name':  so.item.code + ' - ' + so.item.engname,
-                                          'quantity': netqty , 'itemuom_id' :so.itemuom_id , 'price': so.price , 'taxpercent': so.taxpercent , 'taxamount': so.taxamount ,
-                                          'barcode': so.barcode, 'linetotal' : so.linetotal ,
-                                          'itemuom_name':  so.itemuom.unit.code + ' - ' + str(int(so.itemuom.baseunitfactor)) + ' - ' + so.itemuom.barcode } )
+                    else:
+                        soarr.append({'operation': operation_id,'parent': so.id, 'item_id': so.item_id, 'item_name':  so.item.code + ' - ' + so.item.engname,
+                                    'quantity': so.remainquantity , 'itemuom_id' :so.itemuom_id , 'price': so.price , 'taxpercent': so.taxpercent , 'taxamount': so.taxamount ,
+                                    'barcode' : so.barcode , 'linetotal' : so.linetotal ,
+                                    'itemuom_name':  so.itemuom.unit.code + ' - ' + str(int(so.itemuom.baseunitfactor)) + ' - ' + so.itemuom.barcode })
 
                 else:
-                    soarr.append({'operation': operation_id,'parent': so.id, 'item_id': so.item_id, 'item_name':  so.item.code + ' - ' + so.item.engname,
-                                  'quantity': so.quantity , 'itemuom_id' :so.itemuom_id , 'price': so.price , 'taxpercent': so.taxpercent , 'taxamount': so.taxamount ,
-                                  'barcode' : so.barcode , 'linetotal' : so.linetotal ,
-                                  'itemuom_name':  so.itemuom.unit.code + ' - ' + str(int(so.itemuom.baseunitfactor)) + ' - ' + so.itemuom.barcode })
+                    itemqtydone = alloperationlinesdone.aggregate(Sum('quantity'))
 
+                    if alloperationlinesdone.count() > 0 :
+                        if itemqtydone['quantity__sum'] is not None:
+                            qtydone = itemqtydone['quantity__sum']
+                            if so.remainquantity > qtydone:
+                                
+                                netqty = so.quantity - qtydone
+
+                                soarr.append({'operation': operation_id,'parent': so.id, 'item_id': so.item_id, 'item_name':  so.item.code + ' - ' + so.item.engname,
+                                            'quantity': netqty , 'itemuom_id' :so.itemuom_id , 'price': so.price , 'taxpercent': so.taxpercent , 'taxamount': so.taxamount ,
+                                            'barcode': so.barcode, 'linetotal' : so.linetotal ,
+                                            'itemuom_name':  so.itemuom.unit.code + ' - ' + str(int(so.itemuom.baseunitfactor)) + ' - ' + so.itemuom.barcode } )
+                                
+
+                    else:
+                        soarr.append({'operation': operation_id,'parent': so.id, 'item_id': so.item_id, 'item_name':  so.item.code + ' - ' + so.item.engname,
+                                    'quantity': so.quantity , 'itemuom_id' :so.itemuom_id , 'price': so.price , 'taxpercent': so.taxpercent , 'taxamount': so.taxamount ,
+                                    'barcode' : so.barcode , 'linetotal' : so.linetotal ,
+                                    'itemuom_name':  so.itemuom.unit.code + ' - ' + str(int(so.itemuom.baseunitfactor)) + ' - ' + so.itemuom.barcode })
         else:
             messages.warning(request, 'You have to Post All Old Operations Before Create New one')
 
@@ -242,7 +329,6 @@ def load_operation_line(request):
 def load_operation_line_count(request):
     currentoperationtype_id = request.GET.get('curroptypreid')
     operation_id = request.GET.get('parentopid')
-
     operationlines = OperationsLine.objects.filter(operation_id=operation_id).order_by('pk')
     #alloperationlinesdone = OperationsLine.objects.filter(operation__operationtype_id= currentoperationtype_id ).order_by('pk')
     #soarr = []
@@ -262,10 +348,11 @@ def load_operation_line_count(request):
                     operation__status__keyid=10004).order_by('pk')
 
                 #print(alloperationlinesdone.query)
-                itemqtydone = alloperationlinesdone.aggregate(Sum('quantity'))
+                itemqtydone = alloperationlinesdone.aggregate(Sum('remainquantity'))
+
                 if alloperationlinesdone.count() > 0 :
                     if itemqtydone['quantity__sum'] is not None:
-                        if so.quantity == itemqtydone['quantity__sum']:
+                        if so.remainquantity == itemqtydone['quantity__sum']:
                             linescount = linescount - 1
     else:
         messages.warning(request, 'You have to Post All Old Operations Before Create New one')
@@ -311,6 +398,16 @@ class UnitsDeleteView(LoginRequiredMixin, BSModalDeleteView):
     template_name = 'inv/master/delete_units.html'
     success_message = 'Success: Units was deleted.'
     success_url = reverse_lazy('inv:list-units')
+
+def deleteunits(request):
+    Lc=  Units.objects.all()
+    for l in Lc:
+       try:
+            print(l)
+            l.delete()
+       except:
+            print("not deleted connection somwhere")
+    return redirect("/inv/units/")
 ######### End Units
 
 
@@ -347,6 +444,16 @@ class WarehousesDeleteView(LoginRequiredMixin, BSModalDeleteView):
     template_name = 'inv/master/delete_warehouses.html'
     success_message = 'Success: Warehouses was deleted.'
     success_url = reverse_lazy('inv:list-warehouses')
+
+def deletewarehouses(request):
+    Lc= Warehouses.objects.all()
+    for l in Lc:
+       try:
+            print(l)
+            l.delete()
+       except:
+            print("not deleted connection somwhere")
+    return redirect("/inv/warehouses/")
 ######### End Warehouses
 
 
@@ -383,6 +490,17 @@ class StorageMethodsTypesDeleteView(LoginRequiredMixin, BSModalDeleteView):
     template_name = 'inv/master/delete_storagemethodstypes.html'
     success_message = 'Success: Storage Methods Types was deleted.'
     success_url = reverse_lazy('inv:list-storagemethodstypes')
+
+def deletestoragemethodstypes(request):
+    Lc=StorageMethodsTypes.objects.all()
+    for l in Lc:
+       try:
+            print(l)
+            l.delete()
+       except:
+            print("not deleted connection somwhere")
+    return redirect("/inv/storagemethodstypes/")
+
 ######### End StorageMethodsTypes
 
 
@@ -419,6 +537,17 @@ class InventoriesLocationsTypesDeleteView(LoginRequiredMixin, BSModalDeleteView)
     template_name = 'inv/master/delete_inventorieslocationstypes.html'
     success_message = 'Success: Inventorie Location Type was deleted.'
     success_url = reverse_lazy('inv:list-inventorieslocationstypes')
+
+def deleteinventorieslocationstypes(request):
+    Lc= InventoriesLocationsTypes.objects.all()
+    for l in Lc:
+       try:
+            print(l)
+            l.delete()
+       except:
+            print("not deleted connection somwhere")
+    return redirect("/inv/inventorieslocationstypes/")
+    
 ######### End InventoriesLocationsTypes
 
 
@@ -454,6 +583,17 @@ class InventoriesLocationsDeleteView(LoginRequiredMixin, BSModalDeleteView):
     template_name = 'inv/master/delete_inventorieslocations.html'
     success_message = 'Success: Inventorie Location was deleted.'
     success_url = reverse_lazy('inv:list-inventorieslocations')
+
+def deleteinventorieslocations(request):
+    Lc= InventoriesLocations.objects.all()
+    for l in Lc:
+       try:
+            print(l)
+            l.delete()
+       except:
+            print("not deleted connection somwhere")
+    return redirect("/inv/inventorieslocations/")
+    
 ######### End InventoriesLocations
 
 
@@ -465,13 +605,48 @@ class InventoriesBinLocationsListView(LoginRequiredMixin, generic.ListView):
     context_object_name = 'inventoriesbinlocations'
     template_name = 'inv/master/list-inventoriesbinlocations.html'
 
-
 class InventoriesBinLocationsCreateView(LoginRequiredMixin,  BSModalCreateView):
     model = InventoriesBinLocations
     form_class = InventoriesBinLocationsForm
     template_name = 'inv/master/create_inventoriesbinlocations.html'
     success_message = 'Success: Inventorie Bin Location was created.'
     success_url = reverse_lazy('inv:list-inventoriesbinlocations')
+    def form_valid(self, form):
+        if not self.request.is_ajax():
+            inventlocation = form.cleaned_data['inventlocation']
+            location = inventlocation.code
+            floor = form.cleaned_data['floor']
+            zone = form.cleaned_data['zone'] 
+            track = form.cleaned_data['track']
+            shelf = form.cleaned_data['shelf']
+            bin = form.cleaned_data['bin']
+            storagemethod = form.cleaned_data['storagemethod']
+            storage = storagemethod.code
+            store = storage[0]
+        
+            f=int(floor)
+            z=int(zone)
+            t=int(track)
+            s=int(shelf)
+            b=int(bin)
+
+            for floor in range(1,f+1):
+                for zone in range(1,z+1):
+                    for track in range(1,t+1): 
+                        for shelf in range(1,s+1):
+                            for bin in range(1,b+1):
+                                codes = location + '-' + store + '-' + str(floor) + '-' + str(zone) + '-' + str(track) + '-' + str(shelf) + '-' + str(bin)
+                                barcodes = location + '' + store + '' + str(floor) + '' + str(zone) + '' + str(track) + '' + str(shelf) + '' + str(bin)
+                                data =InventoriesBinLocations.objects.filter(code=codes)
+                                datainfo = InventoriesBinLocations(code=codes,barcode=barcodes,inventlocation=inventlocation,floor=floor,
+                                zone=zone,track=track,shelf=shelf,bin=bin,storagemethod=storagemethod)
+                                if len(data) > 0:
+                                    messages.warning(self.request, "This Code Already Exist!!!")
+                                else:
+                                    datainfo.save()
+
+        return redirect('/inv/inventoriesbinlocations')
+
 
 class InventoriesBinLocationsUpdateView(LoginRequiredMixin, BSModalUpdateView):
     model = InventoriesBinLocations
@@ -492,12 +667,27 @@ class InventoriesBinLocationsDeleteView(LoginRequiredMixin, BSModalDeleteView):
     success_message = 'Success: Inventorie Bin Location was deleted.'
     success_url = reverse_lazy('inv:list-inventoriesbinlocations')
 
-    def post(self, request, *args, **kwargs):
+def post(self, request, *args, **kwargs):
+
         try:
+
             return super(InventoriesBinLocationsDeleteView, self).delete(*args, **kwargs)
+
         except:
+
             return render(request, 'inv/master/list-inventoriesbinlocations.html', {"protected_error": "Couldn't be deleted Inventory Bin Loacation because it's already aligned with others"})
 
+
+def deleteinventoriesbinlocations(request):
+    Lc= InventoriesBinLocations.objects.all()
+    for l in Lc:
+       try:
+            print(l)
+            l.delete()
+       except:
+            print("not deleted connection somwhere")
+    return redirect("/inv/inventoriesbinlocations/")
+    
 ######### End InventoriesBinLocations
 
 
@@ -532,6 +722,16 @@ class ItemsTypesDeleteView(LoginRequiredMixin, BSModalDeleteView):
     template_name = 'inv/master/delete_itemstypes.html'
     success_message = 'Success: Items Types was deleted.'
     success_url = reverse_lazy('inv:list-itemstypes')
+
+def deleteitemstypes(request):
+    Lc= ItemsTypes.objects.all()
+    for l in Lc:
+       try:
+            print(l)
+            l.delete()
+       except:
+            print("not deleted connection somwhere")
+    return redirect("/inv/itemstypes/")
 ######### End ItemsTypes
 
 ######### ItemsCategories
@@ -565,6 +765,17 @@ class ItemsCategoriesDeleteView(LoginRequiredMixin, BSModalDeleteView):
     template_name = 'inv/master/delete_itemscategories.html'
     success_message = 'Success: Items Categories was deleted.'
     success_url = reverse_lazy('inv:list-itemscategories')
+
+
+def deleteitemscategories(request):
+    Lc= ItemsCategories.objects.all()
+    for l in Lc:
+       try:
+            print(l)
+            l.delete()
+       except:
+            print("not deleted connection somwhere")
+    return redirect("/inv/itemscategories/")
 ######### End ItemsCategories
 
 
@@ -599,6 +810,16 @@ class ItemsGroupsDeleteView(LoginRequiredMixin, BSModalDeleteView):
     template_name = 'inv/master/delete_itemsgroups.html'
     success_message = 'Success: Items Groups was deleted.'
     success_url = reverse_lazy('inv:list-itemsgroups')
+
+def deleteitemsgroups(request):
+    Lc= ItemsGroups.objects.all()
+    for l in Lc:
+       try:
+            print(l)
+            l.delete()
+       except:
+            print("not deleted connection somwhere")
+    return redirect("/inv/itemsgroups/")
 ######### End ItemsGroups
 
 
@@ -633,6 +854,16 @@ class ItemsBrandsDeleteView(LoginRequiredMixin, BSModalDeleteView):
     template_name = 'inv/master/delete_itemsbrands.html'
     success_message = 'Success: Items Brands was deleted.'
     success_url = reverse_lazy('inv:list-itemsbrands')
+
+def deleteitemsbrands(request):
+    Lc= ItemsBrands.objects.all()
+    for l in Lc:
+       try:
+            print(l)
+            l.delete()
+       except:
+            print("not deleted connection somwhere")
+    return redirect("/inv/itemsbrands/")
 ######### End ItemsBrands
 
 
@@ -667,6 +898,17 @@ class GenericNamesCategoriesDeleteView(LoginRequiredMixin, BSModalDeleteView):
     template_name = 'inv/master/delete_genericnamescategories.html'
     success_message = 'Success: Generic Names Categories was deleted.'
     success_url = reverse_lazy('inv:list-genericnamescategories')
+
+
+def deletegenericnamescategories(request):
+    Lc= GenericNamesCategories.objects.all()
+    for l in Lc:
+       try:
+            print(l)
+            l.delete()
+       except:
+            print("not deleted connection somwhere")
+    return redirect("/inv/genericnamescategories/")
 ######### End GenericNamesCategories
 
 
@@ -701,6 +943,17 @@ class GenericNamesDeleteView(LoginRequiredMixin, BSModalDeleteView):
     template_name = 'inv/master/delete_genericnames.html'
     success_message = 'Success: Generic Names  was deleted.'
     success_url = reverse_lazy('inv:list-genericnames')
+
+
+def deletegenericnames(request):
+    Lc= GenericNames.objects.all()
+    for l in Lc:
+       try:
+            print(l)
+            l.delete()
+       except:
+            print("not deleted connection somwhere")
+    return redirect("/inv/genericnames/")
 ######### End GenericNames
 
 ######### ItemsClasses
@@ -734,6 +987,17 @@ class ItemsClassesDeleteView(LoginRequiredMixin, BSModalDeleteView):
     template_name = 'inv/master/delete_itemsclasses.html'
     success_message = 'Success: Items Classes  was deleted.'
     success_url = reverse_lazy('inv:list-itemsclasses')
+
+
+def deleteitemsclasses(request):
+    Lc= ItemsClasses.objects.all()
+    for l in Lc:
+       try:
+            print(l)
+            l.delete()
+       except:
+            print("not deleted connection somwhere")
+    return redirect("/inv/itemsclasses/")
 ######### End ItemsClasses
 
 
@@ -797,7 +1061,10 @@ class ItemsCreateView(LoginRequiredMixin,  CreateView):
             print('validate itemsuom')
             response = super().form_valid(form)
             Itemslines.instance = self.object
+
             Itemslines.save()
+
+
         else:
             print(Itemslines.errors)
             context['itemsuom'] = ItemsUOMFormSet()
@@ -805,7 +1072,6 @@ class ItemsCreateView(LoginRequiredMixin,  CreateView):
 
         cursor = connection.cursor()
         cursor.execute("call in_ItemsAfterSave(" + str(new_id) + "  );")
-
         if itemsseason.is_valid():
             print('validate itemsseason')
             itemsseason.instance = self.object
@@ -818,6 +1084,8 @@ class ItemsCreateView(LoginRequiredMixin,  CreateView):
             return response
 
         return HttpResponseRedirect(self.get_success_url())
+
+       
 
 class ItemsUpdateView(LoginRequiredMixin, UpdateView):
     model = Items
@@ -917,6 +1185,16 @@ class ItemsDeleteView(LoginRequiredMixin, BSModalDeleteView):
     success_message = 'Success: Items was deleted.'
     success_url = reverse_lazy('inv:list-items')
 
+def deleteitems(request):
+    Lc=  Items.objects.all()
+    for l in Lc:
+       try:
+            print(l)
+            l.delete()
+       except:
+            print("not deleted connection somwhere")
+    return redirect("/inv/items/")
+
 
 ######### End Items
 
@@ -951,6 +1229,17 @@ class ExpensesTypesDeleteView(LoginRequiredMixin, BSModalDeleteView):
     template_name = 'inv/setting/delete_expensestypes.html'
     success_message = 'Success: expense stypes  was deleted.'
     success_url = reverse_lazy('inv:list-expensestypes')
+
+def deleteexpensestypes(request):
+    Lc= ExpensesTypes.objects.all()
+    for l in Lc:
+       try:
+            print(l)
+            l.delete()
+       except:
+            print("not deleted connection somwhere")
+    return redirect("/inv/expensestypes/")
+    
 ######### End ExpensesTypes
 
 ######### Agencies
@@ -1009,6 +1298,7 @@ class AgenciesUpdateView(LoginRequiredMixin, UpdateView):
     success_message = 'Success: Agencies was updated.'
     success_url = reverse_lazy("inv:list-agencies")
 
+
     def get_context_data(self, **kwargs):
         context = super(AgenciesUpdateView, self).get_context_data(**kwargs)
         if self.request.POST:
@@ -1022,15 +1312,22 @@ class AgenciesUpdateView(LoginRequiredMixin, UpdateView):
         context = self.get_context_data(form=form)
         agenciesexpensesline = context['agenciesexpensesline']
         agenciesexpensesline.clean()
+        print('validate')
         if agenciesexpensesline.is_valid():
+                
             response = super().form_valid(form)
+
             agenciesexpensesline.instance = self.object
+
             form.save()
+
             agenciesexpensesline.save()
+
             return response
 
         elif agenciesexpensesline.is_valid() == False:
             messages.error(self.request, "Error")
+            print(agenciesexpensesline.errors)
             return super().form_invalid(form)
 
 class AgenciesDeleteView(LoginRequiredMixin, BSModalDeleteView):
@@ -1038,6 +1335,16 @@ class AgenciesDeleteView(LoginRequiredMixin, BSModalDeleteView):
     template_name = 'inv/setting/delete_agencies.html'
     success_message = 'Success: Agencies was deleted.'
     success_url = reverse_lazy('inv:list-agencies')
+
+def deleteagencies(request):
+    Lc= Agencies.objects.all()
+    for l in Lc:
+       try:
+            print(l)
+            l.delete()
+       except:
+            print("not deleted connection somwhere")
+    return redirect("/inv/agencies/")
 
 ######### End Agencies
 
@@ -1176,6 +1483,17 @@ class OperationsTypesDeleteView(LoginRequiredMixin, BSModalDeleteView):
     success_message = 'Success: Operations Types was deleted.'
     success_url = reverse_lazy('inv:list-operationstypes')
 
+def deleteoperationstypes(request):
+    Lc= OperationsTypes.objects.all()
+    for l in Lc:
+       try:
+            print(l)
+            l.delete()
+       except:
+            print("not deleted connection somwhere")
+    return redirect("/inv/operationstypes/")
+
+
 ######### End OperationsTypes
 
 
@@ -1184,12 +1502,13 @@ class OperationsTypesDeleteView(LoginRequiredMixin, BSModalDeleteView):
 class OperationsListView(LoginRequiredMixin, ListView):
 
     model = Operations
+    extra_context={'users': OperationsLine.objects.all()}
+    # extra_context={'operations': Operations.objects.all()}
     context_object_name = 'operations'
     template_name = 'inv/trans/list-operations.html'
 
     def get_context_data(self, **kwargs):
         otype = self.kwargs
-        #print(otype['pk'])
         otype_id = otype['pk']
 
         context = super().get_context_data(**kwargs)
@@ -1205,54 +1524,33 @@ class OperationsListView(LoginRequiredMixin, ListView):
             onamestr = oprationnamelst[0]['engname']
             okindkeyid = oprationnamelst[0]['operationkind__keyid']
 
-
         context['oprationname'] = onamestr
         context['otype_id']=otype_id
         context['okindkeyid']=okindkeyid
-
-
-
-
         return context
 
     def get_queryset(self):
         otype = self.kwargs
         otype_id= otype['pk']
-
         #print(Operations.objects.filter(operationtype_id=otype_id).values('pk','operationtype','number','operationdate','status','invlocation__code','status__engname').query)
         return Operations.objects.filter(operationtype_id=otype_id).values('pk','operationtype','number','operationdate','status','invlocation__code','status__engname','rdstatus__engname','amountstatus__engname')
-
-
-
 
 
 class OperationsCreateView(LoginRequiredMixin,  CreateView):
     model = Operations
     form_class = OperationsForm
-
-    #fields = '__all__'
     template_name = 'inv/trans/create_operations.html'
     success_message = 'Success: Operation created.'
 
-    #success_url = reverse_lazy('inv:list-operations')
-
-
-
     def get_success_url(self):
         otype = self.kwargs
-
         otype_id= otype['pk']
         return reverse('inv:list-operations', kwargs={'pk': otype_id})
-
-
 
     def get_context_data(self, **kwargs):
         context = super(OperationsCreateView, self).get_context_data(**kwargs)
         otype = self.kwargs
         otype_id= otype['pk']
-
-        print('get_context_data')
-
 
         possibleparent=None
         if get_language() == 'ar':
@@ -1276,14 +1574,26 @@ class OperationsCreateView(LoginRequiredMixin,  CreateView):
         parents=None
         if viewparent==True :
             parentids=[]
-            for parent in oprationname:
-                parentids.append(parent['possibleparent'])
-
-                parents=Operations.objects.filter(operationtype_id__in= list(parentids) ).exclude(rdstatus__keyid= 10033).values('id','operationtype','number','operationdate','status','invlocation__code','status__engname','rdstatus','rdstatus__code','rdstatus__engname')
-                #parents=Operations.objects.filter(operationtype_id__in= list(parentids) ).values('id','operationtype','number','operationdate','status','invlocation__code','status__engname','rdstatus__code','rdstatus__engname')
+            parentt=[]
+            oprtn = Operations.objects.all()
+            oprtn_line = OperationsLine.objects.all()
+            if otype_id == 6:
+                for (op,opl) in zip(oprtn,oprtn_line):
+                    if op.id == opl.id and opl.remainquantity != None and opl.remainquantity !=0.000:
+                        if not op.number.startswith('GD'):
+                            parentt.append(op.id)
+                
+                for parent in oprationname:           
+                    parentids.append(parent['possibleparent'])
+                    parents=Operations.objects.filter(id__in= list(parentt) ).values('id','operationtype','number','operationdate','status','invlocation__code','status__engname','rdstatus','rdstatus__code','rdstatus__engname')
+        
+            else:
+                for parent in oprationname:
+                    parentids.append(parent['possibleparent'])
+                    parents=Operations.objects.filter(operationtype_id__in= list(parentids) ).exclude(rdstatus__keyid= 10033).values('id','operationtype','number','operationdate','status','invlocation__code','status__engname','rdstatus','rdstatus__code','rdstatus__engname')
+                    #parents=Operations.objects.filter(operationtype_id__in= list(parentids) ).values('id','operationtype','number','operationdate','status','invlocation__code','status__engname','rdstatus__code','rdstatus__engname')
         else:
             parents=[]
-
         context['parent'] = parents
 
         inventlocationsids = []
@@ -1297,7 +1607,6 @@ class OperationsCreateView(LoginRequiredMixin,  CreateView):
             userbusrole_id = inventlocations[0]['id']
             for invloc in inventlocations:
                 inventlocationsids.append(invloc['invlocation'])
-
 
         model = apps.get_model('crm', 'UserBusinessRolesotline')
         inventlocations = model.objects.filter(userbusinessrole_id = userbusrole_id , operationstype_id = otype_id ).values()
@@ -1328,14 +1637,11 @@ class OperationsCreateView(LoginRequiredMixin,  CreateView):
             # context['canpost'] = str(to_bool(inventlocations[0]['canpost']))
             # context['canrejct'] = str(to_bool(inventlocations[0]['canrejct']))
 
-
         if opricelevel ==None:
             opricelevel = 0
-
         context['opricelevel'] = opricelevel
 
         companyprofile=CompanyProfile.objects.values('id','usecostcenter1','usecostcenter2','usecostcenter3','usecostcenter4').first()
-
         if companyprofile == None :
             messages.error(self.request, 'Please Create Company')
             return reverse('inv:list-operations', kwargs={'pk': otype_id})
@@ -1453,7 +1759,6 @@ class OperationsCreateView(LoginRequiredMixin,  CreateView):
         #context['currentdate'] =  timezone.now().strftime('%Y-%m-%d')
 
         if self.request.POST:
-
             context['operationsline'] = OperationsLineFormSet(self.request.POST, instance=self.object)
             context['operationsline'].full_clean()
 
@@ -1464,15 +1769,11 @@ class OperationsCreateView(LoginRequiredMixin,  CreateView):
             context['operationsline'] = OperationsLineFormSet(instance=self.object)
             context['operationsexpensesline'] = OperationsExpensesLineFormSet(instance=self.object)
 
-
-
         return context
 
 
     def form_valid(self, form):
         context = self.get_context_data(form=form)
-
-
         otype = self.kwargs
         otype_id= otype['pk']
         oprationname = OperationsTypes.objects.filter(pk=otype_id).values('engname', 'code', 'pk', 'possibleparent',
@@ -1485,7 +1786,6 @@ class OperationsCreateView(LoginRequiredMixin,  CreateView):
             maxid = Operations.objects.filter(operationtype_id=otype_id).count() + 1
         except:
             maxid = 1
-
         context['lastnumber'] =  otcodestr + '-' + str(maxid)
 
 
@@ -1496,8 +1796,7 @@ class OperationsCreateView(LoginRequiredMixin,  CreateView):
         form.instance.statusdate = timezone.now()
         form.instance.operationdate = timezone.now()
         sign=int( form.instance.operationtype.operationkind.value)
-        print(form.instance.parent)
-
+        # print(form.instance.parent)
 
         parentoperationkind = []
         if form.instance.parent != None:
@@ -1521,8 +1820,13 @@ class OperationsCreateView(LoginRequiredMixin,  CreateView):
                 print('childform.instance.itemuom.pk')
 
                 item_id = childform.instance.item.pk
+                print("item_id",item_id)
                 vbarcode = childform.instance.barcode
-                vitemunit_id = childform.instance.itemuom.pk
+                try:
+                    vitemunit_id = childform.instance.itemuom.pk
+                    # print(vitemunit_id)
+                except:
+                    return HttpResponse("please select unit of measurement")
                 vbatchnumber = childform.instance.batchnumber
                 vexpiredate = childform.instance.expiredate
                 vlotnumber = childform.instance.lotnumber
@@ -1592,7 +1896,6 @@ class OperationsCreateView(LoginRequiredMixin,  CreateView):
                 itemident_id = itemident['id']
 
 
-
                 itemunit_id = childform.instance.item.baseunit_id
                 baseitemuom_id = childform.instance.item.baseuom_id
 
@@ -1601,15 +1904,12 @@ class OperationsCreateView(LoginRequiredMixin,  CreateView):
                     # Error No Tax Setting
                     pass
 
-
                 taxid=TaxesGroupsLine.objects.filter(taxgroup_id=txgrpid,fromdate__lte= datetime.now(),todate__gte=_datetime.date.today()).values('tax_id').first()
                 if taxid== None:
                     # Error No Tax Setting
                     pass
                 print(taxid)
-                #print(taxid['tax_id'])
-                #print('taxid')
-
+              
                 vcp = ItemsCosts.objects.filter(item_id=item_id,unit_id=itemunit_id,warehouse_id = wh_id).values('costprice').order_by('-transdate').first()
                 if vcp == None:
                     costprice = 0
@@ -1623,15 +1923,14 @@ class OperationsCreateView(LoginRequiredMixin,  CreateView):
                 childform.instance.costprice = costprice
                 childform.instance.baseunit_id = itemunit_id
                 childform.instance.baseuom_id = baseitemuom_id
-
                 childform.instance.baseunit_id = childform.instance.itemuom.unit_id
                 childform.instance.baseunitfactor = childform.instance.itemuom.baseunitfactor
 
                 childform.instance.baseequivalentquantity = childform.instance.itemuom.baseunitfactor * childform.instance.quantity #* sign
                 childform.instance.quantity =  childform.instance.quantity #* sign
-
+                #add 27-04-2022
+                childform.instance.remainquantity = childform.instance.quantity
                 childform.instance.tax_id = taxid['tax_id']
-
                 childform.instance.unit_id = itemunit_id
                 childform.instance.itemidentifier_id = itemident_id
                 childform.instance.lastdi = 1
@@ -1656,8 +1955,6 @@ class OperationsCreateView(LoginRequiredMixin,  CreateView):
 
             form.save()
 
-
-
             return response
         elif operationsline.is_valid() == False:
             print(operationsline.errors)
@@ -1673,11 +1970,9 @@ class OperationsUpdateView(LoginRequiredMixin, UpdateView):
     template_name = 'inv/trans/edit_operations.html'
     success_message = 'Success: Operation was updated.'
 
-    #success_url = reverse_lazy("inv:edit_operations")
-
     def get_success_url(self):
+        global otype_id
         otype = self.kwargs
-        print(otype)
         otype_id= otype['pk']
         return reverse('inv:edit_operations', kwargs={'pk': otype_id})
 
@@ -1690,10 +1985,7 @@ class OperationsUpdateView(LoginRequiredMixin, UpdateView):
         otype_id = otype[0]['operationtype_id']
         statuskeyid = otype[0]['status__keyid']
         context['number'] = otype[0]['number']
-
         context['operationdate'] = otype[0]['operationdate'].strftime('%Y-%m-%d')
-        print(context['operationdate'])
-
 
         if get_language() == 'ar':
             oprationname = OperationsTypes.objects.filter(pk=otype_id).values('arbname','code','pk','possibleparent','pricelevel_id','viewparent')
@@ -1719,10 +2011,10 @@ class OperationsUpdateView(LoginRequiredMixin, UpdateView):
             parentids=[]
             for parent in oprationname:
                 parentids.append(parent['possibleparent'])
-            parents=Operations.objects.filter(operationtype_id__in= list(parentids) ).exclude(rdstatus__keyid= 10033) .values('id','operationtype','number','operationdate','status','invlocation__code','status__engname','rdstatus__code','rdstatus__engname')
+                parents=Operations.objects.filter(operationtype_id__in= list(parentids) ).exclude(rdstatus__keyid= 10033) .values('id','operationtype','number','operationdate','status','invlocation__code','status__engname','rdstatus__code','rdstatus__engname')
         else:
             parents=[]
-
+        
         context['parent'] = parents
 
 
@@ -1733,7 +2025,6 @@ class OperationsUpdateView(LoginRequiredMixin, UpdateView):
         if inventlocations == None or inventlocations.count() ==  0 :
             pass
         else :
-            print(inventlocations)
             userbusrole_id = inventlocations[0]['id']
             for invloc in inventlocations:
                 inventlocationsids.append(invloc['invlocation'])
@@ -1745,7 +2036,6 @@ class OperationsUpdateView(LoginRequiredMixin, UpdateView):
         model = apps.get_model('crm', 'UserBusinessRolesotline')
         inventlocations = model.objects.filter(userbusinessrole_id = userbusrole_id , operationstype_id = otype_id ).values()
         if inventlocations == None or inventlocations.count() ==  0 :
-            print(inventlocations)
             context['cancreate'] = 'False'
             context['canedit'] = 'False'
             context['canview'] = 'False'
@@ -1813,17 +2103,6 @@ class OperationsUpdateView(LoginRequiredMixin, UpdateView):
                 context['canpost'] = 'False'
                 context['canrejct'] = 'False'
                 context['cancancel'] = 'False'
-
-
-            # context['cancreate'] =str( inventlocations[0]['cancreate'])
-            # context['canedit'] =str( inventlocations[0]['canedit'])
-            # context['canview'] =str( inventlocations[0]['canview'])
-            # context['cansubmit'] =str( inventlocations[0]['cansubmit'])
-            # context['canapprove'] =str( inventlocations[0]['canapprove'])
-            # context['canpost'] = str(inventlocations[0]['canpost'])
-            # context['canrejct'] = str(inventlocations[0]['canrejct'])
-
-
 
         print(possibleparent)
         context['opricelevel'] = opricelevel
@@ -1952,7 +2231,6 @@ class OperationsUpdateView(LoginRequiredMixin, UpdateView):
 
     def form_valid(self, form):
         context = self.get_context_data(form=form)
-        print('form_valid')
         op_id = self.kwargs
         retislocked = Operations.objects.filter(pk=op_id['pk']).values('islocked')
         islocked = retislocked[0]['islocked']
@@ -1972,19 +2250,7 @@ class OperationsUpdateView(LoginRequiredMixin, UpdateView):
 
         okindkeyid = context['operationkind']
 
-        # if self.request.method == 'POST':
-
-            # if islocked == True:
-            #     try:
-            #         raise forms.ValidationError("Error Record Locked")
-            #     except Exception as e:
-            #         messages.error(self.request, 'Locked Record')
-            #         return HttpResponseRedirect(self.request.path_info)
-
-
-
         if operationsline.is_valid():
-            print('operationsline.is_valid')
             try:
                 if 'save' in self.request.POST:
                     if islocked == True:
@@ -2024,6 +2290,7 @@ class OperationsUpdateView(LoginRequiredMixin, UpdateView):
                             itemident_id = ItemsIdentifiers.objects.filter(item_id=item_id, itemuom_id=vitemunit_id,expiredate=vexpiredate,batchnumber=vbatchnumber).values('id').first()
 
                         itemident_id = itemident['id']
+                   
 
                         item_id = childform.instance.item.pk
                         txgrpid = childform.instance.item.taxgroupsale
@@ -2051,14 +2318,15 @@ class OperationsUpdateView(LoginRequiredMixin, UpdateView):
                         childform.instance.baseunitfactor = childform.instance.itemuom.baseunitfactor
 
                         childform.instance.baseequivalentquantity = childform.instance.itemuom.baseunitfactor * childform.instance.quantity  # * sign
-                        childform.instance.quantity = childform.instance.quantity  # * sign
+                        childform.instance.quantity = childform.instance.quantity # * sign
+                        childform.instance.parent = childform.instance.parent
+                        # print("childform.instance.quantity",childform.instance.quantity)
                         childform.instance.tax_id = taxid['tax_id']
 
                         childform.instance.unit_id = itemunit_id
                         childform.instance.lastdi = 1
-
-
                     operationsline.save()
+
                     needsaveexp = False
                     for childformexp in operationsexpensesline :
                         if childformexp.instance.agency_id == None:
@@ -2100,22 +2368,61 @@ class OperationsUpdateView(LoginRequiredMixin, UpdateView):
                             messages.success(self.request, 'Successfully Posted')
                             return HttpResponseRedirect(self.get_success_url())
                         except Exception as e:
+                            # print("try")
                             messages.warning(self.request, e)
                             return HttpResponseRedirect(self.request.path_info)
+                            # return HttpResponse(e)
                     else:
+                        # cursor = connection.cursor()
+                        # cursor.execute("call in_OperationPost(" + str(self.kwargs['pk']) + "," + str(self.request.user.pk) + "  );")
+                        # messages.success(self.request,'Successfully Posted' )
+                        # return HttpResponseRedirect(self.get_success_url())
+                        # status = Operations.objects.filter(id = self.kwargs['pk'])
+                        # for sta_id in status:
+                        #     sta_id.status_id = 50
+                        #     sta_id.statusdate = date.today()
+                        #     sta_id.save()
+                        # messages.success(self.request,'Successfully Posted' )
+                        # return HttpResponseRedirect(self.get_success_url())
 
+                        #Todo Later
+                        
                         try:
                             cursor = connection.cursor()
+                            print("cursor",cursor)
                             cursor.execute("call in_OperationPost(" + str(self.kwargs['pk']) + "," + str(self.request.user.pk) + "  );")
                             messages.success(self.request,'Successfully Posted' )
                             return HttpResponseRedirect(self.get_success_url())
                         except Exception as e:
+                            print("except")
                             messages.warning(self.request, e)
                             return HttpResponseRedirect(self.request.path_info)
+                            
 
-#                        return HttpResponse(e)
+                        # return HttpResponse(e)
 
                 elif 'approve' in self.request.POST:
+                    # 25-04-2022
+                    otype = self.kwargs
+                    otype_id= otype['pk']
+                    
+                    operationsline.instance = self.object
+                    for childform in operationsline:
+                        childform.instance.parent = childform.instance.parent
+                        parentss = childform.instance.parent
+                    if parentss != None:
+                        item_detail = OperationsLine.objects.get(id = otype_id)
+                        item_qnty = item_detail.remainquantity
+                        pr_detail = OperationsLine.objects.get(id = parentss)
+                        total_qty = pr_detail.remainquantity
+                        pr_detail.remainquantity =  total_qty - item_qnty
+                        pr_detail.save()
+                        # if total_qty >= item_qnty:
+                        #     pr_detail.quantity =  total_qty - item_qnty
+                        #     pr_detail.save()
+                        # else:
+                        #    messages.warning(self.request,'Quantity limit crossed') 
+                        return HttpResponseRedirect(self.get_success_url())
                     try:
                         cursor = connection.cursor()
                         cursor.execute("call in_OperationApproval(" + str(self.kwargs['pk']) + "," + str(self.request.user.pk) + "  );")
@@ -2125,9 +2432,6 @@ class OperationsUpdateView(LoginRequiredMixin, UpdateView):
                         print('errorerror')
                         messages.warning(self.request, e)
                         return HttpResponseRedirect(self.request.path_info)
-                        #messages.error(self.request, 'error message kh')
-                        #return HttpResponse(e)
-
 
                 elif 'submit' in self.request.POST:
                     try:
@@ -2142,20 +2446,18 @@ class OperationsUpdateView(LoginRequiredMixin, UpdateView):
 
                         #return HttpResponse(e)
 
-
                 elif 'reject' in self.request.POST:
                     print('reject')
 
             except Exception as e:
                 print(e)
 
-                #print('error')
-
         elif operationsline.is_valid() == False:
             print('operationsline.is_valid() == False')
             messages.error(self.request, "Error")
             print(operationsline.errors)
             return super().form_invalid(form)
+        return HttpResponseRedirect(self.get_success_url())
 
 
 
@@ -2303,9 +2605,13 @@ class WFGroupsUpdateView(LoginRequiredMixin, UpdateView):
         print('validate')
         if wfgroupsusers.is_valid():
             response = super().form_valid(form)
+
             wfgroupsusers.instance = self.object
+
             form.save()
+
             wfgroupsusers.save()
+
             return response
 
         elif wfgroupsusers.is_valid() == False:
@@ -2318,6 +2624,17 @@ class WFGroupsDeleteView(LoginRequiredMixin, BSModalDeleteView):
     template_name = 'inv/setting/delete_wfgroups.html'
     success_message = 'Success: wf groups was deleted.'
     success_url = reverse_lazy('inv:list-wfgroups')
+
+def deletewfgroups(request):
+    Lc= WFGroups.objects.all()
+    for l in Lc:
+       try:
+            print(l)
+            l.delete()
+       except:
+            print("not deleted connection somwhere")
+    return redirect("/inv/wfgroups/")
+
 
 ######### End Workflow Groups
 
@@ -2353,6 +2670,17 @@ class WFActionsStatusDeleteView(LoginRequiredMixin, BSModalDeleteView):
     template_name = 'inv/setting/delete_wfactionsstatus.html'
     success_message = 'Success: WF Actions Status was deleted.'
     success_url = reverse_lazy('inv:list-wfactionsstatus')
+
+def deletewfactionsstatus(request):
+    Lc= WFActionsStatus.objects.all()
+    for l in Lc:
+       try:
+            print(l)
+            l.delete()
+       except:
+            print("not deleted connection somwhere")
+    return redirect("/inv/wfactionsstatus/")
+
 ######### End WFActionsStatus
 
 
@@ -2454,6 +2782,17 @@ class WFOperationsCyclesDeleteView(LoginRequiredMixin, BSModalDeleteView):
     success_message = 'Success: WFOperationsCycles was deleted.'
     success_url = reverse_lazy('inv:list-wfoperationscycles')
 
+def deletewfoperationscycles(request):
+    Lc= WFOperationsCycles.objects.all()
+    for l in Lc:
+       try:
+            print(l)
+            l.delete()
+       except:
+            print("not deleted connection somwhere")
+    return redirect("/inv/wfoperationscycles/")
+
+
 ######### End WF Operations Cycles
 
 
@@ -2541,6 +2880,17 @@ class TargetBuildingBlocksRebuildView(LoginRequiredMixin, TemplateView):
 
             #signals.post_save_TargetBuildingBlocksItems(sender=TargetBuildingBlocksItems, instance=instance, created=False)
         return redirect('/inv/targetbuildingblocks/')
+    
+def deletetargetbuildingblocks(request):
+    Lc= TargetBuildingBlocks.objects.all()
+    for l in Lc:
+       try:
+            print(l)
+            l.delete()
+       except:
+            print("not deleted connection somwhere")
+    return redirect("/inv/targetbuildingblocks/")
+    
 
 class TargetBuildingBlocksAccountsRebuildView(LoginRequiredMixin, TemplateView):
 
@@ -2666,6 +3016,16 @@ class TargetBuildingBlocksAccountsUpdateView(LoginRequiredMixin, UpdateView):
             print(formset.errors)
             return super().form_invalid(form)
 
+def deletetargetbuildingblocksaccounts(request):
+    Lc= TargetBuildingBlocksAccounts.objects.all()
+    for l in Lc:
+       try:
+            print(l)
+            l.delete()
+       except:
+            print("not deleted connection somwhere")
+    return redirect("/inv/targetbuildingblocksaccounts/")
+
 class TargetBuildingBlocksChannelsListView(LoginRequiredMixin, ListView):
     model = TargetBuildingBlocksChannels
     context_object_name = 'targetbuildingblockschannels'
@@ -2745,6 +3105,15 @@ class TargetBuildingBlocksChannelsRebuildView(LoginRequiredMixin, TemplateView):
             signals.post_save_TargetBuildingBlocksChannels(sender=TargetBuildingBlocksChannelsItems, instance=instance, created=False)
         return redirect('/inv/targetbuildingblockschannels/')
 
+def deletetargetbuildingblockschannels(request):
+    Lc= TargetBuildingBlocksChannels.objects.all()
+    for l in Lc:
+       try:
+            print(l)
+            l.delete()
+       except:
+            print("not deleted connection somwhere")
+    return redirect("/inv/targetbuildingblockschannels/")
 
 ##------------- END TARGET VIEWS
 
@@ -2903,7 +3272,7 @@ class CustTargetRepView(LoginRequiredMixin, TemplateView):
             # elif city_id != 9898989998 and areas_id != 9898989998 and channel_id != 9898989998:
             #     targettransactions = TargetTransactions.objects.all().filter(area_id=areas_id).filter(
             #         channel_id__in=parent_cat).filter(city_id=city_id)
-            #
+            #truncate inv_operationsline cascade;
             # else:
             #     targettransactions = TargetTransactions.objects.all()
 
@@ -3215,7 +3584,5 @@ def to_bool(value):
     if str(value).lower() in ("yes", "y", "true",  "t", "1"): return True
     if str(value).lower() in ("no",  "n", "false", "f", "0", "0.0", "", "none", "[]", "{}"): return False
     raise Exception('Invalid value for boolean conversion: ' + str(value))
-
-
 
 

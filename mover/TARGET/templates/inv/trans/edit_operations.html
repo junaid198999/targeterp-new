@@ -1,0 +1,1384 @@
+{% extends "auth_base.html" %}
+{% load i18n %}
+{% load django_tables2 %}
+{% load widget_tweaks %}
+{% load crispy_forms_tags %}
+{% block content %}
+{% load humanize %}
+
+{% comment %}
+
+{% endcomment %}
+
+
+<link href="/static/libs/select2/select2.min.css" rel="stylesheet" />
+<link href="/static/libs/sweetalert2/sweetalert2.min.css" rel="stylesheet" type="text/css" />
+<link href="/static/libs/dropify/dropify.min.css" rel="stylesheet">
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+
+
+<div class="container-fluid">
+    <!-- start page title -->
+    <div class="row" style="position: fixed;top:70px;z-index:2; overflow: hidden;width: 100%; ">
+        <div class="col-6" >
+            <div class="page-title" style="background: #f7b84b;height:45px;text-align: left;padding-top: 1px;padding-left: 5px;">
+                <h4 class="page-title" style="margin:4px; font-size: 2rem;color: white;">{% trans "Update "  %} {{ oprationname }}  </h4>
+            </div>
+        </div>
+        <div class="col-6" >
+            <div class="buttons" style="margin-top:8px;float: left; ">
+                <button type="submit" name="approve"  id="approve_id" form="LJForm" class="btn btn-primary btn-lg btn-sm" style="width: 105px;" >{% trans "Approve" %}</button>
+                <button type="submit" name="post"  id="post_id" form="LJForm" class="btn btn-warning btn-lg btn-sm" style="width: 105px;">{% trans "Post" %}</button>
+                <button type="submit" name="reject"  id="reject_id" form="LJForm" class="btn btn-info btn-lg btn-sm" style="width: 105px;" >{% trans "Reject" %}</button>
+                <input type="submit" name="submit" id="submit_id" form="LJForm" style="width: 105px;" class="submit-btn btn-success btn btn-sm" value="{% trans "Submit" %}"/>
+                <input type="submit" name="save" id="create_id" form="LJForm" style="width: 105px;" class="submit-btn btn-danger btn btn-sm" value="{% trans "Save" %}"/>
+                <button type="submit" name="cancel"  id="cancel_id" form="LJForm" class="btn btn-info btn-lg btn-sm" style="width: 105px;" >{% trans "Cancel" %}</button>
+                <a style="width: 105px;" class="btn btn-secondary btn-lg btn-sm"  href={% url "inv:list-operations"  otype_id  %}   >{% trans "Exit" %}</a>
+
+
+           </div>
+        </div>
+
+    </div>
+
+
+    <head>
+        <meta charset="utf-8" />
+        <title>Operation_form</title>
+    </head>
+    <div class="row" >
+        <div class="col-xl-12">
+            <div class="card" style="top: 46px; ">
+                <div class="card-body" style="padding:0.5rem;padding-bottom: 0px;">
+                    <form  data-itemtaxvalue-url="{% url 'inv:ajax_load_itemtaxvalue' %}"  data-itemprice-url="{% url 'inv:ajax_load_itemprice' %}"  data-itemuom-url="{% url 'inv:ajax_load_itemuom' %}" data-accountbalance-url="{% url 'inv:ajax_load_accountbalance' %}"  data-itembarcode-url="{% url 'inv:ajax_load_itembarcode' %}" id="LJForm" action="" method="post"   >
+                        {{ operationsline.management_form }}
+                        {% csrf_token %}
+                        {{ form.id }}
+
+                        <table class="table table-bordered ">
+                            <div class="{% if form.non_field_errors %}invalid{% endif %} mb-2">
+                              {% if form.non_field_errors %}
+                                {{ error }}
+                                {% endif %}
+                            </div>
+                            <tbody style="background-color: inherit;">
+                                    <td width="85%" colspan = "2" style="vertical-align: middle">
+                                        <div class="input-group">
+
+                                        <INPUT TYPE="TEXT" id="id_operationtype" NAME="operationtype" class="form-control" hidden  >
+
+
+
+                                            {% if accounttype == 90001  %}
+                                            <div class="form-group col-md-4 mb-0">
+                                                {{ form.ledger|as_crispy_field }}
+                                                <div class="{% if form.ledger.errors %} invalid{% endif %}">
+                                                    {% if error in form.ledger.errors %}
+                                                    <p class="help-block">{{ error }}</p>
+                                                    {% endif %}
+                                                </div>
+                                            </div>
+                                            {% endif %}
+
+                                            {% if accounttype == 90002  %}
+                                            <div class="form-group col-md-4 mb-0">
+                                                {{ form.vendor|as_crispy_field }}
+                                                <div class="{% if form.vendor.errors %} invalid{% endif %}">
+                                                    {% if error in form.vendor.errors %}
+                                                    <p class="help-block">{{ error }}</p>
+                                                    {% endif %}
+                                                </div>
+                                            </div>
+                                            {% endif %}
+
+                                            {% if accounttype == 90003  %}
+                                            <div class="form-group col-md-4 mb-0">
+                                                {{ form.customer|as_crispy_field }}
+                                                <div class="{% if form.customer.errors %} invalid{% endif %}">
+                                                    {% if error in form.customer.errors %}
+                                                    <p class="help-block">{{ error }}</p>
+                                                    {% endif %}
+                                                </div>
+                                            </div>
+                                            {% endif %}
+                                            <div class="form-group col-md-3 mb-0">
+                                                {{ form.invlocation|as_crispy_field }}
+                                                <div class="{% if form.invlocation.errors %} invalid{% endif %}">
+                                                    {% if error in form.invlocation.errors %}
+                                                    <p class="help-block">{{ error }}</p>
+                                                    {% endif %}
+                                                </div>
+                                            </div>
+
+
+                                            <div class="form-group col-md-2 mb-0">
+                                                {{ form.status|as_crispy_field }}
+                                                <div class="{% if form.status.errors %} invalid{% endif %}">
+                                                    {% if error in form.status.errors %}
+                                                    <p class="help-block">{{ error }}</p>
+                                                    {% endif %}
+                                                </div>
+                                            </div>
+                                            <div class="form-group col-md-2 mb-0">
+                                                {{ form.statusdate|as_crispy_field }}
+                                                <div class="{% if form.statusdate.errors %} invalid{% endif %}">
+                                                    {% if error in form.statusdate.errors %}
+                                                    <p class="help-block">{{ error }}</p>
+                                                    {% endif %}
+                                                </div>
+                                            </div>
+                                            {% if viewaccountbalance == True %}
+
+                                                <div class="input-group" >
+                                                    <div class="input-group-prepend">
+                                                        <span style="color:red" class="input-group-text" id="basic-addon10">{% trans " Bal." %}</span>
+                                                    </div>
+                                                    <INPUT TYPE="TEXT" NAME="accountbalance" id="id_accountbalance" class="form-control" value="" readonly  >
+
+                                                    <div class="input-group-prepend">
+                                                        <span style="color:red" class="input-group-text" id="basic-addon11">{% trans " credit Limit" %}</span>
+                                                    </div>
+                                                    <INPUT TYPE="TEXT" NAME="creditlimit" id="id_creditlimit" class="form-control" value="" readonly  >
+
+                                                    <div class="input-group-prepend">
+                                                        <span style="color:red" class="input-group-text" id="basic-addon12">{% trans " credit Period" %}</span>
+                                                    </div>
+                                                    <INPUT TYPE="TEXT" NAME="creditdays" id="id_creditdays" class="form-control" value="" readonly  >
+
+                                                </div>
+                                            {% endif %}
+
+
+                                        </div>
+                                    </td>
+                                    <td style="vertical-align: center"  >
+                                        <div class="input-group" >
+
+                                        <div class="input-group" >
+                                            <div class="input-group-prepend">
+                                                <span class="input-group-text" id="basic-addon1">{% trans " No." %}</span>
+                                            </div>
+                                            <INPUT TYPE="TEXT" NAME="number" id="id_numberr" class="form-control" value="{{ number }}" readonly  >
+                                        </div>
+
+
+
+                                        <div class="input-group" style="margin-top: 2%">
+                                            <div class="input-group-prepend">
+                                                <span class="input-group-text" >{% trans "Date" %}</span>
+                                            </div>
+                                            <INPUT id="id_operationdate" type="date" NAME="operationdate" class="form-control"  value=  {{ operationdate}}  readonly  >
+                                        </div>
+
+
+
+
+                                        </div>
+                                    </td>
+                            </tbody>
+                        </table>
+
+
+                        <div class="tab" role="tabpanel" id="tabs">
+                            <ul class="nav nav-tabs" role="tablist">
+                                <li  class="active"><a href="#lines"   role="tab" data-toggle="pill">Lines</a></li>
+                                <li  ><a href="#general"  role="tab" data-toggle="tab">Info.</a></li>
+                                {% if useexpense == True  %}
+                                <li  ><a href="#expenses"  role="tab" data-toggle="tab">Services Expenses</a></li>
+                                {% endif%}
+                            </ul>
+
+                            <div class="tab-content">
+                                <div id="general" class="tab-pane fade in active">
+                                        <table class="table table-bordered ">
+                                            <div class="{% if form.non_field_errors %}invalid{% endif %} mb-2">
+                                              {% if form.non_field_errors %}
+                                                {{ error }}
+                                                {% endif %}
+                                            </div>
+                                            <tbody style="background-color: inherit;">
+
+                                                <tr>
+                                                    <td width="100%" colspan = "7">
+                                                        <div class="input-group" >
+                                                            <div class="form-group col-md-2 mb-0" >
+                                                                {{ form.subject|as_crispy_field }}
+                                                                <div class="{% if form.subject.errors %} invalid{% endif %}">
+                                                                    {% if error in form.subject.errors %}
+                                                                    <p class="help-block">{{ error }}</p>
+                                                                    {% endif %}
+                                                                </div>
+                                                            </div>
+
+
+                                                            <div class="form-group col-md-2 mb-0">
+                                                                {{ form.fiscalyearperiod|as_crispy_field }}
+                                                                <div class="{% if form.fiscalyearperiod.errors %} invalid{% endif %}">
+                                                                    {% if error in form.fiscalyearperiod.errors %}
+                                                                    <p class="help-block">{{ error }}</p>
+                                                                    {% endif %}
+                                                                </div>
+                                                            </div>
+
+
+                                                            {% if operationkind == 3214 or  operationkind == 3215 or  operationkind == 3216    %}
+
+                                                            <div class="form-group col-md-2 mb-0">
+                                                                {{ form.sourceinvlocation|as_crispy_field }}
+                                                                <div class="{% if form.sourceinvlocation.errors %} invalid{% endif %}">
+                                                                    {% if error in form.sourceinvlocation.errors %}
+                                                                    <p class="help-block">{{ error }}</p>
+                                                                    {% endif %}
+                                                                </div>
+                                                            </div>
+                                                            <div class="form-group col-md-2 mb-0">
+                                                                {{ form.destinationinvlocation|as_crispy_field }}
+                                                                <div class="{% if form.destinationinvlocation.errors %} invalid{% endif %}">
+                                                                    {% if error in form.destinationinvlocation.errors %}
+                                                                    <p class="help-block">{{ error }}</p>
+                                                                    {% endif %}
+                                                                </div>
+                                                            </div>
+                                                            {% endif %}
+
+                                                            <div class="form-group col-md-2 mb-0">
+                                                                {{ form.currency|as_crispy_field }}
+                                                                <div class="{% if form.currency.errors %} invalid{% endif %}">
+                                                                    {% if error in form.currency.errors %}
+                                                                    <p class="help-block">{{ error }}</p>
+                                                                    {% endif %}
+                                                                </div>
+                                                            </div>
+
+                                                            {% if usesaleperson == True  %}
+                                                            <div class="form-group col-md-2 mb-0">
+                                                                {{ form.salesperson|as_crispy_field }}
+                                                                <div class="{% if form.salesperson.errors %} invalid{% endif %}">
+                                                                    {% if error in form.salesperson.errors %}
+                                                                    <p class="help-block">{{ error }}</p>
+                                                                    {% endif %}
+                                                                </div>
+                                                            </div>
+                                                            {% endif %}
+                                                            {% if usedepartment == True  %}
+                                                            <div class="form-group col-md-2 mb-0">
+                                                                {{ form.department|as_crispy_field }}
+                                                                <div class="{% if form.department.errors %} invalid{% endif %}">
+                                                                    {% if error in form.department.errors %}
+                                                                    <p class="help-block">{{ error }}</p>
+                                                                    {% endif %}
+                                                                </div>
+                                                            </div>
+                                                            {% endif %}
+
+                                                            {% if usecostcenter1 == True and comusecostcenter1 == True %}
+                                                            <div class="form-group col-md-2 mb-0">
+                                                                {{ form.costcenter1|as_crispy_field }}
+                                                                <div class="{% if form.costcenter1.errors %} invalid{% endif %}">
+                                                                    {% if error in form.costcenter1.errors %}
+                                                                    <p class="help-block">{{ error }}</p>
+                                                                    {% endif %}
+                                                                </div>
+                                                            </div>
+                                                            {% endif %}
+                                                            {% if usecostcenter2 == True and comusecostcenter2 == True %}
+                                                            <div class="form-group col-md-2 mb-0">
+                                                                {{ form.costcenter2|as_crispy_field }}
+                                                                <div class="{% if form.costcenter2.errors %} invalid{% endif %}">
+                                                                    {% if error in form.costcenter2.errors %}
+                                                                    <p class="help-block">{{ error }}</p>
+                                                                    {% endif %}
+                                                                </div>
+                                                            </div>
+                                                            {% endif %}
+                                                            {% if usecostcenter3 == True and comusecostcenter3 == True %}
+                                                            <div class="form-group col-md-2 mb-0">
+                                                                {{ form.costcenter3|as_crispy_field }}
+                                                                <div class="{% if form.costcenter3.errors %} invalid{% endif %}">
+                                                                    {% if error in form.costcenter3.errors %}
+                                                                    <p class="help-block">{{ error }}</p>
+                                                                    {% endif %}
+                                                                </div>
+                                                            </div>
+                                                            {% endif %}
+                                                            {% if usecostcenter4 == True and comusecostcenter4 == True %}
+                                                            <div class="form-group col-md-2 mb-0">
+                                                                {{ form.costcenter4|as_crispy_field }}
+                                                                <div class="{% if form.costcenter4.errors %} invalid{% endif %}">
+                                                                    {% if error in form.costcenter4.errors %}
+                                                                    <p class="help-block">{{ error }}</p>
+                                                                    {% endif %}
+                                                                </div>
+                                                            </div>
+                                                            {% endif %}
+
+
+                                                            <div class="form-group col-md-2 mb-0">
+                                                                {{ form.statusreason|as_crispy_field }}
+                                                                <div class="{% if form.statusreason.errors %} invalid{% endif %}">
+                                                                    {% if error in form.statusreason.errors %}
+                                                                    <p class="help-block">{{ error }}</p>
+                                                                    {% endif %}
+                                                                </div>
+                                                            </div>
+                                                            <div class="form-group col-md-2 mb-0">
+                                                                {{ form.statuschangedby|as_crispy_field }}
+                                                                <div class="{% if form.statuschangedby.errors %} invalid{% endif %}">
+                                                                    {% if error in form.statuschangedby.errors %}
+                                                                    <p class="help-block">{{ error }}</p>
+                                                                    {% endif %}
+                                                                </div>
+                                                            </div>
+                                                            <div class="form-group col-md-2 mb-0">
+                                                                {{ form.remarks|as_crispy_field }}
+                                                                <div class="{% if form.remarks.errors %} invalid{% endif %}">
+                                                                    {% if error in form.remarks.errors %}
+                                                                    <p class="help-block">{{ error }}</p>
+                                                                    {% endif %}
+                                                                </div>
+                                                            </div>
+
+
+                                                        </div>
+                                                    </td>
+                                                </tr>
+
+                                            </tbody>
+                                        </table>
+                                </div>
+
+                                <div id="lines" class="tab-pane fade in active">
+                                        <div class="row">
+                                            <div class="col-12">
+                                                <div class="sub-header">
+                                                    <a style="float:right" class="buttonHolder" id="add-row"></a>
+                                               </div>
+                                            </div>
+                                        </div>
+                                        <table id="table_id" class="table table-bordered table-hover table-sm mb-0" >
+                                                <thead class="thead-light">
+                                                    <tr>
+                                                        {% if viewitem == True %}
+                                                        <th>{% trans "Item " %}</th>
+                                                        {% endif %}
+
+                                                        <th>{% trans "Item Barcode" %}</th>
+
+                                                        {% if viewitemidentifier == True %}
+                                                        <th>{% trans "Item Identifier" %}</th>
+                                                        {% endif %}
+
+                                                        {% if viewitemengdesc == True %}
+                                                        <th>{% trans "Item Eng Desc" %}</th>
+                                                        {% endif %}
+
+                                                        {% if viewitemarbdesc == True %}
+                                                        <th>{% trans "Item Arb Desc" %}</th>
+                                                        {% endif %}
+
+                                                        {% if viewinvbinlocation == True %}
+                                                        <th>{% trans "Bin Location" %}</th>
+                                                        {% endif %}
+
+                                                        {% if viewquantity == True %}
+                                                        <th>{% trans "Quantity" %}</th>
+                                                        {% endif %}
+
+                                                        {% if viewquantitycount == True %}
+                                                        <th>{% trans "Quantity Count" %}</th>
+                                                        {% endif %}
+
+                                                        {% if viewisbonus == True %}
+                                                        <th>{% trans "Is Bounus" %}</th>
+                                                        {% endif %}
+
+                                                        {% if viewitemuom == True %}
+                                                        <th>{% trans "Item UOM" %}</th>
+                                                        {% endif %}
+
+
+                                                        {% if viewbaseunitfactor == True %}
+                                                        <th>{% trans "Base Factor" %}</th>
+                                                        {% endif %}
+
+                                                        {% if viewbaseequivalentquantity == True %}
+                                                        <th>{% trans "Eq Qty" %}</th>
+                                                        {% endif %}
+
+                                                        {% if viewbaseunit == True %}
+                                                        <th>{% trans "Base Unit" %}</th>
+                                                        {% endif %}
+
+                                                        {% if viewprice == True %}
+                                                        <th>{% trans "Price" %}</th>
+                                                        {% endif %}
+
+                                                        {% if viewpricelist == True %}
+                                                        <th>{% trans "Price List" %}</th>
+                                                        {% endif %}
+
+                                                        {% if vieworiginalprice == True %}
+                                                        <th>{% trans "Org Price " %}</th>
+                                                        {% endif %}
+
+                                                        {% if viewcostprice == True %}
+                                                        <th>{% trans "Cost Price " %}</th>
+                                                        {% endif %}
+
+                                                        {% if viewlastdi == True %}
+                                                        <th>{% trans "Last DI " %}</th>
+                                                        {% endif %}
+
+                                                        {% if viewdiscper1 == True %}
+                                                        <th>{% trans "Dis 1 %" %}</th>
+                                                        {% endif %}
+
+                                                        {% if viewdiscamt1 == True %}
+                                                        <th>{% trans "Disc 1 # " %}</th>
+                                                        {% endif %}
+
+                                                        {% if viewdiscper2 == True %}
+                                                        <th>{% trans "Dis 2 %" %}</th>
+                                                        {% endif %}
+
+                                                        {% if viewdiscamt2 == True %}
+                                                        <th>{% trans "Disc 2 # " %}</th>
+                                                        {% endif %}
+
+                                                        {% if viewdiscper3 == True %}
+                                                        <th>{% trans "Dis 3 %" %}</th>
+                                                        {% endif %}
+
+                                                        {% if viewdiscamt3 == True %}
+                                                        <th>{% trans "Disc 3 # " %}</th>
+                                                        {% endif %}
+
+
+                                                        {% if viewexpiredate == True %}
+                                                        <th>{% trans "Exp Date" %}</th>
+                                                        {% endif %}
+
+                                                        {% if viewbatchnumber == True %}
+                                                        <th>{% trans "Batch No" %}</th>
+                                                        {% endif %}
+
+                                                        {% if viewlotdate == True %}
+                                                        <th>{% trans "Lot Date" %}</th>
+                                                        {% endif %}
+
+                                                        {% if viewlotnumber == True %}
+                                                        <th>{% trans "Lot No" %}</th>
+                                                        {% endif %}
+
+                                                        {% if viewserialnumber == True %}
+                                                        <th>{% trans "Serial No" %}</th>
+                                                        {% endif %}
+
+
+                                                        {% if viewtaxpercent == True %}
+                                                        <th>{% trans "VAT %" %}</th>
+                                                        {% endif %}
+
+                                                        {% if viewtaxamount == True %}
+                                                        <th>{% trans "VAT #" %}</th>
+                                                        {% endif %}
+
+                                                        {% if viewlinetotal == True %}
+                                                        <th>{% trans "Total" %}</th>
+                                                        {% endif %}
+
+                                                        <th hidden>{% trans "Parent" %}</th>
+
+                                                        <th>{% trans "Actions" %}</th>
+
+
+                                                    </tr>
+                                                </thead>
+                                                <tbody class="formset_row">
+
+                                                    {% for form in operationsline %}
+                                                        {{ form.id }}
+
+                                                        <tr  style="padding: 0px !important;" class="rowclass">
+
+                                                            {% if viewitem == True %}
+                                                                <td   style="padding: 0rem !important;width:200px;"  >{{ form.item|as_crispy_field }}</td>
+
+                                                            {% endif %}
+
+
+                                                                <td   style="padding: 0rem !important;width:100px;" >{{ form.barcode|as_crispy_field }} </td>
+
+
+                                                            {% if viewitemidentifier == True %}
+                                                            <td style="padding: 0rem !important;width:100px;" >{{ form.itemidentifier|as_crispy_field }}</td>
+                                                            {% endif %}
+
+                                                            {% if viewitemengdesc == True %}
+                                                                <td style="padding: 0rem !important;width:100px;">{{ form.itemengdesc|as_crispy_field }}</td>
+                                                            {% endif %}
+
+                                                            {% if viewitemarbdesc == True %}
+                                                                <td style="padding: 0rem !important;width:100px;">{{ form.itemarbdesc|as_crispy_field }}</td>
+                                                            {% endif %}
+
+                                                            {% if viewinvbinlocation == True %}
+                                                                <td style="padding: 0rem !important;width:100px;">{{ form.invbinlocation|as_crispy_field }}</td>
+                                                            {% endif %}
+
+                                                            {% if viewquantity == True %}
+                                                                <td style="padding: 0rem !important;width:50px;">{{ form.quantity|as_crispy_field }}</td>
+                                                            {% endif %}
+
+                                                            {% if viewquantitycount == True %}
+                                                                <td style="padding: 0rem !important;width:50px;">{{ form.quantitycount|as_crispy_field }}</td>
+                                                            {% endif %}
+
+                                                            {% if viewisbonus == True %}
+                                                                <td style="padding: 0rem !important;width:50px;">{{ form.isbonus|as_crispy_field }}</td>
+                                                            {% endif %}
+
+                                                            {% if viewitemuom == True %}
+                                                                <td style="padding: 0rem !important;width:100px;">{{ form.itemuom|as_crispy_field }}</td>
+                                                            {% endif %}
+
+
+                                                            {% if viewbaseunitfactor == True %}
+                                                                <td style="padding: 0rem !important;width:50px;">{{ form.baseunitfactor|as_crispy_field }}</td>
+                                                            {% endif %}
+
+                                                            {% if viewbaseequivalentquantity == True %}
+                                                                <td style="padding: 0rem !important;width:50px;">{{ form.baseequivalentquantity|as_crispy_field }}</td>
+                                                            {% endif %}
+
+                                                            {% if viewbaseunit == True %}
+                                                                <td style="padding: 0rem !important;width:100px;">{{ form.baseunit|as_crispy_field }}</td>
+                                                            {% endif %}
+
+                                                            {% if viewprice == True %}
+                                                                <td style="padding: 0rem !important;width:70px;">{{ form.price|as_crispy_field }}</td>
+                                                            {% endif %}
+
+
+                                                            {% if viewpricelist == True %}
+                                                                <td style="padding: 0rem !important;width:100px;">{{ form.pricelist.id|as_crispy_field }}</td>
+                                                            {% endif %}
+
+                                                            {% if vieworiginalprice == True %}
+                                                                <td style="padding: 0rem !important;width:75px;">{{ form.originalprice|as_crispy_field }}</td>
+                                                            {% endif %}
+
+                                                            {% if viewcostprice == True %}
+                                                                <td style="padding: 0rem !important;width:75px;">{{ form.costprice|as_crispy_field }}</td>
+                                                            {% endif %}
+
+                                                            {% if viewlastdi == True %}
+                                                                <td style="padding: 0rem !important;width:75px;">{{ form.lastdi|as_crispy_field }}</td>
+                                                            {% endif %}
+
+                                                            {% if viewdiscper1 == True %}
+                                                                <td style="padding: 0rem !important;width:50px;">{{ form.discper1|as_crispy_field }}</td>
+                                                            {% endif %}
+
+                                                            {% if viewdiscamt1 == True %}
+                                                                <td style="padding: 0rem !important;width:50px;">{{ form.discamt1|as_crispy_field }}</td>
+                                                            {% endif %}
+
+                                                            {% if viewdiscper2 == True %}
+                                                                <td style="padding: 0rem !important;width:50px;">{{ form.discper2|as_crispy_field }}</td>
+                                                            {% endif %}
+
+                                                            {% if viewdiscamt2 == True %}
+                                                                <td style="padding: 0rem !important;width:50px;">{{ form.discamt2|as_crispy_field }}</td>
+                                                            {% endif %}
+
+                                                            {% if viewdiscper3 == True %}
+                                                                <td style="padding: 0rem !important;width:50px;">{{ form.discper3|as_crispy_field }}</td>
+                                                            {% endif %}
+
+                                                            {% if viewdiscamt3 == True %}
+                                                                <td style="padding: 0rem !important;width:50px;">{{ form.discamt3|as_crispy_field }}</td>
+                                                            {% endif %}
+
+
+                                                            {% if viewexpiredate == True %}
+                                                                <td style="padding: 0rem !important;width:75px;">{{ form.expiredate|as_crispy_field }}</td>
+                                                            {% endif %}
+
+                                                            {% if viewbatchnumber == True %}
+                                                                <td style="padding: 0rem !important;width:75px;">{{ form.batchnumber|as_crispy_field }}</td>
+                                                            {% endif %}
+
+                                                            {% if viewlotdate == True %}
+                                                                <td style="padding: 0rem !important;width:75px;">{{ form.lotdate|as_crispy_field }}</td>
+                                                            {% endif %}
+
+                                                            {% if viewlotnumber == True %}
+                                                                <td style="padding: 0rem !important;width:75px;">{{ form.lotnumber|as_crispy_field }}</td>
+                                                            {% endif %}
+
+                                                            {% if viewserialnumber == True %}
+                                                                <td style="padding: 0rem !important;width:75px;">{{ form.serialnumber|as_crispy_field }}</td>
+                                                            {% endif %}
+
+
+                                                            {% if viewtaxpercent == True %}
+                                                                <td style="padding: 0rem !important;width:50px;">{{ form.taxpercent|as_crispy_field }}</td>
+                                                            {% endif %}
+
+                                                            {% if viewtaxamount == True %}
+                                                                <td style="padding: 0rem !important;width:50px;">{{ form.taxamount|as_crispy_field }}</td>
+                                                            {% endif %}
+
+                                                            {% if viewlinetotal == True %}
+                                                                <td style="padding: 0rem !important;width:75px;">{{ form.linetotal|as_crispy_field }}</td>
+                                                            {% endif %}
+
+                                                            <td style="padding: 0rem !important;width:75px;" hidden>{{ form.parent|as_crispy_field }}</td>
+
+                                                            <td style="padding: 0rem !important;width:10px; text-align: center;"></td>
+
+                                                        </tr>
+                                                    {% endfor %}
+                                                </tbody>
+                                        </table>
+                                </div>
+
+                                <div id="expenses" class="tab-pane fade in active">
+                                      {{ operationsexpensesline.management_form }}
+                                        {{ form.id }}
+
+                                        <div class="row">
+                                            <div class="col-12">
+                                                <div class="sub-header">
+                                                    <a style="float:right" class="buttonHolderexp" id="add-rowexp"></a>
+                                               </div>
+                                            </div>
+                                        </div>
+                                        <table id="table_exp_id" class="table table-bordered table-hover table-sm mb-0" >
+                                                <thead class="thead-light">
+                                                    <tr>
+                                                        <th>{% trans "Agency " %}</th>
+                                                        <th>{% trans "Srv. Expense" %}</th>
+                                                        <th>{% trans "Doc. No." %}</th>
+                                                        <th>{% trans "Doc. Date" %}</th>
+                                                        <th>{% trans "Remarks" %}</th>
+                                                        <th>{% trans "Currency" %}</th>
+                                                        <th>{% trans "Rate" %}</th>
+                                                        <th>{% trans "Amount" %}</th>
+                                                        <th>{% trans "VAT %" %}</th>
+                                                        <th>{% trans "VAT #" %}</th>
+                                                        <th>{% trans "Line Total" %}</th>
+
+                                                        <th>{% trans "Actions" %}</th>
+
+
+                                                    </tr>
+                                                </thead>
+                                                <tbody class="formset_rowexp">
+                                                    {% for form in operationsexpensesline %}
+                                                        {{ form.id }}
+
+                                                        <tr style="padding: 0px !important;" class="rowclass">
+
+                                                            <td style="padding: 0rem !important;width:200px;" >{{ form.agency|as_crispy_field }}</td>
+                                                            <td style="padding: 0rem !important;width:100px;" >{{ form.serviceexpense|as_crispy_field }}</td>
+                                                            <td style="padding: 0rem !important;width:100px;" >{{ form.documentno|as_crispy_field }}</td>
+                                                            <td style="padding: 0rem !important;width:100px;">{{ form.documentdate|as_crispy_field }}</td>
+                                                            <td style="padding: 0rem !important;width:100px;">{{ form.remarks|as_crispy_field }}</td>
+                                                            <td style="padding: 0rem !important;width:100px;">{{ form.currency|as_crispy_field }}</td>
+                                                            <td style="padding: 0rem !important;width:50px;">{{ form.currencyrate|as_crispy_field }}</td>
+                                                            <td style="padding: 0rem !important;width:50px;">{{ form.amount|as_crispy_field }}</td>
+                                                            <td style="padding: 0rem !important;width:50px;">{{ form.exptaxpercent|as_crispy_field }}</td>
+                                                            <td style="padding: 0rem !important;width:100px;">{{ form.exptaxamount|as_crispy_field }}</td>
+                                                            <td style="padding: 0rem !important;width:50px;">{{ form.explinetotal|as_crispy_field }}</td>
+                                                            <td style="padding: 0rem !important;width:10px; text-align: center;"></td>
+
+                                                        </tr>
+                                                    {% endfor %}
+                                                </tbody>
+                                        </table>
+                                </div>
+
+
+                            </div>
+                        </div>
+
+                        <table id="table_idfoot" class="table table-bordered table-hover table-sm mb-0">
+                            <tr>
+                                <td colspan="5" width="60%"><b class="float-right" > </b></td>
+                                <td colspan="5"><b class="float-right" >{% trans "Gross Amount : " %} </b></td>
+                                <td class="float-right"  style="padding: 0rem" colspan="1"><INPUT style="text-align:right" TYPE="number" id="id_grossamount" NAME="grossamount" placeholder="Gross Amount" class="form-control" readonly></td>
+                            </tr>
+                            {% if usedisc1 == True  %}
+                            <tr>
+                                <td colspan="5"  width="70%"><b class="float-right" > </b></td>
+                                <td colspan="5"><b class="float-right" >{% trans "Discount 1 : " %} </b></td>
+                                <td class="float-right" style="padding: 0rem" colspan="1"><INPUT style="text-align:right" TYPE="number" id="id_discamt1" NAME="discamt1" placeholder="Discount Amount" class="form-control" readonly></td>
+                                <td class="float-right" style="padding: 0rem" colspan="1"><INPUT  style="text-align:right" TYPE="number" id="id_discper1" NAME="discper1" placeholder="Discount %" class="form-control" readonly></td>
+                            </tr>
+                            {% endif %}
+
+                            {% if usedisc2 == True  %}
+                            <tr>
+                                <td colspan="5"  width="70%"><b class="float-right" > </b></td>
+                                <td colspan="5"><b class="float-right" >{% trans "Discount 2 : " %} </b></td>
+                                <td class="float-right" style="padding: 0rem" colspan="1"><INPUT  style="text-align:right" TYPE="number" id="id_discamt2" NAME="discamt2" placeholder="Discount Amount" class="form-control" readonly></td>
+                                <td class="float-right" style="padding: 0rem" colspan="1"><INPUT  style="text-align:right" TYPE="number" id="id_discper2" NAME="discper2" placeholder="Discount %" class="form-control" readonly></td>
+                            </tr>
+                            {% endif %}
+
+                            {% if usedisc3 == True  %}
+                            <tr>
+                                <td colspan="5"  width="70%"><b class="float-right" > </b></td>
+                                <td colspan="5"><b class="float-right" >{% trans "Discount 3 : " %} </b></td>
+                                <td class="float-right" style="padding: 0rem" colspan="1"><INPUT style="text-align:right" TYPE="number" id="id_discamt3" NAME="discamt3" placeholder="Discount Amount" class="form-control" readonly></td>
+                                <td class="float-right" style="padding: 0rem" colspan="1"><INPUT style="text-align:right" TYPE="number" id="id_discper3" NAME="discper3" placeholder="Discount %" class="form-control" readonly></td>
+                            </tr>
+                            {% endif %}
+
+
+
+                            {% if useexpense == True  %}
+                            <tr>
+                                <td colspan="5"  width="60%"><b class="float-right" > </b></td>
+                                <td colspan="5"><b class="float-right">{% trans "Expeses Amount : " %} </b></td>
+                                <td class="float-right" style="padding: 0rem" colspan="1"><INPUT  style="text-align:right" TYPE="number" id="id_expenseamount" NAME="expenseamount" placeholder="Expeses Amount" class="form-control" readonly></td>
+                            </tr>
+                            {% endif %}
+
+                            {% if viewtaxpercent == True or viewtaxamount == True %}
+                            <tr>
+                                <td colspan="5"  width="60%"><b class="float-right" > </b></td>
+                                <td colspan="5"><b class="float-right">{% trans "VAT :" %} </b></td>
+                                <td class="float-right" style="padding: 0rem" colspan="1"><INPUT style="text-align:right" TYPE="number" id="id_taxamount" NAME="taxamount" placeholder="Vat" class="form-control" readonly></td>
+                            </tr>
+                            {% endif %}
+
+
+                            <tr>
+                                <td colspan="5" width="60%"><b class="float-right" > </b></td>
+                                <td colspan="5"><b class="float-right">{% trans "Net Amount : " %} </b></td>
+                                <td class="float-right" style="padding: 0rem" colspan="1"><INPUT style="text-align:right" TYPE="number" id="id_netamount" NAME="netamount" placeholder="Net Amount" class="form-control"  readonly></td>
+                            </tr>
+
+                        </table>
+
+                        <br><br>
+
+                    </form>
+
+                </div>
+            </div>
+        </div>
+    </div>
+    <button hidden type="button" class="btn btn-info btn-xs" id="sa-error">Click me</button>
+
+</div>
+{% endblock %}
+{% block extra_javascript %}
+
+<script src="/static/libs/select2/select2.min.js"></script>
+<script src="/static/dynamic_formsets/jquery.formset.js"></script>
+<script src="/static/django_select2/django_select2.js"></script>
+<script src="/static/libs/sweetalert2/sweetalert2.min.js"></script>
+
+<script src="/static/libs/dropify/dropify.min.js"></script>
+
+
+{{ event_formset.media }}
+<script type="text/javascript">
+
+
+document.addEventListener('DOMContentLoaded', function() {
+        $("#id_operationtype").val("{{ otype_id }}");
+        get_total();
+        var currencydecimal = {{ currencydecimal }}
+}, true);
+
+
+$(document).ready(function(){
+  activaTab('lines');
+
+     $('#id_customer').select2();
+    $('#id_vendor').select2();
+    $('#id_ledger').select2();
+     $("[name*=-item]").select2();
+     $("[name*=unit]").select2();
+
+
+});
+
+function activaTab(tab){
+  $('.nav-tabs a[href="#' + tab + '"]').tab('show');
+};
+
+
+    $(document).ready(function(){
+        // Basic
+        $('.dropify').dropify();
+
+        $('.dropify-fr').dropify({
+            messages: {
+                default: 'Drag and drop a file here or click',
+                replace: 'Drag and drop a file or click to replace',
+                remove:  'Remove',
+                error:   'Sorry, the file is too large'
+            }
+        });
+
+
+    });
+
+var subtotalval = 0;
+var taxlval = 0;
+function get_total(subtotid, taxid){
+        var subtotalfield1 = $(`input[name=${subtotid}]`).attr("id");
+        var taxfield = $(`input[name=${taxid}]`).attr("id");
+
+        subtotalval = parseFloat(subtotalval) + parseFloat($("#id_"+subtotalfield1).val(),1);
+        var currencydecimal = {{ currencydecimal }}
+        var quantitydecimal = {{ quantitydecimal }}
+
+        var id = parseInt($('#id_operationsline_set-TOTAL_FORMS').val());
+        var total = 0;
+        var bttotal = 0;
+        var tax = 0;
+        var nettotal = 0;
+        for (i = 0; i <= parseInt(id); i++){
+            if($("input[name=operationsline_set-" + i + "-linetotal]").val()){
+                total += parseFloat($("input[name=operationsline_set-" + i + "-linetotal]").val(),1);
+                bttotal += parseFloat($("input[name=operationsline_set-" + i + "-linetotal]").val(),1);
+                tax += parseFloat($("input[name=operationsline_set-" + i + "-taxamount]").val(),1);
+
+                var qtyval = parseFloat($("input[name=operationsline_set-" + i + "-quantity]").val(),1);;
+                $("input[name=operationsline_set-" + i + "-quantity]").val(qtyval.toFixed(quantitydecimal));
+                var priceval = parseFloat($("input[name=operationsline_set-" + i + "-price]").val(),1);
+                totalval  = parseFloat($("input[name=operationsline_set-" + i + "-linetotal]").val(),1);
+                $("input[name=operationsline_set-" + i + "-price]").val(priceval.toFixed(currencydecimal));
+                $("input[name=operationsline_set-" + i + "-linetotal]").val(totalval.toFixed(currencydecimal));
+
+            }
+            else{
+                total += 0;
+                bttotal += 0;
+                tax += 0;
+            }
+        }
+        {% if useexpense == True  %}
+            console.log("useexpense == True")
+            var expid = parseInt($('#id_operationsexpensesline_set-TOTAL_FORMS').val());
+            var exptotal = 0;
+            var expvat = 0;
+            for (i = 0; i <= parseInt(id); i++){
+                if($("input[name=operationsexpensesline_set-" + i + "-explinetotal]").val()){
+                    exptotal += parseFloat($("input[name=operationsexpensesline_set-" + i + "-explinetotal]").val(),1);
+                    expvat += parseFloat($("input[name=operationsexpensesline_set-" + i + "-exptaxamount]").val(),1);
+
+                    var amntval = parseFloat($("input[name=operationsexpensesline_set-" + i + "-amount]").val(),1);;
+                    $("input[name=operationsexpensesline_set-" + i + "-amount]").val(amntval.toFixed(currencydecimal));
+
+                    exptotallineval  = parseFloat($("input[name=operationsexpensesline_set-" + i + "-explinetotal]").val(),1);
+                    $("input[name=operationsline_set-" + i + "-explinetotal]").val(exptotallineval.toFixed(currencydecimal));
+
+                }
+                else{
+                    exptotal += 0;
+                    expvat += 0;
+                }
+            }
+        {% endif %}
+
+        $("#id_taxamount").val( tax.toFixed(currencydecimal));
+        nettotal = bttotal + tax  ;
+
+        {% if useexpense == True  %}
+            $("#id_expenseamount").val( (exptotal).toFixed(currencydecimal));
+            nettotal = bttotal + tax + exptotal + expvat ;
+            $("#id_taxamount").val( (tax + expvat).toFixed(currencydecimal));
+
+        {% endif %}
+
+        $("#id_grossamount").val(bttotal.toFixed(currencydecimal));
+        $("#id_netamount").val(nettotal.toFixed(currencydecimal))  ;
+
+
+
+};
+
+
+
+    $("input[name*='price']").change(function () {
+
+            console.log('price change');
+    });
+
+function calc_expline_total(rowfieldname,fieldname){
+        var explinetotalfield = rowfieldname.replace('-'+fieldname  , '-explinetotal');
+        console.log(explinetotalfield);
+        console.log("explinetotalfield");
+
+        var amountfield = rowfieldname.replace('-'+fieldname  , '-amount');
+        var taxpercentfield = rowfieldname.replace('-'+fieldname, '-exptaxpercent');
+        var taxamountfield = rowfieldname.replace('-'+fieldname, '-exptaxamount');
+        var linetotalsum = 0;
+        var tax = 0;
+        var currencydecimal = {{ currencydecimal }}
+
+        linetotalsum =  $("#id_"+amountfield).val();
+
+        if (parseInt(0) > 0) {
+            tax = parseFloat((linetotalsum * $("#id_"+taxpercentfield).val() / 100))
+
+            $("#id_"+taxamountfield).val(tax.toFixed(currencydecimal));
+        } else {
+            linetotalsum = linetotalsum
+        }
+        console.log(linetotalsum);
+
+        console.log($("#id_"+taxpercentfield).val());
+        $("#id_"+taxamountfield).val(tax.toFixed(currencydecimal));
+        console.log(explinetotalfield);
+
+        $("#id_"+explinetotalfield).val(linetotalsum);
+
+
+
+};
+
+    $("input[name*='amount']").change(function () {
+        var amntfield = $(this).attr('name').replace('-amount', '-amount');
+            console.log(amntfield);
+          calc_expline_total(amntfield,"amount");
+          get_total();
+
+    });
+
+
+
+function calc_line_total(rowfieldname,fieldname){
+        var linetotalfield = rowfieldname.replace('-'+fieldname  , '-linetotal');
+        var qtyfield = rowfieldname.replace('-'+fieldname, '-quantity');
+        var currencydecimal = {{ currencydecimal }}
+
+        var taxpercentfield = rowfieldname.replace('-'+fieldname, '-taxpercent');
+        var taxamountfield = rowfieldname.replace('-'+fieldname, '-taxamount');
+
+        var pricefield = rowfieldname.replace('-'+fieldname, '-price');
+        var taxfield = rowfieldname.replace('-'+fieldname, '-tax');
+        var discountfield = rowfieldname.replace('-'+fieldname, '-discper1');
+        var linetotalsum = 0;
+        var bttotalsum = 0;
+        var netsubtotalsum = 0;
+        var tax = 0;
+        var disc1perval = 0;
+        var disc1amtval = 0;
+        var disc2perval = 0;
+        var disc2amtval = 0;
+        var linetotalsum = 0;
+        var qtyvalue = 0;
+        var priceaftertax = 0;
+
+        qtyvalue =$("#id_"+qtyfield).val();
+        {% if viewdiscper1 == True %}
+            console.log('Disc % in Calc');
+            var discountfield = rowfieldname.replace('-'+fieldname, '-discper1');
+            disc1amtval =($("#id_"+pricefield).val() * qtyvalue * $("#id_"+discountfield).val())/100
+            console.log(disc1amtval);
+        {% endif %}
+
+        {% if viewdiscamt1 == True %}
+            var discountfield = rowfieldname.replace('-'+fieldname, '-discamt1');
+            disc1amtval = $("#id_"+discountfield).val()/100
+        {% endif %}
+
+        {% if viewdiscper2 == True %}
+            var discountfield = rowfieldname.replace('-'+fieldname, '-discper2');
+            disc2amtval =($("#id_"+pricefield).val() * qtyvalue * $("#id_"+discountfield).val())/100
+        {% endif %}
+
+        {% if viewdiscamt2 == True %}
+            var discountfield = rowfieldname.replace('-'+fieldname, '-discamt2');
+            disc2amtval = $("#id_"+discountfield).val()/100
+        {% endif %}
+        bttotalsum = linetotalsum + parseFloat( ($("#id_"+pricefield).val() * qtyvalue) - disc1amtval - disc2amtval ,1);
+
+        if ( $("#id_"+taxpercentfield).val() > 0 ){
+            vartaxamount = ((parseFloat($("#id_"+pricefield).val() *  $("#id_"+qtyfield).val()) - disc1amtval - disc2amtval) *  Math.abs($("#id_"+taxpercentfield).val()) /100)
+        }
+        else {
+            console.log('disc in cal linetot');
+            console.log(disc1amtval);
+            priceafterdisc = parseFloat( $("#id_"+pricefield).val() *  $("#id_"+qtyfield).val() ) -  disc1amtval - disc2amtval
+            priceaftertax = (priceafterdisc * 100 ) /  (100 + Math.abs($("#id_"+taxpercentfield).val()) ) ;
+            //vartaxamount = parseFloat($("#id_"+pricefield).val() *  $("#id_"+qtyfield).val() *  Math.abs($("#id_"+taxpercentfield).val()) /100);
+            vartaxamount = (priceafterdisc - priceaftertax)  ;
+        }
+
+
+        //$("#id_"+taxamountfield).val(parseFloat($("#id_"+pricefield).val() *  $("#id_"+qtyfield).val() *  Math.abs($("#id_"+taxpercentfield).val()) /100));
+        $("#id_"+taxamountfield).val(vartaxamount.toFixed(currencydecimal));
+
+        if (parseInt(0) > 0) {
+            tax = parseFloat((bttotalsum * 0 / 100))
+            linetotalsum = bttotalsum + tax
+            $("#id_"+taxfield).val(tax.toFixed(currencydecimal));
+        } else {
+            if ($("#id_"+taxpercentfield).val() < 0) {
+                linetotalsum = bttotalsum - $("#id_"+taxamountfield).val();
+            }
+            else {
+                linetotalsum = bttotalsum ;
+            }
+        }
+
+
+        $("#id_"+linetotalfield).val(linetotalsum.toFixed(currencydecimal));
+
+};
+
+    $("input[name*='quantity']").change(function () {
+        var qtyfield = $(this).attr('name').replace('-quantity', '-quantity');
+          calc_line_total(qtyfield,"quantity");
+          get_total();
+
+    });
+
+    $("input[name*='price']").change(function () {
+        var qtyfield = $(this).attr('name').replace('-quantity', '-quantity');
+          calc_line_total(qtyfield,"price");
+          get_total();
+
+    });
+
+
+
+    $("select[name*='-item']").change(function () {
+        var currencydecimal = {{ currencydecimal }}
+        var itemuomfield = $(this).attr('name').replace('-item', '-itemuom');
+        var taxpercentfield = $(this).attr('name').replace('-item', '-taxpercent');
+          var itemId = $(this).val();
+        var qtyfield = $(this).attr('name').replace('-item', '-quantity');
+
+      var urlbc = $("#LJForm").attr("data-itemtaxvalue-url");
+      console.log(itemId);
+      $.ajax({
+            url: urlbc,
+            async: false,
+
+            data: {
+
+                'item': parseInt(itemId),
+                },
+                success: function (data) {
+                    console.log(data);
+                    $("#id_"+taxpercentfield).val(parseFloat(data).toFixed(currencydecimal));
+           }
+      });
+
+      var urlup = $("#LJForm").attr("data-itemuom-url");
+      $.ajax({
+            url: urlup,
+            data: {
+                'item': parseInt(itemId),
+                },
+                success: function (data) {
+                    $("#id_"+qtyfield).val(1);
+                    $("#id_"+itemuomfield).html(data);
+                    $("#id_"+itemuomfield).trigger("change");
+
+            }
+      });
+
+
+    });
+
+
+    $("select[name*='customer']").change(function () {
+        var accounttypeid = {{ accounttypeid }}
+        var accountid = $("#id_customer").val();
+        var currencydecimal = {{ currencydecimal }}
+        if ( accounttypeid != 'None' ) {
+          var urlaccbal = $("#LJForm").attr("data-accountbalance-url");
+          $.ajax({
+                url: urlaccbal,
+                async: false,
+                data: {
+                    'accounttypeid': parseInt(accounttypeid),
+                    'accountid': accountid,
+                    },
+                    success: function (data) {
+                        console.log(data);
+                        var array = data.split(",");
+                        $("#id_accountbalance").val(parseFloat(array[0]).toFixed(currencydecimal));
+                        $("#id_creditlimit").val(parseFloat(array[1]).toFixed(currencydecimal));
+
+               }
+          });
+
+
+        }
+    } );
+
+
+
+
+
+
+    $("select[name*='-itemuom']").change(function () {
+        var linetotalfield = $(this).attr('name').replace('-itemuom', '-linetotal');
+        var linetotalsum = 0;
+        var qtyfield = $(this).attr('name').replace('-itemuom', '-quantity');
+        var pricefield = $(this).attr('name').replace('-itemuom', '-price');
+        var orgpricefield = $(this).attr('name').replace('-itemuom', '-originalprice');
+        var barcodefield = $(this).attr('name').replace('-itemuom', '-barcode');
+        var itemfield = $(this).attr('name').replace('-itemuom', '-item');
+        var invlocation = $("#id_invlocation").val();
+        var itemId = $("#id_"+itemfield).val();
+        var uom_value= $(this).val();
+        var taxpercentfield = $(this).attr('name').replace('-itemuom', '-taxpercent');
+        var taxamountfield = $(this).attr('name').replace('-itemuom', '-taxamount');
+        var pricelevel = {{ opricelevel }}
+
+          var urlup = $("#LJForm").attr("data-itemprice-url");
+          $.ajax({
+                url: urlup,
+                async: false,
+                data: {
+                    'item': parseInt(itemId),
+                    'uom': uom_value,
+                    'pricelevel':pricelevel,
+                    'invlocation':invlocation,
+                    },
+                    success: function (data) {
+                        console.log(data);
+                        $("#id_"+pricefield).val(parseFloat(data));
+                        $("#id_"+orgpricefield).val(parseFloat(data));
+
+
+
+               }
+          });
+
+
+          var urlbc = $("#LJForm").attr("data-itembarcode-url");
+          $.ajax({
+                url: urlbc,
+                async: false,
+                data: {
+                    'item': parseInt(itemId),
+                    'uom': uom_value,
+                    },
+                    success: function (data) {
+                        $("#id_"+barcodefield).val(data);
+               }
+          });
+
+
+          calc_line_total(qtyfield,"quantity");
+          get_total();
+    });
+
+
+
+    $('.formset_row').formset({
+    animateForms: true,
+    uiText: {
+        addPrompt: 'Add Item',         // Text used on the 'add a new form' control.
+        removePrompt: '',        // Text used on the 'delete this existing form' control.
+    },
+    addButtonHolder:'.buttonHolder',
+    addCssClass: "add-row btn btn-primary waves-effect waves-light ",
+    deleteCssClass: "delete-row btn btn-danger waves-effect mdi mdi-close",
+    prefix: '{{ operationsline.prefix }}',
+        callbacks: {
+            onAdd: function () {
+                 $("[name*=-item]").select2();
+                 $("[name*=unit]").select2();
+            },
+            onRemove: function () {
+                 get_total();
+            }
+        },
+
+    });
+
+
+
+    $('.formset_rowexp').formset({
+    animateForms: true,
+    uiText: {
+        addPrompt: 'Add expense',         // Text used on the 'add a new form' control.
+        removePrompt: '',        // Text used on the 'delete this existing form' control.
+    },
+    addButtonHolder:'.buttonHolderexp',
+    addCssClass: "add-row btn btn-primary waves-effect waves-light ",
+    deleteCssClass: "delete-row btn btn-danger waves-effect mdi mdi-close",
+    prefix: '{{ operationsexpensesline.prefix }}',
+        callbacks: {
+            onAdd: function () {
+                 $("[name*=-agency]").select2();
+                 $("[name*=serviceexpense]").select2();
+            },
+            onRemove: function () {
+                 get_total();
+            }
+        },
+
+    });
+
+
+
+function createInput(){
+        for (i=1 ; i <=5 ;i++){
+        var $input = $('<input type="button" value="new button" />');
+        $input.appendTo($("body"));
+        }
+    }
+
+
+
+
+if ( '{{ canedit }}' == 'False') {
+    $("#create_id").hide();
+    }
+    else if ( '{{ canedit }}' == 'True') {
+    $("#create_id").show();
+    }
+
+if ( '{{ cansubmit }}'== 'False') {
+    $("#submit_id").hide();
+    }
+    else if ( '{{ cansubmit }}' == 'True') {
+    $("#submit_id").show();
+    }
+
+if ( '{{ canapprove }}'== 'False') {
+    $("#approve_id").hide();
+    }
+    else if ( '{{ canapprove }}'== 'True') {
+    $("#approve_id").show();
+    }
+
+if ( '{{ canpost }}'== 'False') {
+
+    $("#post_id").hide();
+    }
+    else if ( '{{ canpost }}'== 'True') {
+    $("#post_id").show();
+    }
+
+if ( '{{ canrejct }}'== 'False') {
+    $("#reject_id").hide();
+    }
+    else if ( '{{ canrejct }}' == 'True') {
+    $("#reject_id").show();
+    }
+
+if ( '{{ cancancel }}'== 'False') {
+    $("#cancel_id").hide();
+    }
+    else if ( '{{ cancancel }}' == 'True') {
+    $("#cancel_id").show();
+    }
+
+
+
+</script>
+
+<style type="text/css">
+
+.card-header:first-child {
+    height: 28px !important;
+}
+h5.card-title.mb-0.text-white {
+    line-height: 0 !important;
+}
+.card-widgets {
+    line-height: 0 !important;
+}
+.card-widgets>a {
+    line-height: 0px !important;
+}
+
+
+      a:hover,a:focus{
+    outline: none;
+    text-decoration: none;
+}
+.tab .nav-tabs{
+    position: relative;
+    border-bottom: none;
+}
+.tab .nav-tabs li{
+    margin-right: 3px;
+}
+.tab .nav-tabs li a{
+    padding: 15px 25px;
+    font-size: 15px;
+    font-weight: 600;
+    color: inherit;
+    text-transform: uppercase;
+    background: inherit;
+    margin-right: 0;
+    border-radius: 0;
+    border: 1px solid #c9cba3;
+    position: relative;
+    transition: all 0.5s ease 0s;
+}
+.tab .nav-tabs li a:before{
+    content: "";
+    width: 100%;
+    height: 3px;
+    background: #c9cba3;
+    position: absolute;
+    top: 0;
+    left: 0;
+}
+.tab .nav-tabs li a:hover{
+    border: 1px solid #63d7d9;
+}
+.tab .nav-tabs li.active a{
+    border-color: #14c6c9;
+}
+.tab .nav-tabs li.active a:before{
+    background: #14c6c9;
+}
+.tab .tab-content{
+    font-size: 14px;
+    color: #808080;
+    line-height: 26px;
+    padding: 10px 0;
+    margin-top: 10px;
+}
+.tab .tab-content h3{
+    font-size: 22px;
+    color: #5b5a5a;
+}
+@media only screen and (max-width: 480px){
+    .tab .nav-tabs li{
+        width: 100%;
+        text-align: center;
+        margin-bottom: 8px;
+    }
+}
+
+
+.form-group {
+    margin-bottom: .1rem !important;
+}
+
+.delete-row{
+width: 30px;
+    height: 30px;
+    padding-left: 7px;
+    top: 4px;
+    padding-top: 4px;
+}
+
+
+</style>
+
+{% endblock %}
+
+

@@ -3,7 +3,7 @@
 {% load crispy_forms_tags %}
 {% block content %}
 
-    <form  align="left" id="CostCenterForm" method="post" action="#"  novalidate>
+    <form  align="left" id="CostCenterForm" method="post" action="url 'delete_module'"  novalidate>
 	{% csrf_token %}
     <div class="modal-header" style="background: #f1556c;">
       <h3 class="modal-title" style="color: white;">{% trans "Delete Modules" %}</h3>

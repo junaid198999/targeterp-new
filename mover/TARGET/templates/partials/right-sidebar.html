@@ -1,0 +1,181 @@
+{% load i18n static %}
+{% load notifications_tags %}
+<!-- Right Sidebar -->
+<link href="/static/libs/bootstrap-colorpicker/bootstrap-colorpicker.min.css" rel="stylesheet" type="text/css" />
+<div class="right-bar">
+    <div class="rightbar-title">
+        <a href="javascript:void(0);" class="right-bar-toggle float-right">
+            <i class="dripicons-cross noti-icon"></i>
+        </a>
+        <h5 class="m-0 text-white">{% trans "Settings" %}</h5>
+    </div>
+<form data-status-url="{% url 'crm:note_status' %}" data-tour-url="{% url 'crm:tour_status' %}" data-dark-url="{% url 'crm:dark_status' %}" data-color-url="{% url 'crm:theme_color' %}" id="RSForm" action="" method="post" >
+    <div class="slimscroll-menu">
+        <!-- User box -->
+        {% rightsidbar_function as settings%}
+            <div class="user-box">
+                <div class="user-img">
+                    <img src="{% if UserS.picture %} /media/{{ UserS.picture }} {% else %} /static/images/users/userimage.png {% endif %}" alt="user-img" title="Mat Helme" class="rounded-circle img-fluid">
+                    <a href="javascript:void(0);" class="user-edit"><i class="mdi mdi-pencil"></i></a>
+                </div>
+
+                <h5><a href="javascript: void(0);">{{ UserS.name }}</a> </h5>
+                <p class="text-muted mb-0"><small>{% trans "Welcome" %}</small></p>
+            </div>
+
+            <!-- Settings -->
+            <hr class="mt-0" />
+            <h5 class="pl-3">{% trans "Basic Settings" %}</h5>
+            <hr class="mb-0" />
+            {% for UserS in settings %}
+            <div class="p-3">
+                <div class="checkbox checkbox-primary mb-2">
+                    <input class="tour-status" id="Rcheckbox3" type="checkbox" {% if UserS.tours == 1 %} checked {% endif %}>
+                    <label for="Rcheckbox3">
+                        {% trans "Enable Tour" %}
+                    </label>
+                </div>
+                <div class="checkbox checkbox-primary mb-2">
+                    <input class="note-status" id="Rcheckbox1" type="checkbox" {% if UserS.notifications == 1 %} checked {% endif %}>
+                    <label for="Rcheckbox1">
+                        {% trans "Enable Notifications" %}
+                    </label>
+                </div>
+                <div class="checkbox checkbox-primary mb-2">
+                    <input class="dark-status" id="Rcheckbox2" type="checkbox" {% if UserS.darktheme == 1 %} checked {% endif %}>
+                    <label for="Rcheckbox2">
+                        {% trans "Dark Theme" %}
+                    </label>
+                </div>
+                <div class="mb-2">
+                    <label for="id_color">{% trans "Top Bar Color" %}</label> <a class="sub-header mb-0" style="color: #8b0000;"><small> {% trans "(Dark Theme)" %}</small></a>
+                    <input class="id_color form-control" id="id_color" type="color" name="color" value="{% if request.user.color is not null %}{{request.user.color}}{% else %}#0088cc{% endif %}">
+                </div>
+                <div class="mb-2" >
+                        <button style="width: 100%" id="demo-apply" class="apply-theme btn btn-blue waves-effect waves-light mb-2" type="button" name="button" data-overlayColor="#38414a">
+                            {% trans "Apply" %}
+                        </button>
+                </div>
+            </div>
+            {% endfor %}
+
+        <!-- Timeline -->
+        <hr class="mt-0" />
+        <h5 class="px-3">{% trans "Messages" %} <span class="float-right badge badge-pill badge-danger">{% not_read_count %}</span></h5>
+        <hr class="mb-0" />
+        <div class="p-3">
+            <div class="inbox-widget">
+                {% any_function as notifications%}
+
+                {% for Note in notifications %}
+                    <!-- item-->
+                    {% if request.user == Note.to_user %}
+                        <div class="inbox-item">
+                            <div class="inbox-item-img"><img src="{% if Note.picture %} {{ Note.picture.url }} {% else %} /static/images/users/userimage.png {% endif %}" class="rounded-circle" alt=""></div>
+                            <p class="inbox-item-author"><a href="javascript: void(0);" class="text-dark">{{Note.from_user}}</a></p>
+                            <p class="inbox-item-text" style="{% if Note.urgent == 1 %}color: red;{% endif %}">{{Note.message}}</p>
+                        </div>
+                    {% endif %}
+                {% endfor %}
+            </div> <!-- end inbox-widget -->
+        </div> <!-- end .p-3-->
+
+    </div> <!-- end slimscroll-menu-->
+</form>
+
+</div>
+<!-- /Right-bar -->
+
+<!-- Right bar overlay-->
+<div class="rightbar-overlay"></div>
+<script src="/static/libs/bootstrap-colorpicker/bootstrap-colorpicker.min.js"></script>
+
+
+
+<script type="text/javascript">
+
+        $(function () {
+
+            $(".apply-theme").click(function () {
+                var url = $("#RSForm").attr("data-status-url");
+                if($('.note-status').is(":checked")){
+                    var noteId = 1
+                } else {
+                    var noteId = 2
+                }
+                  $.ajax({
+                        async: false,
+                        url: url,
+                        data: {
+                            'note': noteId
+                        },
+                        success: function (data) {
+                            $("#id_payment_terms").html(data);
+                        }
+                  });
+
+                var url = $("#RSForm").attr("data-tour-url");
+                if($('.tour-status').is(":checked")){
+                    var tourId = 1
+                } else {
+                    var tourId = 2
+                }
+                  $.ajax({
+                        async: false,
+                        url: url,
+                        data: {
+                            'tour': tourId
+                        },
+                        success: function (data) {
+                            $("#id_payment_terms").html(data);
+                        }
+                  });
+
+                var url = $("#RSForm").attr("data-dark-url");
+                if($('.dark-status').is(":checked")){
+                    var darkId = 1
+                } else {
+                    var darkId = 2
+                }
+                  $.ajax({
+                        async: false,
+                        url: url,
+                        data: {
+                            'dark': darkId
+                        },
+                        success: function (data) {
+                            $("#id_payment_terms").html(data);
+                        }
+                  });
+                var url = $("#RSForm").attr("data-color-url");
+                var colorId = $(".id_color").val();
+                  $.ajax({
+                        async: false,
+                        url: url,
+                        data: {
+                            'color': colorId
+                        },
+                        success: function (data) {
+                            $("#id_payment_terms").html(data);
+                        }
+                  });
+                location.reload();
+            })
+       });
+</script>
+
+<style>
+    {% if request.user.darktheme == 1 %}
+        .right-bar .rightbar-title {
+            background-color: {{request.user.color}} !important;
+        }
+    {% else %}
+        .right-bar .rightbar-title {
+            background-color: #0088cc !important;
+        }
+    {% endif %}
+.checkbox-primary input[type=checkbox]:checked+label:before {
+    background-color: #0088cc !important;
+    border-color: #0088cc !important;
+}
+</style>

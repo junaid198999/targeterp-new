@@ -1,0 +1,389 @@
+{% extends "auth_base.html" %}
+{% load i18n %}
+{% load widget_tweaks %}
+{% load widgets %}
+
+{% block content %}
+<link href="/static/libs/sweetalert2/sweetalert2.min.css" rel="stylesheet" type="text/css" />
+    <div class="container-fluid">
+        <!-- start page title -->
+        <div class="row">
+            <div class="col-12">
+                <div class="page-title-box">
+                    <div class="page-title-right">
+                        <ol class="breadcrumb m-0">
+                            <li class="breadcrumb-item"><a href="/">TARGET</a></li>
+                            <li class="breadcrumb-item active">{% trans "Leads" %}</li>
+                        </ol>
+                    </div>
+                    <h4 class="page-title">{% trans "Leads" %}</h4>
+                </div>
+            </div>
+        </div>
+        <!-- end page title -->
+        {% if perms.crm.view_lead %}
+
+        <div class="row" >
+            <div class="col-xl-9">
+                <div class="card">
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-sm-6">
+                                <div id="controlPanel" {% if LANGUAGE_CODE == 'ar' %} align="right" {% else %} align="left" {% endif %}></div>
+                            </div>
+                            {% if perms.crm.add_lead %}
+                            <div {% if LANGUAGE_CODE == 'ar' %} align="left" {% else %} align="right" {% endif %} class="col-sm-6">
+                                <button class="btn btn-warning waves-effect waves-light mb-2"  onclick="location.href='{% url 'crm:contact_upload' %}'" type="button" name="button" data-overlayColor="#38414a">
+                                    <i class="fe-download mr-1"></i>{% trans "Import Leads" %}
+                                </button>
+                                <button class="btn btn-blue waves-effect waves-light mb-2"  onclick="location.href='{% url 'crm:create_lead' %}'" type="button" name="button" data-overlayColor="#38414a">
+                                    <i class="mdi mdi-plus-circle mr-1"></i>  {% trans "Add" %}
+                                </button>
+                            </div>
+                            {% endif %}
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-xl-12">
+                <div class="card">
+                    <div class="card-body">
+                        <div class="row mb-2">
+                            <div class="col-sm-12">
+                                <div class="text-sm-right">
+                                    <div class="modal fade" tabindex="-1" role="dialog" id="modal">
+                                          <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
+                                                <div class="modal-content"></div>
+                                          </div>
+                                    </div>
+                                    <!-- Create salesorder button -->
+                                </div><!-- end col-->
+                            </div>
+                        </div>
+
+
+                        <table id="table_id" class="table activate-select table-sm table-hover nowrap" style="width:100%">
+                            <thead class="thead-light" >
+                                <tr>
+                                    <th>{% trans "Number" %}</th>
+                                    <th>{% trans "Name" %}</th>
+                                    <th>{% trans "Status" %}</th>
+                                    <th>{% trans "Amount" %}</th>
+                                    <th>{% trans "Assigned To" %}</th>
+                                    <th>{% trans "Converted" %}</th>
+                                    <th>{% trans "Date" %}</th>
+                                    <th width="30">{% trans "Action" %}</th>
+                                </tr>
+                            </thead>
+
+                            <tbody>
+                                {% for Lead in leads %}
+                                <tr>
+                                        <td>
+                                            {{ Lead.pk}}
+                                        </td>
+                                        <td>
+                                            {{ Lead.name}}
+                                        </td>
+                                        <td>
+                                            {{ Lead.get_status_display}}
+                                        </td>
+                                        <td>
+                                            {% if Lead.amount != None %}{{ Lead.amount|currency}}{% else %} 0 {% endif%}
+                                        </td>
+                                        <td>
+                                            {{Lead.salesman}}
+
+                                        </td>
+                                        <td>
+                                            {% if Lead.converted == True %} <span class="badge bg-soft-success text-success">{% trans "Converted" %}</span> {% else %} <span class="badge bg-soft-danger text-danger">{% trans "Not Converted" %}</span> {% endif %}
+
+                                        </td>
+                                        <td>
+                                            {{ Lead.created_date }}
+                                        </td>
+                                        <td>
+                                            {% if perms.crm.change_lead %}
+                                            <a href="{% url 'crm:edit_lead' Lead.pk %}" class="btn btn-outline-warning effect waves-light btn-xs" title="{% trans "Edit" %}"><i class="mdi mdi-square-edit-outline"></i></a>
+                                            {% endif %}
+                                            {% if Lead.converted == 0 %}
+                                                {% if Lead.country is None %}
+                                                    <button type="button" class="convert-error btn btn-outline-dark effect waves-light btn-xs"  title="{% trans "Convert to Customer" %}"><i class="mdi mdi-share"></i></button>
+                                                {% elif Lead.salesman is None %}
+                                                    <button type="button" class="salesman-error btn btn-outline-dark effect waves-light btn-xs"  title="{% trans "Convert to Customer" %}"><i class="mdi mdi-share"></i></button>
+                                                {% else %}
+                                                    {% if perms.crm.convert_lead %}
+                                                    <button type="button" class="convert-lead btn btn-outline-dark effect waves-light btn-xs" data-id="{% url 'crm:convert_lead' Lead.pk %}"  title="{% trans "Convert to Customer" %}"><i class="mdi mdi-share"></i></button>
+                                                    {% endif %}
+                                                {% endif %}
+                                            {% endif %}
+                                            {% if perms.crm.delete_lead %}
+                                            <button type="button" class="delete-lead btn btn-outline-danger effect waves-light btn-xs" data-id="{% url 'crm:delete_lead' Lead.pk %}"  title="{% trans "Delete" %}"><i class="mdi mdi-delete"></i></button>
+                                            {% endif %}
+                                        </td>
+
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+
+                    </div> <!-- end card-->
+                </div> <!-- end col -->
+
+            </div>
+        <!-- end row -->
+        </div>
+    </div>
+
+    <div class="col-xl-3">
+        <div class="row">
+            <div class="col-xl-12">
+                <div class="card">
+                        <div class="card-body" dir="ltr">
+                            <div class="card-widgets">
+                                <a data-toggle="collapse" href="#cardCollpase35" role="button" aria-expanded="false" aria-controls="cardCollpase35"><i class="mdi mdi-minus"></i></a>
+                            </div>
+                            <h4 class="header-title mb-0">{% trans "Leads Status" %}</h4>
+                            <div id="cardCollpase35" class="collapse pt-3 show" >
+                                <div id="OpportunityChart" style="width: 100%; height: 340px;"></div>
+                            </div>
+                        </div> <!-- end card-body-->
+                    </div> <!-- end card-->
+            </div> <!-- end col-->
+        </div>
+        <div class="row">
+            <div class="col-xl-12">
+                <div class="card">
+                        <div class="card-body" dir="ltr">
+                            <div class="card-widgets">
+                                <a data-toggle="collapse" href="#cardCollpase34" role="button" aria-expanded="false" aria-controls="cardCollpase34"><i class="mdi mdi-minus"></i></a>
+                            </div>
+                            <h4 class="header-title mb-0">{% trans "Lead - By Status" %}</h4>
+                            <div id="cardCollpase34" class="collapse pt-3 show" >
+                                <div id="myChartOpportunity1" ></div>
+                            </div>
+                        </div> <!-- end card-body-->
+                    </div> <!-- end card-->
+            </div> <!-- end col-->
+        </div>
+    </div>
+
+        </div> <!-- container -->
+        {% else %}
+        <div class="row" >
+            <div class="col-xl-12">
+                <div class="card">
+                    <div class="card-body">
+                            <STRONG> {% trans "You Don't have a permission to access this page." %} </STRONG>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endif %}
+
+    </div>
+{% endblock %}
+
+
+{% block extra_javascript %}
+<script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+<script src="/static/libs/sweetalert2/sweetalert2.min.js"></script>
+
+    <script type="text/javascript">
+        $(".convert-error").click(function() {
+            Swal.fire({
+                type: "error",
+                title: "Oops...",
+                text: "{% trans 'You must select Country, City and Area for this Lead first' %}",
+                confirmButtonClass: "btn btn-confirm mt-2",
+            })
+        })
+        $(".salesman-error").click(function() {
+            Swal.fire({
+                type: "error",
+                title: "Oops...",
+                text: "{% trans 'You must assign Salesman for this Lead first' %}",
+                confirmButtonClass: "btn btn-confirm mt-2",
+            })
+        })
+document.addEventListener("DOMContentLoaded", function(){
+    {% if converted == 1 %}
+        alert('Created')
+    {% endif %}
+});
+      $(function () {
+        // Create lead button
+            $(".create-lead").modalForm({formURL: "{% url 'crm:create_lead' %}"});
+            // Update lead buttons
+            $(".edit-lead").each(function () {
+              $(this).modalForm({formURL: "{% url 'crm:edit_lead' 227 %}"});
+            });
+                // Delete lead button
+            $(".delete-lead").each(function () {
+              $(this).modalForm({formURL: $(this).data('id')});
+            });
+            $(".convert-lead").each(function () {
+              $(this).modalForm({formURL: $(this).data('id')});
+            });
+
+            var table = $('#table_id').DataTable( {
+                "pageLength": 10,
+                language: {
+                    buttons: {
+				        "copy": "{% trans "Copy" %}",
+				        "csv": "{% trans "CSV" %}",
+				        "pdf": "{% trans "PDF" %}",
+				        "print": "{% trans "Print" %}",
+                        copyTitle: '{% trans "Copy to clipboard" %}',
+                        copySuccess: {
+                            _: '{% trans "Copied %d rows to clipboard" %}',
+                            1: '{% trans "Copied one row to clipboard" %}'
+                        }
+                    },
+                    "sEmptyTable":     "{% trans "No data available in table" %}",
+                    "sInfo":           "{% trans "Showing _START_ to _END_ of _TOTAL_ entries" %}",
+                    "sInfoEmpty":      "{% trans "Showing 0 to 0 of 0 entries" %}",
+                    "sInfoFiltered":   "{% trans "(filtered from _MAX_ total entries)" %}",
+                    "sInfoPostFix":    "",
+                    "sInfoThousands":  ",",
+                    "sLengthMenu":     "{% trans "Show _MENU_ entries" %}",
+                    "sLoadingRecords": "{% trans "Loading..." %}",
+                    "sProcessing":     "{% trans "Processing..." %}",
+                    "sSearch":         "{% trans "Search:" %}",
+                    "sZeroRecords":    "{% trans "No matching records found" %}",
+                    "oPaginate": {
+                        "sFirst":    "{% trans "First" %}",
+                        "sLast":     "{% trans "Last" %}",
+                        "sNext":     "{% trans "Next" %}",
+                        "sPrevious": "{% trans "Previous" %}"
+                    },
+                    "oAria": {
+                        "sSortAscending":  "{% trans ": activate to sort column ascending" %}",
+                        "sSortDescending": "{% trans ": activate to sort column descending" %}"
+                    }
+                },
+                buttons: [
+                    {% if perms.crm.can_copy %}
+                        'copy',
+                    {% endif %}
+                    {% if perms.crm.can_csv %}
+                        'csv',
+                    {% endif %}
+                    {% if perms.crm.can_pdf %}
+                        'pdf',
+                    {% endif %}
+                    {% if perms.crm.can_print %}
+                        'print',
+                    {% endif %}
+                ],
+                "pagingType": "full_numbers",
+                responsive: true,
+                columnDefs: [
+                    { responsivePriority: 1, targets: 0 },
+                    { responsivePriority: 2, targets: 7 },
+
+                ]
+            } );
+
+            table
+                .buttons()
+                .container()
+                .appendTo( '#controlPanel' );
+        });
+
+
+        google.charts.load('current', {packages: ['corechart']});
+        google.charts.setOnLoadCallback(drawChartchannels);
+
+            function drawChartchannels() {
+              var data = google.visualization.arrayToDataTable([
+                ["{% trans "Status" %}", "{% trans "Total Amount" %}" ],
+                {% for i in opparr %}
+                [{% if i.status == 1 %}"New"{% elif i.status == 2 %}"Assigned"{% elif i.status == 3 %}"In Process"{% elif i.status == 4 %}"Converted"{% elif i.status == 5 %}"Recycled"{% elif i.status == 6 %}"Dead"{% endif %}, {{ i.totalsum }} ], {% endfor %}
+              ]);
+
+              var options = {
+                isStacked:true,
+                chartArea:{left:50,top:50,right:20,bottom:50,width: '70%', height: '70%'},
+                height: 340,
+                legend: { position: "none" },
+                colors:['#0088cc','#f7b84b'],
+                animation: {"startup": true,
+                    duration: 1000,
+                    easing: 'in'
+                },
+                {% if LANGUAGE_CODE == 'ar' %}
+                    fontName: 'Tajawal',
+                    annotations: { textStyle: { fontName: 'Tajawal', fontSize: 12 } },
+                    legend: {
+                        textStyle: {
+                            fontName: 'Tajawal',
+                        },
+                    },
+                    tooltip: {
+                        textStyle: {
+                            fontName: 'Tajawal',
+                        },
+                    },
+                    title: {
+                        textStyle: {
+                            fontName: 'Tajawal',
+                        },
+                    },
+
+                {% endif %}
+
+              };
+              var chart = new google.visualization.ColumnChart(document.getElementById("myChartOpportunity1"));
+              chart.draw(data, options);
+          }
+
+          google.charts.load("current", {packages:["corechart"]});
+          google.charts.setOnLoadCallback(drawChartChannel);
+          function drawChartChannel() {
+            var data = google.visualization.arrayToDataTable([
+              ['{% trans "Stage" %}', '{% trans "Total Amount" %}'],
+                {% for i in opparr %}
+                [{% if i.status == 1 %}"New"{% elif i.status == 2 %}"Assigned"{% elif i.status == 3 %}"In Process"{% elif i.status == 4 %}"Converted"{% elif i.status == 5 %}"Recycled"{% elif i.status == 6 %}"Dead"{% endif %}, {{ i.totalsum }} ], {% endfor %}
+
+            ]);
+
+            var options = {
+                animation: {"startup": true,
+                    duration: 1000,
+                    easing: 'in'
+                },
+                {% if LANGUAGE_CODE == 'ar' %}
+                    fontName: 'Tajawal',
+                    annotations: { textStyle: { fontName: 'Tajawal', fontSize: 12 } },
+                    legend: {
+                        textStyle: {
+                            fontName: 'Tajawal',
+                        },
+                    },
+                    tooltip: {
+                        textStyle: {
+                            fontName: 'Tajawal',
+                        },
+                    },
+                    title: {
+                        textStyle: {
+                            fontName: 'Tajawal',
+                        },
+                    },
+
+                {% endif %}
+              pieHole: 0.5,
+                chartArea:{left:10,top:30,right:10,bottom:30,width: '100%', height: '70%'},
+            legend: { position: "bottom", alignment: "center" },
+            tooltip: { trigger: 'selection' }
+            };
+            var chart = new google.visualization.PieChart(document.getElementById('OpportunityChart'));
+            chart.draw(data, options);
+          }
+
+    </script>
+
+
+{% endblock %}

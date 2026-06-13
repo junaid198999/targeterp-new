@@ -1,0 +1,194 @@
+{% load i18n %}
+
+{% load widget_tweaks %}
+{% load crispy_forms_tags %}
+{% block content %}
+
+    <form  align="left" id="WarehouseForm" method="post" action="#" data-areas-url="{% url 'crm:ajax_load_areas' %}" data-cities-url="{% url 'crm:ajax_load_cities' %}" novalidate>
+    {% if LANGUAGE_CODE == 'ar' %}
+        <link href="/static/libs/select2/select2-rtl.min.css" rel="stylesheet" />
+    {% else %}
+        <link href="/static/libs/select2/select2.min.css" rel="stylesheet" />
+    {% endif %}
+        {% csrf_token %}
+
+        <div class="modal-header" style="background: #4a81d4;">
+          <h3 class="modal-title" style="color: white;">{% trans "Add Warehouse" %}</h3>
+          <button style="color:white; font-size: 2rem;" type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+
+
+        <div class="modal-body">
+            <table>
+                <div class="{% if form.non_field_errors %}invalid{% endif %} mb-2">
+                  {% if form.non_field_errors %}
+                    {{ error }}
+                    {% endif %}
+                </div>
+
+                <div class="form-row">
+                      <div class="form-group col-md-8 mb-0">
+                          {{ form.name|as_crispy_field }}
+                                <div class="{% if form.name.errors %} invalid{% endif %}">
+                                    {% if error in form.name.errors %}
+                                        <p class="help-block">{{ error }}</p>
+                                        {% endif %}
+                                </div>
+                        </div>
+                      <div class="form-group col-md-4 mb-0">
+                          {{ form.warehousetype|as_crispy_field }}
+                                <div class="{% if form.warehousetype.errors %} invalid{% endif %}">
+                                    {% if error in form.warehousetype.errors %}
+                                        <p class="help-block">{{ error }}</p>
+                                        {% endif %}
+                                </div>
+                        </div>
+                </div>
+                <div class="form-row">
+                        <div class="form-group col-md-4 mb-0">
+                            {{ form.country|as_crispy_field }}
+                                 <div class="{% if form.country.errors %} invalid{% endif %}">
+                                    {% if error in form.country.errors %}
+                                        <p class="help-block">{{ error }}</p>
+                                        {% endif %}
+                                </div>
+                        </div>
+                        <div class="form-group col-md-4 mb-0">
+                            {{ form.area|as_crispy_field }}
+                                 <div class="{% if form.area.errors %} invalid{% endif %}">
+                                    {% if error in form.area.errors %}
+                                        <p class="help-block">{{ error }}</p>
+                                        {% endif %}
+                                </div>
+                        </div>
+                        <div class="form-group col-md-4 mb-0">
+                            {{ form.city|as_crispy_field }}
+                                 <div class="{% if form.city.errors %} invalid{% endif %}">
+                                    {% if error in form.city.errors %}
+                                        <p class="help-block">{{ error }}</p>
+                                        {% endif %}
+                                </div>
+                        </div>
+
+                </div>
+                <div class="form-row">
+                      <div class="form-group col-md-4 mb-0">
+                          {{ form.size|as_crispy_field }}
+                                <div class="{% if form.size.errors %} invalid{% endif %}">
+                                    {% if error in form.size.errors %}
+                                        <p class="help-block">{{ error }}</p>
+                                        {% endif %}
+                                </div>
+                        </div>
+                        <div class="form-group col-md-4 mb-0">
+                            {{ form.capacity|as_crispy_field }}
+                                 <div class="{% if form.capacity.errors %} invalid{% endif %}">
+                                    {% if error in form.capacity.errors %}
+                                        <p class="help-block">{{ error }}</p>
+                                        {% endif %}
+                                </div>
+                        </div>
+                        <div class="form-group col-md-4 mb-0">
+                            {{ form.shelves|as_crispy_field }}
+                                 <div class="{% if form.shelves.errors %} invalid{% endif %}">
+                                    {% if error in form.shelves.errors %}
+                                        <p class="help-block">{{ error }}</p>
+                                        {% endif %}
+                                </div>
+                        </div>
+                        <div class="form-group col-md-12 mb-0">
+                            {{ form.address|as_crispy_field }}
+                                 <div class="{% if form.address.errors %} invalid{% endif %}">
+                                    {% if error in form.address.errors %}
+                                        <p class="help-block">{{ error }}</p>
+                                        {% endif %}
+                                </div>
+                        </div>
+
+                </div>
+
+            </table>
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-secondary waves-effect" data-dismiss="modal">{% trans "Cancel" %}</button>
+            <button type="button" class="submit-btn btn-danger btn btn-primary">{% trans "Create" %}</button>
+        </div>
+
+
+    </form>
+
+    <script src="/static/libs/select2/select2.min.js"></script>
+<script type="text/javascript">
+    $("#id_country").change(function () {
+      var url = $("#WarehouseForm").attr("data-areas-url");  // get the url of the `load_cities` view
+      var countryId = $(this).val();  // get the selected country ID from the HTML input
+
+      $.ajax({                       // initialize an AJAX request
+        url: url,                    // set the url of the request (= localhost:8000/hr/ajax/load-cities/)
+        data: {
+          'country': countryId       // add the country id to the GET parameters
+        },
+        success: function (data) {   // `data` is the return of the `load_cities` view function
+          $("#id_area").html(data);  // replace the contents of the city input with the data that came from the server
+        }
+      });
+
+    });
+    $("#id_area").change(function () {
+      var url = $("#WarehouseForm").attr("data-cities-url");  // get the url of the `load_cities` view
+      var areaId = $(this).val();  // get the selected country ID from the HTML input
+
+      $.ajax({                       // initialize an AJAX request
+        url: url,                    // set the url of the request (= localhost:8000/hr/ajax/load-cities/)
+        data: {
+          'area': areaId       // add the country id to the GET parameters
+        },
+        success: function (data) {   // `data` is the return of the `load_cities` view function
+          $("#id_city").html(data);  // replace the contents of the city input with the data that came from the server
+        }
+      });
+
+    });
+    $(function () {
+        $('#id_warehousetype').select2({
+            width: '100%',
+            templateSelection: function (data) {
+                if (data.id === '') {
+                  return 'Select';
+                }
+            return data.text;
+            }
+        });
+        $('#id_country').select2({
+            width: '100%',
+            templateSelection: function (data) {
+                if (data.id === '') {
+                  return 'Select';
+                }
+            return data.text;
+            }
+        });
+        $('#id_area').select2({
+            width: '100%',
+            templateSelection: function (data) {
+                if (data.id === '') {
+                  return 'Select';
+                }
+            return data.text;
+            }
+        });
+        $('#id_city').select2({
+            width: '100%',
+            templateSelection: function (data) {
+                if (data.id === '') {
+                  return 'Select';
+                }
+            return data.text;
+            }
+        });
+    });
+</script>
+
+{% endblock %}

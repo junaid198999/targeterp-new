@@ -1,0 +1,78 @@
+operation detail info html
+------------------------
+
+{% load widgets %}
+
+<script>
+    var cust_id = "";
+    var cust_name = "";
+
+    var invl_id = "";
+    var invl_name = "";
+
+
+
+</script>
+
+
+{% for so in operationsdetinfo %}
+
+<script>
+    {% if so.accounttypekeyid == 90001 %}
+        cust_id = {{so.ledgerid}} + ""
+        cust_name = "{{so.ledger}}";
+    {% endif %}
+    {% if so.accounttypekeyid == 90002 %}
+        cust_id = {{so.vendorid}} + ""
+        cust_name = "{{so.vendor}}";
+    {% endif %}
+    {% if so.accounttypekeyid == 90003 %}
+        cust_id = {{so.customerid}} + ""
+        cust_name = "{{so.customer}}";
+    {% endif %}
+
+
+    invl_id = {{so.invlocationid}} + ""
+    invl_name = "{{so.invlocation}}";
+
+    {% if so.accounttypekeyid == 90001 %}
+        $(`select[name="ledger"]`).html(
+        `<option selected value="${cust_id}">${cust_name}</option>`);
+    {% endif %}
+    {% if so.accounttypekeyid == 90002 %}
+        $(`select[name="vendor"]`).html(
+        `<option selected value="${cust_id}">${cust_name}</option>`);
+    {% endif %}
+    {% if so.accounttypekeyid == 90003 %}
+        $(`select[name="customer"]`).html(
+        `<option selected value="${cust_id}">${cust_name}</option>`);
+    {% endif %}
+
+
+    $(`select[name="invlocation"]`).html(
+    `<option selected value="${invl_id}">${invl_name}</option>`);
+
+    {% if viewdiscamt1 == True %}
+    $(`input[name="discper1"]`).val({{so.discper1}});
+    $(`input[name="discamt1"]`).val({{so.discamt1}});
+    {% endif %}
+
+    {% if viewdiscamt2 == True %}
+    $(`input[name="discper2"]`).val({{so.discper2}});
+    $(`input[name="discamt2"]`).val({{so.discamt2}});
+    {% endif %}
+
+    {% if viewdiscamt3 == True %}
+    $(`input[name="discper3"]`).val({{so.discper3}});
+    $(`input[name="discamt3"]`).val({{so.discamt3}});
+    {% endif %}
+
+
+
+
+
+
+</script>
+
+
+{% endfor %}

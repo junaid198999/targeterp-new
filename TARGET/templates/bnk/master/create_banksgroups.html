@@ -70,26 +70,49 @@
 
 {% endblock %}
 <script>
+
     $(".submit-btn.btn-danger.btn.btn-primary").prop("disabled", true);
+
     function check_validation(control) {
+
         if($(control).val().length < 1) {
+
             $(control).css("border", "1px solid red");
+
             $(control).focus();            
+
         } else {
+
             $(control).css("border", "1px solid black");
+
         }
+
         if(($("#id_code").val().length < 1) || ($("#id_engname").val().length < 1)) {
+
             $(".submit-btn.btn-danger.btn.btn-primary").prop("disabled", true);            
+
         } else {
+
                 $(".submit-btn.btn-danger.btn.btn-primary").prop("disabled", false);
+
         }
+
     }
+
   
+
     $("#id_code").on('keyup keypress change blur', function(){
+
         check_validation(this);
+
     });
+
   
+
     $("#id_engname").on('keyup keypress change blur', function(){
+
         check_validation(this);
+
     });  
+
   </script>

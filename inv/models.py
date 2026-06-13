@@ -2,98 +2,71 @@ from django.core.validators import MinValueValidator, MaxValueValidator
 from decimal import Decimal
 from django.db.models import Q
 import datetime
-
 from django.db import models
 from TARGET.users.models import User
 from django.utils.translation import gettext_lazy as _
-
 from TARGET.crm.models import current_year
-
 from sy.models import PaymentsMethods,LookUp
 from django.utils.translation import get_language
 from gl.models import *
 from sy.models import *
 from ar.models import Customers ,  CustomersClasses ,Salesmans
 from ap.models import *
-
-
 from datetime import datetime
-
-
 #from django.db import models
-
-
 class Units(models.Model):
     code = models.CharField(max_length=20,blank=True, null=True, verbose_name =_("Code"))
     engname = models.CharField(max_length=100,blank=True, null=True, verbose_name =_("Eng Name"))
     arbname = models.CharField(max_length=100,blank=True, null=True, verbose_name=_("Arb Name"))
     remarks = models.CharField(max_length=100,blank=True, null=True, verbose_name=_("Remarks"))
     #created_date = models.DateTimeField(blank=True,auto_now_add=True, verbose_name =_("Created Date"))
-
     class Meta:
         ordering = ['pk']
         default_permissions = ('add', 'change', 'delete', 'view')
-
     def __str__(self):
         if get_language() == 'ar':
             return self.code + ' - ' + self.arbname
         else:
             return self.code + ' - ' + self.engname
-
-
 class Warehouses(models.Model):
     code = models.CharField(max_length=50,unique=True, verbose_name=_("Code"))
     engname = models.CharField(max_length=100, verbose_name =_("Eng Name"))
     arbname = models.CharField(max_length=100, verbose_name=_("Arb Name"))
     remarks = models.CharField(max_length=100,blank=True, null=True, verbose_name=_("Remarks"))
-
     class Meta:
         ordering = ['code']
         default_permissions = ('add', 'change', 'delete', 'view')
-
     def __str__(self):
         if get_language() == 'ar':
             return self.code + ' - ' + self.arbname
         else:
             return self.code + ' - ' + self.engname
-
-
 class StorageMethodsTypes(models.Model):
     code = models.CharField(max_length=50,unique=True, verbose_name=_("Code"))
     engname = models.CharField(max_length=100, verbose_name =_("Eng Name"))
     arbname = models.CharField(max_length=100, verbose_name=_("Arb Name"))
     remarks = models.CharField(max_length=100,blank=True, null=True, verbose_name=_("Remarks"))
-
-
     class Meta:
         ordering = ['code']
         default_permissions = ('add', 'change', 'delete', 'view')
-
     def __str__(self):
         if get_language() == 'ar':
             return self.code + ' - ' + self.arbname
         else:
             return self.code + ' - ' + self.engname
-
-
 class InventoriesLocationsTypes(models.Model):
     code = models.CharField(max_length=50,unique=True, verbose_name=_("Code"))
     engname = models.CharField(max_length=100, verbose_name =_("Eng Name"))
     arbname = models.CharField(max_length=100, verbose_name=_("Arb Name"))
     remarks = models.CharField(max_length=100,blank=True, null=True, verbose_name=_("Remarks"))
-
-
     class Meta:
         ordering = ['code']
         default_permissions = ('add', 'change', 'delete', 'view')
-
     def __str__(self):
         if get_language() == 'ar':
             return self.code + ' - ' + self.arbname
         else:
             return self.code + ' - ' + self.engname
-
-
 class InventoriesLocations(models.Model):
     code = models.CharField(max_length=50, unique=True, verbose_name=_("Code"))
     engname = models.CharField(max_length=100, verbose_name=_("Eng Name"))
@@ -127,23 +100,18 @@ class InventoriesLocations(models.Model):
     costcenter4 = models.ForeignKey(CostCenters,related_name='InventoriesLocations_cc4', blank=True, null=True, on_delete=models.PROTECT, verbose_name=_("Cost center 4"))
     storekeeper = models.IntegerField( blank=True, null=True,  verbose_name =_("Store Keeper"))
     remarks = models.CharField(max_length=100,blank=True, null=True, verbose_name=_("Remarks"))
-
-
     class Meta:
         ordering = ['code']
         default_permissions = ('add', 'change', 'delete', 'view')
-
     def __str__(self):
         if get_language() == 'ar':
             return str(self.code + ' - ' + self.arbname)
         else:
             return str(self.code + ' - ' + self.engname)
-
-
 class InventoriesBinLocations(models.Model):
     inventlocation = models.ForeignKey(InventoriesLocations, blank=True, null=True, on_delete=models.PROTECT, verbose_name=_("Inventory Location"))
-    code = models.CharField(max_length=100,unique=True, verbose_name=_("Auto Code Concat(L+F+Z+T+S+B)"))
-    barcode = models.CharField(max_length=100,unique=True, verbose_name=_("Barode"))
+    code = models.CharField(max_length=100,unique=True,blank=True, verbose_name=_("Auto Code Concat(L+I+F+Z+T+S+B)"))
+    barcode = models.CharField(max_length=100,unique=True,blank=True, verbose_name=_("Barode"))
     floor = models.CharField(max_length=50,  verbose_name=_("Floor"))
     zone = models.CharField(max_length=100, blank=False, null=True, verbose_name=_("Zone"))
     track = models.CharField(max_length=100, blank=False, null=True, verbose_name=_("Track"))
@@ -151,16 +119,12 @@ class InventoriesBinLocations(models.Model):
     bin = models.CharField(max_length=100, blank=False, null=True, verbose_name=_("Bin"))
     storagemethod = models.ForeignKey(StorageMethodsTypes, blank=True, null=True, on_delete=models.PROTECT, verbose_name=_("Inventry Storage Method"))
     remarks = models.CharField(max_length=100,blank=True, null=True, verbose_name=_("Remarks"))
-
     class Meta:
         ordering = ['code']
         default_permissions = ('add', 'change', 'delete', 'view')
-
     def __str__(self):
             return str(self.code)
-
-
-
+            # return str(self.code + ' - ' + self.floor + ' - ' + self.zone + ' - ' + self.track + ' - ' + self.code + ' - ' + self.barcode)
 class ItemsTypes(models.Model):
     code = models.CharField(max_length=20,blank=True, null=True, verbose_name =_("Code"))
     engname = models.CharField(max_length=100,blank=True, null=True, verbose_name =_("Eng Name"))
@@ -172,18 +136,14 @@ class ItemsTypes(models.Model):
     allowsellingzeroqty = models.BooleanField(blank=False, null=False, verbose_name=_("Allow Selling Zero Qty"))
     remarks = models.CharField(max_length=100,blank=True, null=True, verbose_name=_("Remarks"))
     #created_date = models.DateTimeField(blank=True,auto_now_add=True, verbose_name =_("Created Date"))
-
     class Meta:
         ordering = ['pk']
         default_permissions = ('add', 'change', 'delete', 'view')
-
     def __str__(self):
         if get_language() == 'ar':
             return str(self.code) + ' - ' + str(self.arbname)
         else:
             return str(self.code) + ' - ' + str(self.engname)
-
-
 class ItemsCategories(models.Model):
     code = models.CharField(max_length=20,blank=True, null=True, verbose_name =_("Code"))
     engname = models.CharField(max_length=100,blank=True, null=True, verbose_name =_("Eng Name"))
@@ -191,18 +151,14 @@ class ItemsCategories(models.Model):
     parent = models.ForeignKey('self',related_name='ItemsCategories_Parent', blank=True, null=True, on_delete=models.PROTECT, verbose_name=_("Parent Category"))
     remarks = models.CharField(max_length=100,blank=True, null=True, verbose_name=_("Remarks"))
     #created_date = models.DateTimeField(blank=True,auto_now_add=True, verbose_name =_("Created Date"))
-
     class Meta:
         ordering = ['pk']
         default_permissions = ('add', 'change', 'delete', 'view')
-
     def __str__(self):
         if get_language() == 'ar':
             return self.code + ' - ' + self.arbname
         else:
             return self.code + ' - ' + self.engname
-
-
 class ItemsGroups(models.Model):
     code = models.CharField(max_length=20,blank=True, null=True, verbose_name =_("Code"))
     engname = models.CharField(max_length=100,blank=True, null=True, verbose_name =_("Eng Name"))
@@ -210,18 +166,14 @@ class ItemsGroups(models.Model):
     parent = models.ForeignKey('self',related_name='ItemsGroups_Parent', blank=True, null=True, on_delete=models.PROTECT, verbose_name=_("Parent Group"))
     remarks = models.CharField(max_length=100,blank=True, null=True, verbose_name=_("Remarks"))
     #created_date = models.DateTimeField(blank=True,auto_now_add=True, verbose_name =_("Created Date"))
-
     class Meta:
         ordering = ['pk']
         default_permissions = ('add', 'change', 'delete', 'view')
-
     def __str__(self):
         if get_language() == 'ar':
             return self.code + ' - ' + self.arbname
         else:
             return self.code + ' - ' + self.engname
-
-
 class ItemsBrands(models.Model):
     code = models.CharField(max_length=20,blank=True, null=True, verbose_name =_("Code"))
     engname = models.CharField(max_length=100,blank=True, null=True, verbose_name =_("Eng Name"))
@@ -229,36 +181,28 @@ class ItemsBrands(models.Model):
     parent = models.ForeignKey('self',related_name='ItemsBrands_Parent', blank=True, null=True, on_delete=models.PROTECT, verbose_name=_("Parent"))
     remarks = models.CharField(max_length=100,blank=True, null=True, verbose_name=_("Remarks"))
     #created_date = models.DateTimeField(blank=True,auto_now_add=True, verbose_name =_("Created Date"))
-
     class Meta:
         ordering = ['pk']
         default_permissions = ('add', 'change', 'delete', 'view')
-
     def __str__(self):
         if get_language() == 'ar':
             return self.code + ' - ' + self.arbname
         else:
             return self.code + ' - ' + self.engname
-
-
-
 class GenericNamesCategories(models.Model):
     code = models.CharField(max_length=20,blank=True, null=True, verbose_name =_("Code"))
     engname = models.CharField(max_length=100,blank=True, null=True, verbose_name =_("Eng Name"))
     arbname = models.CharField(max_length=100,blank=True, null=True, verbose_name=_("Arb Name"))
     remarks = models.CharField(max_length=100,blank=True, null=True, verbose_name=_("Remarks"))
     #created_date = models.DateTimeField(blank=True,auto_now_add=True, verbose_name =_("Created Date"))
-
     class Meta:
         ordering = ['pk']
         default_permissions = ('add', 'change', 'delete', 'view')
-
     def __str__(self):
         if get_language() == 'ar':
             return self.code + ' - ' + self.arbname
         else:
             return self.code + ' - ' + self.engname
-
 class GenericNames(models.Model):
     code = models.CharField(max_length=20,blank=True, null=True, verbose_name =_("Code"))
     engname = models.CharField(max_length=100,blank=True, null=True, verbose_name =_("Eng Name"))
@@ -266,19 +210,14 @@ class GenericNames(models.Model):
     genericcategory = models.ForeignKey(GenericNamesCategories, blank=True, null=True, on_delete=models.PROTECT, verbose_name=_("Generic Category"))
     remarks = models.CharField(max_length=100,blank=True, null=True, verbose_name=_("Remarks"))
     #created_date = models.DateTimeField(blank=True,auto_now_add=True, verbose_name =_("Created Date"))
-
     class Meta:
         ordering = ['pk']
         default_permissions = ('add', 'change', 'delete', 'view')
-
     def __str__(self):
         if get_language() == 'ar':
             return str(self.code) + ' - ' + str(self.arbname)
         else:
             return str(self.code) + ' - ' + str(self.engname)
-
-
-
 class ItemsClasses(models.Model):
     code = models.CharField(max_length=20,blank=True, null=True, verbose_name =_("Code"))
     engname = models.CharField(max_length=100,blank=True, null=True, verbose_name =_("Eng Name"))
@@ -292,22 +231,24 @@ class ItemsClasses(models.Model):
     costcenter2 = models.ForeignKey(CostCenters,related_name='ItemsClasses_cc2', blank=True, null=True, on_delete=models.PROTECT, verbose_name=_("Cost center 2"))
     costcenter3 = models.ForeignKey(CostCenters,related_name='ItemsClasses_cc3', blank=True, null=True, on_delete=models.PROTECT, verbose_name=_("Cost center 3"))
     costcenter4 = models.ForeignKey(CostCenters,related_name='ItemsClasses_cc4', blank=True, null=True, on_delete=models.PROTECT, verbose_name=_("Cost center 4"))
-
-
     remarks = models.CharField(max_length=100,blank=True, null=True, verbose_name=_("Remarks"))
     #created_date = models.DateTimeField(blank=True,auto_now_add=True, verbose_name =_("Created Date"))
-
     class Meta:
         ordering = ['pk']
         default_permissions = ('add', 'change', 'delete', 'view')
-
     def __str__(self):
         if get_language() == 'ar':
-            return self.code + ' - ' + self.arbname
+            # return self.code + ' - ' + self.arbname
+            return "%s | %s" % (
+             self.code,
+             self.arbname,
+             )
         else:
-            return self.code + ' - ' + self.engname
-
-
+            # return self.code + ' - ' + self.engname
+            return "%s | %s" % (
+             self.code,
+             self.engname,
+             )
 class Items(models.Model):
     code = models.CharField(max_length=20,blank=True, null=True, verbose_name =_("Code"))
     engname = models.CharField(max_length=100,blank=True, null=True, verbose_name =_("Eng Name"))
@@ -327,7 +268,6 @@ class Items(models.Model):
     noofpiece = models.IntegerField(default=1, blank=True, null=True,  verbose_name =_("No Of Piece"))
     weight =models.DecimalField(decimal_places=3, max_digits=30,blank=True, null=True, verbose_name =_("Weight"))
     weightunit = models.ForeignKey(Units, blank=True, null=True,related_name='Items_WeightUnit', on_delete=models.PROTECT, verbose_name=_("Weight Unit"))
-
     status = models.ForeignKey(LookUp,related_name='Items_Status', limit_choices_to={'keyname': 'ItemStatus'}, blank=True, null=True, on_delete=models.PROTECT, verbose_name=_("Item Status"))
     statusdate = models.DateField(blank=True, null=True, verbose_name =_("Status Date"))
     statusreason = models.CharField(max_length=100,blank=True, null=True, verbose_name=_("Status Reason"))
@@ -339,14 +279,11 @@ class Items(models.Model):
     taxgroupsaleincludedprice = models.BooleanField(default=False,blank=False, null=False, verbose_name=_("Tax Included sale Price"))
     taxgroupPurchase= models.ForeignKey(TaxesGroups,related_name='Items_taxgroupheadPurchase',blank=False, null=True, on_delete=models.PROTECT, verbose_name=_("Tax Group Head Purchase"))
     taxgroupPurchaseincludedprice = models.BooleanField(default=False,blank=False, null=False, verbose_name=_("Tax Included Purchase Price"))
-
     image = ImageField(upload_to='images/', max_length=255, blank=True, null=True, verbose_name =_("Item Image"))
     ti = models.PositiveIntegerField(blank=True, null=True, verbose_name =_("TI"))
     hi = models.PositiveIntegerField(blank=True, null=True, verbose_name =_("HI"))
-
     shelflife = models.PositiveIntegerField(blank=True, null=True, verbose_name =_("Shelf Life Month"))
     safetystock = models.PositiveIntegerField(blank=True, null=True, verbose_name =_("Safety Stock Month"))
-
     sfdaregno = models.CharField(max_length=100,blank=True, null=True, verbose_name=_("SFDA Registration Number"))
     genericname = models.ForeignKey(GenericNames  , blank=True, null=True, on_delete=models.PROTECT, verbose_name=_("Item Generic Name"))
     lasa = models.BooleanField(default=False,blank=False, null=False, verbose_name=_("Look-Alike/Sound-Alike"))
@@ -359,37 +296,39 @@ class Items(models.Model):
     strength = models.CharField(max_length=100,blank=True, null=True, verbose_name=_("Strength"))
     instruction = models.CharField(max_length=100,blank=True, null=True, verbose_name=_("Instruction"))
     routeofadministration = models.IntegerField( blank=True, null=True,  verbose_name =_("route of administration"))
-
     remarks = models.CharField(max_length=100,blank=True, null=True, verbose_name=_("Remarks"))
     created_date = models.DateField(auto_now_add=True, auto_now=False, verbose_name =_("Created Date"))
-
     class Meta:
         ordering = ['pk']
         default_permissions = ('add', 'change', 'delete', 'view')
-
     def __str__(self):
         if get_language() == 'ar':
             return str(self.code) + ' - ' + str(self.arbname)
         else:
             return str(self.code) + ' - ' + str(self.engname)
-
-
 """ Insert into next table One record for Base unit and factor is 1 to make relation direct with Item Identifier"""
 class ItemsUOM(models.Model):
     item = models.ForeignKey(Items, blank=False, null=False, on_delete=models.PROTECT, verbose_name=_("Item"))
     unit = models.ForeignKey(Units, blank=True, null=True, on_delete=models.PROTECT, verbose_name=_("Unit"))
     baseunitfactor = models.DecimalField(decimal_places=12, max_digits=30,blank=True, null=True, verbose_name =_("Base Unit Factor"))
     barcode = models.CharField(max_length=100,blank=True, null=True, verbose_name=_("Barcode Global Trade Item Number (GTIN)"))
-
     class Meta:
         ordering = ['pk']
         default_permissions = ('add', 'change', 'delete', 'view')
-
     def __str__(self):
-        return   self.unit.code + ' - ' + str(int(self.baseunitfactor)) + ' - ' + self.barcode
-
-
-
+        # return   self.unit.code + ' - ' + str(int(self.baseunitfactor)) + ' - ' + self.barcode
+        # return   self.unit.code  + ' - ' + self.barcode
+        if self.baseunitfactor is None:
+            return "%s | %s " % (
+                    self.unit.code,
+                    self.barcode,
+                    )
+        else:
+            return "%s | %s | %s " % (
+                    self.unit.code,
+                    str(int(self.baseunitfactor)),
+                    self.barcode,
+                    )
 class ItemsInventoriesLocations(models.Model):
     item = models.ForeignKey(Items, blank=False, null=False, on_delete=models.PROTECT, verbose_name=_("Item"))
     invlocation = models.ForeignKey(InventoriesLocations, blank=True, null=True, on_delete=models.PROTECT, verbose_name=_("Inventory Location"))
@@ -398,15 +337,23 @@ class ItemsInventoriesLocations(models.Model):
     statusdate = models.DateField(blank=True, null=True, verbose_name =_("Status Date"))
     statusreason = models.CharField(max_length=100,blank=True, null=True, verbose_name=_("Status Reason"))
     statuschangedby = models.ForeignKey(User,blank=True, null=True, on_delete=models.PROTECT, verbose_name=_("Status Changed By"))
-
     class Meta:
         ordering = ['pk']
         default_permissions = ('add', 'change', 'delete', 'view')
-
     def __str__(self):
-        return self.invlocation
-
-
+        if get_language() == 'ar':
+                # return self.code + ' - ' + self.arbname
+                return "%s | %s" % (
+                self.code,
+                self.arbname,
+                )
+        else:
+            # return self.code + ' - ' + self.engname
+            return "%s | %s" % (
+            self.code,
+            self.engname,
+            )
+    #     return self.invlocation
 class ItemsSeasonality(models.Model):
     item = models.ForeignKey(Items, blank=False, null=False, on_delete=models.PROTECT, verbose_name=_("Item"))
     area = models.ForeignKey(Areas, blank=True, null=True, on_delete=models.PROTECT, verbose_name=_("Area "))
@@ -424,29 +371,19 @@ class ItemsSeasonality(models.Model):
     m11 = models.DecimalField(blank=True, null=True, decimal_places=2, max_digits=12, default=8.34, validators=[MinValueValidator(Decimal('0.01'))], verbose_name =_("M11"))
     m12 = models.DecimalField(blank=True, null=True, decimal_places=2, max_digits=12, default=8.34, validators=[MinValueValidator(Decimal('0.01'))], verbose_name =_("M12"))
     m_total = models.PositiveIntegerField(default=100, validators=[MinValueValidator(100),MaxValueValidator(100)], verbose_name =_("Total"))
-
     class Meta:
         ordering = ['pk']
         default_permissions = ('add', 'change', 'delete', 'view')
-
-
-
     def __str__(self):
         return self.pk
-
-
 class ItemsPricesLevels(models.Model):
     item = models.ForeignKey(Items, blank=False, null=False, on_delete=models.PROTECT, verbose_name=_("Item"))
     pricelevel = models.ForeignKey(PriceLevels , blank=False, null=False, on_delete=models.PROTECT, verbose_name=_("Price Level"))
-
     class Meta:
         ordering = ['pk']
         default_permissions = ('add', 'change', 'delete', 'view')
-
     def __str__(self):
         return self.pricelevel
-
-
 class ItemsPricesLists(models.Model):
     item = models.ForeignKey(Items, blank=False, null=False, on_delete=models.PROTECT, verbose_name=_("Item"))
     itemuom = models.ForeignKey(ItemsUOM, blank=False, null=True, on_delete=models.PROTECT, verbose_name=_("Item UOM"))
@@ -455,16 +392,11 @@ class ItemsPricesLists(models.Model):
     unit = models.ForeignKey(Units, blank=False, null=True, on_delete=models.PROTECT, verbose_name=_("Unit"))
     price =models.DecimalField(decimal_places=12, max_digits=30,blank=True, null=True, verbose_name =_("Price"))
     #barcode = models.CharField(max_length=100,blank=False, null=False,unique=True, verbose_name=_("Barcode Global Trade Item Number (GTIN)"))
-
-
     class Meta:
         ordering = ['pk']
         default_permissions = ('add', 'change', 'delete', 'view')
-
     def __str__(self):
         return str(self.price)
-
-
 class ItemsIdentifiers(models.Model):
     item = models.ForeignKey(Items, blank=False, null=False, on_delete=models.PROTECT, verbose_name=_("Item"))
     itemuom = models.ForeignKey(ItemsUOM, blank=False, null=False,related_name='ItemsIdentifiers_itemuom', on_delete=models.PROTECT, verbose_name=_("Item UOM"))
@@ -475,17 +407,12 @@ class ItemsIdentifiers(models.Model):
     lotdate = models.DateField(blank=True, null=True, verbose_name =_("Lot Date"))
     lotnumber = models.CharField(max_length=50,blank=True, null=True, verbose_name=_("Lot Number"))
     serialnumber = models.CharField(max_length=100,blank=True, null=True, verbose_name=_("Serial Number"))
-
     class Meta:
         ordering = ['pk']
         default_permissions = ('add', 'change', 'delete', 'view')
         unique_together = ['item', 'itemuom','barcode','expiredate','batchnumber','lotdate','lotnumber','serialnumber']
-
-
     def __str__(self):
         return self.barcode
-
-
 class WFActionsStatus(models.Model):
     code = models.CharField(max_length=20,blank=True, null=True, verbose_name =_("Code"))
     engname = models.CharField(max_length=100,blank=True, null=True, verbose_name =_("Action Eng Name"))
@@ -494,18 +421,14 @@ class WFActionsStatus(models.Model):
     statusarbname = models.CharField(max_length=100,blank=True, null=True, verbose_name=_("Status Arb Name"))
     remarks = models.CharField(max_length=100,blank=True, null=True, verbose_name=_("Remarks"))
     #created_date = models.DateTimeField(blank=True,auto_now_add=True, verbose_name =_("Created Date"))
-
     class Meta:
         ordering = ['pk']
         default_permissions = ('add', 'change', 'delete', 'view')
-
     def __str__(self):
         if get_language() == 'ar':
             return self.code + ' - ' + self.arbname
         else:
             return self.code + ' - ' + self.engname
-
-
 class ExpensesTypes(models.Model):
     code = models.CharField(max_length=20,blank=True, null=True, verbose_name =_("Code"))
     engname = models.CharField(max_length=100,blank=True, null=True, verbose_name =_("Action Eng Name"))
@@ -515,21 +438,16 @@ class ExpensesTypes(models.Model):
     costcenter2 = models.ForeignKey(CostCenters,related_name='ExpensesType_cc2', blank=True, null=True, on_delete=models.PROTECT, verbose_name=_("Cost center 2"))
     costcenter3 = models.ForeignKey(CostCenters,related_name='ExpensesType_cc3', blank=True, null=True, on_delete=models.PROTECT, verbose_name=_("Cost center 3"))
     costcenter4 = models.ForeignKey(CostCenters,related_name='ExpensesType_cc4', blank=True, null=True, on_delete=models.PROTECT, verbose_name=_("Cost center 4"))
-
     remarks = models.CharField(max_length=100,blank=True, null=True, verbose_name=_("Remarks"))
     #created_date = models.DateTimeField(blank=True,auto_now_add=True, verbose_name =_("Created Date"))
-
     class Meta:
         ordering = ['pk']
         default_permissions = ('add', 'change', 'delete', 'view')
-
     def __str__(self):
         if get_language() == 'ar':
             return str(self.code) + ' - ' + str(self.arbname)
         else:
             return str(self.code) + ' - ' + str(self.engname)
-
-
 class Agencies(models.Model):
     code = models.CharField(max_length=20,blank=True, null=True, verbose_name =_("Code"))
     engname = models.CharField(max_length=100,blank=True, null=True, verbose_name =_("Action Eng Name"))
@@ -541,44 +459,42 @@ class Agencies(models.Model):
     costcenter2 = models.ForeignKey(CostCenters,related_name='Agencies_cc2', blank=True, null=True, on_delete=models.PROTECT, verbose_name=_("Cost center 2"))
     costcenter3 = models.ForeignKey(CostCenters,related_name='Agencies_cc3', blank=True, null=True, on_delete=models.PROTECT, verbose_name=_("Cost center 3"))
     costcenter4 = models.ForeignKey(CostCenters,related_name='Agencies_cc4', blank=True, null=True, on_delete=models.PROTECT, verbose_name=_("Cost center 4"))
-
     remarks = models.CharField(max_length=100,blank=True, null=True, verbose_name=_("Remarks"))
     #created_date = models.DateTimeField(blank=True,auto_now_add=True, verbose_name =_("Created Date"))
-
+    taxgroupsales= models.ForeignKey(TaxesGroups,related_name='Items_taxgroupheadsales',blank=False, null=True, on_delete=models.PROTECT, verbose_name=_("Tax Group Head Sales"))
+    taxgroupsalesincludedprice = models.BooleanField(default=False,blank=False, null=False, verbose_name=_("Tax Included sale Price"))
+    taxgrouppurchases= models.ForeignKey(TaxesGroups,related_name='Items_taxgroupheadPurchases',blank=False, null=True, on_delete=models.PROTECT, verbose_name=_("Tax Group Head Purchases"))
+    taxgrouppurchasesincludedprice = models.BooleanField(default=False,blank=False, null=False, verbose_name=_("Tax Included Purchase Price"))
     class Meta:
         ordering = ['pk']
         default_permissions = ('add', 'change', 'delete', 'view')
-
     def __str__(self):
         if get_language() == 'ar':
             return str(self.code) + ' - ' + str(self.arbname)
         else:
             return str(self.code) + ' - ' + str(self.engname)
-
 class AgenciesExpensesLine(models.Model):
     agency = models.ForeignKey(Agencies,blank=True, null=True,  on_delete=models.PROTECT, verbose_name=_("Agency"))
     expenstype = models.ForeignKey(ExpensesTypes,blank=True, null=True,  on_delete=models.PROTECT, verbose_name=_("Expense Type"))
     remarks = models.CharField(max_length=100,blank=True, null=True, verbose_name=_("Remarks"))
+   
     #created_date = models.DateTimeField(blank=True,auto_now_add=True, verbose_name =_("Created Date"))
-
     class Meta:
         ordering = ['pk']
         default_permissions = ('add', 'change', 'delete', 'view')
-
     def __str__(self):
         return self.pk
-
-
-
 class OperationsTypes(models.Model):
     code = models.CharField(max_length=20,blank=True, null=True, verbose_name =_("Code"))
     engname = models.CharField(max_length=100,blank=True, null=True, verbose_name =_("Eng Name"))
     arbname = models.CharField(max_length=100,blank=True, null=True, verbose_name=_("Arb Name"))
     operationkind = models.ForeignKey(LookUp,limit_choices_to={'keyname': 'OperationsKinds'},related_name='OperationsTypes_operationkind', blank=True, null=True, on_delete=models.PROTECT, verbose_name=_("Operation Kind"))
+    # operationkind = models.ForeignKey(LookUp,related_name='OperationsTypes_operationkind', blank=True, null=True, on_delete=models.PROTECT, verbose_name=_("Operation Kind"))
     pricelevel = models.ForeignKey(PriceLevels,related_name='OperationsTypes_pricelevel', blank=True, null=True, on_delete=models.PROTECT, verbose_name=_("Price Level"))
     effectcostprice = models.BooleanField(default=False,blank=False, null=False, verbose_name=_("Iseffecting Item Cost Price"))
     viewlocationqty = models.BooleanField(default=False,blank=False, null=False, verbose_name=_("View Qty In All Locations"))
     accounttype = models.ForeignKey(LookUp,limit_choices_to={'keyname': 'AccountType'},related_name='OperationsTypes_accounttype', blank=True, null=True, on_delete=models.PROTECT, verbose_name=_("Account Type"))
+    # accounttype = models.ForeignKey(Vendors,related_name='OperationsTypes_accounttype', blank=True, null=True, on_delete=models.PROTECT, verbose_name=_("Account Type"))
     viewaccountbalance = models.BooleanField(default=False,blank=False, null=False, verbose_name=_("View Account Balance"))
     allowrevise = models.BooleanField(default=False,blank=False, null=False, verbose_name=_("Allow Revise"))
     allowadditem = models.BooleanField(default=False,blank=False, null=False, verbose_name=_("Allow Add New Item"))
@@ -610,12 +526,9 @@ class OperationsTypes(models.Model):
     viewparent = models.BooleanField(default=False, verbose_name =_("Load Parent"))
     #possibleparent = models.CharField(max_length=450,blank=True, null=True, verbose_name=_("Parent Possible"))
     possibleparent = models.ManyToManyField('self',verbose_name=_("Parent Possible"))
-
     ledgergoodsonway = models.ForeignKey(Ledger,related_name='OperationsTypes_ledgergoodsonway', limit_choices_to={'allowaccountentry': True}, blank=True, null=True,on_delete=models.PROTECT, verbose_name=_("Ledger Goods On The Way"))
     allowchangeprice = models.BooleanField(default=False, blank=False, null=False, verbose_name=_("Allow Item Change Price"))
     allowcashdiscount = models.BooleanField(default=False,blank=False, null=False, verbose_name=_("Allow Cash Discount"))
-
-
     viewitem = models.BooleanField(default=False, verbose_name =_("Item"))
     viewitemidentifier = models.BooleanField(default=False, verbose_name =_("Item Identifier"))
     viewitemengdesc = models.BooleanField(default=False, verbose_name =_("Item Eng Description"))
@@ -649,35 +562,33 @@ class OperationsTypes(models.Model):
     viewlinetotal = models.BooleanField(default=False, verbose_name =_("Line Total"))
     viewtaxpercent = models.BooleanField(default=False, verbose_name =_("Tax Percent"))
     viewtaxamount = models.BooleanField(default=False, verbose_name =_("Tax Amount"))
-
-
     #created_date = models.DateTimeField(blank=True,auto_now_add=True, verbose_name =_("Created Date"))
-
     class Meta:
         ordering = ['pk']
         default_permissions = ('add', 'change', 'delete', 'view')
-
     def __str__(self):
         if get_language() == 'ar':
-            return self.code + ' - ' + self.arbname
+            return "%s | %s" % (
+             self.code,
+             self.arbname,
+             )
+            # return self.code + ' - ' + self.arbname
         else:
-            return self.code + ' - ' + self.engname
-
+            return "%s | %s" % (
+             self.code,
+             self.engname,
+             )
+            # return self.code + ' - ' + self.engname
 class OperationsTypesExpensesLine(models.Model):
     operationtype = models.ForeignKey(OperationsTypes ,blank=True, null=True,  on_delete=models.PROTECT, verbose_name=_("Operation Type"))
     expenstype = models.ForeignKey(ExpensesTypes,blank=True, null=True,  on_delete=models.PROTECT, verbose_name=_("Expense Type"))
     remarks = models.CharField(max_length=100,blank=True, null=True, verbose_name=_("Remarks"))
     #created_date = models.DateTimeField(blank=True,auto_now_add=True, verbose_name =_("Created Date"))
-
     class Meta:
         ordering = ['pk']
         default_permissions = ('add', 'change', 'delete', 'view')
-
     def __str__(self):
         return self.pk
-
-
-
 class OperationsTypesLineViews(models.Model):
     operationtype = models.OneToOneField(OperationsTypes,related_name='OperationsTypesLineViews_Operatoiontype', blank=True, null=True, on_delete=models.PROTECT, verbose_name=_("Operation Type"))
     viewitem = models.BooleanField(default=False, verbose_name =_("Auto Approved"))
@@ -713,16 +624,11 @@ class OperationsTypesLineViews(models.Model):
     viewlinetotal = models.BooleanField(default=False, verbose_name =_("Line Total"))
     viewtaxpercent = models.BooleanField(default=False, verbose_name =_("Tax Percent"))
     viewtaxamount = models.BooleanField(default=False, verbose_name =_("Tax Amount"))
-
     class Meta:
         ordering = ['pk']
         default_permissions = ('add', 'change', 'delete', 'view')
-
     def __str__(self):
         return self.pk
-
-
-
 class Operations(models.Model):
     operationtype = models.ForeignKey(OperationsTypes,related_name='Operations_Operatoiontype' ,db_index = True, blank=False, null=True, on_delete=models.PROTECT, verbose_name=_("Operation Type"))
     number = models.CharField(max_length=20,blank=True, null=True, verbose_name =_("Operation Number"))
@@ -747,18 +653,15 @@ class Operations(models.Model):
     discamt1 =models.DecimalField(decimal_places=12, max_digits=30,blank=True, null=True, verbose_name =_("Discount 1 #"))
     discamt2 =models.DecimalField(decimal_places=12, max_digits=30,blank=True, null=True, verbose_name =_("Discount 2 #"))
     discamt3 =models.DecimalField(decimal_places=12, max_digits=30,blank=True, null=True, verbose_name =_("Discount 3 #"))
-
     expenseamount =models.DecimalField(decimal_places=12, max_digits=30,blank=True, null=True, verbose_name =_("Expense Amount"))
     grossamount =models.DecimalField(decimal_places=12, max_digits=30,blank=True, null=True, verbose_name =_("Gross Amount"))
     taxamount =models.DecimalField(decimal_places=12, max_digits=30,blank=True, null=True, verbose_name =_("Tax Amount"))
     netamount =models.DecimalField(decimal_places=12, max_digits=30,blank=True, null=True, verbose_name =_("Net Amount"))
     totalcost =models.DecimalField(decimal_places=12, max_digits=30,blank=True, null=True, verbose_name =_("Total Cost"))
-
     costcenter1 = models.ForeignKey(CostCenters,related_name='Operations_cc1', blank=True, null=True, on_delete=models.PROTECT, verbose_name=_("Cost center 1"))
     costcenter2 = models.ForeignKey(CostCenters,related_name='Operations_cc2', blank=True, null=True, on_delete=models.PROTECT, verbose_name=_("Cost center 2"))
     costcenter3 = models.ForeignKey(CostCenters,related_name='Operations_cc3', blank=True, null=True, on_delete=models.PROTECT, verbose_name=_("Cost center 3"))
     costcenter4 = models.ForeignKey(CostCenters,related_name='Operations_cc4', blank=True, null=True, on_delete=models.PROTECT, verbose_name=_("Cost center 4"))
-
     status = models.ForeignKey(LookUp,related_name='Operations_Status', limit_choices_to={'keyname': 'RecordStatus'}, blank=True, null=True, on_delete=models.PROTECT, verbose_name=_("Rec. Status"))
     statusdate = models.DateField(blank=True, null=True, verbose_name =_("Rec. Status Date"))
     statusreason = models.CharField(max_length=100,blank=True, null=True, verbose_name=_("Rec. Status Reason"))
@@ -768,43 +671,32 @@ class Operations(models.Model):
     reference2 = models.CharField(max_length=100,blank=True, null=True, verbose_name=_("Reference 2"))
     reference3 = models.CharField(max_length=100,blank=True, null=True, verbose_name=_("Reference 3"))
     islocked = models.BooleanField(blank=False, null=False, verbose_name=_("Is IsLocked"))
-
     rdstatus = models.ForeignKey(LookUp,related_name='Operations_rdStatus', limit_choices_to={'keyname': 'ReceiveDeliveryStatus'}, blank=True, null=True, on_delete=models.PROTECT, verbose_name=_("Receive & Delivery Status"))
     rdstatusdate = models.DateField(blank=True, null=True, verbose_name =_("Receive Delivery. Date"))
     rdstatusreason = models.CharField(max_length=100,blank=True, null=True, verbose_name=_("Receive Delivery. Reason"))
     rdstatuschangedby = models.ForeignKey(User,related_name='ReceiveDelivery_statuschangedby',blank=True, null=True, on_delete=models.PROTECT, verbose_name=_("Receive Delivery. Changed By"))
-
-
     amountstatus = models.ForeignKey(LookUp,related_name='Operations_amountstatus', limit_choices_to={'keyname': 'AmountStatus'}, blank=True, null=True, on_delete=models.PROTECT, verbose_name=_("Amount Status"))
     amountstatusdate = models.DateField(blank=True, null=True, verbose_name =_("Amount Pay Date"))
     amountstatusreason = models.CharField(max_length=100,blank=True, null=True, verbose_name=_("Amount Status Reason"))
     amountstatuschangedby = models.ForeignKey(User,related_name='Payment_amountchangedby',blank=True, null=True, on_delete=models.PROTECT, verbose_name=_("Amount Pay By"))
-
-
     wfstatus = models.ForeignKey('inv.WFActionsStatus' ,related_name='Operations_WFStatus', blank=True, null=True, on_delete=models.PROTECT, verbose_name=_("W. F. Status"))
     wfstatusdate = models.DateField(blank=True, null=True, verbose_name =_("W. F. Status Date"))
     wfstatusreason = models.CharField(max_length=100,blank=True, null=True, verbose_name=_("W. F. Status Reason"))
     wfstatuschangedby = models.ForeignKey(User,related_name='Operations_wfstatuschangedby',blank=True, null=True, on_delete=models.PROTECT, verbose_name=_("W. F. Status Changed By"))
-
     #created_date = models.DateTimeField(blank=True,auto_now_add=True, verbose_name =_("Created Date"))
-
     class Meta:
         ordering = ['pk']
         default_permissions = ('add', 'change', 'delete', 'view')
-
     def __str__(self):
         if str(self.customer ) != None :
             acc = str(self.customer )
         elif str(self.vendor ) != None :
             acc = str(self.vendor )
-
         elif str(self.ledger) != None:
             acc = str(self.ledger )
         else:
             acc=''
         return str(self.pk) + ' - ' + str(self.number) +  ' - ' + str(self.operationdate)  +  ' - ' +   acc
-
-
 class OperationsLine(models.Model):
     operation = models.ForeignKey(Operations, blank=False, null=False, on_delete=models.PROTECT, verbose_name=_("Operation"))
     item = models.ForeignKey(Items, blank=False, null=True, on_delete=models.PROTECT, verbose_name=_("Item"))
@@ -813,6 +705,8 @@ class OperationsLine(models.Model):
     itemarbdesc = models.CharField(max_length=100,blank=True, null=True,unique=True, verbose_name=_("Item Arb Description"))
     invbinlocation=models.ForeignKey(InventoriesBinLocations, blank=False, null=True, on_delete=models.PROTECT, verbose_name=_("Inventory Bin Location"))
     quantity =models.DecimalField(decimal_places=3, max_digits=30,blank=True, null=True, verbose_name =_("Quantity"))
+    #add
+    remainquantity =models.DecimalField(decimal_places=3, max_digits=30,blank=True, null=True, verbose_name =_("RemainQuantity"))
     quantitycount =models.DecimalField(decimal_places=3, max_digits=30,blank=True, null=True, verbose_name =_("Quantity Count"))
     isbonus = models.BooleanField(default=False,blank=False, null=False, verbose_name=_("Is Bonus Quantity"))
     itemuom = models.ForeignKey(ItemsUOM, blank=True, null=True, on_delete=models.PROTECT, verbose_name=_("Unit Of Measurement"))
@@ -844,14 +738,11 @@ class OperationsLine(models.Model):
     tax = models.ForeignKey(Taxes, blank=True, null=True, on_delete=models.PROTECT, verbose_name=_("Tax"))
     parent = models.IntegerField( blank=True, null=True, verbose_name=_("Parent"))
     newcostprice = models.DecimalField(decimal_places=12, max_digits=30, blank=True, null=True,verbose_name=_("New Cost Price"))
-
     class Meta:
         ordering = ['pk']
         default_permissions = ('add', 'change', 'delete', 'view')
-
     def __int__(self):
         return self.pk
-
 class OperationsExpensesLine(models.Model):
     operation = models.ForeignKey(Operations, blank=False, null=False, on_delete=models.PROTECT, verbose_name=_("Operation"))
     agency = models.ForeignKey(Agencies, blank=True, null=True, on_delete=models.PROTECT, verbose_name=_("Agency"))
@@ -866,33 +757,23 @@ class OperationsExpensesLine(models.Model):
     exptaxamount =models.DecimalField(decimal_places=3, max_digits=30,blank=True, null=True, verbose_name =_("Tax Amount"))
     explinetotal =models.DecimalField(decimal_places=12, max_digits=30,blank=True, null=True, verbose_name =_("Line Total"))
     exptax = models.ForeignKey(Taxes, blank=True, null=True, on_delete=models.PROTECT, verbose_name=_("Tax"))
-
     class Meta:
         ordering = ['pk']
         default_permissions = ('add', 'change', 'delete', 'view')
-
     def __str__(self):
         return self.pk
-
-
 class OperationsStatusLog(models.Model):
     operation = models.ForeignKey(Operations , blank=False, null=False, on_delete=models.PROTECT, verbose_name=_("Operation"))
     status = models.ForeignKey(LookUp,related_name='OperationsStatusLog_Status', limit_choices_to={'keyname': 'RecordStatus'}, blank=True, null=True, on_delete=models.PROTECT, verbose_name=_("Status"))
     statusdate = models.DateField(blank=True, null=True, verbose_name =_("Status Date"))
     statusreason = models.CharField(max_length=100,blank=True, null=True, verbose_name=_("Status Reason"))
     statuschangedby = models.ForeignKey(User,blank=True, null=True, on_delete=models.PROTECT, verbose_name=_("Status Changed By"))
-
     class Meta:
         ordering = ['-pk']
         default_permissions = ('add', 'change', 'delete', 'view')
-
     def __str__(self):
         return self.pk
-
-
-
 class ItemsCosts(models.Model):
-
     item = models.ForeignKey(Items, blank=False, null=False, on_delete=models.PROTECT, verbose_name=_("Item"))
     unit = models.ForeignKey(Units, blank=False, null=False, on_delete=models.PROTECT, verbose_name=_("Unit"))
     itemuom = models.ForeignKey(ItemsUOM, blank=True, null=True, on_delete=models.PROTECT, verbose_name=_("Unit"))
@@ -901,17 +782,12 @@ class ItemsCosts(models.Model):
     costprice =models.DecimalField(max_digits=30, decimal_places=12, blank=True, null=True, verbose_name =_("Cost Price"))
     itemtransid = models.IntegerField( blank=True, null=True,  verbose_name =_("Item Trans ID"))
     itemtranslineid = models.IntegerField( blank=True, null=True,  verbose_name =_("Item Trans ID"))
-
-
     class Meta:
         ordering = ['-pk']
         default_permissions = ('add', 'change', 'delete', 'view')
-
     def __str__(self):
         return self.costprice
-
 class ItemsTrans(models.Model):
-
     operationtype = models.ForeignKey(OperationsTypes, blank=False, null=False, on_delete=models.PROTECT, verbose_name=_("Operation Type"))
     operation = models.ForeignKey(Operations, blank=False, null=False, on_delete=models.PROTECT, verbose_name=_("Operation"))
     transdate = models.DateField(blank=False, null=False, verbose_name =_("Transaction Date"))
@@ -919,14 +795,11 @@ class ItemsTrans(models.Model):
     invlocation = models.ForeignKey(InventoriesLocations,related_name='ItemsTrans_invlocation',  blank=True, null=True,on_delete=models.PROTECT, verbose_name=_("Inventory Location"))
     fiscalyearperiod = models.ForeignKey(FiscalYearsPeriods,  blank=True, null=True,on_delete=models.PROTECT, verbose_name=_("Fiscal Year Period"))
     parent = models.ForeignKey('self',related_name='ItemsTrans_Parent',  blank=True, null=True,on_delete=models.PROTECT, verbose_name=_("Parent"))
-
     class Meta:
         ordering = ['pk']
         default_permissions = ('add', 'change', 'delete', 'view')
-
     def __str__(self):
         return self.pk
-
 class ItemsTransLine(models.Model):
     itemtrans = models.ForeignKey(ItemsTrans, blank=False, null=False, on_delete=models.PROTECT, verbose_name=_("Item Trans"))
     item = models.ForeignKey(Items, blank=False, null=False, on_delete=models.PROTECT, verbose_name=_("Item"))
@@ -954,15 +827,11 @@ class ItemsTransLine(models.Model):
     serialnumber = models.CharField(max_length=100,blank=True, null=True, verbose_name=_("Serial Number"))
     linetotal =models.DecimalField(decimal_places=12, max_digits=30,blank=True, null=True, verbose_name =_("Line Total"))
     operationlineid = models.IntegerField( blank=True, null=True, verbose_name=_("Operation Line ID"))
-
     class Meta:
         ordering = ['pk']
         default_permissions = ('add', 'change', 'delete', 'view')
-
     def __str__(self):
         return self.pk
-
-
 class Inventory(models.Model):
     invlocation = models.ForeignKey(InventoriesLocations,related_name='Inventory_invlocation',  blank=True, null=True,on_delete=models.PROTECT, verbose_name=_("Inventory Location"))
     invbinlocation=models.ForeignKey(InventoriesBinLocations, blank=False, null=False, on_delete=models.PROTECT, verbose_name=_("Inventory Bin Location"))
@@ -978,73 +847,51 @@ class Inventory(models.Model):
     lastitemtrans = models.ForeignKey(ItemsTrans, blank=False, null=True, on_delete=models.PROTECT, verbose_name=_("Last Item Trans"))
     lastitemtransline = models.ForeignKey(ItemsTransLine , blank=False, null=True, on_delete=models.PROTECT, verbose_name=_("Last Item Trans Line"))
     isopenbal = models.BooleanField(blank=False, null=False, verbose_name=_("Is Open Balance"))
-
-
     class Meta:
         ordering = ['pk']
         default_permissions = ('add', 'change', 'delete', 'view')
         unique_together = ['invlocation', 'invbinlocation','itemidentifier','item','changedate','itemuom']
-
-
     def __str__(self):
         return self.pk
-
-
-
-
-
 class WFGroups(models.Model):
     code = models.CharField(max_length=20,blank=True, null=True, verbose_name =_("Code"))
     engname = models.CharField(max_length=100,blank=True, null=True, verbose_name =_("Action Eng Name"))
     arbname = models.CharField(max_length=100,blank=True, null=True, verbose_name=_("Action Arb Name"))
     remarks = models.CharField(max_length=100,blank=True, null=True, verbose_name=_("Remarks"))
     #created_date = models.DateTimeField(blank=True,auto_now_add=True, verbose_name =_("Created Date"))
-
     class Meta:
         ordering = ['pk']
         default_permissions = ('add', 'change', 'delete', 'view')
-
     def __str__(self):
         if get_language() == 'ar':
             return self.code + ' - ' + self.arbname
         else:
             return self.code + ' - ' + self.engname
-
 class WFGroupsUsers(models.Model):
     group=models.ForeignKey(WFGroups, blank=False, null=False, on_delete=models.PROTECT, verbose_name=_("Group"))
     user=models.ForeignKey(User , blank=False, null=False, on_delete=models.PROTECT, verbose_name=_("User"))
     levelrank = models.IntegerField( blank=False, null=False,  verbose_name =_("Level Rank"))
     remarks = models.CharField(max_length=100,blank=True, null=True, verbose_name=_("Remarks"))
     #created_date = models.DateTimeField(blank=True,auto_now_add=True, verbose_name =_("Created Date"))
-
     class Meta:
         ordering = ['pk']
         default_permissions = ('add', 'change', 'delete', 'view')
-
     def __str__(self):
         return self.pk
-
-
-
-
 class WFOperationsCycles(models.Model):
     code = models.CharField(max_length=20,blank=True, null=True, verbose_name =_("Code"))
     engname = models.CharField(max_length=100,blank=True, null=True, verbose_name =_("Eng Name"))
     arbname = models.CharField(max_length=100,blank=True, null=True, verbose_name=_("Arb Name"))
     remarks = models.CharField(max_length=100,blank=True, null=True, verbose_name=_("Remarks"))
     #created_date = models.DateTimeField(blank=True,auto_now_add=True, verbose_name =_("Created Date"))
-
     class Meta:
         ordering = ['pk']
         default_permissions = ('add', 'change', 'delete', 'view')
-
     def __str__(self):
         if get_language() == 'ar':
             return self.code + ' - ' + self.arbname
         else:
             return self.code + ' - ' + self.engname
-
-
 class WFOperationsCyclesLine(models.Model):
     operationcycle = models.ForeignKey(WFOperationsCycles,related_name='WFOperationsCyclesLine_operationcycle',  blank=True, null=True,on_delete=models.PROTECT, verbose_name=_("Operation Cycle"))
     sequence = models.IntegerField( blank=False, null=False,  verbose_name =_("Sequence Rank"))
@@ -1055,32 +902,22 @@ class WFOperationsCyclesLine(models.Model):
     wfgroups=models.ForeignKey(WFGroups ,related_name='WFOperationsCyclesLine_wfgroups', blank=False, null=False, on_delete=models.PROTECT, verbose_name=_("Workflow Group"))
     notifyapplicant = models.BooleanField(blank=False, null=False, verbose_name=_("Notify Applicant"))
     notifyrecipient = models.BooleanField(blank=False, null=False, verbose_name=_("Notify Recipient"))
-
     class Meta:
         ordering = ['pk']
         default_permissions = ('add', 'change', 'delete', 'view')
-
     def __str__(self):
         return self.pk
-
-
-
 class WFOperationsStatusLog(models.Model):
     operation = models.ForeignKey(Operations , blank=False, null=False, on_delete=models.PROTECT, verbose_name=_("Operation"))
     status = models.ForeignKey(WFActionsStatus , blank=True, null=True, on_delete=models.PROTECT, verbose_name=_("W. F. Status"))
     statusdate = models.DateField(blank=True, null=True, verbose_name =_("W. F. Status Date"))
     statuschangedby = models.ForeignKey(User,blank=True, null=True, on_delete=models.PROTECT, verbose_name=_("W. F. Status Changed By"))
-
     class Meta:
         ordering = ['-pk']
         default_permissions = ('add', 'change', 'delete', 'view')
-
     def __str__(self):
         return self.pk
-
-
 #---------- SATRT TARGET TABLES
-
 class TargetBuildingBlocks(models.Model):
     code = models.CharField(max_length=20,blank=False, null=True, verbose_name =_("Code"))
     engname = models.CharField(max_length=100,blank=False, null=True, verbose_name =_("Eng Name"))
@@ -1091,14 +928,11 @@ class TargetBuildingBlocks(models.Model):
     c_total = models.PositiveIntegerField(blank=True, null=True, validators=[MinValueValidator(100),MaxValueValidator(100)])
     created_date = models.DateTimeField(auto_now_add=True, verbose_name =_("Created Date"))
     year = models.IntegerField(default=current_year, verbose_name =_("Year"))
-
     class Meta:
         ordering = ['pk']
         default_permissions = ('add', 'change', 'delete', 'view')
-
     def __str__(self):
         return self.item
-
 class TargetBuildingBlocksItems(models.Model):     #TargetBuildingBlocksProducts
     channel = models.ForeignKey(CustomersClasses, on_delete=models.PROTECT, blank=False, null=False, verbose_name =_("Channel"))
     contribution = models.PositiveIntegerField(blank=False, null=False, verbose_name =_("Contribution"))
@@ -1110,26 +944,20 @@ class TargetBuildingBlocksItems(models.Model):     #TargetBuildingBlocksProducts
     targetbuildingblocks = models.ForeignKey(TargetBuildingBlocks, on_delete=models.PROTECT)
     created_date = models.DateTimeField(auto_now_add=True, verbose_name =_("Created Date"))
     year = models.IntegerField(default=current_year, verbose_name =_("Year"))
-
     class Meta:
         ordering = ['pk']
         default_permissions = ('add', 'change', 'delete', 'view')
-
     def __str__(self):
         return self.channel
-
 class TargetBuildingBlocksExeption(models.Model):
     account = models.ForeignKey(Customers, on_delete=models.PROTECT, blank=True, null=True, verbose_name =_("Account"))
     targetbuildingblocks = models.ForeignKey(TargetBuildingBlocks, on_delete=models.PROTECT)
     created_date = models.DateTimeField(auto_now_add=True, verbose_name =_("Created Date"))
-
     class Meta:
         ordering = ['pk']
         default_permissions = ('add', 'change', 'delete', 'view')
-
     def __str__(self):
         return self.account
-
 class TargetBuildingBlocksAccounts(models.Model):
     code = models.CharField(max_length=20,blank=False, null=True, verbose_name =_("Code"))
     engname = models.CharField(max_length=100,blank=False, null=True, verbose_name =_("Eng Name"))
@@ -1137,18 +965,14 @@ class TargetBuildingBlocksAccounts(models.Model):
     channel = models.ForeignKey(CustomersClasses, on_delete=models.PROTECT, verbose_name =_("Channel"))
     account = models.ForeignKey(Customers, on_delete=models.PROTECT, blank=True, null=True, verbose_name =_("Account"))
     customer_size = models.ForeignKey(LookUp,limit_choices_to={'keyname': 'AccountSize'}, blank=False, null=True, on_delete=models.PROTECT, verbose_name=_("Customer Size"))
-
     created_date = models.DateTimeField(auto_now_add=True, verbose_name =_("Created Date"))
     year = models.IntegerField(default=current_year, verbose_name =_("Year"))
-
     class Meta:
         ordering = ['pk']
         unique_together = (('channel', 'account', 'customer_size', 'year'),)
         default_permissions = ('add', 'change', 'delete', 'view', 'rebuild')
-
     def __str__(self):
         return self.account
-
 class TargetBuildingBlocksAccountsItems(models.Model):   #TargetBuildingBlocksAccountsProducts
     item = models.ForeignKey(Items, on_delete=models.PROTECT, blank=False, null=False, verbose_name =_("Item"))
     itemuom = models.ForeignKey(ItemsUOM, blank=False, null=False, on_delete=models.PROTECT, verbose_name=_("Unit Of Measurement"))
@@ -1159,15 +983,12 @@ class TargetBuildingBlocksAccountsItems(models.Model):   #TargetBuildingBlocksAc
     targetbuildingblocksaccounts = models.ForeignKey(TargetBuildingBlocksAccounts, on_delete=models.PROTECT)
     created_date = models.DateTimeField(auto_now_add=True, verbose_name =_("Created Date"))
     year = models.IntegerField(default=current_year, verbose_name =_("Year"))
-
     class Meta:
         ordering = ['pk']
         unique_together = (('targetbuildingblocksaccounts', 'item','year'),  )
         default_permissions = ('add', 'change', 'delete', 'view')
-
     def __str__(self):
         return self.item
-
 class TargetBuildingBlocksChannels(models.Model):
     code = models.CharField(max_length=20,blank=False, null=True, verbose_name =_("Code"))
     engname = models.CharField(max_length=100,blank=False, null=True, verbose_name =_("Eng Name"))
@@ -1176,15 +997,12 @@ class TargetBuildingBlocksChannels(models.Model):
     customer_size = models.ForeignKey(LookUp,limit_choices_to={'keyname': 'AccountSize'}, blank=False, null=True, on_delete=models.PROTECT, verbose_name=_("Customer Size"))
     created_date = models.DateTimeField(auto_now_add=True, verbose_name =_("Created Date"))
     year = models.IntegerField(default=current_year, verbose_name =_("Year"))
-
     class Meta:
         ordering = ['pk']
         unique_together = (('channel', 'year'),)
         default_permissions = ('add', 'change', 'delete', 'view', 'rebuild')
-
     def __str__(self):
         return self.pk
-
 class TargetBuildingBlocksChannelsItems(models.Model):  #TargetBuildingBlocksChannelsProducts
     item = models.ForeignKey(Items, on_delete=models.PROTECT, blank=False, null=True, verbose_name =_("Item"))
     itemuom = models.ForeignKey(ItemsUOM, blank=False, null=True, on_delete=models.PROTECT, verbose_name=_("Unit Of Measurement"))
@@ -1194,16 +1012,12 @@ class TargetBuildingBlocksChannelsItems(models.Model):  #TargetBuildingBlocksCha
     targetbuildingblockschannels = models.ForeignKey(TargetBuildingBlocksChannels, on_delete=models.PROTECT)
     created_date = models.DateTimeField(auto_now_add=True, verbose_name =_("Created Date"))
     year = models.IntegerField(default=current_year, verbose_name =_("Year"))
-
     class Meta:
         ordering = ['pk']
         unique_together = (('targetbuildingblockschannels', 'item', 'year'),)
         default_permissions = ('add', 'change', 'delete', 'view')
-
     def __str__(self):
         return self.item
-
-
 class TargetTransactions(models.Model):
     code = models.CharField(max_length=20,blank=False, null=True, verbose_name =_("Code"))
     engname = models.CharField(max_length=100,blank=False, null=True, verbose_name =_("Eng Name"))
@@ -1237,14 +1051,9 @@ class TargetTransactions(models.Model):
     #salesman = models.ForeignKey('crm.Salesman', on_delete=models.PROTECT)
     #category = models.ForeignKey(Category, on_delete=models.PROTECT)
     isautoseasonality = models.BooleanField(default=False,blank=False, null=False, verbose_name=_("Is Auto Seasonality %"))
-
     class Meta:
         ordering = ['source_id']
         default_permissions = ('add', 'change', 'delete', 'view')
-
     def __str__(self):
         return self.source
-
-
 #---------- END TARGET TABLES
-

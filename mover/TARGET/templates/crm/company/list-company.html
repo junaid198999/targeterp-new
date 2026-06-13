@@ -1,0 +1,212 @@
+{% extends "auth_base.html" %}
+{% load i18n %}
+{% load widget_tweaks %}
+{% load django_tables2 %}
+{% block content %}
+    <div class="container-fluid">
+        <!-- start page title -->
+        <div class="row">
+            <div class="col-12">
+                <div class="page-title-box">
+                    <div class="page-title-right">
+                        <ol class="breadcrumb m-0">
+                            <li class="breadcrumb-item"><a href="/">TARGET</a></li>
+                            <li class="breadcrumb-item active">{% trans "Company" %}</li>
+                        </ol>
+                    </div>
+                    <h4 class="page-title">{% trans "Company" %}</h4>
+                </div>
+            </div>
+        </div>
+        <!-- end page title -->
+        {% if request.user.is_superuser %}
+        <div class="row" >
+            <div class="col-xl-12">
+                <div class="card">
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-sm-6">
+                                <div id="controlPanel" {% if LANGUAGE_CODE == 'ar' %} align="right" {% else %} align="left" {% endif %}></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+        <div class="row">
+            <div class="col-xl-12">
+                <div class="card">
+                    <div class="card-body">
+                        <div class="row mb-2">
+                            <div class="col-sm-12">
+                                <div class="text-sm-right">
+                                    <div class="modal fade" tabindex="-1" role="dialog" id="modal">
+                                          <div class="modal-dialog modal-xl " role="document">
+                                                <div class="modal-content"></div>
+                                          </div>
+                                    </div>
+                                    <!-- Create account button -->
+                                </div><!-- end col-->
+                            </div>
+                        </div>
+
+
+                        <table id="table_id" class="table activate-select nowrap" style="width:100%">
+                            <thead class="thead-light" >
+                                <tr>
+                                    <th></th>
+                                    <th>{% trans "Name" %}</th>
+                                    <th>{% trans "email" %}</th>
+                                    <th>{% trans "Tax Number" %}</th>
+                                    <th>{% trans "Tax" %}</th>
+                                    <th>{% trans "Phone Number" %}</th>
+                                    <th>{% trans "Currency" %}</th>
+                                    <th width="30">{% trans "Action" %}</th>
+                                </tr>
+                            </thead>
+
+                            <tbody>
+                                {% for Company in companies %}
+                                <tr>
+                                        <td style="width: 36px;">
+                                            {% if  Company.logo %}
+                                            <img src="{{ Company.logo.url }}" height="30px">
+                                            {% endif %}
+                                        </td>
+                                        <td>
+                                            {{ Company.name}}
+                                        </td>
+                                        <td>
+                                            {{ Company.email}}
+                                        </td>
+                                        <td>
+                                            {{ Company.tax_number }}
+                                        </td>
+                                        <td>
+                                            {{ Company.tax }}%
+                                        </td>
+                                        <td>
+                                            {{ Company.phone_number }}
+                                        </td>
+                                        <td>
+                                            {{ Company.currency }}
+                                        </td>
+
+                                        <td>
+
+                                            {% if perms.crm.change_account %}
+                                            <button type="button" class="edit-company btn btn-outline-warning effect waves-light btn-xs" data-id="{% url 'crm:edit_company' Company.pk %}" title="{% trans "Edit" %}"><i class="mdi mdi-square-edit-outline"></i></button>
+                                            {% endif %}
+                                        </td>
+
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+
+                    </div> <!-- end card-->
+                </div> <!-- end col -->
+
+            </div>
+        <!-- end row -->
+
+        </div> <!-- container -->
+
+    </div>
+        {% else %}
+        <div class="row" >
+            <div class="col-xl-12">
+                <div class="card">
+                    <div class="card-body">
+                            <STRONG> {% trans "You Don't have a permission to access this page." %} </STRONG>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endif %}
+{% endblock %}
+
+
+{% block extra_javascript %}
+    <script type="text/javascript">
+      $(function () {
+            // Update company buttons
+            $(".edit-company").each(function () {
+              $(this).modalForm({formURL: $(this).data('id')});
+            });
+
+            var table = $('#table_id').DataTable( {
+                language: {
+                    "collection": "{% trans "Columns" %}",
+                    buttons: {
+				        "copy": "{% trans "Copy" %}",
+				        "csv": "{% trans "CSV" %}",
+				        "pdf": "{% trans "PDF" %}",
+				        "print": "{% trans "Print" %}",
+                        copyTitle: '{% trans "Copy to clipboard" %}',
+                        copySuccess: {
+                            _: '{% trans "Copied %d rows to clipboard" %}',
+                            1: '{% trans "Copied one row to clipboard" %}'
+                        }
+                    },
+                    "sEmptyTable":     "{% trans "No data available in table" %}",
+                    "sInfo":           "{% trans "Showing _START_ to _END_ of _TOTAL_ entries" %}",
+                    "sInfoEmpty":      "{% trans "Showing 0 to 0 of 0 entries" %}",
+                    "sInfoFiltered":   "{% trans "(filtered from _MAX_ total entries)" %}",
+                    "sInfoPostFix":    "",
+                    "sInfoThousands":  ",",
+                    "sLengthMenu":     "{% trans "Show _MENU_ entries" %}",
+                    "sLoadingRecords": "{% trans "Loading..." %}",
+                    "sProcessing":     "{% trans "Processing..." %}",
+                    "sSearch":         "{% trans "Search:" %}",
+                    "sZeroRecords":    "{% trans "No matching records found" %}",
+                    "oPaginate": {
+                        "sFirst":    "{% trans "First" %}",
+                        "sLast":     "{% trans "Last" %}",
+                        "sNext":     "{% trans "Next" %}",
+                        "sPrevious": "{% trans "Previous" %}"
+                    },
+                    "oAria": {
+                        "sSortAscending":  "{% trans ": activate to sort column ascending" %}",
+                        "sSortDescending": "{% trans ": activate to sort column descending" %}"
+                    }
+                },
+                buttons: [
+                    {
+                        extend: 'collection',
+                        buttons: [ 'columnsToggle' ]
+                    },
+                    {% if perms.crm.can_copy %}
+                        'copy',
+                    {% endif %}
+                    {% if perms.crm.can_csv %}
+                        'csv',
+                    {% endif %}
+                    {% if perms.crm.can_pdf %}
+                        'pdf',
+                    {% endif %}
+                    {% if perms.crm.can_print %}
+                        'print',
+                    {% endif %}
+                ],
+                stateSave: true,
+                "pagingType": "full_numbers",
+                responsive: true,
+                columnDefs: [
+                    { responsivePriority: 1, targets: 0 },
+                    { responsivePriority: 2, targets: 7 },
+
+                ]
+                } );
+
+            new $.fn.dataTable.ColReorder( table, {
+                colReorder: true,
+            } );
+            table
+                .buttons()
+                .container()
+                .appendTo( '#controlPanel' );
+        });
+
+    </script>
+
+
+{% endblock %}

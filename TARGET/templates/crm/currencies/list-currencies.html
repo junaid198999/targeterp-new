@@ -31,6 +31,11 @@
                                 <div id="controlPanel" {% if LANGUAGE_CODE == 'ar' %} align="right" {% else %} align="left" {% endif %}></div>
                             </div>
                             <div {% if LANGUAGE_CODE == 'ar' %} align="left" {% else %} align="right" {% endif %} class="col-sm-6">
+                                <a href="delete/">
+                                    <button class="delete-transtypes btn btn-danger waves-effect waves-light mb-2" type="button">
+                                      DeleteAll 
+                                    </button>  
+                                    </a> 
                                     <button id="demo-create-row" class="create-currency btn btn-blue waves-effect waves-light mb-2" type="button" name="button" data-overlayColor="#38414a">
                                         <i class="mdi mdi-plus-circle mr-1"></i>  {% trans "Add" %}
                                     </button>

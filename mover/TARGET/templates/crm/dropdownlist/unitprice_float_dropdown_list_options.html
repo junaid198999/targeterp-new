@@ -1,0 +1,13 @@
+{% load widgets %}
+{% load humanize %}
+{% for product in products %}
+{% if unit  == 1  %}
+{{ product.price|intcomma:False|currency_decimal }}
+{% else  %}
+{% if product.price_2  != None  %}
+{{ product.price_2|intcomma:False|currency_decimal }}
+{% else  %}
+0
+{% endif  %}
+{% endif  %}
+{% endfor %}

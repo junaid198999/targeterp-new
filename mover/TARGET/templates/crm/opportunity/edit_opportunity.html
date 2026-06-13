@@ -1,0 +1,666 @@
+{% extends "auth_base.html" %}
+{% load i18n %}
+{% load widget_tweaks %}
+{% load crispy_forms_tags %}
+{% block content %}
+<link href="/static/libs/select2/select2.min.css" rel="stylesheet" />
+{% comment %}
+<link href="/static/libs/bootstrap-datepicker/bootstrap-datepicker.min.css" rel="stylesheet" type="text/css" />
+{% endcomment %}
+
+<div class="container-fluid">
+    <!-- start page title -->
+    <div class="row">
+        <div class="col-12">
+            <div class="page-title-box">
+                <h4 class="page-title">{% trans "Update Opportunity" %}</h4>
+            </div>
+        </div>
+    </div>
+    <head>
+        <meta charset="utf-8" />
+        <title>opportunity_form</title>
+    </head>
+    <form id="OpportunityForm" action="" method="post" data-customers-url="{% url 'crm:ajax_load_customers' %}" data-days-url="{% url 'crm:ajax_load_days' %}" data-unitprice-url="{% url 'crm:ajax_load_unitprice' %}" data-duedate-url="{% url 'crm:ajax_load_duedate' %}" data-salesman-url="{% url 'crm:ajax_load_saleman' %}" data-uom-url="{% url 'crm:ajax_load_uom' %}">
+        {% csrf_token %}
+        <div class="{% if form.non_field_errors %}invalid{% endif %} ">
+          {% if form.non_field_errors %}
+            {{ error }}
+            {% endif %}
+        </div>
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="card">
+                    <div class="card-header bg-warning py-3 text-white" data-toggle="collapse" href="#cardCollpase1" role="button" aria-expanded="false" aria-controls="cardCollpase1">
+                            <div class="card-widgets">
+                                <a data-toggle="collapse" href="#cardCollpase1" role="button" aria-expanded="false" aria-controls="cardCollpase1"><i class="mdi mdi-minus"></i></a>
+                            </div>
+                            <div class="card-title mb-0 text-white" style="font-size:13, font-weight:500;line-height: 0px !important">{% trans "BASIC" %}</div>
+                    </div>
+                    <div class="card-body">
+                        <div id="cardCollpase1" class="collapse pt-3 show">
+
+                            <div class="row">
+                                <div class="form-group col-md-6 mb-0">
+                                    <div class="row">
+                                        <label class="col-3 col-form-label" style="padding-left: 30px; font-weight: 700;">{{form.name.label}}:</label>
+                                        <div class="col-8">
+                                            {{ form.name|as_crispy_field }}
+                                            <div class="{% if form.name.errors %} invalid{% endif %}">
+                                                {% if error in form.name.errors %}
+                                                    <p class="help-block">{{ error }}</p>
+                                                    {% endif %}
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-group col-md-6 mb-0">
+                                    <div class="row">
+                                        <label class="col-3 col-form-label" style="font-weight: 700;">{% trans "Source" %}:</label>
+                                            <div class="form-group col-md-3 mb-0">
+                                                <div id="customer_type_div">
+                                                    {{ form.source|as_crispy_field }}
+                                                </div>
+                                            </div>
+                                            <div class="form-group col-md-5 mb-0">
+                                                <div hidden id="customer_select">
+                                                    <select name="customer" id="id_customer" class="form-control">
+                                                            <option value="">---------</option>
+                                                            {% for Customer in customers %}
+                                                                <option {% if form.instance.customer.id == Customer.id %} selected {% endif %} value="{{ Customer.id }}">{{ Customer.name }}</option>
+                                                            {% endfor %}
+                                                    </select>
+                                                </div>
+                                                <div hidden id="lead_select">
+                                                    <select name="lead" id="id_lead" class="form-control">
+                                                            <option value="">---------</option>
+                                                            {% for Lead in leads %}
+                                                                <option {% if form.instance.lead.id == Lead.id %} selected {% endif %} value="{{ Lead.id }}">{{ Lead.name }}</option>
+                                                            {% endfor %}
+                                                    </select>
+                                                </div>
+                                            </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="form-group col-md-6 mb-0">
+                                    <div class="row">
+                                        <label class="col-3 col-form-label" style="padding-left: 30px; font-weight: 700;">{{form.amount.label}}:</label>
+                                        <div class="col-8">
+                                            {{ form.amount|as_crispy_field }}
+                                            <div class="{% if form.amount.errors %} invalid{% endif %}">
+                                                {% if error in form.amount.errors %}
+                                                    <p class="help-block">{{ error }}</p>
+                                                    {% endif %}
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-group col-md-6 mb-0">
+                                    <div class="row">
+                                        <label class="col-3 col-form-label" style="font-weight: 700;">{{form.closedate.label}}:</label>
+                                        <div class="col-8">
+                                             <input id="id_closedate1" name="closedate" type="date" class="form-control"/>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="form-group col-md-6 mb-0">
+                                    <div class="row">
+                                        <label class="col-3 col-form-label" style="padding-left: 30px; font-weight: 700;">{{form.type.label}}:</label>
+                                        <div class="col-8">
+                                            {{ form.type|as_crispy_field }}
+                                            <div class="{% if form.type.errors %} invalid{% endif %}">
+                                                {% if error in form.type.errors %}
+                                                    <p class="help-block">{{ error }}</p>
+                                                    {% endif %}
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-group col-md-6 mb-0">
+                                    <div class="row">
+                                        <label class="col-3 col-form-label" style="font-weight: 700;">{{form.lead_Source.label}}:</label>
+                                        <div class="col-8">
+                                            {{ form.lead_Source|as_crispy_field }}
+                                            <div class="{% if form.lead_Source.errors %} invalid{% endif %}">
+                                                {% if error in form.lead_Source.errors %}
+                                                    <p class="help-block">{{ error }}</p>
+                                                    {% endif %}
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </div>
+                            <div class="row">
+                                <div class="form-group col-md-6 mb-0">
+                                    <div class="row">
+                                        <label class="col-3 col-form-label" style="padding-left: 30px; font-weight: 700;">{{form.probability.label}}:</label>
+                                        <div class="col-8">
+                                            {{ form.probability|as_crispy_field }}
+                                            <div class="{% if form.probability.errors %} invalid{% endif %}">
+                                                {% if error in form.probability.errors %}
+                                                    <p class="help-block">{{ error }}</p>
+                                                    {% endif %}
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-group col-md-6 mb-0">
+                                    <div class="row">
+                                        <label class="col-3 col-form-label" style="font-weight: 700;">{{form.stage.label}}:</label>
+                                        <div class="col-8">
+                                            {{ form.stage|as_crispy_field }}
+                                            <div class="{% if form.stage.errors %} invalid{% endif %}">
+                                                {% if error in form.stage.errors %}
+                                                    <p class="help-block">{{ error }}</p>
+                                                    {% endif %}
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row mt-3">
+                                <div class="form-group col-md-6 mb-0">
+                                    <div class="row">
+                                        <label class="col-3 col-form-label" style="padding-left: 30px; font-weight: 700;">{{form.next_step.label}}:</label>
+                                        <div class="col-8">
+                                            {{ form.next_step|as_crispy_field }}
+                                            <div class="{% if form.next_step.errors %} invalid{% endif %}">
+                                                {% if error in form.next_step.errors %}
+                                                    <p class="help-block">{{ error }}</p>
+                                                    {% endif %}
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="form-group col-md-6 mb-0">
+                                    <div class="row">
+                                        <label class="col-3 col-form-label" style="padding-left: 30px; font-weight: 700;">{{form.description.label}}:</label>
+                                        <div class="col-8">
+                                            {{ form.description|as_crispy_field }}
+                                            <div class="{% if form.description.errors %} invalid{% endif %}">
+                                                {% if error in form.description.errors %}
+                                                    <p class="help-block">{{ error }}</p>
+                                                    {% endif %}
+                                            </div>
+                                        </div>
+                                        <div class="col-1">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="card">
+                    <div class="card-header bg-warning py-3 text-white" data-toggle="collapse" href="#cardCollpase4" role="button" aria-expanded="false" aria-controls="cardCollpase4">
+                            <div class="card-widgets">
+                                <a data-toggle="collapse" href="#cardCollpase4" role="button" aria-expanded="false" aria-controls="cardCollpase4"><i class="mdi mdi-minus"></i></a>
+                            </div>
+                            <div class="card-title mb-0 text-white" style="font-size:13, font-weight:500;line-height: 0px !important">{% trans "EXPECTED PRODUCTS" %}</div>
+                    </div>
+                    <div class="card-body">
+                        <div id="cardCollpase4" class="collapse pt-3 show">
+                            <div class="row">
+                                <div class="form-group col-md-12 mb-0">
+                                    <div class="row">
+
+                                                <div class="sub-header col-12">
+                                                    <a style="float:right" class="buttonHolder" id="add-row"></a>
+                                                </div>
+
+                                        <table id="table_id" class="table table-bordered table-hover table-sm mb-0">
+                                            {{ salesproducts.management_form }}
+                                            {{ form.id }}
+                                                <thead class="thead-light">
+                                                    <tr>
+                                                        <th>{% trans "Product" %}</th>
+                                                        <th>{% trans "Qty" %}</th>
+                                                        <th>{% trans "Price" %}</th>
+                                                        <th>{% trans "Unit" %}</th>
+                                                        <th hidden>UOM</th>
+                                                        <th>{% trans "Discount" %}</th>
+                                                        <th>{% trans "Subtotal" %}</th>
+                                                        <th>{% trans "Actions" %}</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody class="formset_row">
+                                                    {% for form in salesproducts %}
+                                                        {{ form.id }}
+                                                        <tr style="padding: 0px !important;" class="rowclass">
+
+                                                                <td style="padding: 0rem !important;width:300px;" >{{ form.product }}</td>
+                                                                <td style="padding: 0rem !important;width:100px;">{{ form.qty|as_crispy_field }}</td>
+                                                                <td style="padding: 0rem !important;width:100px;">{{ form.price|as_crispy_field }}</td>
+                                                                <td style="padding: 0rem !important;width:70px;">
+
+                                                                <select name="uoom" class="form-control" id="id_opportunityproduct_set-{{forloop.counter0}}-uoom" style="width:100%">
+                                                                     {% for unit in unitslist %}
+                                                                        <option value="{{unit.id}}">{{ unit.unit }} </option>
+                                                                    {% endfor %}
+                                                                </select>
+                                                                </td>
+                                                                <td hidden style="padding: 0rem !important;width:100px;">{{ form.uom|as_crispy_field }}</td>
+                                                                <td style="padding: 0rem !important;width:70px;">{{ form.discount|as_crispy_field }}</td>
+                                                                <td hidden style="padding: 0rem !important;width:70px;">{{ form.tax }}</td>
+                                                                <td hidden style="padding: 0rem !important;width:100px;">{{ form.bt_total|as_crispy_field }}</td>
+                                                                <td style="padding: 0rem !important;width:100px;">{{ form.subtotal|as_crispy_field }}</td>
+                                                                <td style="padding: 0rem !important;width:10px; text-align: center;"></td>
+                                                        </tr>
+                                                    {% endfor %}
+                                                </tbody>
+                                                <tr>
+                                                    <td colspan="5"><b class="float-right">{% trans "Sub Total:" %} </b></td>
+                                                    <td style="padding: 0rem" colspan="1"><INPUT TYPE="number" id="id_subtotal" NAME="subtotal" placeholder="Sub Total" class="form-control"></td>
+                                                </tr>
+                                                <tr>
+                                                    {% if taxv != 0 %}
+                                                        <td colspan="5"><b class="float-right">{% trans "Tax:" %} </b></td>
+                                                        <td style="padding: 0rem" colspan="1"><INPUT TYPE="number" id="id_so_tax" NAME="so_tax" placeholder="Tax" class="form-control" readonly></td>
+                                                    {% endif %}
+                                                </tr>
+                                                <tr>
+                                                    <td colspan="5"><b class="float-right">{% trans "Total:" %} </b></td>
+                                                    <td style="padding: 0rem" colspan="1"><INPUT TYPE="number" id="id_total" NAME="total" placeholder="Total" class="form-control"></td>
+                                                </tr>
+                                        </table>
+
+                                    </div>
+                                </div>
+                            </div>
+
+
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="card">
+                    <div class="card-header bg-warning py-3 text-white" data-toggle="collapse" href="#cardCollpase3" role="button" aria-expanded="false" aria-controls="cardCollpase3">
+                            <div class="card-widgets">
+                                <a data-toggle="collapse" href="#cardCollpase3" role="button" aria-expanded="false" aria-controls="cardCollpase3"><i class="mdi mdi-minus"></i></a>
+                            </div>
+                            <div class="card-title mb-0 text-white" style="font-size:13, font-weight:500;line-height: 0px !important">{% trans "OTHER" %}</div>
+                    </div>
+                    <div class="card-body">
+                        <div id="cardCollpase3" class="collapse pt-3 show">
+                            <div class="row">
+                                <div class="form-group col-md-6 mb-0">
+                                    <div class="row">
+                                        <label class="col-3 col-form-label" style="padding-left: 30px; font-weight: 700;">{{form.salesman.label}}:</label>
+                                        <div class="col-8">
+                                            <div class="col-8">
+                                            {% if request.user.is_superuser %}
+                                                <div>{{ form.salesman}}</div>
+                                            {% else %}
+                                                <div hidden>{{ form.salesman}}</div>
+                                                <select name="salesman1" class="form-control" id="id_salesman1" style="width:100%" disabled data-value="{{form.salesman}}
+                                                </select>
+                                            {% endif %}
+                                            <div class="{% if form.salesman.errors %} invalid{% endif %}">
+                                                {% if error in form.salesman.errors %}
+                                                    <p class="help-block">{{ error }}</p>
+                                                    {% endif %}
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
+            <div class="modal-footer">
+                <a class="btn btn-secondary waves-effect" href="{% url 'crm:opportunities' %}">{% trans "Cancel" %}</a>
+                <input type="submit" class="submit-btn btn-danger btn btn-primary" value="{% trans "Save" %}"/>
+            </div>
+
+    </form>
+
+</div>
+
+{% endblock %}
+
+{% block extra_javascript %}
+{% comment %}
+<script src="/static/libs/moment/moment.min.js"></script>
+<script src="/static/libs/bootstrap-datepicker/bootstrap-datepicker.min.js"></script>
+{% endcomment %}
+<script src="/static/libs/select2/select2.min.js"></script>
+<script src="/static/dynamic_formsets/jquery.formset.js"></script>
+<script src="/static/django_select2/django_select2.js"></script>
+
+
+<script type="text/javascript">
+$('#id_total').attr('readonly', true);
+$('#id_subtotal').attr('readonly', true);
+
+
+        $('#id_customer').select2();
+        $('#id_salesman').select2();
+        $('#id_lead').select2();
+
+        $("#id_source").change(function () {
+            if ($("#id_source").val() == 2) {
+                $("#customer_select").attr('hidden',false)
+                $("#lead_select").attr('hidden',true)
+                $("#id_lead").val('').trigger('change');
+            } else if ($("#id_source").val() == 1) {
+                $("#lead_select").attr('hidden',false)
+                $("#customer_select").attr('hidden',true)
+                $("#id_customer").val('').trigger('change');
+            } else {
+                $("#lead_select").attr('hidden',true)
+                $("#customer_select").attr('hidden',true)
+                $("#id_lead").val('').trigger('change');
+                $("#id_customer").val('').trigger('change');
+            }
+
+        });
+
+
+document.addEventListener("DOMContentLoaded", function(){
+    var subtotalfield = 'id_opportunityproduct_set-0-subtotal';
+    var taxfield = 'id_opportunityproduct_set-0-tax';
+    get_total(subtotalfield, taxfield)
+
+    if ($("#id_source").val() == 2) {
+        $("#customer_select").attr('hidden',false)
+    } else if ($("#id_source").val() == 1) {
+        $("#lead_select").attr('hidden',false)
+    }
+});
+var subtotalval = 0;
+var taxlval = 0;
+
+function get_total(subtotid, taxid){
+        var subtotalfield1 = $(`input[name=${subtotid}]`).attr("id");
+        var taxfield = $(`input[name=${taxid}]`).attr("id");
+
+        subtotalval = parseFloat(subtotalval) + parseFloat($("#id_"+subtotalfield1).val(),1);
+        taxval = parseFloat(taxlval) + parseFloat($("#id_"+taxfield).val(),1);
+
+        var id = parseInt($('#id_opportunityproduct_set-TOTAL_FORMS').val());
+        var TaxV = {{taxv}}
+        var total = 0;
+        var bttotal = 0;
+        var tax = 0;
+        var subtotal = 0;
+        for (i = 0; i <= parseInt(id); i++){
+            if($("input[name=opportunityproduct_set-" + i + "-subtotal]").val()){
+                total += parseFloat($("input[name=opportunityproduct_set-" + i + "-subtotal]").val(),1);
+                bttotal += parseFloat($("input[name=opportunityproduct_set-" + i + "-bt_total]").val(),1);
+                tax += parseFloat($("input[name=opportunityproduct_set-" + i + "-tax]").val(),1);
+            }
+            else{
+                total += 0;
+                bttotal += 0;
+                tax += 0;
+            }
+        }
+        subtotal = total - tax;
+        $("#id_subtotal").val(bttotal.toFixed(1));
+        $("#id_so_tax").val(tax.toFixed(1));
+        $("#id_total").val(total.toFixed(0));
+    if ($("#id_total").val() > 0 ) {
+        $("#id_amount").val(total.toFixed(1));
+        $('#id_amount').attr('readonly', true);
+    } else {
+        $('#id_amount').attr('readonly', false);
+    }
+
+};
+
+    $("input[name*='qty']").change(function () {
+        var newElement = $('formset_row').clone(true);
+        var subtotalfield = $(this).attr('name').replace('-qty', '-subtotal');
+        var bttotalfield = $(this).attr('name').replace('-qty', '-bt_total');
+        var uom1field = $(this).attr('name').replace('-qty', '-uoom');
+        var uomfield = $(this).attr('name').replace('-qty', '-uom');
+        var pricefield = $(this).attr('name').replace('-qty', '-price');
+        var taxfield = $(this).attr('name').replace('-qty', '-tax');
+        var discountfield = $(this).attr('name').replace('-qty', '-discount');
+        var subtotalsum = 0;
+        var bttotalsum = 0;
+        var netsubtotalsum = 0;
+        var tax = 0;
+            bttotalsum = subtotalsum + parseFloat($(this).val() * $("#id_"+pricefield).val() - $("#id_"+discountfield).val(),1);
+        if (parseInt({{taxv}}) > 0) {
+            tax = parseFloat((bttotalsum * {{taxv}} / 100))
+            subtotalsum = bttotalsum + tax
+            $("#id_"+taxfield).val(tax.toFixed(1));
+        }else{
+            subtotalsum = bttotalsum
+        }
+        $("#id_"+uomfield).val($("#id_"+uom1field).val());
+
+
+        $("#id_"+bttotalfield).val(bttotalsum.toFixed(1));
+        $("#id_"+subtotalfield).val(subtotalsum.toFixed(1));
+        get_total(subtotalfield, taxfield)
+    });
+    $("input[name*='price']").change(function () {
+        var newElement = $('formset_row').clone(true);
+        var uom1field = $(this).attr('name').replace('-price', '-uoom');
+        var uomfield = $(this).attr('name').replace('-price', '-uom');
+        var subtotalfield = $(this).attr('name').replace('-price', '-subtotal');
+        var bttotalfield = $(this).attr('name').replace('-price', '-bt_total');
+        var discountfield = $(this).attr('name').replace('-price', '-discount');
+        var qtyfield = $(this).attr('name').replace('-price', '-qty');
+        var taxfield = $(this).attr('name').replace('-price', '-tax');
+
+        $("#id_"+uomfield).val($("#id_"+uom1field).val());
+        var subtotalsum = 0;
+        var bttotalsum = 0;
+        var netsubtotalsum = 0;
+            bttotalsum = subtotalsum + parseFloat($(this).val() * $("#id_"+qtyfield).val() - $("#id_"+ discountfield).val(),1);
+
+        var tax = 0;
+        if (parseInt({{taxv}}) > 0) {
+            tax = parseFloat((bttotalsum * {{taxv}} / 100),1)
+            subtotalsum = bttotalsum + tax
+            $("#id_"+taxfield).val(tax.toFixed(1));
+        }else{
+            subtotalsum = bttotalsum
+        }
+        $("#id_"+bttotalfield).val(bttotalsum.toFixed(1));
+        $("#id_"+subtotalfield).val(subtotalsum.toFixed(1));
+        get_total(subtotalfield, taxfield)
+    });
+    $("input[name*='discount']").change(function () {
+        var newElement = $('formset_row').clone(true);
+        var subtotalfield = $(this).attr('name').replace('-discount', '-subtotal');
+        var bttotalfield = $(this).attr('name').replace('-discount', '-bt_total');
+        var pricefield = $(this).attr('name').replace('-discount', '-price');
+        var qtyfield = $(this).attr('name').replace('-discount', '-qty');
+        var taxfield = $(this).attr('name').replace('-discount', '-tax');
+        var uomfield = $(this).attr('name').replace('-discount', '-uom');
+        var uom1field = $(this).attr('name').replace('-discount', '-uoom');
+        $("#id_"+uomfield).val($("#id_"+uom1field).val());
+        var subtotalsum = 0;
+        var bttotalsum = 0;
+        var netsubtotalsum = 0;
+            bttotalsum = subtotalsum + parseFloat( $("#id_"+pricefield).val() * $("#id_"+qtyfield).val() - $(this).val(),1);
+
+        var tax = 0;
+        if (parseInt({{taxv}}) > 0) {
+            tax = parseFloat((bttotalsum * {{taxv}} / 100),1)
+            subtotalsum = bttotalsum + tax
+            $("#id_"+taxfield).val(tax.toFixed(1));
+        }else{
+            subtotalsum = bttotalsum
+        }
+        $("#id_"+bttotalfield).val(bttotalsum.toFixed(1));
+        $("#id_"+subtotalfield).val(subtotalsum.toFixed(1));
+        get_total(subtotalfield, taxfield)
+    });
+    $("select[name*='-product']").change(function () {
+        var name = $(this).attr('name').replace('-product', '-price');
+        var uomfield = $(this).attr('name').replace('-product', '-uom');
+
+        var id = $(this).attr('id');
+        price_value = $(this).val();
+        $("#id_"+subtotalfield).val(subtotalsum);
+
+        var pricefield = $(this).attr('name').replace('-product', '-price');
+        var uomfield = $(this).attr('name').replace('-product', '-uom');
+        var uoomfield = $(this).attr('id').replace('-product', '-uoom');
+        uom_value = $("#"+uoomfield).val();
+          var productId = $(this).val();
+          var urlup = $("#OpportunityForm").attr("data-unitprice-url");
+          $.ajax({
+                url: urlup,
+                async: false,
+                data: {
+                    'product': productId,
+                    'unit': uom_value,
+                    },
+                    success: function (data) {
+                        $("#id_"+pricefield).val(parseInt(data));
+               }
+          });
+
+        var subtotalfield = $(this).attr('name').replace('-product', '-subtotal');
+        var bttotalfield = $(this).attr('name').replace('-product', '-bt_total');
+        var pricefield = $(this).attr('name').replace('-product', '-price');
+        var discountfield = $(this).attr('name').replace('-product', '-discount');
+        var qtyfield = $(this).attr('name').replace('-product', '-qty');
+        var taxfield = $(this).attr('name').replace('-product', '-tax');
+        var subtotalsum = 0;
+        var bttotalsum = 0;
+        var netsubtotalsum = 0;
+            bttotalsum = subtotalsum + parseFloat( $("#id_"+pricefield).val() * $("#id_"+qtyfield).val() - $("#id_"+discountfield).val(),1);
+
+        var tax = 0;
+        if (parseInt({{taxv}}) > 0) {
+
+            tax = parseFloat((bttotalsum * {{taxv}} / 100),1)
+            subtotalsum = bttotalsum + tax
+            $("#id_"+taxfield).val(tax.toFixed(1));
+        }else{
+            subtotalsum = bttotalsum
+        }
+        $("#id_"+bttotalfield).val(bttotalsum.toFixed(1));
+        $("#id_"+subtotalfield).val(subtotalsum.toFixed(1));
+        var id = parseInt($('#id_opportunityproduct_set-TOTAL_FORMS').val());
+        get_total(subtotalfield, taxfield)
+    });
+
+    $("[id*=-uoom]").change(function () {
+        var uomfield = $(this).attr('id').replace('-uoom', '-uom');
+        var productfield = $(this).attr('id').replace('-uoom', '-product');
+        var pricefield = $(this).attr('id').replace('-uoom', '-price');
+
+        var id = $(this).attr('id');
+        uom_value = $(this).val();
+        product_value = $("#"+productfield).val();
+        $("#"+uomfield).val(uom_value);
+          var urlup = $("#OpportunityForm").attr("data-unitprice-url");
+          var productId = $(this).val();
+          $.ajax({
+                async: false,
+                url: urlup,
+                data: {
+                    'product': product_value,
+                    'unit': uom_value,
+                    },
+                    success: function (data) {
+                        $("#"+pricefield).val(parseInt(data));
+                }
+          });
+
+
+        var taxfield = $(this).attr('id').replace('-uoom', '-tax');
+        $("#id_"+uomfield).val(parseInt($(this).val()));
+        var subtotalfield = $(this).attr('id').replace('-uoom', '-subtotal');
+        var bttotalfield = $(this).attr('id').replace('-uoom', '-bt_total');
+        var discountfield = $(this).attr('id').replace('-uoom', '-discount');
+        var qtyfield = $(this).attr('id').replace('-uoom', '-qty');
+        var subtotalsum = 0;
+        var bttotalsum = 0;
+        var netsubtotalsum = 0;
+            bttotalsum = subtotalsum + parseFloat( $("#"+pricefield).val() * $("#"+qtyfield).val() - $("#"+discountfield).val(),1);
+        var tax = 0;
+        if (parseInt({{taxv}}) > 0) {
+            tax = parseFloat((bttotalsum * {{taxv}} / 100),1)
+            subtotalsum = bttotalsum + tax
+            $("#"+taxfield).val(tax.toFixed(1));
+        }else{
+            subtotalsum = bttotalsum
+        }
+        $("#"+bttotalfield).val(bttotalsum.toFixed(1));
+        $("#"+subtotalfield).val(subtotalsum.toFixed(1));
+        get_total(subtotalfield, taxfield)
+
+
+    });
+   $('.delete-row').on("click", function(){
+        get_total()
+    });
+
+    $('.formset_row').formset({
+        animateForms: true,
+        uiText: {
+            addPrompt: 'Add Product',         // Text used on the 'add a new form' control.
+            removePrompt: '',        // Text used on the 'delete this existing form' control.
+        },
+        addButtonHolder:'.buttonHolder',
+        addCssClass: "add-row btn btn-primary waves-effect waves-light",
+        deleteCssClass: "delete-row btn btn-danger waves-effect mdi mdi-close",
+        prefix: '{{ salesproducts.prefix }}',
+        callbacks: {
+            onAdd: function () {
+                 $("[name*=-product]").select2();
+                 $("[name*=uoom]").select2();
+            },
+            onRemove: function () {
+                 get_total();
+            }
+        },
+    });
+
+{% comment %}
+      $(function () {
+        $("#datetimepicker1").datepicker({
+            format: 'yyyy/mm/dd',
+        });
+      });
+{% endcomment %}
+
+</script>
+
+<style>
+.card-header:first-child {
+    height: 28px !important;
+}
+h5.card-title.mb-0.text-white {
+    line-height: 0 !important;
+}
+.card-widgets {
+    line-height: 0 !important;
+}
+.card-widgets>a {
+    line-height: 0px !important;
+}
+</style>
+{% endblock %}

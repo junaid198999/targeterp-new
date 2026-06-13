@@ -305,7 +305,7 @@
                                                 {% for form in companyprofilecontacts %}
                                                     {{ form.id }}
                                                     <tr style="padding: 0px !important;" class="rowclass">
-                                                        <td style="padding: 0rem !important;width:300px;" >{{ form.contacttype|as_crispy_field}}</td>
+                                                        <td style="padding: 0rem !important;width:300px;" >{{ form.contacttype|as_crispy_field }}</td>
                                                         <td style="padding: 0rem !important;width:100px;">{{ form.value|as_crispy_field }}</td>
                                                         <td style="padding: 0rem !important;width:100px;">{{ form.inactive|as_crispy_field }}</td>
                                                         <td style="padding: 0rem !important;width:100px;">{{ form.remarks|as_crispy_field }}</td>

@@ -51,11 +51,12 @@
         <meta charset="utf-8" />
         <title>Operation_form</title>
     </head>
+   
     <div class="row" >
         <div class="col-xl-12">
             <div class="card" style="top: 46px; ">
                 <div class="card-body" style="padding:0.5rem;padding-bottom: 0px;">
-                    <form      data-operations-details-info-url ="{% url 'inv:ajax_load-operations-detail-info' %}"     data-operations-lines-count-url="{% url 'inv:ajax_load-operations-lines-count' %}"   data-operations-lines-url="{% url 'inv:ajax_load-operations-lines' %}"   data-itemtaxvalue-url="{% url 'inv:ajax_load_itemtaxvalue' %}"  data-itemprice-url="{% url 'inv:ajax_load_itemprice' %}"  data-itemuom-url="{% url 'inv:ajax_load_itemuom' %}"   data-accountbalance-url="{% url 'inv:ajax_load_accountbalance' %}"  data-itembarcode-url="{% url 'inv:ajax_load_itembarcode' %}" id="LJForm" action="" method="post"   >
+                    <form   data-invlocations-details-info-url = "{% url 'inv:ajax_load-invlocations-detail-info' %}"    data-operations-details-info-url =  "{% url 'inv:ajax_load-operations-detail-info' %}"     data-operations-lines-count-url="{% url 'inv:ajax_load-operations-lines-count' %}"   data-operations-lines-url="{% url 'inv:ajax_load-operations-lines' %}"  data-agencytaxvalue-url="{% url 'inv:ajax_load_agencytaxvalue' %}"  data-itemtaxvalue-url="{% url 'inv:ajax_load_itemtaxvalue' %}"  data-itemprice-url="{% url 'inv:ajax_load_itemprice' %}"  data-itemuom-url="{% url 'inv:ajax_load_itemuom' %}"   data-accountbalance-url="{% url 'inv:ajax_load_accountbalance' %}"  data-itembarcode-url="{% url 'inv:ajax_load_itembarcode' %}" id="LJForm" action="" method="post"   >
                         {{ operationsline.management_form }}
                         {% csrf_token %}
                         {{ form.id }}
@@ -75,32 +76,26 @@
 
                                             {% if viewparent == True  %}
 
-<!--
-                                            <div class="form-group col-md-4 mb-0">
-                                                {{ form.parent|as_crispy_field }}
-                                                <div class="{% if form.parent.errors %} invalid{% endif %}">
-                                                    {% if error in form.parent.errors %}
-                                                    <p class="help-block">{{ error }}</p>
-                                                    {% endif %}
-                                                </div>
-                                            </div>
--->
                                             <div class="col-2" style="padding-right:0px; padding-left:0px">
                                                     <label class="col-form-label">{% trans "Parent" %}</label>
                                             </div>
+                                          
 
                                             <div class="col-10">
                                                 <select name="parent" id="id_parent" class="form-control" style="">
                                                     <option value="0">---------</option>
                                                         {% for op in parent %}
-                                                            <option value="{{ op.id }}">No. #{{ op.number }} | Date: {{ op.operationdate }} </option>
+                                                        {% if op.status__engname == "Posted" %}
+                                               
+                                                        <option value="{{ op.id }}">No. #{{ op.number }} | Date: {{ op.operationdate }}</option>
+                                                        {% endif %}
+                                                            
                                                         {% endfor %}
                                                 </select>
                                             </div>
 
 
                                             {% endif %}
-
 
                                             {% if accounttype == 90001  %}
                                             <div class="form-group col-md-4 mb-0">
@@ -211,7 +206,7 @@
 
                             </tbody>
                         </table>
-
+                        <h1>{{context}}</h1>
 
                         <div class="tab" role="tabpanel" id="tabs">
                             <ul class="nav nav-tabs" role="tablist">
@@ -390,6 +385,7 @@
                                                </div>
                                             </div>
                                         </div>
+                                        
                                         <table id="table_id" class="table table-bordered table-hover table-sm mb-0" >
                                                 <thead class="thead-light">
                                                     <tr>
@@ -724,8 +720,8 @@
                                                             <td style="padding: 0rem !important;width:50px;">{{ form.currencyrate|as_crispy_field }}</td>
                                                             <td style="padding: 0rem !important;width:50px;">{{ form.amount|as_crispy_field }}</td>
                                                             <td style="padding: 0rem !important;width:50px;">{{ form.exptaxpercent|as_crispy_field }}</td>
-                                                            <td style="padding: 0rem !important;width:100px;">{{ form.exptaxamount|as_crispy_field }}</td>
-                                                            <td style="padding: 0rem !important;width:50px;">{{ form.explinetotal|as_crispy_field }}</td>
+                                                            <td style="padding: 0rem !important;width:75px;">{{ form.exptaxamount|as_crispy_field }}</td>
+                                                            <td style="padding: 0rem !important;width:100px;">{{ form.explinetotal|as_crispy_field }}</td>
                                                             <td style="padding: 0rem !important;width:10px; text-align: center;"></td>
 
                                                         </tr>
@@ -776,7 +772,7 @@
                             {% if useexpense == True  %}
                             <tr>
                                 <td colspan="5"  width="60%"><b class="float-right" > </b></td>
-                                <td colspan="5"><b class="float-right">{% trans "Expeses Amount : " %} </b></td>
+                                <td colspan="5"><b class="float-right">{% trans "Expenses Amount : " %} </b></td>
                                 <td class="float-right" style="padding: 0rem" colspan="1"><INPUT  style="text-align:right" TYPE="number" id="id_expenseamount" NAME="expenseamount" placeholder="Expeses Amount" class="form-control" readonly></td>
                             </tr>
                             {% endif %}
@@ -821,8 +817,8 @@
 
 
 {{ event_formset.media }}
-<script type="text/javascript">
 
+<script type="text/javascript">
 
 document.addEventListener('DOMContentLoaded', function() {
         $("#id_operationtype").val("{{ otype_id }}");
@@ -879,76 +875,127 @@ function get_total(subtotid, taxid){
         var bttotal = 0;
         var tax = 0;
         var nettotal = 0;
+        var priceAmount = 0;
+        var nettotals = 0;
+        var taxinclude_totals = 0;
+     
+        var grossamntbox = parseFloat($("#id_grossamount").val(0.00))
+        var expenseamntbox = parseFloat($("#id_expenseamount").val(0.00))
+        
+    
         for (i = 0; i <= parseInt(id); i++){
             if($("input[name=operationsline_set-" + i + "-linetotal]").val()){
+                var taxpercent = parseFloat($("input[name=operationsline_set-" + i + "-taxpercent]").val(),1);
                 total += parseFloat($("input[name=operationsline_set-" + i + "-linetotal]").val(),1);
                 bttotal += parseFloat($("input[name=operationsline_set-" + i + "-linetotal]").val(),1);
                 tax += parseFloat($("input[name=operationsline_set-" + i + "-taxamount]").val(),1);
-
-                var qtyval = parseFloat($("input[name=operationsline_set-" + i + "-quantity]").val(),1);;
+                var taxes = parseFloat($("input[name=operationsline_set-" + i + "-taxamount]").val(),1);
+                var qtyval = parseFloat($("input[name=operationsline_set-" + i + "-quantity]").val(),1);
                 $("input[name=operationsline_set-" + i + "-quantity]").val(qtyval.toFixed(quantitydecimal));
-                var priceval = parseFloat($("input[name=operationsline_set-" + i + "-price]").val(),1);
+                priceval = parseFloat($("input[name=operationsline_set-" + i + "-price]").val(),1);
+                priceAmount += priceval
                 totalval  = parseFloat($("input[name=operationsline_set-" + i + "-linetotal]").val(),1);
                 $("input[name=operationsline_set-" + i + "-price]").val(priceval.toFixed(currencydecimal));
-                $("input[name=operationsline_set-" + i + "-linetotal]").val(totalval.toFixed(currencydecimal));
-
+                if(taxpercent<0){
+                    var linetotals = qtyval * priceval - taxes;
+                    $("input[name=operationsline_set-" + i + "-linetotal]").val(Math.abs(linetotals).toFixed(currencydecimal));
+                    taxinclude_total =  linetotals
+                   
+                }else{
+                var linetotals = qtyval *  priceval ;
+                $("input[name=operationsline_set-" + i + "-linetotal]").val(linetotals.toFixed(currencydecimal));
+                taxinclude_total = linetotals 
+                
+                }
+              
+                taxinclude_totals+=taxinclude_total
+                $("#id_grossamount").val(taxinclude_totals.toFixed(currencydecimal));
+                nettotals = taxinclude_totals+ tax
             }
             else{
                 total += 0;
                 bttotal += 0;
                 tax += 0;
+            
             }
         }
+     
+        
         {% if useexpense == True  %}
-            console.log("useexpense == True")
+                
             var expid = parseInt($('#id_operationsexpensesline_set-TOTAL_FORMS').val());
             var exptotal = 0;
             var expvat = 0;
-            for (i = 0; i <= parseInt(id); i++){
+            var exptotallineval = 0;
+            var taxincludes_totals = 0;
+            for (i = 0; i <= parseInt(expid); i++){
                 if($("input[name=operationsexpensesline_set-" + i + "-explinetotal]").val()){
-                    exptotal += parseFloat($("input[name=operationsexpensesline_set-" + i + "-explinetotal]").val(),1);
-                    expvat += parseFloat($("input[name=operationsexpensesline_set-" + i + "-exptaxamount]").val(),1);
-
-                    var amntval = parseFloat($("input[name=operationsexpensesline_set-" + i + "-amount]").val(),1);;
+                    exptotal += parseFloat($("input[name=operationsexpensesline_set-" + i + "-amount]").val(),1);
+                    var exp = parseFloat($("input[name=operationsexpensesline_set-" + i + "-amount]").val(),1);
+                    var amntval = parseFloat($("input[name=operationsexpensesline_set-" + i + "-amount]").val(),1);
                     $("input[name=operationsexpensesline_set-" + i + "-amount]").val(amntval.toFixed(currencydecimal));
-
+                    var vatpercent = parseFloat($("input[name=operationsexpensesline_set-" + i + "-exptaxpercent]").val(),1);
+                    if(vatpercent < 0 && (amntval && vatpercent) ){
+                    var totalvat = amntval*(vatpercent/115)
+                        $("input[name=operationsexpensesline_set-" + i + "-exptaxamount]").val(Math.abs(totalvat).toFixed(currencydecimal));
+                        expvat += parseFloat($("input[name=operationsexpensesline_set-" + i + "-exptaxamount]").val(),1);
+                        vat = parseFloat($("input[name=operationsexpensesline_set-" + i + "-exptaxamount]").val(),1);
+                    }
+                        else if(amntval && vatpercent){ 
+                        var totalvat = amntval*(vatpercent/100)
+                        $("input[name=operationsexpensesline_set-" + i + "-exptaxamount]").val(Math.abs(totalvat).toFixed(currencydecimal));
+                        expvat += parseFloat($("input[name=operationsexpensesline_set-" + i + "-exptaxamount]").val(),1);
+                        vat = parseFloat($("input[name=operationsexpensesline_set-" + i + "-exptaxamount]").val(),1);
+                    }
                     exptotallineval  = parseFloat($("input[name=operationsexpensesline_set-" + i + "-explinetotal]").val(),1);
-                    $("input[name=operationsline_set-" + i + "-explinetotal]").val(exptotallineval.toFixed(currencydecimal));
-
-                }
-                else{
-                    exptotal += 0;
-                    expvat += 0;
-                }
+        if(vatpercent < 0){
+            var exptotals = exp - vat ;
+            $("input[name=operationsexpensesline_set-" + i + "-explinetotal]").val(exptotals.toFixed(currencydecimal));
+            taxincludes_total =  exptotals
+            nettotal = bttotal + tax + exptotals + Math.abs(expvat) ;
+                    }
+        else{  
+            var exptotals = exp;
+            nettotals = nettotal+ exptotal + expvat ;
+            $("input[name=operationsexpensesline_set-" + i + "-explinetotal]").val(exptotals.toFixed(currencydecimal));
+            taxincludes_total = exptotals
             }
+            taxincludes_totals+=taxincludes_total
+            $("#id_expenseamount").val( (taxincludes_totals).toFixed(currencydecimal));
+            }
+            else{
+                exptotal += 0;
+                expvat += 0;
+                }
+                
+            }
+            $("#id_taxamount").val( (tax + expvat).toFixed(currencydecimal)); 
         {% endif %}
 
-        $("#id_taxamount").val( tax.toFixed(currencydecimal));
+        
         nettotal = bttotal + tax  ;
+        grossamntbox = parseFloat($("#id_grossamount").val())
+        expenseamntbox = parseFloat($("#id_expenseamount").val())
+        let taxamntbox = parseFloat($("#id_taxamount").val())
+        let wholeTotal = parseFloat(grossamntbox+expenseamntbox+taxamntbox)
+          
+        if(isNaN(expenseamntbox)){
+            $("#id_netamount").val(nettotal.toFixed(currencydecimal))  ;
+            $("#id_taxamount").val(tax.toFixed(currencydecimal)); 
 
-        {% if useexpense == True  %}
-            $("#id_expenseamount").val( (exptotal).toFixed(currencydecimal));
-            nettotal = bttotal + tax + exptotal + expvat ;
-            $("#id_taxamount").val( (tax + expvat).toFixed(currencydecimal));
+        }
 
-        {% endif %}
-
-        $("#id_grossamount").val(bttotal.toFixed(currencydecimal));
-        $("#id_netamount").val(nettotal.toFixed(currencydecimal))  ;
-
-
+         else if(!isNaN(grossamntbox)){
+         $("#id_netamount").val(wholeTotal.toFixed(currencydecimal))  ;
+         
+         }
 
 };
     $("input[name*='price']").change(function () {
-
-            console.log('price change');
     });
 
 function calc_expline_total(rowfieldname,fieldname){
         var explinetotalfield = rowfieldname.replace('-'+fieldname  , '-explinetotal');
-        console.log(explinetotalfield);
-        console.log("explinetotalfield");
-
         var amountfield = rowfieldname.replace('-'+fieldname  , '-amount');
         var taxpercentfield = rowfieldname.replace('-'+fieldname, '-exptaxpercent');
         var taxamountfield = rowfieldname.replace('-'+fieldname, '-exptaxamount');
@@ -960,16 +1007,13 @@ function calc_expline_total(rowfieldname,fieldname){
 
         if (parseInt(0) > 0) {
             tax = parseFloat((linetotalsum * $("#id_"+taxpercentfield).val() / 100))
+            
 
             $("#id_"+taxamountfield).val(tax.toFixed(currencydecimal));
         } else {
             linetotalsum = linetotalsum
         }
-        console.log(linetotalsum);
-
-        console.log($("#id_"+taxpercentfield).val());
         $("#id_"+taxamountfield).val(tax.toFixed(currencydecimal));
-        console.log(explinetotalfield);
 
         $("#id_"+explinetotalfield).val(linetotalsum);
 
@@ -979,7 +1023,6 @@ function calc_expline_total(rowfieldname,fieldname){
 
     $("input[name*='amount']").change(function () {
         var amntfield = $(this).attr('name').replace('-amount', '-amount');
-            console.log(amntfield);
           calc_expline_total(amntfield,"amount");
           get_total();
 
@@ -1012,10 +1055,9 @@ function calc_line_total(rowfieldname,fieldname){
 
         qtyvalue =$("#id_"+qtyfield).val();
         {% if viewdiscper1 == True %}
-            console.log('Disc % in Calc');
             var discountfield = rowfieldname.replace('-'+fieldname, '-discper1');
             disc1amtval =($("#id_"+pricefield).val() * qtyvalue * $("#id_"+discountfield).val())/100
-            console.log(disc1amtval);
+            //  (disc1amtval);
         {% endif %}
 
         {% if viewdiscamt1 == True %}
@@ -1038,12 +1080,11 @@ function calc_line_total(rowfieldname,fieldname){
             vartaxamount = ((parseFloat($("#id_"+pricefield).val() *  $("#id_"+qtyfield).val()) - disc1amtval - disc2amtval) *  Math.abs($("#id_"+taxpercentfield).val()) /100)
         }
         else {
-            console.log('disc in cal linetot');
-            console.log(disc1amtval);
             priceafterdisc = parseFloat( $("#id_"+pricefield).val() *  $("#id_"+qtyfield).val() ) -  disc1amtval - disc2amtval
-            priceaftertax = (priceafterdisc * 100 ) /  (100 + Math.abs($("#id_"+taxpercentfield).val()) ) ;
+            // priceaftertax = (priceafterdisc * 100 ) /  (100 + Math.abs($("#id_"+taxpercentfield).val()) ) ;
+            vartaxamount = (($("#id_"+pricefield).val() * $("#id_"+qtyfield).val()) * Math.abs($("#id_"+taxpercentfield).val()) ) / 115
             //vartaxamount = parseFloat($("#id_"+pricefield).val() *  $("#id_"+qtyfield).val() *  Math.abs($("#id_"+taxpercentfield).val()) /100);
-            vartaxamount = (priceafterdisc - priceaftertax)  ;
+            // vartaxamount = (priceafterdisc - priceaftertax)  ;
         }
 
 
@@ -1089,48 +1130,9 @@ function calc_line_total(rowfieldname,fieldname){
 
           calc_line_total(qtyfield,"discper1");
           get_total();
-          console.log('Disc1 %');
 
     });
-
-
-    $("select[name*='-item']").change(function () {
-        var currencydecimal = {{ currencydecimal }}
-        var itemuomfield = $(this).attr('name').replace('-item', '-itemuom');
-        var taxpercentfield = $(this).attr('name').replace('-item', '-taxpercent');
-          var itemId = $(this).val();
-        var qtyfield = $(this).attr('name').replace('-item', '-quantity');
-      var urlbc = $("#LJForm").attr("data-itemtaxvalue-url");
-      console.log(parseInt(itemId));
-      $.ajax({
-            url: urlbc,
-            async: false,
-            data: {
-
-                'item': parseInt(itemId),
-                },
-                success: function (data) {
-                    console.log(data);
-                    $("#id_"+taxpercentfield).val(parseFloat(data).toFixed(currencydecimal));
-           }
-      });
-
-      var urlup = $("#LJForm").attr("data-itemuom-url");
-      $.ajax({
-            url: urlup,
-            data: {
-                'item': parseInt(itemId),
-                },
-                success: function (data) {
-                    $("#id_"+qtyfield).val(1);
-                    $("#id_"+itemuomfield).html(data);
-                    $("#id_"+itemuomfield).trigger("change");
-
-            }
-      });
-
-
-    });
+    
 
     $("select[name*='customer']").change(function () {
         var accounttypeid = {{ accounttypeid }}
@@ -1146,7 +1148,6 @@ function calc_line_total(rowfieldname,fieldname){
                     'accountid': accountid,
                     },
                     success: function (data) {
-                        console.log(data);
                         $("#id_accountbalance").val(parseFloat(data).toFixed(currencydecimal));
                }
           });
@@ -1183,11 +1184,8 @@ function calc_line_total(rowfieldname,fieldname){
                     'invlocation':invlocation,
                     },
                     success: function (data) {
-                        console.log(data);
                         $("#id_"+pricefield).val(parseFloat(data));
                         $("#id_"+orgpricefield).val(parseFloat(data));
-
-
 
                }
           });
@@ -1211,18 +1209,133 @@ function calc_line_total(rowfieldname,fieldname){
           get_total();
     });
 
+    // get cookie
+    let n = getCookie('csrftoken');
+    if(n == undefined){
+        n = getCookie(' csrftoken');
+    };
+
+    function getCookie(n){
+		cookies = document.cookie.split(';');
+		for(var i = 0; i < cookies.length; i++){
+			v = cookies[i].split('=');
+			if(v[0] == n){
+				return v[1];
+			};
+		};
+	};
+
+    var data = document.getElementById(id_invlocation)
+    function _(e){
+        return document.getElementById(e);
+    }
+    
+    _('id_invlocation').addEventListener('change', function(e){
+        e.preventDefault();
+        let field_val = this.value;
+         // other vars
+        var formData = new FormData();
+        var ajax = new XMLHttpRequest();
+        var obj=[];
+        //append all fields for server manipulation
+        formData.append('field_val', field_val);
+
+        ajax.open('POST', '{% url "inv:ajax_load-invlocations-detail-info" %}', true)
+        ajax.setRequestHeader('X-CSRFToken', n);
+        
+        ajax.onreadystatechange = function(){
+            if(ajax.readyState == 4 && ajax.status == 200){
+                let obj = JSON.parse(ajax.responseText)
+            var i;
+            var j;
+            $("select[name*='-invbinlocation']").empty();            
+            for (i = 0; i < obj.message.length; ++i) {      
+            let  bin_location_add = '<option value="'+obj.message[i].id+'" selected="selected">'+obj.message[i].invlocation+'</option>';
+            $("select[name*='-invbinlocation']").append(bin_location_add);
+        
+            }
+            $("select[name$='-item']").empty();  
+            for (let j = 0; j < obj.messages.length; ++j) {
+                let  item_add = '<option value="'+obj.messages[j].id+'" selected="selected">'+obj.messages[j].code+'-'+obj.messages[j].engname+'</option>';
+                $("select[name$='-item']").append(item_add);
+
+            }
+            };
+        };
+        ajax.send(formData);
+    })
+
+$("select[name*='-agency']").change(function () {
+        var agencyId = $(this).val();
+        var currencydecimal = { currencydecimal }
+        var expid = parseInt($('#id_operationsexpensesline_set-TOTAL_FORMS').val());
+        var urlag = $("#LJForm").attr("data-agencytaxvalue-url");
+        var exptaxpercent = $(this).attr('name').replace('-agency', '-exptaxpercent');
+      $.ajax({
+            url: urlag,
+            async: false,
+            data: {
+                'agency': agencyId
+                },
+                success: function (data) {
+                    $("#id_"+exptaxpercent).val(data);
+                    
+           },
+
+        })
+          
+           
+      });
+
+$("select[name*='-item']").change(function () {
+        var currencydecimal = { currencydecimal }
+        var itemuomfield = $(this).attr('name').replace('-item', '-itemuom');
+        var taxpercentfield = $(this).attr('name').replace('-item', '-taxpercent');
+        var itemId = $(this).val();
+        var qtyfield = $(this).attr('name').replace('-item', '-quantity');
+        var urlbc = $("#LJForm").attr("data-itemtaxvalue-url");
+      $.ajax({
+            url: urlbc,
+            async: false,
+            data: {
+
+                'item': parseInt(itemId),
+                },
+                success: function (data) {
+                    $("#id_"+taxpercentfield).val(parseFloat(data).toFixed(currencydecimal));
+           }
+      });
 
 
 
+
+      var urlup = $("#LJForm").attr("data-itemuom-url");
+      $.ajax({
+            url: urlup,
+            data: {
+                'item': parseInt(itemId),
+                },
+                success: function (data) {
+                    $("#id_"+qtyfield).val(1);
+                    $("#id_"+itemuomfield).html(data);
+                    $("#id_"+itemuomfield).trigger("change");
+
+            }
+      });
+
+
+     
+
+    });
 
 
     $("#id_parent").change(function () {
-          //var url = $("#LJForm").attr("data-operations-lines-url");
+
           var parentval = $(this).val();
           parentval =   parseInt($("#id_parent").val());
 
-
           var url = $("#LJForm").attr("data-operations-details-info-url");
+               $('#operationsline_set-0-invbinlocation').find('option:not(:first)').remove();
           $.ajax({
                 async: false,
                 url: url,
@@ -1235,7 +1348,6 @@ function calc_line_total(rowfieldname,fieldname){
                             $("select[name*='ledger']").html(data);
                         {% endif %}
                         {% if accounttype == 90002  %}
-                            console.log(data);
                             $("select[name*='vendor']").html(data);
                         {% endif %}
                         {% if accounttype == 90003  %}
@@ -1245,6 +1357,26 @@ function calc_line_total(rowfieldname,fieldname){
                         }
 
           });
+
+              // get cookie
+    let n = getCookie('csrftoken');
+    if(n == undefined){
+        n = getCookie(' csrftoken');
+    };
+
+    function getCookie(n){
+		cookies = document.cookie.split(';');
+		for(var i = 0; i < cookies.length; i++){
+			v = cookies[i].split('=');
+			if(v[0] == n){
+				return v[1];
+			};
+		};
+	};
+
+    function _(e){
+        return document.getElementById(e);
+    }
 
 
          var url = $("#LJForm").attr("data-operations-lines-count-url");
@@ -1279,12 +1411,60 @@ function calc_line_total(rowfieldname,fieldname){
                         get_total();
                         }
           });
+          
+
+          
+
+
+          let field_val = $('#id_invlocation').val();
+
+ // other vars
+var formData = new FormData();
+var ajax = new XMLHttpRequest();
+var obj=[];
+//append all fields for server manipulation
+formData.append('field_val', field_val);
+
+
+
+
+ajax.open('POST', '{% url "inv:ajax_load-invlocations-detail-info" %}', true)
+ajax.setRequestHeader('X-CSRFToken', n);
+
+ajax.onreadystatechange = function(){
+    if(ajax.readyState == 4 && ajax.status == 200){
+    let obj = JSON.parse(ajax.responseText)
+    var i;
+    for (i = 0; i < obj.message.length; ++i) {
+
+    let  html = '<option value="'+obj.message[i].id+'" selected="selected">'+obj.message[i].invlocation+'</option>';
+
+
+$('#id_operationsline_set-0-invbinlocation').html(html);
+}
+
+    };
+};
+ajax.send(formData);
+
+
+
 
 
 
     });
 
 
+    var clicks = 0;
+    function click() {
+        let op_item = $("#id_operationsline_set-0-item").html()
+        let inv_binlocations = $("#id_operationsline_set-0-invbinlocation").html()
+        clicks += 1;
+        $("#id_operationsline_set-"+ clicks +"-item").html(op_item)
+        $("#id_operationsline_set-"+ clicks +"-invbinlocation").html(inv_binlocations)
+        
+    console.log("clicks",clicks);
+    };
 
     $('.formset_row').formset({
 
@@ -1300,6 +1480,7 @@ function calc_line_total(rowfieldname,fieldname){
     prefix: '{{ operationsline.prefix }}',
         callbacks: {
             onAdd: function () {
+                click();
                  $("[name*=-item]").select2();
                  $("[name*=unit]").select2();
             },
@@ -1350,7 +1531,8 @@ function createInput(){
 
 
 if ( '{{ cancreate }}' == 'False') {
-    $("#create_id").hide();
+    // $("#create_id").hide();
+    $("#create_id").show();
     }
     else if ( '{{ cancreate }}' == 'True') {
     $("#create_id").show();

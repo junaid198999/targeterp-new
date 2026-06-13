@@ -1,0 +1,493 @@
+{% extends "auth_base.html" %}
+{% load i18n %}
+{% load django_tables2 %}
+{% load widget_tweaks %}
+{% load crispy_forms_tags %}
+{% block content %}
+{% load humanize %}
+
+<link href="/static/libs/select2/select2.min.css" rel="stylesheet" />
+<link href="/static/libs/sweetalert2/sweetalert2.min.css" rel="stylesheet" type="text/css" />
+<div class="container-fluid">
+    <!-- start page title -->
+    <div class="row">
+        <div class="col-12">
+            <div class="page-title-box">
+                <h4 class="page-title">{% trans "Create Contract" %}</h4>
+            </div>
+        </div>
+    </div>
+    <head>
+        <meta charset="utf-8" />
+        <title>contract_form</title>
+    </head>
+    <div class="row">
+        <div class="col-xl-12">
+            <div class="card">
+                <div class="card-body">
+                    <form data-customers-url="{% url 'crm:ajax_load_customers' %}" data-days-url="{% url 'crm:ajax_load_days' %}" data-unitprice-url="{% url 'crm:ajax_load_unitprice' %}" data-duedate-url="{% url 'crm:ajax_load_duedate' %}" data-salesman-url="{% url 'crm:ajax_load_saleman' %}" data-uom-url="{% url 'crm:ajax_load_uom' %}" id="SOForm" action="" method="post" >
+                        {{ contractproducts.management_form }}
+                        {% csrf_token %}
+                        {{ form.id }}
+                        <div class="row">
+                            <div class="col-12">
+                                <div class="sub-header">
+                                    <h5 class="page-title">{% trans "Contract Details" %}</h5>
+                                </div>
+                            </div>
+                        </div>
+
+                        <table class="table table-bordered ">
+                            <div class="{% if form.non_field_errors %}invalid{% endif %} mb-2">
+                              {% if form.non_field_errors %}
+                                {{ error }}
+                                {% endif %}
+                            </div>
+                            <tbody style="background-color: white;">
+                                <tr>
+                                    <td  width="70%" colspan = "7">
+                                        <div class="input-group" style="margin-top: 4%">
+                                            <div class="col-2" style="padding-right:0px; padding-left:0px">
+                                                    <label class="col-form-label">{% trans "Name" %}</label>
+                                            </div>
+                                            <div class="col-10">
+                                                <INPUT TYPE="TEXT" id="id_name" NAME="name" class="form-control">
+                                            </div>
+                                        </div>
+                                        <div class="input-group" style="margin-top: 4%">
+                                            <div class="col-2" style="padding-right:0px; padding-left:0px">
+                                                    <label class="col-form-label" >{% trans "Payment Terms" %}</label>
+                                            </div>
+                                            <div class="col-4">
+                                                <select  name="payment_terms" id="id_payment_terms" class="form-control" value="{{ form.payment_terms }}
+                                                </select>
+                                            </div>
+                                            <div class="col-2" style="padding-right:0px; padding-left:0px">
+                                                    <label class="col-form-label">{% trans "Target 1 Discount" %}</label>
+                                            </div>
+                                            <div class="col-4">
+                                                <INPUT type="text" id="id_target1_discount" NAME="target1_discount" class="form-control" data-value="{{ form.target1_discount }}
+                                            </div>
+
+                                        </div>
+                                        <div class="input-group" style="margin-top: 4%">
+                                            <div class="col-2" style="padding-right:0px; padding-left:0px">
+                                                    <label class="col-form-label">{% trans "Target 2 Discount" %}</label>
+                                            </div>
+                                            <div class="col-4">
+                                                <INPUT type="text" id="id_target2_discount" NAME="target2_discount" class="form-control" data-value="{{ form.target2_discount }}
+                                            </div>
+                                            <div class="col-2" style="padding-right:0px; padding-left:0px">
+                                                    <label class="col-form-label" >{% trans "Target 3 Discount" %}</label>
+                                            </div>
+                                            <div class="col-4">
+                                                <INPUT type="text" id="id_target3_discount" NAME="target3_discount" class="form-control" data-value="{{ form.target3_discount }}
+                                            </div>
+
+                                        </div>
+
+                                    </td>
+                                    <td colspan = "3">
+                                        <div class="input-group">
+                                            <div class="input-group-prepend">
+                                                <span class="input-group-text" id="basic-addon1">{% trans "CO No" %}</span>
+                                            </div>
+                                            <INPUT TYPE="TEXT" NAME="contract_number" id="id_contract_number" class="form-control" value="{{contract_prefix}}{{ maxsoid }}" READONLY >
+                                        </div>
+                                        <div class="input-group" style="margin-top: 2%">
+                                            <div class="input-group-prepend">
+                                                <span class="input-group-text" >{% trans "Start Date" %}</span>
+                                            </div>
+
+                                            <INPUT type="date" id="id_startdate" NAME="startdate" class="form-control">
+
+                                        </div>
+                                        <div class="input-group" style="margin-top: 2%">
+                                            <div class="input-group-prepend">
+                                                <span class="input-group-text" >{% trans "End Date" %}</span>
+                                            </div>
+                                            <INPUT type="date" id="id_enddate" NAME="enddate" class="form-control">
+
+                                        </div>
+                                        <div class="input-group" style="margin-top: 2%">
+                                            <div class="input-group-prepend">
+                                                <span class="input-group-text" >{% trans "Status" %}</span>
+                                            </div>
+                                                <select  name="status" id="id_status" class="form-control" value="{{ form.status }}
+                                                </select>
+
+                                        </div>
+                                    </td>
+                                </tr>
+
+
+                                <tr>
+                                    <td colspan = "10" style="vertical-align: middle; background-color: #f1f5f7;">
+                                        <div class="input-group">
+                                            <div class="input-group-prepend">
+                                                <strong>{% trans "Commercial Terms" %}</strong>
+                                            </div>
+                                        </div>
+                                    </td>
+                                </tr>
+
+                                <tr>
+                                    <td  width="70%" colspan = "7">
+                                        <div class="input-group" style="margin-top: 4%">
+                                            <div class="col-2" style="padding-right:0px; padding-left:0px">
+                                                    <label class="col-form-label" id="">{% trans "Invoice Discount 1" %}</label>
+                                            </div>
+                                            <div class="col-4">
+                                                <INPUT type="text" id="id_inv_dis1" NAME="inv_dis1" class="form-control" data-value="{{ form.inv_dis1 }}
+                                            </div>
+                                            <div class="col-2" style="padding-right:0px; padding-left:0px">
+                                                    <label class="col-form-label">{% trans "Invoice Discount 2" %}</label>
+                                            </div>
+                                            <div class="col-4">
+                                                <INPUT type="text" id="id_inv_dis2" NAME="inv_dis2" class="form-control" data-value="{{ form.inv_dis2 }}
+                                            </div>
+
+                                        </div>
+                                        <div class="input-group" style="margin-top: 4%">
+                                            <div class="col-2" style="padding-right:0px; padding-left:0px">
+                                                    <label class="col-form-label">{% trans "Bonus %" %}</label>
+                                            </div>
+                                            <div class="col-4">
+                                                <INPUT type="text" id="id_bonus" NAME="bonus" class="form-control" data-value="{{ form.bonus }}
+                                            </div>
+                                            <div class="col-2" style="padding-right:0px; padding-left:0px">
+                                                    <label class="col-form-label" >{% trans "Bonus units" %}</label>
+                                            </div>
+                                            <div class="col-4">
+                                                <select  name="bonus_uint" id="id_bonus_uint" class="form-control" value="{{ form.bonus_uint }}
+                                                </select>
+                                            </div>
+
+                                        </div>
+
+                                    </td>
+                                    <td colspan = "3">
+                                        <div class="input-group">
+                                            <div class="input-group-prepend">
+                                                <span class="input-group-text" id="basic-addon3">{% trans "Rebate %" %}</span>
+                                            </div>
+                                            <INPUT TYPE="TEXT" NAME="rebate" id="id_rebate" class="form-control" data-value="{{ form.rebate }}
+                                        </div>
+                                        <div class="input-group" style="margin-top: 2%">
+                                            <div class="input-group-prepend">
+                                                <span class="input-group-text" >{% trans "Marketing Support" %}</span>
+                                            </div>
+
+                                            <INPUT id="id_marketing_support" NAME="marketing_support" class="form-control" data-value="{{ form.marketing_support }}
+
+                                        </div>
+                                        <div class="input-group" style="margin-top: 2%">
+                                            <div class="input-group-prepend">
+                                                <span class="input-group-text" >{% trans "Scientific Support" %}</span>
+                                            </div>
+
+                                            <INPUT id="id_scientific_support" NAME="scientific_support" class="form-control" data-value="{{ form.scientific_support }}
+
+                                        </div>
+                                        <div class="input-group" style="margin-top: 2%">
+                                            <div class="input-group-prepend">
+                                                <span class="input-group-text" >{% trans "Training" %}</span>
+                                            </div>
+
+                                            <INPUT id="id_training" NAME="training" class="form-control" data-value="{{ form.training }}
+
+                                        </div>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        <div class="row">
+                            <div class="col-12">
+                                <div class="sub-header">
+                                    <h5 class="page-title">{% trans "Product Details" %}</h5>
+                                    <a style="float:right" class="buttonHolder" id="add-row"></a>
+                               </div>
+                            </div>
+                        </div>
+                        <table id="table_id" class="table table-bordered table-hover table-sm mb-0">
+                                <thead class="thead-light">
+                                    <tr>
+                                        <th>{% trans "Product" %}</th>
+                                        <th>{% trans "Retail Price" %}</th>
+                                        <th>{% trans "Distributor Price" %}</th>
+                                        <th>{% trans "Invoice Discount 1" %}</th>
+                                        <th>{% trans "Invoice Discount 2" %}</th>
+                                        <th>{% trans "Bonus %" %}</th>
+                                        <th>{% trans "Bonus Unit" %}</th>
+                                        <th hidden>UOM</th>
+                                        <th>{% trans "Actions" %}</th>
+                                    </tr>
+                                </thead>
+                                <tbody class="formset_row">
+                                    {% for form in contractproducts %}
+                                        {{ form.id }}
+                                        <tr style="padding: 0px !important;" class="rowclass">
+
+                                                <td style="padding: 0rem !important;width:300px;" >{{ form.product }}</td>
+                                                <td style="padding: 0rem !important;width:100px;">{{ form.retail_price|as_crispy_field }}</td>
+                                                <td style="padding: 0rem !important;width:100px;">{{ form.distributor_price|as_crispy_field }}</td>
+                                                <td style="padding: 0rem !important;width:100px;">{{ form.inv_discount1|as_crispy_field }}</td>
+                                                <td style="padding: 0rem !important;width:100px;">{{ form.inv_discount2|as_crispy_field }}</td>
+                                                <td style="padding: 0rem !important;width:100px;">{{ form.p_bonus|as_crispy_field }}</td>
+                                                <td style="padding: 0rem !important;width:70px;">
+
+                                                <select name="uoom" class="form-control" id="id_contractproduct_set-0-uoom" style="width:100%">
+                                                     {% for unit in unitslist %}
+                                                        <option {% if form.instance.p_bonus_uint.id == unit.id %} selected {% endif %} value="{{unit.id}}">{{ unit.unit }} </option>
+                                                    {% endfor %}
+                                                </select>
+
+                                                </td>
+                                                <td hidden style="padding: 0rem !important;width:100px;">{{ form.p_bonus_uint|as_crispy_field }}</td>
+                                                <td style="padding: 0rem !important;width:10px; text-align: center;"></td>
+                                        </tr>
+                                    {% endfor %}
+                                </tbody>
+                        </table>
+
+                        <br><br>
+                        <div class="modal-footer">
+                            <a class="btn btn-secondary waves-effect" href="{% url 'crm:contract' %}">{% trans "Cancel" %}</a>
+                            <input type="submit" class="submit-btn btn-danger btn btn-primary" value="{% trans "Create" %}"/>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    <button hidden type="button" class="btn btn-info btn-xs" id="sa-error">Click me</button>
+</div>
+{% endblock %}
+
+{% block extra_javascript %}
+
+<script src="/static/dynamic_formsets/jquery.formset.js"></script>
+    <script src="/static/libs/select2/select2.min.js"></script>
+<script src="/static/django_select2/django_select2.js"></script>
+<script src="/static/libs/sweetalert2/sweetalert2.min.js"></script>
+
+<script type="text/javascript">
+$('#id_total').attr('readonly', true);
+$('#id_subtotal').attr('readonly', true);
+
+        var subtotalval = 0;
+        var dayss = 30;
+        $("#sa-error").click(function() {
+            Swal.fire({
+                type: "error",
+                title: "Oops...",
+                text: "{% trans 'Customer already have contract:' %}",
+                confirmButtonClass: "btn btn-confirm mt-2",
+            })
+        })
+{% if error == 'True' %}
+    $("#sa-error").click()
+{% endif %}
+    {% if creditlimit > 0 %}
+        $("#sa-error").click()
+        $(`select[name="customer"]`).val({{customerid}});
+        $(`select[name="uoom"]`).val({{uomid}});
+    {% endif %}
+    $("#id_customer").change(function () {
+          var url = $("#SOForm").attr("data-customers-url");
+          var customerId = $(this).val();
+
+          $.ajax({
+                url: url,
+                data: {
+                    'customer': customerId
+                    },
+                    success: function (data) {
+                        $("#id_payment_terms").html(data);
+                        $("#id_payment_terms1").html(data);
+                }
+          });
+
+
+          var urldd = $("#SOForm").attr("data-duedate-url");
+          $.ajax({
+                url: urldd,
+                data: {
+                    'customer': customerId
+                    },
+                    success: function (data) {
+                        $("#id_dueddate").val(data);
+                }
+          });
+
+          var url1 = $("#SOForm").attr("data-days-url");
+          $.ajax({
+                url: url1,
+                data: {
+                    'customer': customerId
+                    },
+                    success: function (data) {
+                        $("#id_payment_days").val(data);
+                }
+          });
+
+          var url2 = $("#SOForm").attr("data-salesman-url");
+          $.ajax({
+                url: url2,
+                data: {
+                    'customer': customerId
+                    },
+                    success: function (data) {
+                        $("#id_salesman1").html(data);
+                        $("#id_salesman").html(data);
+                }
+          });
+
+    });
+$('#id_payment_days').attr('readonly', true);
+$( "#id_salesman1" ).prop( "disabled", true );
+$( "#id_payment_terms1" ).prop( "disabled", true );
+$('#id_total').attr('readonly', true);
+$('#id_dueddate').attr('readonly', true);
+
+var subtotalval = 0;
+var taxlval = 0;
+function get_total(subtotid, taxid){
+        var subtotalfield1 = $(`input[name=${subtotid}]`).attr("id");
+        var taxfield = $(`input[name=${taxid}]`).attr("id");
+
+        subtotalval = parseFloat(subtotalval) + parseFloat($("#id_"+subtotalfield1).val(),1);
+        taxval = parseFloat(taxlval) + parseFloat($("#id_"+taxfield).val(),1);
+
+        var id = parseInt($('#id_salesproduct_set-TOTAL_FORMS').val());
+        var TaxV = 0;
+        var total = 0;
+        var bttotal = 0;
+        var tax = 0;
+        var subtotal = 0;
+        for (i = 0; i <= parseInt(id); i++){
+            if($("input[name=salesproduct_set-" + i + "-subtotal]").val()){
+                total += parseFloat($("input[name=salesproduct_set-" + i + "-subtotal]").val(),1);
+                bttotal += parseFloat($("input[name=salesproduct_set-" + i + "-bt_total]").val(),1);
+                tax += parseFloat($("input[name=salesproduct_set-" + i + "-tax]").val(),1);
+            }
+            else{
+                total += 0;
+                bttotal += 0;
+                tax += 0;
+            }
+        }
+        subtotal = total - tax;
+        $("#id_subtotal").val(bttotal.toFixed(1));
+        $("#id_so_tax").val(tax.toFixed(1));
+        $("#id_total").val(total.toFixed(1));
+
+};
+
+    $("input[name*='retail_price']").change(function () {
+        var newElement = $('formset_row').clone(true);
+        var uom1field = $(this).attr('name').replace('-retail_price', '-uoom');
+        var uomfield = $(this).attr('name').replace('-retail_price', '-p_bonus_uint');
+        var discountfield = $(this).attr('name').replace('-retail_price', '-discount');
+
+        $("#id_"+uomfield).val($("#id_"+uom1field).val());
+
+    });
+    $("select[name*='-product']").change(function () {
+        var name = $(this).attr('name').replace('-product', '-retail_price');
+        var uomfield = $(this).attr('name').replace('-product', '-p_bonus_uint');
+
+        var id = $(this).attr('id');
+        price_value = $(this).val();
+
+        var pricefield = $(this).attr('name').replace('-product', '-retail_price');
+        var uomfield = $(this).attr('name').replace('-product', '-p_bonus_uint');
+        var uoomfield = $(this).attr('id').replace('-product', '-uoom');
+        uom_value = $("#"+uoomfield).val();
+        $("#id_"+uomfield).val(uom_value);
+        var productId = $(this).val();
+          var urlup = $("#SOForm").attr("data-unitprice-url");
+          $.ajax({
+                url: urlup,
+                async: false,
+                data: {
+                    'product': productId,
+                    'unit': uom_value,
+                    },
+                    success: function (data) {
+                        $("#id_"+pricefield).val(parseInt(data));
+               }
+          });
+
+    });
+
+    $("[id*=-uoom]").change(function () {
+        var uomfield = $(this).attr('id').replace('-uoom', '-p_bonus_uint');
+        var productfield = $(this).attr('id').replace('-uoom', '-product');
+        var pricefield = $(this).attr('id').replace('-uoom', '-retail_price');
+
+        var id = $(this).attr('id');
+        uom_value = $(this).val();
+        product_value = $("#"+productfield).val();
+        $("#"+uomfield).val(uom_value);
+          var urlup = $("#SOForm").attr("data-unitprice-url");
+          var productId = $(this).val();
+          $.ajax({
+                async: false,
+                url: urlup,
+                data: {
+                    'product': product_value,
+                    'unit': uom_value,
+                    },
+                    success: function (data) {
+                        $("#"+pricefield).val(parseInt(data));
+                }
+          });
+
+        $("#id_"+uomfield).val(parseInt($(this).val()));
+        var subtotalsum = 0;
+        var bttotalsum = 0;
+        var netsubtotalsum = 0;
+            bttotalsum = subtotalsum + parseFloat( $("#"+pricefield).val());
+
+    });
+
+
+   $('.delete-row').on("click", function(){
+        get_total()
+    });
+
+    $('.formset_row').formset({
+        animateForms: true,
+        uiText: {
+            addPrompt: 'Add Product',         // Text used on the 'add a new form' control.
+            removePrompt: '',        // Text used on the 'delete this existing form' control.
+        },
+        addButtonHolder:'.buttonHolder',
+        addCssClass: "add-row btn btn-primary waves-effect waves-light",
+        deleteCssClass: "delete-row btn btn-danger waves-effect mdi mdi-close",
+        prefix: '{{ contractproducts.prefix }}',
+        callbacks: {
+            onAdd: function () {
+                 $("[name*=-product]").select2();
+                 $("[name*=uoom]").select2();
+            },
+            onRemove: function () {
+                 get_total();
+            }
+        },
+    });
+ $('#id_customer').select2();
+ $('#warehouse_id').select2();
+ $("[name*=-product]").select2();
+ $("[name*=uoom]").select2();
+
+
+
+</script>
+
+{% endblock %}
+.rowclass {
+  padding-top: 0px !important;
+  padding-bottom: 0px !important;
+};

@@ -55,6 +55,8 @@
                                         <select name="source" class="form-control" id="id_source" style="width:100%">
                                             <option value="SystemModules">{% trans "Modules" %}</option>
                                             <option value="SystemLookUp">{% trans "System LookUp" %}</option>
+                                            <option value="FiscalYears">{% trans "Fiscal Years" %}</option>
+                                            <option value="FYPModule">{% trans "FYP Module" %}</option>
                                             <option value="PricesLevels">{% trans "Prices Levels" %}</option>
                                             <option value="PaymentsMethods">{% trans "Payments Methods" %}</option>
                                             <option value="PaymentsTearms">{% trans "Payments Tearms" %}</option>
@@ -70,6 +72,7 @@
                                             <option value="OperationsTypes">{% trans "Operations Types" %}</option>
                                             <option value="Items">{% trans "Items" %}</option>
                                             <option value="ItemsUOM">{% trans "Items Packing (UOM)" %}</option>
+                                           
 
 
                                             <option value="LedgersTypes">{% trans "Ledger Types" %}</option>
@@ -81,7 +84,7 @@
                                             <option value="CustomerBalance">{% trans "AR Customers Balances" %}</option>
                                             <option value="Reports">{% trans "Reports" %}</option>
                                             <option value="ItemsPlan">{% trans "Items Plan (Seasonality)" %}</option>
-                                            <option value="TargetUpDown">{% trans "Item Target Up Down" %}</option>
+                                            <option value="TargetUpDown">{% trans "Item Target Up To Down" %}</option>
                                             <option value="TargetByChannel">{% trans "Items Target By Channel" %}</option>
 
 
@@ -97,6 +100,15 @@
                                     <div id="SystemLookUp_Div">
                                         <a href="/media/import/SystemLookUp.csv">{% trans "Download Import File Template" %}</a>
                                     </div>
+
+                                    <div id="FiscalYears_Div">
+                                        <a href="/media/import/FiscalYears.csv">{% trans "Download Import File Template" %}</a>
+                                    </div>
+
+                                    <div id="FYPModule_Div">
+                                        <a href="/media/import/FYPModule.csv">{% trans "Download Import File Template" %}</a>
+                                    </div>
+                                   
 
                                     <div id="PricesLevels_Div">
                                         <a href="/media/import/sy_pricelevels.csv">{% trans "Download Import File Template" %}</a>
@@ -157,7 +169,6 @@
                                     <div id="ItemsUOM_Div">
                                         <a href="/media/import/in_itemsUOM.csv">{% trans "Download Import File Template" %}</a>
                                     </div>
-
 
                                     <div id="LedgersTypes_Div">
                                         <a href="/media/import/gl_LedgersTypes.csv">{% trans "Download Import File Template" %}</a>

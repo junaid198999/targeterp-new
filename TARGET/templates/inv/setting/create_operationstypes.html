@@ -812,6 +812,23 @@
 <script src="/static/libs/select2/select2.min.js"></script>
 <script src="/static/libs/dropify/dropify.min.js"></script>
 
+<script>
+    $('#id_viewparent').click(function() {
+    if($(this).is(':checked'))
+    {
+        // alert('checked');
+        $("#div_id_possibleparent").css("display","block");
+    }
+
+    else{
+        // alert('unchecked');
+        $("#div_id_possibleparent").css("display","none");
+    }
+
+});
+
+</script>
+
 {{ event_formset.media }}
 <script type="text/javascript">
 
@@ -883,6 +900,7 @@ $(function() {
 });
 
     $(document).ready(function(){
+        $("#div_id_possibleparent").css("display","none");
         // Basic
         $('.dropify').dropify();
 

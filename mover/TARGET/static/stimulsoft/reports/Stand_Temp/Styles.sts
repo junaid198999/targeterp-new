@@ -1,0 +1,1484 @@
+{
+  "0": {
+    "Ident": "StiStyle",
+    "CollectionName": "Black",
+    "Conditions": {
+      "0": {
+        "Ident": "StiStyleCondition",
+        "Placement": "DataEvenStyle",
+        "ComponentName": "Data"
+      }
+    },
+    "Name": "Black Data Even",
+    "Font": "Microsoft Sans Serif;9.75;;",
+    "Border": ";43,43,43;;;;;;solid:0,0,0",
+    "Brush": "solid:236,240,241",
+    "TextBrush": "solid:43,43,43",
+    "NegativeTextBrush": "solid:255,0,0"
+  },
+  "1": {
+    "Ident": "StiStyle",
+    "CollectionName": "Black",
+    "Conditions": {
+      "0": {
+        "Ident": "StiStyleCondition",
+        "Type": "ComponentName",
+        "OperationComponentName": "BeginningWith",
+        "ComponentName": "HorizontalLinePrimitive"
+      }
+    },
+    "Name": "Black Primitive Line",
+    "Font": "Microsoft Sans Serif;9.75;;",
+    "Border": ";255,255,255;5;;;;;solid:0,0,0",
+    "Brush": "solid:",
+    "TextBrush": "solid:43,43,43",
+    "NegativeTextBrush": "solid:255,0,0"
+  },
+  "2": {
+    "Ident": "StiStyle",
+    "CollectionName": "Black",
+    "Conditions": {
+      "0": {
+        "Ident": "StiStyleCondition",
+        "Type": "ComponentName",
+        "OperationComponentName": "BeginningWith",
+        "Placement": "PageHeader",
+        "ComponentName": "Text01"
+      }
+    },
+    "Name": "Black Company Name",
+    "Font": "Microsoft Sans Serif;18;Bold;",
+    "Border": ";155,155,155;;;;;;solid:0,0,0",
+    "Brush": "solid:",
+    "TextBrush": "solid:43,43,43",
+    "NegativeTextBrush": "solid:255,0,0",
+    "AllowUseHorAlignment": true
+  },
+  "3": {
+    "Ident": "StiStyle",
+    "CollectionName": "Black",
+    "Conditions": {
+      "0": {
+        "Ident": "StiStyleCondition",
+        "Type": "ComponentName",
+        "OperationComponentName": "BeginningWith",
+        "ComponentName": "Text1"
+      }
+    },
+    "Name": "Black Company Info",
+    "Font": "Microsoft Sans Serif;9.75;;",
+    "Border": ";155,155,155;;;;;;solid:0,0,0",
+    "Brush": "solid:",
+    "TextBrush": "solid:43,43,43",
+    "NegativeTextBrush": "solid:255,0,0",
+    "AllowUseBorderFormatting": false,
+    "AllowUseBorderSides": false
+  },
+  "4": {
+    "Ident": "StiStyle",
+    "CollectionName": "Black",
+    "Conditions": {
+      "0": {
+        "Ident": "StiStyleCondition",
+        "Type": "ComponentName",
+        "OperationComponentName": "BeginningWith",
+        "Placement": "ReportTitle",
+        "ComponentName": "Text2"
+      }
+    },
+    "Name": "Black Bill To",
+    "Font": "Microsoft Sans Serif;14.25;Bold;",
+    "Border": "Left;255,255,255;;;;;;solid:0,0,0",
+    "Brush": "solid:",
+    "TextBrush": "solid:43,43,43",
+    "NegativeTextBrush": "solid:255,0,0"
+  },
+  "5": {
+    "Ident": "StiStyle",
+    "CollectionName": "Black",
+    "Conditions": {
+      "0": {
+        "Ident": "StiStyleCondition",
+        "Type": "ComponentName",
+        "OperationComponentName": "BeginningWith",
+        "ComponentName": "Text3"
+      }
+    },
+    "Name": "Black Bill To Info",
+    "Font": "Microsoft Sans Serif;9.75;;",
+    "Border": ";155,155,155;;;;;;solid:0,0,0",
+    "Brush": "solid:",
+    "TextBrush": "solid:43,43,43",
+    "NegativeTextBrush": "solid:255,0,0"
+  },
+  "6": {
+    "Ident": "StiStyle",
+    "CollectionName": "Black",
+    "Conditions": {
+      "0": {
+        "Ident": "StiStyleCondition",
+        "Type": "ComponentName",
+        "OperationComponentName": "BeginningWith",
+        "Placement": "ReportTitle",
+        "ComponentName": "Text8"
+      }
+    },
+    "Name": "Black Requisites",
+    "Font": "Microsoft Sans Serif;9.75;Bold;",
+    "Border": ";155,155,155;;;;;;solid:0,0,0",
+    "Brush": "solid:",
+    "TextBrush": "solid:0,0,0",
+    "NegativeTextBrush": "solid:255,0,0"
+  },
+  "7": {
+    "Ident": "StiStyle",
+    "CollectionName": "Black",
+    "Conditions": {
+      "0": {
+        "Ident": "StiStyleCondition",
+        "Type": "ComponentName",
+        "Placement": "ReportTitle",
+        "ComponentName": "Text02"
+      }
+    },
+    "Name": "Black Title",
+    "Font": "Microsoft Sans Serif;27.75;Bold;",
+    "Border": ";155,155,155;;;;;;solid:0,0,0",
+    "Brush": "solid:",
+    "TextBrush": "solid:43,43,43",
+    "NegativeTextBrush": "solid:255,0,0"
+  },
+  "8": {
+    "Ident": "StiStyle",
+    "CollectionName": "Black",
+    "Conditions": {
+      "0": {
+        "Ident": "StiStyleCondition",
+        "Type": "ComponentName",
+        "OperationComponentName": "BeginningWith",
+        "ComponentName": "Text5"
+      }
+    },
+    "Name": "Black Data",
+    "Font": "Microsoft Sans Serif;9.75;;",
+    "Border": ";43,43,43;;;;;;solid:0,0,0",
+    "Brush": "solid:",
+    "TextBrush": "solid:43,43,43",
+    "NegativeTextBrush": "solid:255,0,0"
+  },
+  "9": {
+    "Ident": "StiStyle",
+    "CollectionName": "Black",
+    "Conditions": {
+      "0": {
+        "Ident": "StiStyleCondition",
+        "Type": "ComponentName",
+        "OperationComponentName": "BeginningWith",
+        "ComponentName": "Text6"
+      }
+    },
+    "Name": "Black Contact Name",
+    "Font": "Microsoft Sans Serif;9.75;Bold;",
+    "Border": ";155,155,155;;;;;true;solid:0,0,0",
+    "Brush": "solid:",
+    "TextBrush": "solid:43,43,43",
+    "NegativeTextBrush": "solid:255,0,0"
+  },
+  "10": {
+    "Ident": "StiStyle",
+    "CollectionName": "Black",
+    "Conditions": {
+      "0": {
+        "Ident": "StiStyleCondition",
+        "Type": "ComponentName",
+        "OperationComponentName": "BeginningWith",
+        "ComponentName": "Text4"
+      }
+    },
+    "Name": "Black subtotals",
+    "Font": "Microsoft Sans Serif;9.75;Bold;",
+    "Border": "Left;255,255,255;;;;;;solid:0,0,0",
+    "Brush": "solid:213,218,222",
+    "TextBrush": "solid:255,255,255",
+    "NegativeTextBrush": "solid:255,0,0"
+  },
+  "11": {
+    "Ident": "StiStyle",
+    "CollectionName": "Black",
+    "Conditions": {
+      "0": {
+        "Ident": "StiStyleCondition",
+        "Type": "ComponentName",
+        "ComponentName": "Text05"
+      }
+    },
+    "Name": "Black Discount",
+    "Font": "Microsoft Sans Serif;9.75;;",
+    "Border": ";145,145,145;;;;;;solid:0,0,0",
+    "Brush": "solid:",
+    "TextBrush": "solid:43,43,43",
+    "NegativeTextBrush": "solid:255,0,0"
+  },
+  "12": {
+    "Ident": "StiStyle",
+    "CollectionName": "Black",
+    "Conditions": {
+      "0": {
+        "Ident": "StiStyleCondition",
+        "Type": "ComponentName",
+        "OperationComponentName": "BeginningWith",
+        "ComponentName": "Text7"
+      }
+    },
+    "Name": "Black Total",
+    "Font": "Microsoft Sans Serif;12;Bold;",
+    "Border": ";155,155,155;;;;;true;solid:0,0,0",
+    "Brush": "solid:43,43,43",
+    "TextBrush": "solid:255,255,255",
+    "NegativeTextBrush": "solid:255,0,0"
+  },
+  "13": {
+    "Ident": "StiStyle",
+    "CollectionName": "Black",
+    "Conditions": {
+      "0": {
+        "Ident": "StiStyleCondition",
+        "Type": "ComponentName",
+        "OperationComponentName": "BeginningWith",
+        "ComponentName": "Text9"
+      }
+    },
+    "Name": "Black Statement",
+    "Font": "Microsoft Sans Serif;9.75;Bold;",
+    "Border": ";155,155,155;;;;;true;solid:0,0,0",
+    "Brush": "solid:43,43,43",
+    "TextBrush": "solid:255,255,255",
+    "NegativeTextBrush": "solid:255,0,0"
+  },
+  "14": {
+    "Ident": "StiStyle",
+    "CollectionName": "Black",
+    "Conditions": {
+      "0": {
+        "Ident": "StiStyleCondition",
+        "Type": "ComponentName",
+        "ComponentName": "Text03"
+      }
+    },
+    "Name": "Black Thanks",
+    "Font": "Microsoft Sans Serif;27.75;;",
+    "Border": ";43,43,43;;;;;;solid:0,0,0",
+    "Brush": "solid:",
+    "TextBrush": "solid:43,43,43",
+    "NegativeTextBrush": "solid:255,0,0"
+  },
+  "15": {
+    "Ident": "StiStyle",
+    "CollectionName": "Black",
+    "Conditions": {
+      "0": {
+        "Ident": "StiStyleCondition",
+        "Type": "ComponentName",
+        "ComponentName": "Text04"
+      }
+    },
+    "Name": "Black Notes",
+    "Font": "Microsoft Sans Serif;9.75;;",
+    "Border": ";155,155,155;;;;;true;solid:0,0,0",
+    "Brush": "solid:",
+    "TextBrush": "solid:43,43,43",
+    "NegativeTextBrush": "solid:255,0,0",
+    "AllowUseBorderFormatting": false,
+    "AllowUseBorderSides": false
+  },
+  "16": {
+    "Ident": "StiStyle",
+    "CollectionName": "Lime",
+    "Conditions": {
+      "0": {
+        "Ident": "StiStyleCondition",
+        "Type": "ComponentName",
+        "OperationComponentName": "BeginningWith",
+        "Placement": "PageHeader",
+        "Location": "MiddleLeft",
+        "ComponentName": "Text01"
+      }
+    },
+    "Name": "Lime Company Name",
+    "HorAlignment": "Center",
+    "Font": "Microsoft Sans Serif;18;Bold;",
+    "Border": ";155,155,155;;;;;;solid:0,0,0",
+    "Brush": "solid:",
+    "TextBrush": "solid:0,0,0",
+    "NegativeTextBrush": "solid:255,0,0"
+  },
+  "17": {
+    "Ident": "StiStyle",
+    "CollectionName": "Lime",
+    "Conditions": {
+      "0": {
+        "Ident": "StiStyleCondition",
+        "Type": "ComponentName",
+        "OperationComponentName": "BeginningWith",
+        "ComponentName": "Text1"
+      }
+    },
+    "Name": "Lime Company Info",
+    "Font": "Microsoft Sans Serif;9.75;;",
+    "Border": ";155,155,155;;;;;;solid:0,0,0",
+    "Brush": "solid:",
+    "TextBrush": "solid:0,0,0",
+    "NegativeTextBrush": "solid:255,0,0",
+    "AllowUseBorderFormatting": false,
+    "AllowUseBorderSides": false
+  },
+  "18": {
+    "Ident": "StiStyle",
+    "CollectionName": "Lime",
+    "Conditions": {
+      "0": {
+        "Ident": "StiStyleCondition",
+        "Type": "ComponentName",
+        "OperationComponentName": "BeginningWith",
+        "ComponentName": "Text2"
+      }
+    },
+    "Name": "Lime Bill To",
+    "Font": "Microsoft Sans Serif;14.25;Bold;",
+    "Border": "Left;255,255,255;;;;;;solid:0,0,0",
+    "Brush": "solid:145,200,83",
+    "TextBrush": "solid:255,255,255",
+    "NegativeTextBrush": "solid:255,0,0"
+  },
+  "19": {
+    "Ident": "StiStyle",
+    "CollectionName": "Lime",
+    "Conditions": {
+      "0": {
+        "Ident": "StiStyleCondition",
+        "Type": "ComponentName",
+        "OperationComponentName": "BeginningWith",
+        "ComponentName": "Text3"
+      }
+    },
+    "Name": "Lime Bill To Info",
+    "Font": "Microsoft Sans Serif;9.75;;",
+    "Border": ";155,155,155;;;;;;solid:0,0,0",
+    "Brush": "solid:",
+    "TextBrush": "solid:60,63,70",
+    "NegativeTextBrush": "solid:255,0,0"
+  },
+  "20": {
+    "Ident": "StiStyle",
+    "CollectionName": "Lime",
+    "Conditions": {
+      "0": {
+        "Ident": "StiStyleCondition",
+        "Type": "ComponentName",
+        "OperationComponentName": "BeginningWith",
+        "ComponentName": "Text8"
+      }
+    },
+    "Name": "Lime Requisites",
+    "Font": "Microsoft Sans Serif;9.75;Bold;",
+    "Border": ";255,255,255;;;;;;solid:0,0,0",
+    "Brush": "solid:",
+    "TextBrush": "solid:128,128,128",
+    "NegativeTextBrush": "solid:255,0,0"
+  },
+  "21": {
+    "Ident": "StiStyle",
+    "CollectionName": "Lime",
+    "Conditions": {
+      "0": {
+        "Ident": "StiStyleCondition",
+        "Type": "ComponentName",
+        "OperationComponentName": "BeginningWith",
+        "ComponentName": "HorizontalLinePrimitive"
+      }
+    },
+    "Name": "Lime Primitive",
+    "Font": "Microsoft Sans Serif;9.75;;",
+    "Border": ";255,255,255;5;;;;;solid:0,0,0",
+    "Brush": "solid:",
+    "TextBrush": "solid:43,43,43",
+    "NegativeTextBrush": "solid:255,0,0"
+  },
+  "22": {
+    "Ident": "StiStyle",
+    "CollectionName": "Lime",
+    "Conditions": {
+      "0": {
+        "Ident": "StiStyleCondition",
+        "Type": "ComponentName",
+        "ComponentName": "Text02"
+      }
+    },
+    "Name": "Lime Title",
+    "Font": "Microsoft Sans Serif;27.75;Bold;",
+    "Border": ";155,155,155;;;;;;solid:0,0,0",
+    "Brush": "solid:",
+    "TextBrush": "solid:145,200,83",
+    "NegativeTextBrush": "solid:255,0,0"
+  },
+  "23": {
+    "Ident": "StiStyle",
+    "CollectionName": "Lime",
+    "Conditions": {
+      "0": {
+        "Ident": "StiStyleCondition",
+        "Type": "ComponentName",
+        "OperationComponentName": "BeginningWith",
+        "ComponentName": "Text4"
+      }
+    },
+    "Name": "Lime Headers",
+    "Font": "Microsoft Sans Serif;12;Bold;",
+    "Border": "Left;255,255,255;;;;;;solid:0,0,0",
+    "Brush": "solid:60,63,70",
+    "TextBrush": "solid:255,255,255",
+    "NegativeTextBrush": "solid:255,0,0"
+  },
+  "24": {
+    "Ident": "StiStyle",
+    "CollectionName": "Lime",
+    "Conditions": {
+      "0": {
+        "Ident": "StiStyleCondition",
+        "Type": "ComponentName",
+        "OperationComponentName": "BeginningWith",
+        "ComponentName": "Text5"
+      }
+    },
+    "Name": "Lime Data",
+    "Font": "Microsoft Sans Serif;9.75;;",
+    "Border": ";145,145,145;;;;;;solid:0,0,0",
+    "Brush": "solid:",
+    "TextBrush": "solid:120,120,120",
+    "NegativeTextBrush": "solid:255,0,0"
+  },
+  "25": {
+    "Ident": "StiStyle",
+    "CollectionName": "Lime",
+    "Conditions": {
+      "0": {
+        "Ident": "StiStyleCondition",
+        "Type": "ComponentName",
+        "OperationComponentName": "BeginningWith",
+        "ComponentName": "Text6"
+      }
+    },
+    "Name": "Lime Contact Name",
+    "Font": "Microsoft Sans Serif;9.75;Bold;",
+    "Border": ";155,155,155;;;;;true;solid:0,0,0",
+    "Brush": "solid:",
+    "TextBrush": "solid:0,0,0",
+    "NegativeTextBrush": "solid:255,0,0"
+  },
+  "26": {
+    "Ident": "StiStyle",
+    "CollectionName": "Lime",
+    "Conditions": {
+      "0": {
+        "Ident": "StiStyleCondition",
+        "Type": "ComponentName",
+        "ComponentName": "Text05"
+      }
+    },
+    "Name": "Lime Discount",
+    "Font": "Microsoft Sans Serif;9.75;;",
+    "Border": ";145,145,145;;;;;;solid:0,0,0",
+    "Brush": "solid:",
+    "TextBrush": "solid:130,191,62",
+    "NegativeTextBrush": "solid:255,0,0"
+  },
+  "27": {
+    "Ident": "StiStyle",
+    "CollectionName": "Lime",
+    "Conditions": {
+      "0": {
+        "Ident": "StiStyleCondition",
+        "Placement": "DataEvenStyle",
+        "ComponentName": "Data"
+      }
+    },
+    "Name": "Lime Data Even",
+    "Font": "Microsoft Sans Serif;9.75;;",
+    "Border": ";43,43,43;;;;;;solid:0,0,0",
+    "Brush": "solid:236,240,241",
+    "TextBrush": "solid:43,43,43",
+    "NegativeTextBrush": "solid:255,0,0"
+  },
+  "28": {
+    "Ident": "StiStyle",
+    "CollectionName": "Lime",
+    "Conditions": {
+      "0": {
+        "Ident": "StiStyleCondition",
+        "Type": "ComponentName",
+        "OperationComponentName": "BeginningWith",
+        "ComponentName": "Text7"
+      }
+    },
+    "Name": "Lime Total",
+    "Font": "Microsoft Sans Serif;12;Bold;",
+    "Border": ";155,155,155;;;;;true;solid:0,0,0",
+    "Brush": "solid:145,200,83",
+    "TextBrush": "solid:255,255,255",
+    "NegativeTextBrush": "solid:255,0,0"
+  },
+  "29": {
+    "Ident": "StiStyle",
+    "CollectionName": "Lime",
+    "Conditions": {
+      "0": {
+        "Ident": "StiStyleCondition",
+        "Type": "ComponentName",
+        "OperationComponentName": "BeginningWith",
+        "ComponentName": "Text9"
+      }
+    },
+    "Name": "Lime Statement",
+    "Font": "Microsoft Sans Serif;9.75;Bold;",
+    "Border": ";155,155,155;;;;;true;solid:0,0,0",
+    "Brush": "solid:145,200,83",
+    "TextBrush": "solid:255,255,255",
+    "NegativeTextBrush": "solid:255,0,0"
+  },
+  "30": {
+    "Ident": "StiStyle",
+    "CollectionName": "Lime",
+    "Conditions": {
+      "0": {
+        "Ident": "StiStyleCondition",
+        "Type": "ComponentName",
+        "ComponentName": "Text03"
+      }
+    },
+    "Name": "Lime Thanks",
+    "Font": "Microsoft Sans Serif;27.75;;",
+    "Border": ";155,155,155;;;;;;solid:0,0,0",
+    "Brush": "solid:",
+    "TextBrush": "solid:130,191,62",
+    "NegativeTextBrush": "solid:255,0,0"
+  },
+  "31": {
+    "Ident": "StiStyle",
+    "CollectionName": "Lime",
+    "Conditions": {
+      "0": {
+        "Ident": "StiStyleCondition",
+        "Type": "ComponentName",
+        "OperationComponentName": "BeginningWith",
+        "ComponentName": "Text04"
+      }
+    },
+    "Name": "Lime Notes",
+    "Font": "Microsoft Sans Serif;9.75;;",
+    "Border": ";155,155,155;;;;;true;solid:0,0,0",
+    "Brush": "solid:",
+    "TextBrush": "solid:0,0,0",
+    "NegativeTextBrush": "solid:255,0,0"
+  },
+  "32": {
+    "Ident": "StiStyle",
+    "CollectionName": "Aqua",
+    "Conditions": {
+      "0": {
+        "Ident": "StiStyleCondition",
+        "Type": "ComponentName",
+        "OperationComponentName": "BeginningWith",
+        "ComponentName": "Text01"
+      }
+    },
+    "Name": "Aqua Company Name",
+    "HorAlignment": "Center",
+    "Font": "Microsoft Sans Serif;18;Bold;",
+    "Border": ";155,155,155;;;;;;solid:0,0,0",
+    "Brush": "solid:",
+    "TextBrush": "solid:128,128,128",
+    "NegativeTextBrush": "solid:255,0,0"
+  },
+  "33": {
+    "Ident": "StiStyle",
+    "CollectionName": "Aqua",
+    "Conditions": {
+      "0": {
+        "Ident": "StiStyleCondition",
+        "Placement": "DataEvenStyle",
+        "ComponentName": "Data"
+      }
+    },
+    "Name": "Aqua Data Even",
+    "Font": "Microsoft Sans Serif;9.75;;",
+    "Border": ";43,43,43;;;;;;solid:0,0,0",
+    "Brush": "solid:236,240,241",
+    "TextBrush": "solid:43,43,43",
+    "NegativeTextBrush": "solid:255,0,0"
+  },
+  "34": {
+    "Ident": "StiStyle",
+    "CollectionName": "Aqua",
+    "Conditions": {
+      "0": {
+        "Ident": "StiStyleCondition",
+        "Type": "ComponentName",
+        "OperationComponentName": "BeginningWith",
+        "ComponentName": "Text1"
+      }
+    },
+    "Name": "Aqua Company Info",
+    "Font": "Microsoft Sans Serif;9.75;;",
+    "Border": ";155,155,155;;;;;;solid:0,0,0",
+    "Brush": "solid:",
+    "TextBrush": "solid:128,128,128",
+    "NegativeTextBrush": "solid:255,0,0",
+    "AllowUseBorderFormatting": false,
+    "AllowUseBorderSides": false
+  },
+  "35": {
+    "Ident": "StiStyle",
+    "CollectionName": "Aqua",
+    "Conditions": {
+      "0": {
+        "Ident": "StiStyleCondition",
+        "Type": "ComponentName",
+        "OperationComponentName": "BeginningWith",
+        "ComponentName": "Text2"
+      }
+    },
+    "Name": "Aqua Bill To",
+    "Font": "Microsoft Sans Serif;14.25;Bold;",
+    "Border": "Left;255,255,255;;;;;;solid:0,0,0",
+    "Brush": "solid:123,215,238",
+    "TextBrush": "solid:255,255,255",
+    "NegativeTextBrush": "solid:255,0,0"
+  },
+  "36": {
+    "Ident": "StiStyle",
+    "CollectionName": "Aqua",
+    "Conditions": {
+      "0": {
+        "Ident": "StiStyleCondition",
+        "Type": "ComponentName",
+        "OperationComponentName": "BeginningWith",
+        "ComponentName": "Text3"
+      }
+    },
+    "Name": "Aqua Bill To Info",
+    "Font": "Microsoft Sans Serif;9.75;;",
+    "Border": ";155,155,155;;;;;;solid:0,0,0",
+    "Brush": "solid:",
+    "TextBrush": "solid:128,128,128",
+    "NegativeTextBrush": "solid:255,0,0"
+  },
+  "37": {
+    "Ident": "StiStyle",
+    "CollectionName": "Aqua",
+    "Conditions": {
+      "0": {
+        "Ident": "StiStyleCondition",
+        "Type": "ComponentName",
+        "OperationComponentName": "BeginningWith",
+        "ComponentName": "Text8"
+      }
+    },
+    "Name": "Aqua Requisites",
+    "Font": "Microsoft Sans Serif;9.75;Bold;",
+    "Border": ";255,255,255;;;;;;solid:0,0,0",
+    "Brush": "solid:",
+    "TextBrush": "solid:128,128,128",
+    "NegativeTextBrush": "solid:255,0,0"
+  },
+  "38": {
+    "Ident": "StiStyle",
+    "CollectionName": "Aqua",
+    "Conditions": {
+      "0": {
+        "Ident": "StiStyleCondition",
+        "Type": "ComponentName",
+        "ComponentName": "Text02"
+      }
+    },
+    "Name": "Aqua Title",
+    "Font": "Microsoft Sans Serif;27.75;Bold;",
+    "Border": ";155,155,155;;;;;;solid:0,0,0",
+    "Brush": "solid:",
+    "TextBrush": "solid:123,215,238",
+    "NegativeTextBrush": "solid:255,0,0"
+  },
+  "39": {
+    "Ident": "StiStyle",
+    "CollectionName": "Aqua",
+    "Conditions": {
+      "0": {
+        "Ident": "StiStyleCondition",
+        "Type": "ComponentName",
+        "OperationComponentName": "BeginningWith",
+        "ComponentName": "Text4"
+      }
+    },
+    "Name": "Aqua Headers",
+    "Font": "Microsoft Sans Serif;12;Bold;",
+    "Border": "Left;255,255,255;;;;;;solid:0,0,0",
+    "Brush": "solid:128,128,128",
+    "TextBrush": "solid:255,255,255",
+    "NegativeTextBrush": "solid:255,0,0"
+  },
+  "40": {
+    "Ident": "StiStyle",
+    "CollectionName": "Aqua",
+    "Conditions": {
+      "0": {
+        "Ident": "StiStyleCondition",
+        "Type": "ComponentName",
+        "OperationComponentName": "BeginningWith",
+        "ComponentName": "Text5"
+      }
+    },
+    "Name": "Aqua Data",
+    "Font": "Microsoft Sans Serif;9.75;;",
+    "Border": ";145,145,145;;;;;;solid:0,0,0",
+    "Brush": "solid:",
+    "TextBrush": "solid:120,120,120",
+    "NegativeTextBrush": "solid:255,0,0"
+  },
+  "41": {
+    "Ident": "StiStyle",
+    "CollectionName": "Aqua",
+    "Conditions": {
+      "0": {
+        "Ident": "StiStyleCondition",
+        "Type": "ComponentName",
+        "OperationComponentName": "BeginningWith",
+        "ComponentName": "Text6"
+      }
+    },
+    "Name": "Aqua Contact Name",
+    "Font": "Microsoft Sans Serif;9.75;Bold;",
+    "Border": ";155,155,155;;;;;true;solid:0,0,0",
+    "Brush": "solid:",
+    "TextBrush": "solid:128,128,128",
+    "NegativeTextBrush": "solid:255,0,0"
+  },
+  "42": {
+    "Ident": "StiStyle",
+    "CollectionName": "Aqua",
+    "Conditions": {
+      "0": {
+        "Ident": "StiStyleCondition",
+        "Type": "ComponentName",
+        "ComponentName": "Text05"
+      }
+    },
+    "Name": "Aqua Discount",
+    "Font": "Microsoft Sans Serif;9.75;;",
+    "Border": ";145,145,145;;;;;;solid:0,0,0",
+    "Brush": "solid:",
+    "TextBrush": "solid:123,215,238",
+    "NegativeTextBrush": "solid:255,0,0"
+  },
+  "43": {
+    "Ident": "StiStyle",
+    "CollectionName": "Aqua",
+    "Conditions": {
+      "0": {
+        "Ident": "StiStyleCondition",
+        "Type": "ComponentName",
+        "OperationComponentName": "BeginningWith",
+        "ComponentName": "Text7"
+      }
+    },
+    "Name": "Aqua Total",
+    "Font": "Microsoft Sans Serif;12;Bold;",
+    "Border": ";155,155,155;;;;;true;solid:0,0,0",
+    "Brush": "solid:123,215,238",
+    "TextBrush": "solid:255,255,255",
+    "NegativeTextBrush": "solid:255,0,0"
+  },
+  "44": {
+    "Ident": "StiStyle",
+    "CollectionName": "Aqua",
+    "Conditions": {
+      "0": {
+        "Ident": "StiStyleCondition",
+        "Type": "ComponentName",
+        "OperationComponentName": "BeginningWith",
+        "ComponentName": "Text9"
+      }
+    },
+    "Name": "Aqua Statement",
+    "Font": "Microsoft Sans Serif;9.75;Bold;",
+    "Border": ";155,155,155;;;;;true;solid:0,0,0",
+    "Brush": "solid:123,215,238",
+    "TextBrush": "solid:255,255,255",
+    "NegativeTextBrush": "solid:255,0,0"
+  },
+  "45": {
+    "Ident": "StiStyle",
+    "CollectionName": "Aqua",
+    "Conditions": {
+      "0": {
+        "Ident": "StiStyleCondition",
+        "Type": "ComponentName",
+        "ComponentName": "Text03"
+      }
+    },
+    "Name": "Aqua Thanks",
+    "Font": "Microsoft Sans Serif;27.75;;",
+    "Border": ";155,155,155;;;;;;solid:0,0,0",
+    "Brush": "solid:",
+    "TextBrush": "solid:123,215,238",
+    "NegativeTextBrush": "solid:255,0,0"
+  },
+  "46": {
+    "Ident": "StiStyle",
+    "CollectionName": "Aqua",
+    "Conditions": {
+      "0": {
+        "Ident": "StiStyleCondition",
+        "Type": "ComponentName",
+        "OperationComponentName": "BeginningWith",
+        "ComponentName": "HorizontalLinePrimitive"
+      }
+    },
+    "Name": "Aqua Primitive",
+    "Font": "Microsoft Sans Serif;9.75;;",
+    "Border": ";255,255,255;5;;;;;solid:0,0,0",
+    "Brush": "solid:",
+    "TextBrush": "solid:43,43,43",
+    "NegativeTextBrush": "solid:255,0,0"
+  },
+  "47": {
+    "Ident": "StiStyle",
+    "CollectionName": "Aqua",
+    "Conditions": {
+      "0": {
+        "Ident": "StiStyleCondition",
+        "Type": "ComponentName",
+        "ComponentName": "Text04"
+      }
+    },
+    "Name": "Aqua Notes",
+    "Font": "Microsoft Sans Serif;9.75;;",
+    "Border": ";155,155,155;;;;;true;solid:0,0,0",
+    "Brush": "solid:",
+    "TextBrush": "solid:128,128,128",
+    "NegativeTextBrush": "solid:255,0,0"
+  },
+  "48": {
+    "Ident": "StiStyle",
+    "CollectionName": "PeachPuff",
+    "Conditions": {
+      "0": {
+        "Ident": "StiStyleCondition",
+        "Type": "ComponentName",
+        "OperationComponentName": "BeginningWith",
+        "ComponentName": "Text01"
+      }
+    },
+    "Name": "PeachPuff Company Name",
+    "Font": "Microsoft Sans Serif;18;Bold;",
+    "Border": ";155,155,155;;;;;;solid:0,0,0",
+    "Brush": "solid:",
+    "TextBrush": "solid:60,63,70",
+    "NegativeTextBrush": "solid:255,0,0"
+  },
+  "49": {
+    "Ident": "StiStyle",
+    "CollectionName": "PeachPuff",
+    "Conditions": {
+      "0": {
+        "Ident": "StiStyleCondition",
+        "Placement": "DataEvenStyle",
+        "ComponentName": "Data"
+      }
+    },
+    "Name": "PeachPuff Data Even",
+    "Font": "Microsoft Sans Serif;9.75;;",
+    "Border": ";43,43,43;;;;;;solid:0,0,0",
+    "Brush": "solid:236,240,241",
+    "TextBrush": "solid:43,43,43",
+    "NegativeTextBrush": "solid:255,0,0"
+  },
+  "50": {
+    "Ident": "StiStyle",
+    "CollectionName": "PeachPuff",
+    "Conditions": {
+      "0": {
+        "Ident": "StiStyleCondition",
+        "Type": "ComponentName",
+        "OperationComponentName": "BeginningWith",
+        "ComponentName": "Text1"
+      }
+    },
+    "Name": "PeachPuff Company Info",
+    "Font": "Microsoft Sans Serif;9.75;;",
+    "Border": ";155,155,155;;;;;;solid:0,0,0",
+    "Brush": "solid:",
+    "TextBrush": "solid:60,63,70",
+    "NegativeTextBrush": "solid:255,0,0",
+    "AllowUseBorderFormatting": false,
+    "AllowUseBorderSides": false
+  },
+  "51": {
+    "Ident": "StiStyle",
+    "CollectionName": "PeachPuff",
+    "Conditions": {
+      "0": {
+        "Ident": "StiStyleCondition",
+        "Type": "ComponentName",
+        "OperationComponentName": "BeginningWith",
+        "ComponentName": "Text2"
+      }
+    },
+    "Name": "PeachPuff Bill To",
+    "Font": "Microsoft Sans Serif;14.25;Bold;",
+    "Border": "Left;255,255,255;;;;;;solid:0,0,0",
+    "Brush": "solid:241,145,94",
+    "TextBrush": "solid:255,255,255",
+    "NegativeTextBrush": "solid:255,0,0"
+  },
+  "52": {
+    "Ident": "StiStyle",
+    "CollectionName": "PeachPuff",
+    "Conditions": {
+      "0": {
+        "Ident": "StiStyleCondition",
+        "Type": "ComponentName",
+        "OperationComponentName": "BeginningWith",
+        "ComponentName": "Text3"
+      }
+    },
+    "Name": "PeachPuff Bill To Info",
+    "Font": "Microsoft Sans Serif;9.75;;",
+    "Border": ";155,155,155;;;;;;solid:0,0,0",
+    "Brush": "solid:",
+    "TextBrush": "solid:60,63,70",
+    "NegativeTextBrush": "solid:255,0,0"
+  },
+  "53": {
+    "Ident": "StiStyle",
+    "CollectionName": "PeachPuff",
+    "Conditions": {
+      "0": {
+        "Ident": "StiStyleCondition",
+        "Type": "ComponentName",
+        "OperationComponentName": "BeginningWith",
+        "ComponentName": "Text8"
+      }
+    },
+    "Name": "PeachPuff Requisites",
+    "Font": "Microsoft Sans Serif;9.75;Bold;",
+    "Border": ";255,255,255;;;;;;solid:0,0,0",
+    "Brush": "solid:",
+    "TextBrush": "solid:241,145,94",
+    "NegativeTextBrush": "solid:255,0,0"
+  },
+  "54": {
+    "Ident": "StiStyle",
+    "CollectionName": "PeachPuff",
+    "Conditions": {
+      "0": {
+        "Ident": "StiStyleCondition",
+        "Type": "ComponentName",
+        "ComponentName": "Text02"
+      }
+    },
+    "Name": "PeachPuff Title",
+    "Font": "Microsoft Sans Serif;27.75;Bold;",
+    "Border": ";155,155,155;;;;;;solid:0,0,0",
+    "Brush": "solid:",
+    "TextBrush": "solid:241,145,94",
+    "NegativeTextBrush": "solid:255,0,0"
+  },
+  "55": {
+    "Ident": "StiStyle",
+    "CollectionName": "PeachPuff",
+    "Conditions": {
+      "0": {
+        "Ident": "StiStyleCondition",
+        "Type": "ComponentName",
+        "OperationComponentName": "BeginningWith",
+        "ComponentName": "Text4"
+      }
+    },
+    "Name": "PeachPuff Headers",
+    "Font": "Microsoft Sans Serif;12;Bold;",
+    "Border": "Left;236,240,241;;;;;;solid:0,0,0",
+    "Brush": "solid:213,218,222",
+    "TextBrush": "solid:255,255,255",
+    "NegativeTextBrush": "solid:255,0,0"
+  },
+  "56": {
+    "Ident": "StiStyle",
+    "CollectionName": "PeachPuff",
+    "Conditions": {
+      "0": {
+        "Ident": "StiStyleCondition",
+        "Type": "ComponentName",
+        "OperationComponentName": "BeginningWith",
+        "ComponentName": "Text5"
+      }
+    },
+    "Name": "PeachPuff Data",
+    "Font": "Microsoft Sans Serif;9.75;;",
+    "Border": ";241,145,94;;;;;;solid:0,0,0",
+    "Brush": "solid:",
+    "TextBrush": "solid:120,120,120",
+    "NegativeTextBrush": "solid:255,0,0"
+  },
+  "57": {
+    "Ident": "StiStyle",
+    "CollectionName": "PeachPuff",
+    "Conditions": {
+      "0": {
+        "Ident": "StiStyleCondition",
+        "Type": "ComponentName",
+        "OperationComponentName": "BeginningWith",
+        "ComponentName": "Text6"
+      }
+    },
+    "Name": "PeachPuff Contacts Name",
+    "Font": "Microsoft Sans Serif;9.75;Bold;",
+    "Border": ";155,155,155;;;;;true;solid:0,0,0",
+    "Brush": "solid:",
+    "TextBrush": "solid:60,63,70",
+    "NegativeTextBrush": "solid:255,0,0"
+  },
+  "58": {
+    "Ident": "StiStyle",
+    "CollectionName": "PeachPuff",
+    "Conditions": {
+      "0": {
+        "Ident": "StiStyleCondition",
+        "Type": "ComponentName",
+        "ComponentName": "Text05"
+      }
+    },
+    "Name": "PeachPuff Discount",
+    "Font": "Microsoft Sans Serif;9.75;;",
+    "Border": ";145,145,145;;;;;;solid:0,0,0",
+    "Brush": "solid:",
+    "TextBrush": "solid:241,145,94",
+    "NegativeTextBrush": "solid:255,0,0"
+  },
+  "59": {
+    "Ident": "StiStyle",
+    "CollectionName": "PeachPuff",
+    "Conditions": {
+      "0": {
+        "Ident": "StiStyleCondition",
+        "Type": "ComponentName",
+        "OperationComponentName": "BeginningWith",
+        "ComponentName": "Text7"
+      }
+    },
+    "Name": "PeachPuff Totals",
+    "Font": "Microsoft Sans Serif;12;Bold;",
+    "Border": ";155,155,155;;;;;true;solid:0,0,0",
+    "Brush": "solid:241,145,94",
+    "TextBrush": "solid:255,255,255",
+    "NegativeTextBrush": "solid:255,0,0"
+  },
+  "60": {
+    "Ident": "StiStyle",
+    "CollectionName": "PeachPuff",
+    "Conditions": {
+      "0": {
+        "Ident": "StiStyleCondition",
+        "Type": "ComponentName",
+        "OperationComponentName": "BeginningWith",
+        "ComponentName": "Text9"
+      }
+    },
+    "Name": "PeachPuff Statement",
+    "Font": "Microsoft Sans Serif;9.75;Bold;",
+    "Border": ";155,155,155;;;;;true;solid:0,0,0",
+    "Brush": "solid:241,145,94",
+    "TextBrush": "solid:255,255,255",
+    "NegativeTextBrush": "solid:255,0,0"
+  },
+  "61": {
+    "Ident": "StiStyle",
+    "CollectionName": "PeachPuff",
+    "Conditions": {
+      "0": {
+        "Ident": "StiStyleCondition",
+        "Type": "ComponentName",
+        "ComponentName": "Text03"
+      }
+    },
+    "Name": "PeachPuff Thanks",
+    "Font": "Microsoft Sans Serif;27.75;;",
+    "Border": ";60,63,70;;;;;;solid:0,0,0",
+    "Brush": "solid:",
+    "TextBrush": "solid:241,145,94",
+    "NegativeTextBrush": "solid:255,0,0"
+  },
+  "62": {
+    "Ident": "StiStyle",
+    "CollectionName": "PeachPuff",
+    "Conditions": {
+      "0": {
+        "Ident": "StiStyleCondition",
+        "Type": "ComponentName",
+        "OperationComponentName": "BeginningWith",
+        "ComponentName": "HorizontalLinePrimitive"
+      }
+    },
+    "Name": "PeachPuff Primitive",
+    "Font": "Microsoft Sans Serif;9.75;;",
+    "Border": ";255,255,255;5;;;;;solid:0,0,0",
+    "Brush": "solid:",
+    "TextBrush": "solid:43,43,43",
+    "NegativeTextBrush": "solid:255,0,0"
+  },
+  "63": {
+    "Ident": "StiStyle",
+    "CollectionName": "PeachPuff",
+    "Conditions": {
+      "0": {
+        "Ident": "StiStyleCondition",
+        "Type": "ComponentName",
+        "ComponentName": "Text04"
+      }
+    },
+    "Name": "PeachPuff Notes",
+    "Font": "Microsoft Sans Serif;9.75;;",
+    "Border": ";155,155,155;;;;;true;solid:0,0,0",
+    "Brush": "solid:",
+    "TextBrush": "solid:60,63,70",
+    "NegativeTextBrush": "solid:255,0,0"
+  },
+  "64": {
+    "Ident": "StiStyle",
+    "CollectionName": "Red",
+    "Conditions": {
+      "0": {
+        "Ident": "StiStyleCondition",
+        "Type": "ComponentName",
+        "OperationComponentName": "BeginningWith",
+        "ComponentName": "Text01"
+      }
+    },
+    "Name": "Red Company Name",
+    "Font": "Microsoft Sans Serif;18;Bold;",
+    "Border": ";155,155,155;;;;;;solid:0,0,0",
+    "Brush": "solid:",
+    "TextBrush": "solid:60,63,70",
+    "NegativeTextBrush": "solid:255,0,0"
+  },
+  "65": {
+    "Ident": "StiStyle",
+    "CollectionName": "Red",
+    "Conditions": {
+      "0": {
+        "Ident": "StiStyleCondition",
+        "Type": "ComponentName",
+        "OperationComponentName": "BeginningWith",
+        "ComponentName": "Text1"
+      }
+    },
+    "Name": "Red Company Info",
+    "Font": "Microsoft Sans Serif;9.75;;",
+    "Border": ";155,155,155;;;;;;solid:0,0,0",
+    "Brush": "solid:",
+    "TextBrush": "solid:60,63,70",
+    "NegativeTextBrush": "solid:255,0,0",
+    "AllowUseBorderFormatting": false,
+    "AllowUseBorderSides": false
+  },
+  "66": {
+    "Ident": "StiStyle",
+    "CollectionName": "Red",
+    "Conditions": {
+      "0": {
+        "Ident": "StiStyleCondition",
+        "Type": "ComponentName",
+        "OperationComponentName": "BeginningWith",
+        "ComponentName": "Text2"
+      }
+    },
+    "Name": "Red Bill To",
+    "Font": "Microsoft Sans Serif;14.25;Bold;",
+    "Border": "Left;255,255,255;;;;;;solid:0,0,0",
+    "Brush": "solid:238,121,108",
+    "TextBrush": "solid:255,255,255",
+    "NegativeTextBrush": "solid:255,0,0"
+  },
+  "67": {
+    "Ident": "StiStyle",
+    "CollectionName": "Red",
+    "Conditions": {
+      "0": {
+        "Ident": "StiStyleCondition",
+        "Type": "ComponentName",
+        "OperationComponentName": "BeginningWith",
+        "ComponentName": "Text3"
+      }
+    },
+    "Name": "Red Bill To Info",
+    "Font": "Microsoft Sans Serif;9.75;;",
+    "Border": ";155,155,155;;;;;;solid:0,0,0",
+    "Brush": "solid:",
+    "TextBrush": "solid:60,63,70",
+    "NegativeTextBrush": "solid:255,0,0"
+  },
+  "68": {
+    "Ident": "StiStyle",
+    "CollectionName": "Red",
+    "Conditions": {
+      "0": {
+        "Ident": "StiStyleCondition",
+        "Type": "ComponentName",
+        "OperationComponentName": "BeginningWith",
+        "ComponentName": "Text8"
+      }
+    },
+    "Name": "Red Requisites",
+    "Font": "Microsoft Sans Serif;9.75;Bold;",
+    "Border": ";255,255,255;;;;;;solid:0,0,0",
+    "Brush": "solid:",
+    "TextBrush": "solid:232,76,61",
+    "NegativeTextBrush": "solid:255,0,0"
+  },
+  "69": {
+    "Ident": "StiStyle",
+    "CollectionName": "Red",
+    "Conditions": {
+      "0": {
+        "Ident": "StiStyleCondition",
+        "Placement": "DataEvenStyle",
+        "ComponentName": "Data"
+      }
+    },
+    "Name": "Red Data Even",
+    "Font": "Microsoft Sans Serif;9.75;;",
+    "Border": ";43,43,43;;;;;;solid:0,0,0",
+    "Brush": "solid:236,240,241",
+    "TextBrush": "solid:43,43,43",
+    "NegativeTextBrush": "solid:255,0,0"
+  },
+  "70": {
+    "Ident": "StiStyle",
+    "CollectionName": "Red",
+    "Conditions": {
+      "0": {
+        "Ident": "StiStyleCondition",
+        "Type": "ComponentName",
+        "ComponentName": "Text02"
+      }
+    },
+    "Name": "Red Title",
+    "Font": "Microsoft Sans Serif;27.75;Bold;",
+    "Border": ";155,155,155;;;;;;solid:0,0,0",
+    "Brush": "solid:",
+    "TextBrush": "solid:232,76,61",
+    "NegativeTextBrush": "solid:255,0,0"
+  },
+  "71": {
+    "Ident": "StiStyle",
+    "CollectionName": "Red",
+    "Conditions": {
+      "0": {
+        "Ident": "StiStyleCondition",
+        "Type": "ComponentName",
+        "OperationComponentName": "BeginningWith",
+        "ComponentName": "Text4"
+      }
+    },
+    "Name": "Red Headers",
+    "Font": "Microsoft Sans Serif;12;Bold;",
+    "Border": "Left;255,255,255;;;;;;solid:0,0,0",
+    "Brush": "solid:208,213,216",
+    "TextBrush": "solid:255,255,255",
+    "NegativeTextBrush": "solid:255,0,0"
+  },
+  "72": {
+    "Ident": "StiStyle",
+    "CollectionName": "Red",
+    "Conditions": {
+      "0": {
+        "Ident": "StiStyleCondition",
+        "Type": "ComponentName",
+        "OperationComponentName": "BeginningWith",
+        "ComponentName": "Text5"
+      }
+    },
+    "Name": "Red Data",
+    "Font": "Microsoft Sans Serif;9.75;;",
+    "Border": ";232,76,61;;;;;;solid:0,0,0",
+    "Brush": "solid:",
+    "TextBrush": "solid:120,120,120",
+    "NegativeTextBrush": "solid:255,0,0"
+  },
+  "73": {
+    "Ident": "StiStyle",
+    "CollectionName": "Red",
+    "Conditions": {
+      "0": {
+        "Ident": "StiStyleCondition",
+        "Type": "ComponentName",
+        "OperationComponentName": "BeginningWith",
+        "ComponentName": "Text6"
+      }
+    },
+    "Name": "Red Contacts Name",
+    "Font": "Microsoft Sans Serif;9.75;Bold;",
+    "Border": ";155,155,155;;;;;true;solid:0,0,0",
+    "Brush": "solid:",
+    "TextBrush": "solid:60,63,70",
+    "NegativeTextBrush": "solid:255,0,0"
+  },
+  "74": {
+    "Ident": "StiStyle",
+    "CollectionName": "Red",
+    "Conditions": {
+      "0": {
+        "Ident": "StiStyleCondition",
+        "Type": "ComponentName",
+        "ComponentName": "Text05"
+      }
+    },
+    "Name": "Red Discount",
+    "Font": "Microsoft Sans Serif;9.75;;",
+    "Border": ";145,145,145;;;;;;solid:0,0,0",
+    "Brush": "solid:",
+    "TextBrush": "solid:232,76,61",
+    "NegativeTextBrush": "solid:255,0,0"
+  },
+  "75": {
+    "Ident": "StiStyle",
+    "CollectionName": "Red",
+    "Conditions": {
+      "0": {
+        "Ident": "StiStyleCondition",
+        "Type": "ComponentName",
+        "OperationComponentName": "BeginningWith",
+        "ComponentName": "Text7"
+      }
+    },
+    "Name": "Red Totals",
+    "Font": "Microsoft Sans Serif;12;Bold;",
+    "Border": ";155,155,155;;;;;true;solid:0,0,0",
+    "Brush": "solid:232,76,61",
+    "TextBrush": "solid:255,255,255",
+    "NegativeTextBrush": "solid:255,0,0"
+  },
+  "76": {
+    "Ident": "StiStyle",
+    "CollectionName": "Red",
+    "Conditions": {
+      "0": {
+        "Ident": "StiStyleCondition",
+        "Type": "ComponentName",
+        "OperationComponentName": "BeginningWith",
+        "ComponentName": "Text9"
+      }
+    },
+    "Name": "Red Statement",
+    "Font": "Microsoft Sans Serif;9.75;Bold;",
+    "Border": ";155,155,155;;;;;true;solid:0,0,0",
+    "Brush": "solid:238,121,108",
+    "TextBrush": "solid:255,255,255",
+    "NegativeTextBrush": "solid:255,0,0"
+  },
+  "77": {
+    "Ident": "StiStyle",
+    "CollectionName": "Red",
+    "Conditions": {
+      "0": {
+        "Ident": "StiStyleCondition",
+        "Type": "ComponentName",
+        "ComponentName": "Text03"
+      }
+    },
+    "Name": "Red Thanks",
+    "Font": "Microsoft Sans Serif;27.75;;",
+    "Border": ";60,63,70;;;;;;solid:0,0,0",
+    "Brush": "solid:",
+    "TextBrush": "solid:232,76,61",
+    "NegativeTextBrush": "solid:255,0,0"
+  },
+  "78": {
+    "Ident": "StiStyle",
+    "CollectionName": "Red",
+    "Conditions": {
+      "0": {
+        "Ident": "StiStyleCondition",
+        "Type": "ComponentName",
+        "OperationComponentName": "BeginningWith",
+        "ComponentName": "HorizontalLinePrimitive"
+      }
+    },
+    "Name": "Red Primitive",
+    "Font": "Microsoft Sans Serif;9.75;;",
+    "Border": ";255,255,255;5;;;;;solid:0,0,0",
+    "Brush": "solid:",
+    "TextBrush": "solid:43,43,43",
+    "NegativeTextBrush": "solid:255,0,0"
+  },
+  "79": {
+    "Ident": "StiStyle",
+    "CollectionName": "Red",
+    "Conditions": {
+      "0": {
+        "Ident": "StiStyleCondition",
+        "Type": "ComponentName",
+        "ComponentName": "Text04"
+      }
+    },
+    "Name": "Red Notes",
+    "Font": "Microsoft Sans Serif;9.75;;",
+    "Border": ";155,155,155;;;;;true;solid:0,0,0",
+    "Brush": "solid:",
+    "TextBrush": "solid:60,63,70",
+    "NegativeTextBrush": "solid:255,0,0"
+  },
+  "80": {
+    "Ident": "StiStyle",
+    "Description": "Black",
+    "Name": "BlackSample",
+    "Border": ";;;;;;;solid:0,0,0",
+    "Brush": "solid:43,43,43",
+    "TextBrush": "solid:0,0,0",
+    "NegativeTextBrush": "solid:255,0,0"
+  },
+  "81": {
+    "Ident": "StiStyle",
+    "Description": "Lime",
+    "Name": "LimeSample",
+    "Border": ";;;;;;;solid:0,0,0",
+    "Brush": "solid:145,200,83",
+    "TextBrush": "solid:0,0,0",
+    "NegativeTextBrush": "solid:255,0,0"
+  },
+  "82": {
+    "Ident": "StiStyle",
+    "Description": "Aqua",
+    "Name": "AquaSample",
+    "Border": ";;;;;;;solid:0,0,0",
+    "Brush": "solid:123,215,238",
+    "TextBrush": "solid:0,0,0",
+    "NegativeTextBrush": "solid:255,0,0"
+  },
+  "83": {
+    "Ident": "StiStyle",
+    "Description": "Peach Puff",
+    "Name": "PeachPuffSample",
+    "Border": ";;;;;;;solid:0,0,0",
+    "Brush": "solid:241,145,94",
+    "TextBrush": "solid:0,0,0",
+    "NegativeTextBrush": "solid:255,0,0"
+  },
+  "84": {
+    "Ident": "StiStyle",
+    "Description": "Red",
+    "Name": "RedSample",
+    "Border": ";;;;;;;solid:0,0,0",
+    "Brush": "solid:232,76,61",
+    "TextBrush": "solid:0,0,0",
+    "NegativeTextBrush": "solid:255,0,0"
+  }
+}

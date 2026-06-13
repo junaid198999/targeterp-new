@@ -65,3 +65,25 @@ CELERY_TASK_ALWAYS_EAGER = False
 CELERY_TASK_EAGER_PROPAGATES = False
 # Your stuff...
 # ------------------------------------------------------------------------------
+# Dynamic database configuration: SQLite by default, PostgreSQL if DB_HOST is set (e.g. for Cloud SQL Proxy)
+if env('DB_HOST', default=''):
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.postgresql_psycopg2',
+            'NAME': env('DB_NAME', default='targeterp'),
+            'USER': env('DB_USER', default='postgres'),
+            'PASSWORD': env('DB_PASSWORD', default='TargetERP2024!'),
+            'HOST': env('DB_HOST'),
+            'PORT': env('DB_PORT', default='5432'),
+        }
+    }
+else:
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.sqlite3',
+            'NAME': str(ROOT_DIR.path('db.sqlite3')),
+        }
+    }
+
+DATABASES['default']['ATOMIC_REQUESTS'] = True
+

@@ -1,0 +1,83 @@
+
+{% load i18n %}
+{% load widget_tweaks %}
+{% load django_tables2 %}
+{% block content %}
+
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+
+    <link href="/static/stimulsoft/css/stimulsoft.viewer.office2013.whiteblue.css" rel="stylesheet">
+
+    <script src="/static/stimulsoft/stimulsoft.reports.js" type="text/javascript"></script>
+    <script src="/static/stimulsoft/stimulsoft.viewer.js" type="text/javascript"></script>
+
+
+
+    <script src="/static/stimulsoft/stimulsoft.dashboards.js" type="text/javascript"></script>
+
+<head>
+
+
+    <script type="text/javascript">
+
+		var viewer = null;
+		var designer = null;
+
+		Stimulsoft.Base.StiLicense.key = "6vJhGtLLLz2GNviWmUTrhSqnOItdDwjBylQzQcAOiHl2AD0gPVknKsaW0un+3PuM6TTcPMUAWEURKXNso0e5OFPaZYasFtsxNoDemsFOXbvf7SIcnyAkFX/4u37NTfx7g+0IqLXw6QIPolr1PvCSZz8Z5wjBNakeCVozGGOiuCOQDy60XNqfbgrOjxgQ5y/u54K4g7R/xuWmpdx5OMAbUbcy3WbhPCbJJYTI5Hg8C/gsbHSnC2EeOCuyA9ImrNyjsUHkLEh9y4WoRw7lRIc1x+dli8jSJxt9C+NYVUIqK7MEeCmmVyFEGN8mNnqZp4vTe98kxAr4dWSmhcQahHGuFBhKQLlVOdlJ/OT+WPX1zS2UmnkTrxun+FWpCC5bLDlwhlslxtyaN9pV3sRLO6KXM88ZkefRrH21DdR+4j79HA7VLTAsebI79t9nMgmXJ5hB1JKcJMUAgWpxT7C7JUGcWCPIG10NuCd9XQ7H4ykQ4Ve6J2LuNo9SbvP6jPwdfQJB6fJBnKg4mtNuLMlQ4pnXDc+wJmqgw25NfHpFmrZYACZOtLEJoPtMWxxwDzZEYYfT";
+
+
+		var report = new Stimulsoft.Report.StiReport();
+
+        var options = new Stimulsoft.Viewer.StiViewerOptions();
+        //options.appearance.backgroundColor =Stimulsoft.System.Drawing.Color.Transparent;
+
+        options.toolbar.showDesignButton = false;
+        //var viewer = new Stimulsoft.Viewer.StiViewer(options);
+        options.appearance.scrollbarsMode = true;
+        options.toolbar.viewMode = Stimulsoft.Viewer.StiWebViewMode.Continuous;
+        //options.width = "1000px";
+		options.height = "800px";
+
+        viewer = new Stimulsoft.Viewer.StiViewer(options, "StiViewer", false);
+
+        //options.toolbar.viewMode = Stimulsoft.Viewer.StiWebViewMode.AllPage;
+        var dataSet = new Stimulsoft.System.Data.DataSet("Demo");
+        var obj =  {{ datareport | safe }}
+
+
+        dataSet.readJson(obj);
+		report.load(  {{ josndesign |safe }}  );
+        report.regData(dataSet.dataSetName, "", dataSet);
+
+        var gHeader = report.getComponentByName("PageHeaderBand1");
+        if ({{ companyhead | safe }} == 'true'){
+            gHeader.enabled = true;
+            }
+        else {
+          gHeader.enabled = false;
+        }
+
+
+		viewer.report = report;
+
+
+        //document.getElementById("StiViewer").style.backgroundColor = "transparent";
+
+    </script>
+</head>
+<body>
+	<div>
+		<script type="text/javascript">
+			// Show the report viewer in this place
+			viewer.renderHtml();
+		</script>
+	</div>
+</body>
+
+
+
+
+{% endblock %}

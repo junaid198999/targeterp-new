@@ -1,0 +1,7 @@
+<option value="">Select</option>
+{% for trntype in transtypes %}
+<!--<option value="{{ trntype.pk }}">{% if LANGUAGE_CODE == 'ar' %}{{ trntype.arbname }}{% else %}{{ trntype.engname }}{% endif %}</option> -->
+<option value="{{ trntype.pk }}">{{ trntype.arbname }}</option>
+
+
+{% endfor %}

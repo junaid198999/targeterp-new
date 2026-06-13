@@ -1,0 +1,4 @@
+<option value="All">All</option>
+{% for city in cities %}
+<option value="{{ city.pk }}">{% if LANGUAGE_CODE == 'ar' %}{{ city.name_l2 }}{% else %}{{ city.name }}{% endif %}</option>
+{% endfor %}

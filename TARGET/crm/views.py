@@ -277,6 +277,16 @@ class UserDeleteView(LoginRequiredMixin, BSModalDeleteView):
 
         return redirect(path)
 
+def deleteusers(request):
+    Lc= User.objects.all()
+    for l in Lc:
+       try:
+            print(l)
+            l.delete()
+       except:
+            print("not deleted connection somwhere")
+    return redirect("/crm/users/")
+
 
 class UserUpdateView(LoginRequiredMixin, UpdateView):
     model = User
@@ -337,6 +347,16 @@ class GroupDeleteView(LoginRequiredMixin, BSModalDeleteView):
             path = "/crm/pages/"
 
         return redirect(path)
+
+def deletegroups(request):
+    Lc= Group.objects.all()
+    for l in Lc:
+       try:
+            print(l)
+            l.delete()
+       except:
+            print("not deleted connection somwhere")
+    return redirect("/crm/groups/")
 
 
 class GroupUpdateView(LoginRequiredMixin, UpdateView):
@@ -2570,6 +2590,18 @@ class SalesmanDeleteView(LoginRequiredMixin, BSModalDeleteView):
 
         return redirect(path)
 
+def deletesalesmans(request):
+    Lc= Salesman.objects.all()
+    for l in Lc:
+       try:
+            print(l)
+            l.delete()
+       except:
+            print("not deleted connection somwhere")
+    return redirect("/crm/salesmans/")
+
+#End Salesman  
+
 def load_areas(request):
     country_id = request.GET.get('country')
     areas = Area.objects.filter(country_id=country_id).order_by('name')
@@ -3734,6 +3766,16 @@ class NotificationDeleteView(LoginRequiredMixin, BSModalDeleteView):
     template_name = 'crm/notifications/delete_notification.html'
     success_message = 'Success: notification was deleted.'
     success_url = reverse_lazy('crm:notifications')
+
+def deletenotifications(request):
+    Lc= Notification.objects.all()
+    for l in Lc:
+       try:
+            print(l)
+            l.delete()
+       except:
+            print("not deleted connection somwhere")
+    return redirect("/crm/notifications/")
 
 
 class VendorListView(LoginRequiredMixin, generic.ListView):
@@ -5440,6 +5482,17 @@ def fetch_price(request, pk):
     if request.method=='GET':
         price = product.price
         return HttpResponse(price)
+    
+def deletetargetcategorychannels(request):
+    Lc= TargetCategoryChannels.objects.all()
+    for l in Lc:
+       try:
+            print(l)
+            l.delete()
+       except:
+            print("not deleted connection somwhere")
+    return redirect("/crm/targetcategorychannels/")
+    
 
 class FinancialYearListView(LoginRequiredMixin, generic.ListView):
     model = FinancialYear
@@ -12419,6 +12472,16 @@ class CurrencyDeleteView(LoginRequiredMixin, BSModalDeleteView):
 
         return redirect(path)
 
+def deletecurrencies(request):
+    Lc= Currency.objects.all()
+    for l in Lc:
+       try:
+            print(l)
+            l.delete()
+       except:
+            print("not deleted connection somwhere")
+    return redirect("/crm/currencies/")
+
 class LeadListView(LoginRequiredMixin, ListView):
     permission_required = 'crm.view_lead'
     model = Lead
@@ -13620,6 +13683,16 @@ class CommissionUpdateView(LoginRequiredMixin, UpdateView):
             return response
         else:
             return super().form_invalid(form)
+def deletecommissions(request):
+    Lc= Commission.objects.all()
+    for l in Lc:
+       try:
+            print(l)
+            l.delete()
+       except:
+            print("not deleted connection somwhere")
+    return redirect("/crm/commissions/")
+    
 
 class QuestionAnswersListView(LoginRequiredMixin, generic.ListView):
     permission_required = 'crm.view_questionanswers'
@@ -13768,6 +13841,16 @@ class SalesmanGroupsDeleteView(LoginRequiredMixin, BSModalDeleteView):
             path = "/crm/pages/"
 
         return redirect(path)
+
+def deletesalesmangroups(request):
+    Lc= SalesmanGroups.objects.all()
+    for l in Lc:
+       try:
+            print(l)
+            l.delete()
+       except:
+            print("not deleted connection somwhere")
+    return redirect("/crm/salesmangroups/")
 
 class SampleOrderInvoiceView(LoginRequiredMixin, UpdateView):
     model = SampleOrder
@@ -14278,6 +14361,16 @@ class SubDomainDeleteView(LoginRequiredMixin, BSModalDeleteView):
             path = "/crm/pages/"
 
         return redirect(path)
+
+def deletenewsubdomain(request):
+    Lc= DemoAccounts.objects.all()
+    for l in Lc:
+       try:
+            print(l)
+            l.delete()
+       except:
+            print("not deleted connection somwhere")
+    return redirect("/crm/newsubdomain/")
 
 class SubDomainStopView(LoginRequiredMixin, BSModalUpdateView):
     model = DemoAccounts
@@ -15302,16 +15395,46 @@ def Import(request):
                 context = {'success': 2}
 
         elif source == "SystemLookUp":
+            # try:
+            #     _, created = LookUp.objects.update_or_create(
+            #         keyid=column[1],
+            #         defaults={
+            #             'keyname': column[2],
+            #             'code': column[3],
+            #             'engname': column[4],
+            #             'arbname': column[5],
+            #             'value': column[6],
+            #             'remarks': column[7],
+            #         },
+            #     )
+
+            #     context = {'success': 1}
+            # except:
+            #     context = {'success': 2}
+            k=column[2]
+            # print(k)
+            ky=k.replace('"','' )
+            # print(ky)
+            c = column[3]
+            cd =c.replace('"','' )
+            e = column[4]
+            en =e.replace('"','' )
+            a = column[5]
+            ab =a.replace('"','' )
+            v = column[6]
+            va =v.replace('"','' )
+            r = column[7]
+            re =r.replace('"','' )
             try:
                 _, created = LookUp.objects.update_or_create(
-                    keyid=column[0],
+                    keyid=column[1],
                     defaults={
-                        'keyname': column[1],
-                        'code': column[2],
-                        'engname': column[3],
-                        'arbname': column[4],
-                        'value': column[5],
-                        'remarks': column[6],
+                        'keyname': ky,
+                        'code': cd,
+                        'engname': en,
+                        'arbname': ab,
+                        'value': va,
+                        'remarks': re,
                     },
                 )
 
@@ -15323,25 +15446,75 @@ def Import(request):
         elif source == "SystemModules":
             try:
                 _, created = Modules.objects.update_or_create(
-                    code=column[0],
+                    code=column[1],
                     defaults={
-                        'engname': column[1],
-                        'arbname': column[2],
-                        'isregistered': to_bool( column[3]),
-                        'isfydependant': to_bool(column[4]),
-                        'isgl': to_bool(column[5]),
-                        'isar': to_bool(column[6]),
-                        'isap': to_bool(column[7]),
-                        'isfa': to_bool(column[8]),
-                        'isin': to_bool(column[9]),
-                        'ishr': to_bool(column[10]),
-                        'isfc': to_bool(column[11]),
-                        'ispm': to_bool(column[12]),
+                        'engname': column[2],
+                        'arbname': column[3],
+                        'isregistered': to_bool( column[4]),
+                        'isfydependant': to_bool(column[5]),
+                        'isgl': to_bool(column[6]),
+                        'isar': to_bool(column[7]),
+                        'isap': to_bool(column[8]),
+                        'isfa': to_bool(column[9]),
+                        'isin': to_bool(column[10]),
+                        'ishr': to_bool(column[11]),
+                        'isfc': to_bool(column[12]),
+                        'ispm': to_bool(column[13]),
                     },
                 )
                 context = {'success': 1}
             except:
                 context = {'success': 2}
+                
+        #add 
+        elif source == "FiscalYears":
+            try:
+                _, created = FiscalYears.objects.update_or_create(
+                    code=column[0],
+                    defaults={
+                        'engname': column[1],
+                        'arbname': column[2],
+                    },
+                )
+                context = {'success': 1}
+            except:
+                context = {'success': 2}
+
+        # elif source == "FYPModules":
+        #     print(data_set)
+        #     try:
+        #         _, created = FiscalYearsPeriodsModules.objects.update_or_create(
+        #             opendate=column[1],
+        #             defaults={
+        #                 # 'opendate': column[1],
+        #                 'closedate': column[2],
+        #                 'fiscalyearperiod_id': column[3],
+        #                 'module_id': column[4],
+        #             },
+        #         )
+        #         context = {'success': 1}
+        #     except:
+        #         context = {'success': 2}
+        
+        #add 14-0-2022
+        elif source == "FYPModule":
+            # print(data_set)
+            d=column[1]
+            try:
+                _, created = FiscalYearsPeriodsModules.objects.update_or_create(
+                    opendate=d,
+                    defaults={
+                        # 'opendate': column[1],
+                        'closedate': column[2],
+                        'fiscalyearperiod_id': column[3],
+                        'module_id': column[4],
+                    },
+                )
+                context = {'success': 1}
+            except Exception as e:
+                print(str(e))
+                context = {'success': 2}
+          
 
 
         elif source == "PricesLevels":
@@ -16666,26 +16839,29 @@ def Import(request):
 
         elif source == "PaymentsTearms":
             try:
-                accounttype= LookUp.objects.all().filter(keyid =column[3]).values('id')
+                accounttype= LookUp.objects.all().filter(keyid =column[12]).values('id')
                 accounttype_id = accounttype[0]['id']
-                accountcheck= LookUp.objects.all().filter(keyid =column[11]).values('id')
+                accountcheck= LookUp.objects.all().filter(keyid =column[4]).values('id')
                 accountcheck_id = accountcheck[0]['id']
-
-
+            
+          
                 _, created = PaymentsTearms.objects.update_or_create(
                     code=column[0],
                     defaults={
                         'engname': column[1],
                         'arbname': column[2],
-                        'accounttype_id': accounttype_id,
-                        'noofpayment': column[4],
-                        'creditlimit': column[5],
-                        'creditdays': column[6],
-                        'paymentintervalday': column[7],
-                        'allowcashdiscount': to_bool(column[8]),
-                        'isperiod': to_bool(column[9]),
-                        'perioddays': column[10],
+                        'remarks': column[3],
+                        # 'accountcheck_id': column[4],
                         'accountcheck_id': accountcheck_id,
+                        'allowcashdiscount': to_bool(column[5]),
+                        'creditdays': column[6],
+                        'creditlimit': column[7],
+                        'isperiod': to_bool(column[8]),
+                        'noofpayment': column[9],
+                        'paymentintervalday': column[10],
+                        'perioddays': column[11],
+                        # 'accounttype_id': column[12],
+                        'accounttype_id': accounttype_id,
                     },
                 )
                 context = {'success': 1}
@@ -17362,6 +17538,16 @@ class UserAdditionalProfileDeleteView(LoginRequiredMixin, BSModalDeleteView):
 
         return redirect(path)
 
+def deleteuseradditionalprofile(request):
+    Lc= UserAdditionalProfile.objects.all()
+    for l in Lc:
+       try:
+            print(l)
+            l.delete()
+       except:
+            print("not deleted connection somwhere")
+    return redirect("/crm/useradditionalprofile/")
+
 
 class UserAdditionalProfileUpdateView(LoginRequiredMixin, UpdateView):
     model = UserAdditionalProfile
@@ -17490,6 +17676,17 @@ class UserBusinessRolesDeleteView(LoginRequiredMixin, BSModalDeleteView):
     template_name = 'crm/users/delete_userbusinessroles.html'
     success_message = 'Success: User Business Roles was deleted.'
     success_url = reverse_lazy('crm:list-userbusinessroles')
+
+def deleteuserbusinessroles(request):
+    Lc= UserBusinessRoles.objects.all()
+    for l in Lc:
+       try:
+            print(l)
+            l.delete()
+       except:
+            print("not deleted connection somwhere")
+    return redirect("/crm/userbusinessroles/")
+    
 
 
 ######### End userbusinessroles

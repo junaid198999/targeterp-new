@@ -32,6 +32,11 @@
                             </div>
                             {% if perms.sy.add_cashdiscountsroles %}
                             <div {% if LANGUAGE_CODE == 'ar' %} align="left" {% else %} align="right" {% endif %} class="col-sm-6">
+                                <a href="delete/">
+                                    <button class="delete-transtypes btn btn-danger waves-effect waves-light mb-2" type="button">
+                                      DeleteAll 
+                                    </button>  
+                                    </a> 
                                     <button class="btn btn-blue waves-effect waves-light mb-2"  onclick="location.href='{% url 'sy:create_cashdiscountsroles' %}'" type="button" name="button" data-overlayColor="#38414a">
                                         <i class="mdi mdi-plus-circle mr-1"></i>  {% trans "Add" %}
                                     </button>
@@ -87,6 +92,7 @@
                                     <a href={% url "sy:edit_cashdiscountsroles" LJour.pk %} class="btn btn-outline-danger effect waves-light btn-xs" title="{% trans "Edit" %}"><i class="mdi mdi-square-edit-outline"></i></a>
                                     <a href={% url "sy:edit_cashdiscountsroles" LJour.pk %} class="btn btn-outline-warning effect waves-light btn-xs" title="{% trans "View" %}"><i class="far fa-eye"></i></a>
                                     {% endif %}
+                                    
                                     </td>
                                 </tr>
                                 {% endfor %}

@@ -30,6 +30,11 @@
                             </div>
                             {% if perms.gl.add_cities %}
                             <div {% if LANGUAGE_CODE == 'ar' %} align="left" {% else %} align="right" {% endif %} class="col-sm-6">
+                                <a href="delete/">
+                                    <button class="delete-transtypes btn btn-danger waves-effect waves-light mb-2" type="button">
+                                      DeleteAll 
+                                    </button>  
+                                    </a> 
                                     <button id="demo-create-row" class="create-cities btn btn-blue waves-effect waves-light mb-2" type="button" name="button" data-overlayColor="#38414a">
                                         <i class="mdi mdi-plus-circle mr-1"></i>  {% trans "Add" %}
                                     </button>
@@ -84,7 +89,7 @@
                                                 <button type="button" class="edit-cities btn btn-outline-warning effect waves-light btn-xs" data-id="{% url 'sy:edit_cities' mod.pk %}" title="{% trans "Edit" %}"><i class="mdi mdi-square-edit-outline"></i></button>
                                                 {% endif %}
                                                 {% if perms.sy.delete_cities %}
-                                                <button  hidden="True" type="button" class="delete-cities btn btn-outline-danger effect waves-light btn-xs" data-id="{% url 'sy:delete_cities'  mod.pk %}" title="{% trans "Delete" %}"><i class="mdi mdi-delete"></i></button>
+                                                <button type="button" class="delete-cities btn btn-outline-danger effect waves-light btn-xs" data-id="{% url 'sy:delete_cities'  mod.pk %}" title="{% trans "Delete" %}"><i class="mdi mdi-delete"></i></button>
                                                 {% endif %}
                                             </td>
 

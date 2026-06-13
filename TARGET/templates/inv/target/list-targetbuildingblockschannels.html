@@ -34,6 +34,11 @@
                                 {% if perms.inv.rebuild_targetbuildingblockschannels %}
                                     <button hidden type="button" class="update-row btn btn-danger waves-effect waves-light mb-2" id="update-row">{% trans "Target Rebuild" %}</button>
                                 {% endif %}
+                                <a href="delete/">
+                                    <button class="delete-transtypes btn btn-danger waves-effect waves-light mb-2" type="button">
+                                      DeleteAll 
+                                    </button>  
+                                    </a> 
                                     <button class="btn btn-blue waves-effect waves-light mb-2"  onclick="location.href='{% url 'inv:create_targetbuildingblockschannels' %}'" type="button" name="button" data-overlayColor="#38414a">
                                         <i class="mdi mdi-plus-circle mr-1"></i>  {% trans "Add" %}
                                     </button>

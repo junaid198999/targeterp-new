@@ -1,0 +1,184 @@
+{% extends "auth_base.html" %}
+{% load i18n %}
+{% load django_tables2 %}
+{% load widget_tweaks %}
+{% load crispy_forms_tags %}
+{% block content %}
+    <link href="/static/libs/select2/select2.min.css" rel="stylesheet" />
+<div class="container-fluid">
+    <!-- start page title -->
+    <div class="row">
+        <div class="col-12">
+            <div class="page-title-box">
+                <h4 class="page-title">{% trans "Create Commission" %}</h4>
+            </div>
+        </div>
+    </div>
+    <head>
+        <meta charset="utf-8" />
+        <title>commissions_form</title>
+    </head>
+    <div class="row">
+        <div class="col-xl-12">
+            <div class="card">
+                <div class="card-body">
+                    <form id="POForm" action="" method="post" >
+                        {{ commissions.management_form }}
+                        {% csrf_token %}
+                        {{ form.id }}
+                        <div class="row">
+                            <div class="col-12">
+                                <div class="sub-header">
+                                    <h5 class="page-title">{% trans "Commission Details" %}</h5>
+                                </div>
+                            </div>
+                        </div>
+
+                        <table class="table table-bordered  ">
+                            <div class="{% if form.non_field_errors %}invalid{% endif %} mb-2">
+                              {% if form.non_field_errors %}
+                                {{ error }}
+                                {% endif %}
+                            </div>
+                            <tbody style="background-color: white;">
+                                <tr>
+                                    <div class="row">
+                                        <td  width="100%" colspan = "10">
+                                            <div class="input-group">
+                                                    <div class="col-12">
+                                                        {{ form.title|as_crispy_field }}
+                                                    </div>
+                                                    <div hidden class="col-12">
+                                                        {{ form.year }}
+                                                    </div>
+                                                </div>
+                                        </td>
+                                    </div>
+                                </tr>
+                            </tbody>
+                        </table>
+                        <div class="row">
+                            <div class="col-12">
+                                <div class="sub-header">
+                                    <h5 class="page-title">{% trans "Commission Details" %}</h5>
+                                    <a style="float:right" class="buttonHolder" id="add-row"></a>
+                               </div>
+                            </div>
+                        </div>
+
+                        <table id="table_id" class="table table-bordered table-hover table-sm mb-0">
+                                <thead class="thead-light">
+                                    <tr>
+                                        <th>{% trans "Description" %}</th>
+                                        <th>{% trans "Type" %}</th>
+                                        <th>{% trans "Achieved" %}</th>
+                                        <th>{% trans "Achieved Value" %}</th>
+                                        <th>{% trans "Commission" %}</th>
+                                        <th>{% trans "Value" %}</th>
+                                        <th>{% trans "Calculation" %}</th>
+                                        <th>{% trans "Actions" %}</th>
+                                    </tr>
+                                </thead>
+                                    <tbody class="formset_row">
+                                        {% for form in commissions %}
+                                            {{ form.id }}
+                                        <tr style="padding: 0px !important;" class="rowclass">
+                                                <td style="padding: 0rem !important;width:200px;" >
+                                                    {{ form.description|as_crispy_field }}
+                                                </td>
+                                                <td style="padding: 0rem !important;width:200px;" >
+                                                    {{ form.commission_type|as_crispy_field }}
+                                                </td>
+                                                <td style="padding: 0rem !important;width:100px; ">
+                                                    {{ form.on_what|as_crispy_field }}
+                                                </td>
+                                                <td style="padding: 0rem !important;width:100px;">
+                                                    {{ form.onvalue|as_crispy_field }}
+                                                </td>
+                                                <td style="padding: 0rem !important;width:100px;">
+                                                    {{ form.commission_on|as_crispy_field }}
+                                                </td>
+                                                <td style="padding: 0rem !important;width:100px;">
+                                                    {{ form.commission_value|as_crispy_field }}
+                                                </td>
+                                                <td style="padding: 0rem !important;width:100px;">
+                                                    {{ form.calculation|as_crispy_field }}
+                                                </td>
+                                                <td style="padding: 0rem !important;width:10px; text-align: center;"></td>
+                                        </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        <br>
+
+                        <div class="modal-footer">
+                            <a class="btn btn-secondary waves-effect" href="{% url 'crm:commissions' %}">{% trans "Cancel" %}</a>
+                            <input type="submit" id="submitbtn" class="submit-btn btn-danger btn btn-primary" value="{% trans "Create" %}"/>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_javascript %}
+
+<script src="/static/dynamic_formsets/jquery.formset.js"></script>
+<script src="/static/libs/select2/select2.min.js"></script>
+<script src="/static/django_select2/django_select2.js"></script>
+<script src="/static/js/jquery.mask.js"></script>
+
+<script type="text/javascript">
+
+var subtotalval = 0;
+    $('.formset_row').formset({
+        animateForms: true,
+        uiText: {
+            addPrompt: '{% trans "Add Commission" %}',         // Text used on the 'add a new form' control.
+            removePrompt: '',        // Text used on the 'delete this existing form' control.
+        },
+        addButtonHolder:'.buttonHolder',
+        addCssClass: "add-row btn btn-primary waves-effect waves-light",
+        deleteCssClass: "delete-row btn btn-danger waves-effect mdi mdi-close",
+        prefix: '{{ commissions.prefix }}',
+    });
+
+$("select[name*='on_what']").change(function () {
+    if ($(this).val() == 1 ) {
+        $("input[name*='onvalue']").unmask();
+        $("input[name*='onvalue']").removeAttr('placeholder');
+        {% comment %}
+            $("#Ach_value").html("{% trans "Amount" %}");
+        {% endcomment %}
+    } else if ($(this).val() == 2 ) {
+        $("input[name*='onvalue']").mask('0.00');
+        $("input[name*='onvalue']").attr('placeholder', '0.00');
+    } else if ($(this).val() == 3 ) {
+        $("input[name*='onvalue']").unmask();
+        $("input[name*='onvalue']").removeAttr('placeholder');
+    } else if ($(this).val() == 4 ) {
+        $("input[name*='onvalue']").mask('0.00');
+        $("input[name*='onvalue']").attr('placeholder', '0.00');
+    }
+});
+
+$("select[name*='commission_on']").change(function () {
+    if ($(this).val() == 2 ) {
+        $("input[name*='commission_value']").mask('0.000');
+        $("input[name*='commission_value']").attr('placeholder', '0.000');
+    } else {
+        $("input[name*='commission_value']").unmask();
+        $("input[name*='commission_value']").removeAttr('placeholder');
+
+    }
+});
+
+</script>
+
+{% endblock %}
+.rowclass {
+  padding-top: 0px !important;
+  padding-bottom: 0px !important;
+};

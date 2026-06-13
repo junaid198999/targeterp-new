@@ -1,0 +1,172 @@
+{% extends "auth_base.html" %}
+{% load i18n %}
+{% load widgets %}
+{% load widget_tweaks %}
+{% load humanize %}
+{% load django_tables2 %}
+{% block content %}
+    <link href="/static/libs/select2/select2.min.css" rel="stylesheet" />
+<div class="container-fluid">
+    <!-- start page title -->
+    <div class="row">
+        <div class="col-12">
+            <div class="page-title-box">
+                <h4 class="page-title">{% trans "View Purchase Order" %}</h4>
+            </div>
+        </div>
+    </div>
+    <head>
+        <meta charset="utf-8" />
+        <title>purchaseorder_form</title>
+    </head>
+    <div class="row">
+        <div class="col-xl-12">
+            <div class="card">
+                <div class="card-body">
+                    <form id="POForm" data-unitprice-url="{% url 'crm:ajax_load_unitprice' %}" action="" method="post" >
+
+                        <div class="row">
+                            <div class="col-12">
+                                <div class="sub-header">
+                                    <h5 class="page-title">{% trans "Purchase Order Details" %}</h5>
+                                </div>
+                            </div>
+                        </div>
+
+                        <table class="table table-bordered ">
+                            <div class="{% if form.non_field_errors %}invalid{% endif %} mb-2">
+                              {% if form.non_field_errors %}
+                                {{ error }}
+                                {% endif %}
+                            </div>
+                            <tbody style="background-color: white;">
+                                {% csrf_token %}
+                                <tr>
+                                    <td  width="70%" colspan = "7">
+                                        <div class="input-group">
+                                            <div class="col-2" style="padding-right:0px; padding-left:0px">
+                                                    <label class="col-form-label" id="">{% trans "Vendor" %}</label>
+                                            </div>
+                                            <div class="col-10">
+                                                <span class="form-control">{{form.instance.vendor}}</span>
+                                            </div>
+                                        </div>
+                                        <div class="input-group" style="margin-top: 4%">
+                                            <div class="col-2" style="padding-right:0px; padding-left:0px">
+                                                    <label class="col-form-label" id="">{% trans "Warehouse" %}</label>
+                                            </div>
+                                            <div class="col-10">
+                                                <span class="form-control">{{form.instance.warehouse}}</span>
+                                            </div>
+                                        </div>
+
+                                    </td>
+                                    <td colspan = "3">
+                                        <div class="input-group">
+                                            <div class="input-group-prepend">
+                                                <span class="input-group-text" id="basic-addon1">{% trans "PO No" %}</span>
+                                            </div>
+                                                <span class="form-control">{{form.instance.purchaseorder_number}}</span>
+                                        </div>
+                                        <div class="input-group" style="margin-top: 2%">
+                                            <div class="input-group-prepend">
+                                                <span class="input-group-text" id="basic-addon1">{% trans "Payment Terms" %}</span>
+                                            </div>
+                                                <span class="form-control">{{form.instance.payment_terms}}</span>
+                                        </div>
+                                         <div class="input-group" style="margin-top: 2%">
+                                            <div class="input-group-prepend">
+                                                <span class="input-group-text" >{% trans "Due Date" %}</span>
+                                            </div>
+                                                <span class="form-control">{{form.instance.duedate}}</span>
+                                        </div>
+                                   </td>
+                                </tr>
+
+                                <tr>
+                                    <td colspan = "10" style="vertical-align: middle">
+                                        <div class="input-group">
+                                            <div class="input-group-prepend">
+                                                <span class="input-group-text" id="basic-addon1">{% trans "Subject" %}</span>
+                                            </div>
+                                                <span class="form-control">{{form.instance.subject}}</span>
+                                        </div>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        <div class="row">
+                            <div class="col-12">
+                                <div class="sub-header">
+                                    <h5 class="page-title">{% trans "Product Details" %}</h5>
+                                    <a style="float:right" class="buttonHolder" id="add-row"></a>
+                               </div>
+                            </div>
+                        </div>
+                        <table id="table_id" class="table table-bordered table-hover table-sm mb-0">
+                                <thead class="thead-light">
+                                    <tr>
+                                        <th>{% trans "Product" %}</th>
+                                        <th>{% trans "Qty" %}</th>
+                                        <th>{% trans "Price" %}</th>
+                                        <th>{% trans "Unit" %}</th>
+                                        <th>{% trans "Discount" %}</th>
+                                        <th>{% trans "Subtotal" %}</th>
+                                    </tr>
+                                </thead>
+                                        {{ purchaseproducts.management_form }}
+                                    <tbody class="formset_row">
+                                        {% for form in purchaseproducts.forms %}
+                                        <tr style="padding: 0px !important;" class="rowclass">
+                                                <td style="width:300px;" >{{ form.instance.product }}</td>
+                                                <td style="width:100px;">{{ form.instance.qty }}</td>
+                                                <td style="width:100px;">{{ form.instance.price|intcomma:False|currency }}</td>
+                                                <td style="width:100px;">{{ form.instance.uom }}</td>
+                                                <td style="width:70px;">{{ form.instance.discount }}</td>
+                                                <td style="width:100px;">{{ form.instance.subtotal|intcomma:False|currency }}</td>
+                                        </tr>
+                                    {% endfor %}
+                                </tbody>
+                                <tr>
+                                    <td colspan="5"><h4><b class="float-right">{% trans "Total:" %} </b></h4></td>
+                                    <td colspan="1"><h4>{{form.instance.total|intcomma:False|currency}}</h4></td>
+                                </tr>
+                            </table>
+                        <br><br>
+                        <div class="modal-footer">
+                            <a class="btn btn-secondary waves-effect" href="{% url 'crm:purchaseorder' %}">{% trans "Close" %}</a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_javascript %}
+
+<script src="/static/dynamic_formsets/jquery.formset.js"></script>
+    <script src="/static/libs/select2/select2.min.js"></script>
+<script src="/static/django_select2/django_select2.js"></script>
+
+<script type="text/javascript">
+$('#id_vendor').prop( "disabled", true );
+$('#salesman_id').prop( "disabled", true );
+$('#warehouse_id').prop( "disabled", true );
+$('#id_subject').attr('readonly', true);
+$('#id_payment_days').attr('readonly', true);
+$( "#id_payment_terms" ).prop( "disabled", true );
+$('#id_total').attr('readonly', true);
+$("select[name*='-product']").prop( "disabled", true );
+$("select[name*='-uom']").prop( "disabled", true );
+$("input[name*='-qty']").prop( "disabled", true );
+$("input[name*='-disc']").prop( "disabled", true );
+$("input[name*='-price']").prop( "disabled", true );
+</script>
+
+{% endblock %}
+.rowclass {
+  padding-top: 0px !important;
+  padding-bottom: 0px !important;
+};

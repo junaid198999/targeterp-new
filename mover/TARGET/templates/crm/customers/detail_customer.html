@@ -1,0 +1,138 @@
+{% load i18n %}
+{% load widget_tweaks %}
+{% load crispy_forms_tags %}
+{% block content %}
+
+<form align="left" id="CustomerForm" method="post" action="" data-areas-url="{% url 'crm:ajax_load_areas' %}" data-cities-url="{% url 'crm:ajax_load_cities' %}">
+    {% if LANGUAGE_CODE == 'ar' %}
+        <link href="/static/libs/select2/select2-rtl.min.css" rel="stylesheet" />
+    {% else %}
+        <link href="/static/libs/select2/select2.min.css" rel="stylesheet" />
+    {% endif %}
+  {% csrf_token %}
+
+    <div class="modal-header" style="background: #636363;">
+      <h3 class="modal-title" style="color: white;">{% trans "View Customer" %}</h3>
+      <button style="color:white; font-size: 2rem;" type="button" class="close" data-dismiss="modal" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+
+        <div class="modal-body">
+            <table>
+                <div class="form-row">
+                    <div class="form-group col-md-4 mb-0">
+                        <div class="form-row">
+                              <div class="form-group col-md-12 mb-0">
+                                  <div class="col-form-label">{% trans "Name" %}</div>
+                              </div>
+                              <div class="form-group col-md-12 mb-0">
+                                  <span class="form-control">{{customer.name}}</span>
+                                </div>
+                              <div class="form-group col-md-12 mb-0">
+                                  <div class="col-form-label">{% trans "Account" %}</div>
+                              </div>
+                              <div class="form-group col-md-12 mb-0">
+                                  <span class="form-control">{{ customer.account }}</span>
+                              </div>
+                              <div class="form-group col-md-6 mb-0">
+                                  <div class="col-form-label">{% trans "Channel" %}</div>
+                              </div>
+                              <div class="form-group col-md-6 mb-0">
+                                  <div class="col-form-label">{% trans "Salesman" %}</div>
+                              </div>
+                              <div class="form-group col-md-6 mb-0">
+                                  <span class="form-control">{{ customer.channel }}</span>
+                              </div>
+                              <div class="form-group col-md-6 mb-0">
+                                    <span class="form-control">{{ customer.salesman }}</span>
+                              </div>
+                        </div>
+                    </div>
+                    <div class="form-group col-md-4 mb-0">
+                        <div class="form-row">
+                              <div class="form-group col-md-6 mb-0">
+                                  <div class="col-form-label">{% trans "Customer Size" %}</div>
+                              </div>
+                              <div class="form-group col-md-6 mb-0">
+                                  <div class="col-form-label">{% trans "Branches" %}</div>
+                              </div>
+                              <div class="form-group col-md-6 mb-0">
+                                  <span class="form-control">{{ customer.customer_size }}</span>
+                              </div>
+                              <div class="form-group col-md-6 mb-0">
+                                  <span class="form-control">{{ customer.branches }}</span>
+                              </div>
+                              <div class="form-group col-md-6 mb-0">
+                                  <div class="col-form-label">{% trans "Credit Limit" %}</div>
+                              </div>
+                              <div class="form-group col-md-6 mb-0">
+                                  <div class="col-form-label">{% trans "Payment Terms" %}</div>
+                              </div>
+                              <div class="form-group col-md-6 mb-0">
+                                  <span class="form-control">{{ customer.credit_limit }}</span>
+                              </div>
+                              <div class="form-group col-md-6 mb-0">
+                                  <span class="form-control">{{ customer.payment_terms }}</span>
+                              </div>
+                              <div class="form-group col-md-6 mb-0">
+                                  <div class="col-form-label">{% trans "Payment Days" %}</div>
+                              </div>
+                              <div class="form-group col-md-6 mb-0">
+                                  <div class="col-form-label">{% trans "Libility" %}</div>
+                              </div>
+                              <div class="form-group col-md-6 mb-0">
+                                  <span class="form-control">{{ customer.payment_days }}</span>
+                              </div>
+                              <div class="form-group col-md-6 mb-0">
+                                  <span class="form-control">{{ customer.libility }}</span>
+                              </div>
+                        </div>
+                    </div>
+                    <div class="form-group col-md-4 mb-0">
+                        <div class="form-row">
+                              <div class="form-group col-md-6 mb-0">
+                                  <div class="col-form-label">{% trans "Country" %}</div>
+                              </div>
+                              <div class="form-group col-md-6 mb-0">
+                                  <div class="col-form-label">{% trans "Area" %}</div>
+                              </div>
+                              <div class="form-group col-md-6 mb-0">
+                                  <span class="form-control">{{ customer.country }}</span>
+                              </div>
+                              <div class="form-group col-md-6 mb-0">
+                                  <span class="form-control">{{ customer.area }}</span>
+                              </div>
+                              <div class="form-group col-md-6 mb-0">
+                                  <div class="col-form-label">{% trans "City" %}</div>
+                              </div>
+                              <div class="form-group col-md-6 mb-0">
+                                  <div class="col-form-label">{% trans "Address" %}</div>
+                              </div>
+                              <div class="form-group col-md-6 mb-0">
+                                   <span class="form-control">{{ customer.city }}</span>
+                              </div>
+                              <div class="form-group col-md-6 mb-0">
+                                  <span class="form-control">{{ customer.instance.address }}</span>
+                              </div>
+                        </div>
+
+                        <div class="form-row">
+                              <div class="form-group col-md-12 mb-0">
+                                  <div class="col-form-label">{% trans "Description" %}</div>
+                              </div>
+                              <div class="form-group col-md-12 mb-0">
+                                  <span class="form-control">{{ customer.description }}</span>
+                              </div>
+                        </div>
+                    </div>
+                </div>
+            </table>
+        </div>
+
+  <div class="modal-footer">
+    <button type="button" class="btn btn-secondary waves-effect" data-dismiss="modal">{% trans "Close" %}</button>
+  </div>
+
+</form>
+{% endblock %}

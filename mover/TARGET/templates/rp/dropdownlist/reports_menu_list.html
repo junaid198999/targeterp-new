@@ -1,0 +1,35 @@
+{% load widgets %}
+{% load static i18n %}
+{% load i18n %}
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+
+{% for grp in rptgroups %}
+
+    <li >
+        <a href="javascript: void(0);" aria-expanded="false" >
+            <i class="fe-list mdi-18px" ></i>
+            <span> {{ grp.engname }} </span>
+            <span class="menu-arrow"></span>
+        </a>
+        <ul class="nav-second-level" aria-expanded="false" >
+        {% for ot in rpt %}
+            {% if ot.groupcode == grp.code %}
+                <li>
+
+                    <a id="rep-{{ ot.id }}" href="/rp/reportcontainerview/{{ ot.id }}">
+                        <i class="fe-file mdi-12px" ></i>
+                        {{ ot.engname }}
+
+                    </a>
+<!--                    <a class='rep-class' id="rep-{{ ot.id }}" href="/rp/reportcontainerview/{{ ot.id }}" style="padding-top: 8px;padding-bottom: 8px;padding-left: 20px; display: block; padding-right: 20px;color: #6e768e;color: #6e768e;font-size: .875rem;transition: all .4s;" >{{ ot.engname }}</a>-->
+                </li>
+            {% endif %}
+
+        {% endfor %}
+        </ul>
+    </li>
+
+    {% endfor %}
+
+
+

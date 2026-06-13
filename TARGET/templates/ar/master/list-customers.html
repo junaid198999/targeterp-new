@@ -34,6 +34,11 @@
 
                                     {% if perms.crm.add_customers %}
                                     <div {% if LANGUAGE_CODE == 'ar' %} align="left" {% else %} align="right" {% endif %} class="col-sm-6">
+                                        <a href="delete/">
+                                            <button class="delete-transtypes btn btn-danger waves-effect waves-light mb-2" type="button">
+                                              DeleteAll 
+                                            </button>  
+                                            </a> 
                                             <button class="btn btn-blue waves-effect waves-light mb-2"  onclick="location.href='{% url 'ar:create_customers' %}'" type="button" name="button" data-overlayColor="#38414a">
                                                 <i class="mdi mdi-plus-circle mr-1"></i>  {% trans "Add" %}
                                             </button>
@@ -93,6 +98,9 @@
                                                 {% if perms.ar.change_customers %}
                                                 <a href={% url "ar:edit_customers" Type.pk %} class="btn btn-outline-danger effect waves-light btn-xs" title="{% trans "Edit" %}"><i class="mdi mdi-square-edit-outline"></i></a>
                                                 <a href={% url "ar:edit_customers" Type.pk %} class="btn btn-outline-warning effect waves-light btn-xs" title="{% trans "View" %}"><i class="far fa-eye"></i></a>
+                                                {% endif %}
+                                                {% if perms.ar.delete_customers %}
+                                                <button type="button" class="delete-customers btn btn-outline-danger effect waves-light btn-xs" data-id="{% url 'ar:delete_customers'  Type.pk %}" title="{% trans "Delete" %}"><i class="mdi mdi-delete"></i></button>
                                                 {% endif %}
 
                                             </td>

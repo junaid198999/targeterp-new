@@ -1,0 +1,34 @@
+{% load widgets %}
+
+<script>
+    var p_id = "";
+
+    var p_name = "";
+    var num = 0;
+</script>
+{% for so in operationslines %}
+
+<script>
+    p_id = {{so.item_id}} + ""
+    p_name = "{{so.item_name  }}";
+
+    iu_id = {{so.itemuom_id}} + ""
+    iu_name = "{{ so.itemuom_name  }}";
+
+    $(`select[name="operationsline_set-${num}-item"]`).html(
+    `<option selected value="${p_id}">${p_name}</option>`);
+
+    $(`input[name="operationsline_set-${num}-quantity"]`).val({{so.quantity}});
+    $(`input[name="operationsline_set-${num}-quantity"]`).prop('max',{{so.quantity}});
+
+    $(`select[name="operationsline_set-${num}-itemuom"]`).html(
+    `<option selected value="${iu_id}">${iu_name}</option>`);
+
+    $(`input[name="operationsline_set-${num}-parent"]`).val({{so.parent}});
+
+    num = num + 1;
+
+</script>
+
+
+{% endfor %}

@@ -1,0 +1,281 @@
+{% extends "auth_base.html" %}
+{% load i18n %}
+{% load widget_tweaks %}
+{% load django_tables2 %}
+{% block content %}
+<link href="/static/libs/sweetalert2/sweetalert2.min.css" rel="stylesheet" type="text/css" />
+    <div class="container-fluid">
+        <!-- start page title -->
+        <div class="row">
+            <div class="col-12">
+                <div class="page-title-box">
+                    <div class="page-title-right">
+                        <ol class="breadcrumb m-0">
+                            <li class="breadcrumb-item"><a href="/">TARGET</a></li>
+                            <li class="breadcrumb-item active">{% trans "Building Blocks for Category / Channel" %}</li>
+                        </ol>
+                    </div>
+                    <h4 class="page-title">{% trans "Building Blocks for Category / Channel" %}</h4>
+                </div>
+            </div>
+        </div>
+        <!-- end page title -->
+        {% if perms.in.view_targetcategorychannels %}
+        <div class="row" >
+            <div class="col-xl-12">
+                <div class="card">
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-sm-6">
+                                <div id="controlPanel" {% if LANGUAGE_CODE == 'ar' %} align="right" {% else %} align="left" {% endif %}></div>
+                            </div>
+                            {% if perms.in.add_targetcategorychannels %}
+                            <div {% if LANGUAGE_CODE == 'ar' %} align="left" {% else %} align="right" {% endif %} class="col-sm-6">
+                                {% if perms.in.rebuild_targetcategorychannels %}
+                                    <button hidden type="button" class="update-row btn btn-danger waves-effect waves-light mb-2" id="update-row">{% trans "Target Rebuild" %}</button>
+                                {% endif %}
+                                    <button class="btn btn-blue waves-effect waves-light mb-2"  onclick="location.href='{% url 'in:create_targetcategorychannels' %}'" type="button" name="button" data-overlayColor="#38414a">
+                                        <i class="mdi mdi-plus-circle mr-1"></i>  {% trans "Add" %}
+                                    </button>
+                            </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+
+        <div class="row">
+            <div class="col-xl-12">
+                <div class="card">
+                    <div class="card-body">
+                    <form id="TargetForm" data-update-target="{% url 'in:rebuild_targetcategorychannels' %}" action="" method="post" >
+                        <div class="row mb-2">
+                            <div class="col-sm-12">
+                                <div class="text-sm-right">
+                                    <div class="modal fade" tabindex="-1" role="dialog" id="modal">
+                                          <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
+                                                <div class="modal-content"></div>
+                                          </div>
+                                    </div>
+                                    <!-- Create salesorder button -->
+                                </div><!-- end col-->
+                            </div>
+                        </div>
+
+
+                        <table id="table_id" class="table activate-select table-hover nowrap" style="width:100%">
+                            <thead class="thead-light" >
+                                <tr>
+                                    <th class="selectall" style="width:30px"><input type="checkbox" name="selectall" id="selectall"></th>
+                                    <th>{% trans "Name" %}</th>
+                                    <th>{% trans "Channel" %}</th>
+                                    <th>{% trans "Customer Size" %}</th>
+                                    <th width="30">{% trans "Action" %}</th>
+                                </tr>
+                            </thead>
+
+                            <tbody>
+                                {% for BudingBlocksChannels in targetcategorychannels %}
+                                <tr>
+                                        <td>
+                                            <input class="select_ck" type="checkbox" data-id="{{ BudingBlocksChannels.id}}" name="select_ck_{{ BudingBlocksChannels.id}}" id="select_ck_{{ BudingBlocksChannels.id}}">
+                                        </td>
+                                        <td>
+                                            {{ BudingBlocksChannels.name}}
+                                        </td>
+                                        <td>
+                                            {{ BudingBlocksChannels.channel}}
+                                        </td>
+                                        <td>
+                                            {% if BudingBlocksChannels.customer_size == 1 %}{% trans "None" %}{% elif BudingBlocksChannels.customer_size == 2 %}{% trans "Small Business" %}{% elif BudingBlocksChannels.customer_size == 3 %}{% trans "Medium Business" %}{% elif BudingBlocksChannels.customer_size == 4 %}{% trans "Large Business" %}{% endif %}
+                                        </td>
+                                        <td>
+                                            {% if perms.in.change_targetcategorychannels %}
+                                            <a href="{% url 'in:edit_targetcategorychannels' BudingBlocksChannels.pk %}" class="btn btn-outline-warning effect waves-light btn-xs" title="{% trans "Edit" %}"><i class="mdi mdi-square-edit-outline"></i></a>
+                                            {% endif %}
+                                        </td>
+
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </form>
+                    </div> <!-- end card-->
+                </div> <!-- end col -->
+
+            </div>
+        <!-- end row -->
+
+        </div> <!-- container -->
+        {% else %}
+        <div class="row" >
+            <div class="col-xl-12">
+                <div class="card">
+                    <div class="card-body">
+                            <STRONG> {% trans "You Don't have a permission to access this page." %} </STRONG>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endif %}
+
+    </div>
+{% endblock %}
+
+
+{% block extra_javascript %}
+<script src="/static/libs/sweetalert2/sweetalert2.min.js"></script>
+<script type="text/javascript">
+$(".update-row").click(function(){
+      var url = $("#TargetForm").attr("data-update-target");
+      var formid = $("#id_targetid").val();
+            Swal.fire({
+              title: '{% trans "Are you sure?" %}',
+              text:"{% trans 'you want to rebuild the target for the selected item/s' %}",
+              type:"warning",
+              icon: 'warning',
+              showCancelButton: true,
+              confirmButtonColor: '#3085d6',
+              cancelButtonColor: '#d33',
+              cancelButtonText: '{% trans "Cancel" %}',
+              confirmButtonText: '{% trans "Yes, Rebuild it!" %}'
+            }).then((result) => {
+              if (result.value) {
+                Swal.fire(
+                  '{% trans "Success!" %}',
+                  '{% trans "target has been rebuilt." %}',
+                  'success'
+                )
+                $('.select_ck:checked').each(function() {
+                     uu = $(this).data('id')
+                     window.location.href =url+"?id="+ uu;
+                });
+
+              }
+            })
+});
+
+var counter;
+$(function() {
+    counter = 0;
+    $(".select_ck").click(function() {
+         if(this.checked) {
+            counter++;
+            if(counter == 1){
+                document.getElementById("update-row").hidden = false;
+            }
+        } else {
+            counter--;
+            if(counter == 0){
+                document.getElementById("update-row").hidden = true;
+                document.getElementById("selectall").checked = false;
+            }
+        }
+    });
+    $('#selectall').click(function(event) {
+        if(this.checked) {
+            counter = 0;
+            // Iterate each checkbox
+            $('.select_ck').each(function() {
+                counter++;
+                this.checked = true;
+                document.getElementById("update-row").hidden = false;
+            });
+        } else {
+            counter = 0;
+            $('.select_ck').each(function() {
+                this.checked = false;
+                document.getElementById("update-row").hidden = true;
+            });
+        }
+    });
+
+});
+
+      $(function () {
+        // Create targetcategorychannels button
+        $(".create-targetcategorychannels").modalForm({formURL: "{% url 'in:create_targetcategorychannels' %}"});
+            // Update targetcategorychannels buttons
+            $(".edit-targetcategorychannels").each(function () {
+              $(this).modalForm({formURL: "{% url 'in:edit_targetcategorychannels' 227 %}"});
+            });
+                // Delete targetcategorychannels button
+            $(".delete-targetcategorychannels").each(function () {
+              $(this).modalForm({formURL: $(this).data('id')});
+            });
+
+            var table = $('#table_id').DataTable( {
+                language: {
+                    buttons: {
+                        "collection": "{% trans "Columns" %}",
+				        "copy": "{% trans "Copy" %}",
+				        "csv": "{% trans "CSV" %}",
+				        "pdf": "{% trans "PDF" %}",
+				        "print": "{% trans "Print" %}",
+                        copyTitle: '{% trans "Copy to clipboard" %}',
+                        copySuccess: {
+                            _: '{% trans "Copied %d rows to clipboard" %}',
+                            1: '{% trans "Copied one row to clipboard" %}'
+                        }
+                    },
+                    "sEmptyTable":     "{% trans "No data available in table" %}",
+                    "sInfo":           "{% trans "Showing _START_ to _END_ of _TOTAL_ entries" %}",
+                    "sInfoEmpty":      "{% trans "Showing 0 to 0 of 0 entries" %}",
+                    "sInfoFiltered":   "{% trans "(filtered from _MAX_ total entries)" %}",
+                    "sInfoPostFix":    "",
+                    "sInfoThousands":  ",",
+                    "sLengthMenu":     "{% trans "Show _MENU_ entries" %}",
+                    "sLoadingRecords": "{% trans "Loading..." %}",
+                    "sProcessing":     "{% trans "Processing..." %}",
+                    "sSearch":         "{% trans "Search:" %}",
+                    "sZeroRecords":    "{% trans "No matching records found" %}",
+                    "oPaginate": {
+                        "sFirst":    "{% trans "First" %}",
+                        "sLast":     "{% trans "Last" %}",
+                        "sNext":     "{% trans "Next" %}",
+                        "sPrevious": "{% trans "Previous" %}"
+                    },
+                    "oAria": {
+                        "sSortAscending":  "{% trans ": activate to sort column ascending" %}",
+                        "sSortDescending": "{% trans ": activate to sort column descending" %}"
+                    }
+                },
+                buttons: [
+                    {
+                        extend: 'collection',
+                        buttons: [ 'columnsToggle' ]
+                    },
+                    {% if perms.in.can_copy %}
+                        'copy',
+                    {% endif %}
+                    {% if perms.in.can_csv %}
+                        'csv',
+                    {% endif %}
+                    {% if perms.in.can_pdf %}
+                        'pdf',
+                    {% endif %}
+                    {% if perms.in.can_print %}
+                        'print',
+                    {% endif %}
+                ],
+                "pagingType": "full_numbers",
+                responsive: true,
+                columnDefs: [
+                    { responsivePriority: 1, targets: 0 },
+                    { responsivePriority: 2, targets: 3 },
+
+                ]
+            } );
+
+            new $.fn.dataTable.ColReorder( table, {
+                colReorder: true,
+            } );
+            table
+                .buttons()
+                .container()
+                .appendTo( '#controlPanel' );
+        });
+
+    </script>
+
+
+{% endblock %}

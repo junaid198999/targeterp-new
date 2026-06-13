@@ -5,6 +5,8 @@ from TARGET.crm.models import Currency
 from sy.models import PaymentsMethods,LookUp
 from django.utils.translation import get_language
 
+from django.db.models import Q
+
 
 
 
@@ -196,6 +198,7 @@ class TransTypes(models.Model):
     engname = models.CharField(max_length=100, blank=False, null=False, verbose_name =_("Eng Name"))
     arbname = models.CharField(max_length=100, blank=True, null=True,verbose_name=_("Arb Name"))
     transkind = models.ForeignKey(LookUp,related_name='TransTypes_TransKind', limit_choices_to={'keyname': 'TransKind'}, blank=False, null=True, on_delete=models.PROTECT, verbose_name=_("Trans Kind"))
+    # transkind = models.ForeignKey(LookUp,related_name='TransTypes_TransKind', limit_choices_to={'keyname': '"TransKind"'}, blank=False, null=True, on_delete=models.PROTECT, verbose_name=_("Trans Kind"))
     sign = models.ForeignKey(LookUp,related_name='TransTypes_Sign', limit_choices_to={'keyname': 'Sign'}, blank=True, null=True, on_delete=models.PROTECT, verbose_name=_("Sign"))
     paymentmethod= models.ForeignKey(PaymentsMethods,related_name='TransTypes_PaymentMethod', blank=True, null=True, on_delete=models.PROTECT, verbose_name=_("Payment Method"))
     paymentdirection = models.ForeignKey(LookUp,related_name='TransTypes_PaymentDirection', limit_choices_to={'keyname': 'PaymentDirection'}, blank=True, null=True, on_delete=models.PROTECT, verbose_name=_("Payment Direction"))
@@ -259,6 +262,7 @@ class LedgerJour(models.Model):
     remarks = models.CharField(max_length=100, blank=True, null=True, unique=False, verbose_name=_("Remarks"))
     fiscalyearperiod = models.IntegerField( blank=True, null=True, verbose_name=_("Fiscal Year Period"))
     # created_by = models.ForeignKey(User, blank=False, null=True,related_name='LedgerJour_created_by', on_delete=models.CASCADE, verbose_name =_("Created By"))
+    created_by_id = models.ForeignKey(User, blank=False, null=True,related_name='LedgerJour_created_by', on_delete=models.CASCADE, verbose_name =_("Created By "))
     paymentid = models.IntegerField( blank=True, null=True,  verbose_name=_("Ledger Payment ID"))
     status = models.ForeignKey(LookUp,related_name='LedgerJour_Status', limit_choices_to={'keyname': 'RecordStatus'}, blank=True, null=True, on_delete=models.PROTECT, verbose_name=_("Payment Status"))
     statusdate = models.DateField(blank=True, null=True, verbose_name =_("Status Date"))
@@ -415,7 +419,9 @@ class TreasuriesOrders(models.Model):
     currency = models.ForeignKey(Currency, blank=False, null=True, on_delete=models.PROTECT, verbose_name=_("Currency"))
     engdesc = models.CharField(max_length=100, blank=False, null=False, verbose_name =_("Eng Desc"))
     arbdesc = models.CharField(max_length=100, blank=True, null=True,verbose_name=_("Arb Desc"))
-    accounttype = models.ForeignKey(LookUp,related_name='TreasuriesOrders_AccountType', limit_choices_to={'keyname': 'AccountType'}, blank=True, null=True, on_delete=models.PROTECT, verbose_name=_("Account Type"))
+    accounttype = models.ForeignKey(LookUp,related_name='TreasuriesOrders_AccountType', limit_choices_to=Q(keyid= 90001) | Q(keyid=90002) | Q(keyid=90003), blank=True, null=True, on_delete=models.PROTECT, verbose_name=_("Account Type"))
+    # accounttype = models.ForeignKey(LookUp,related_name='TreasuriesOrders_AccountType', limit_choices_to={'keyname': '"AccountType"'}, blank=True, null=True, on_delete=models.PROTECT, verbose_name=_("Account Type"))
+    # accounttype = models.ForeignKey(LookUp,related_name='TreasuriesOrders_AccountType', limit_choices_to={'keyname': 'AccountType'}, blank=True, null=True, on_delete=models.PROTECT, verbose_name=_("Account Type"))
     #account = models.IntegerField( blank=True, null=True,  verbose_name =_("Account Key"))
 
     ledger = models.ForeignKey(Ledger, limit_choices_to={'allowaccountentry': True}, blank=True, null=True,on_delete=models.PROTECT, verbose_name=_("Ledger"))

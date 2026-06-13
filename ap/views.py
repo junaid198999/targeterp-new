@@ -52,6 +52,17 @@ class VendorsCategoriesDeleteView(LoginRequiredMixin, BSModalDeleteView):
     success_url = reverse_lazy('ap:list-vendorscategories')
 
 
+def deletevendorscategories(request):
+    Lc= VendorsCategories.objects.all()
+    for l in Lc:
+       try:
+            print(l)
+            l.delete()
+       except:
+            print("not deleted connection somwhere")
+    return redirect("/ap/vendorscategories/")
+
+
 ######### End vendors Categories
 
 
@@ -88,6 +99,17 @@ class VendorsClassesDeleteView(LoginRequiredMixin, BSModalDeleteView):
     template_name = 'ap/master/delete_vendorsclasses.html'
     success_message = 'Success: vendors Classes was deleted.'
     success_url = reverse_lazy('ap:list-vendorsclasses')
+
+
+def deletevendorsclasses(request):
+    Lc= VendorsClasses.objects.all()
+    for l in Lc:
+       try:
+            print(l)
+            l.delete()
+       except:
+            print("not deleted connection somwhere")
+    return redirect("/ap/vendorsclasses/")
 
 
 ######### End vendors Categories
@@ -210,6 +232,17 @@ class VendorsDeleteView(LoginRequiredMixin, BSModalDeleteView):
     success_message = 'Success: vendors was deleted.'
     success_url = reverse_lazy('ap:list-vendors')
 
+def deletevendors(request):
+    Lc= Vendors.objects.all()
+    for l in Lc:
+       try:
+            print(l)
+            l.delete()
+       except:
+            print("not deleted connection somwhere")
+    return redirect("/ap/vendors/")
+
+
 
 ######### End vendors
 
@@ -248,7 +281,15 @@ class BuyersGroupsDeleteView(LoginRequiredMixin, BSModalDeleteView):
     success_message = 'Success: buyers groups was deleted.'
     success_url = reverse_lazy('ap:list-buyersgroups')
 
-
+def deletebuyersgroups(request):
+    Lc= BuyersGroups.objects.all()
+    for l in Lc:
+       try:
+            print(l)
+            l.delete()
+       except:
+            print("not deleted connection somwhere")
+    return redirect("/ap/buyersgroups/")
 ######### End Buyers Groups
 
 
@@ -286,6 +327,15 @@ class BuyersDeleteView(LoginRequiredMixin, BSModalDeleteView):
     success_message = 'Success: buyers  was deleted.'
     success_url = reverse_lazy('ap:list-buyers')
 
+def deletebuyers(request):
+    Lc= Buyers.objects.all()
+    for l in Lc:
+       try:
+            print(l)
+            l.delete()
+       except:
+            print("not deleted connection somwhere")
+    return redirect("/ap/buyers/")
 
 ######### End Buyers
 
@@ -326,17 +376,27 @@ class VendorsJourCreateView(LoginRequiredMixin,  CreateView):
             context['vendorsjourline'] = VendorsJourLineFormSet(instance=self.object)
         return context
 
-    def form_valid(self, form):        
+
+
+
+
+    def form_valid(self, form):
+
+        print('validate')
         context = self.get_context_data(form=form)
-        vendorsjourline = context['vendorsjourline']        
+        vendorsjourline = context['vendorsjourline']
+        print('validate')
         response = super().form_valid(form)
-        if vendorsjourline.is_valid():        
+        if vendorsjourline.is_valid():
+            print('validate vendorsjourline')
             response = super().form_valid(form)
-            vendorsjourline.instance = self.object        
+            vendorsjourline.instance = self.object
+
             vendorsjourline.save()
             form.save()
 
         else:
+           # print(vendorsjourline.errors)
             context['vendorsjourline'] = VendorsJourLineFormSet()
 
 
@@ -393,8 +453,16 @@ class VendorsJourDeleteView(LoginRequiredMixin, BSModalDeleteView):
     model = VendorsJour
     template_name = 'ap/master/delete_vendorsjour.html'
     success_message = 'Success: vendors Jouranl was deleted.'
-    success_url = reverse_lazy('ap:list-vendors')
+    success_url = reverse_lazy('ap:list-vendorsjour')
 
-
+def deletevendorsjour(request):
+    Lc= VendorsJour.objects.all()
+    for l in Lc:
+       try:
+            print(l)
+            l.delete()
+       except:
+            print("not deleted connection somwhere")
+    return redirect("/ap/vendorsjour/")
 ######### End vendors Jour
 

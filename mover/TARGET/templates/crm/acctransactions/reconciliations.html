@@ -1,0 +1,12 @@
+{% extends "auth_base.html" %}
+
+
+
+{% block content %}
+    <script>
+     window.localStorage.setItem("user", "{{ user.id }}")
+     window.localStorage.setItem("baseURL",  "/");
+    </script>
+
+ {% include './build/index.html' %}
+{% endblock %}

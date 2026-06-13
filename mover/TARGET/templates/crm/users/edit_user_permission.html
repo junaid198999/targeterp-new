@@ -1,0 +1,119 @@
+{% load i18n %}
+
+{% load widget_tweaks %}
+{% load crispy_forms_tags %}
+{% block content %}
+  <link rel="stylesheet" type="text/css" href="/static/css/bootstrap-duallistbox.css">
+  <link rel="stylesheet" type="text/css" href="/static/libs/switchery/switchery.min.css">
+
+    <form  align="left" method="POST" action="#" >
+        {% csrf_token %}
+
+        <div class="modal-header" style="background: #f7b84b;">
+          <h3 class="modal-title" style="color: white;">{% trans "Edit User" %}</h3>
+          <button style="color:white; font-size: 2rem;" type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+
+        <div class="modal-body">
+            <div class="{% if form.non_field_errors %}invalid{% endif %} mb-2">
+              {% if form.non_field_errors %}
+                {{ error }}
+                {% endif %}
+            </div>
+
+            <div class="col-md-12">
+                <div class="row" style="background: #eaeaea;">
+                    <div class="col-md-10" >
+                            <h2 style="float:{% if LANGUAGE_CODE == 'ar' %} right {% else %} left {% endif %}">{{form.instance.username|title}}</h2>
+                            <div hidden>{{form.username}}</div>
+                    </div>
+                    <div class="col-md-2" style="align-self: center; ">
+                        <div class="subject-info-box-1" style="float:{% if LANGUAGE_CODE == 'ar' %} left {% else %} right {% endif %}">
+                            <strong>{% trans "is Admin" %}</strong>
+                            <input {%if form.instance.username == "admin" %} disabled {% endif%} name="is_superuser" id="id_is_superuser" type="checkbox" class="js-switch" {%if form.is_superuser.value == True %} CHECKED {% endif %}  />
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-12">
+                            <label class="col-form-label">{% trans "User Permission" %}</label>
+                    </div>
+                    <div class="col-md-12">
+                        <select multiple="multiple" size="10" name="user_permissions" title="user_permissions" id="id_user_permissions" data-value="{{form.user_permissions}}
+                        </select>
+                    </div>
+                    <div class="col-md-12">
+                        <label class="col-form-label">{% trans "Groups" %}</label>
+                    </div>
+                    <div class="col-md-12">
+                        <select multiple="multiple" size="10" name="groups" title="groups" id="id_groups" data-value="{{form.groups}}
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-secondary waves-effect" data-dismiss="modal">{% trans "Cancel" %}</button>
+            <button type="button" id="create-btn" class="submit-btn btn-danger btn btn-primary">{% trans "Update" %}</button>
+        </div>
+
+
+    </form>
+
+  <script src="/static/libs/switchery/switchery.min.js"></script>
+  <script src="/static/js/jquery.bootstrap-duallistbox.js"></script>
+<script>
+
+var elems = Array.prototype.slice.call(document.querySelectorAll('.js-switch'));
+elems.forEach(function(html) {
+  var switchery = new Switchery(html);
+});
+
+var demo1 = $('#id_user_permissions').bootstrapDualListbox({
+  nonSelectedListLabel: 'Non-selected',
+  selectedListLabel: 'Selected',
+  preserveSelectionOnMove: 'moved',
+  moveOnSelect: true,
+});
+var demo1 = $('#id_groups').bootstrapDualListbox({
+  nonSelectedListLabel: 'Non-selected',
+  selectedListLabel: 'Selected',
+  preserveSelectionOnMove: 'moved',
+  moveOnSelect: true,
+});
+
+</script>
+<style>
+select#bootstrap-duallistbox-selected-list_user_permissions {
+    width: 100%;
+    border-color: lightgray;
+}
+select#bootstrap-duallistbox-nonselected-list_user_permissions {
+    width: 100%;
+    border-color: lightgray;
+}
+select#bootstrap-duallistbox-nonselected-list_groups {
+    width: 100%;
+    border-color: lightgray;
+}
+select#bootstrap-duallistbox-selected-list_groups {
+    width: 100%;
+    border-color: lightgray;
+}
+button.btn.removeall.btn-outline-secondary {
+    border-color: lightgray;
+}
+button.btn.moveall.btn-outline-secondary {
+    border-color: lightgray;
+}
+button.btn.btn-sm.clear1 {
+    color: #f7b84a;
+}
+button.btn.btn-sm.clear2 {
+    color: #f7b84a;
+}
+</style>
+{% endblock %}

@@ -1,0 +1,318 @@
+{% load i18n %}
+{% load widget_tweaks %}
+{% load crispy_forms_tags %}
+{% block content %}
+<form  align="left" id="ProductForm" method="post" action="#"  novalidate enctype="multipart/form-data">
+    <link href="/static/libs/dropify/dropify.min.css" rel="stylesheet">
+    {% if LANGUAGE_CODE == 'ar' %}
+        <link href="/static/libs/select2/select2-rtl.min.css" rel="stylesheet" />
+    {% else %}
+        <link href="/static/libs/select2/select2.min.css" rel="stylesheet" />
+    {% endif %}
+    {% csrf_token %}
+    <div class="modal-header" style="background: #4a81d4;">
+      <h3 class="modal-title" style="color: white;">{% trans "Add Product" %}</h3>
+      <button style="color:white; font-size: 2rem;" type="button" class="close" data-dismiss="modal" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+
+        <div class="{% if form.non_field_errors %}invalid{% endif %} mb-2">
+            {% if form.non_field_errors %}
+                {{ error }}
+            {% endif %}
+        </div>
+        <div class="row">
+            <div class="modal-body">
+                 <table>
+                      <div class="form-row">
+                            <div class="form-group col-md-3 mb-0">
+                                <h5 class="" style="text-align: center;">---------</h5>
+                                <div  style="background: #f3f3f3;">
+                                      <div class="form-group col-md-12 mb-0">
+                                          {{ form.name|as_crispy_field }}
+                                            <div class="{% if form.name.errors %} invalid{% endif %}">
+                                                {% if error in form.name.errors %}
+                                                    <p class="help-block">{{ error }}</p>
+                                                    {% endif %}
+                                            </div>
+                                      </div>
+                                      <div class="form-group col-md-12 mb-0">
+                                            {{ form.category|as_crispy_field }}
+                                                <div class="{% if form.category.errors %} invalid{% endif %}">
+                                                    {% if error in form.category.errors %}
+                                                        <p class="help-block">{{ error }}</p>
+                                                        {% endif %}
+                                                </div>
+                                      </div>
+                                      <div class="form-group col-md-12 mb-0">
+                                            {{ form.brand|as_crispy_field }}
+                                                <div class="{% if form.brand.errors %} invalid{% endif %}">
+                                                    {% if error in form.brand.errors %}
+                                                        <p class="help-block">{{ error }}</p>
+                                                        {% endif %}
+                                                </div>
+                                      </div>
+                                      <div class="form-group col-md-12 mb-0">
+                                            <div class="form-row">
+                                                  <div class="col-md-12">
+                                                        {{ form.sku|as_crispy_field }}
+                                                  </div>
+                                            </div>
+                                      </div>
+                                      <div class="form-group col-md-12 mb-0">
+                                            <div class="form-row">
+                                                  <div class="form-group col-md-6 mb-0">
+                                                          {{ form.ti|as_crispy_field }}
+                                                  </div>
+                                                  <div class="form-group col-md-6 mb-0">
+                                                          {{ form.hi|as_crispy_field }}
+                                                  </div>
+                                            </div>
+                                      </div>
+                                </div>
+                            </div>
+                            <div class="form-group col-md-3 mb-0">
+                                <h5 class="" style="text-align: center;">{% trans "Product Details" %}</h5>
+                                <div   style="background: #f3f3f3;">
+                                      <div class="form-group col-md-12 mb-0">
+                                            <div class="form-row">
+                                                  <div class="col-md-6">
+                                                       <label class="col-form-label">{% trans unit1 %}</label>
+                                                       <INPUT id="id_unit_1" NAME="unit_1" placeholder="Unit1" class="form-control" value="1">
+                                                        <div class="{% if form.unit_1.errors %} invalid{% endif %}">
+                                                            {% if error in form.unit_1.errors %}
+                                                                <p class="help-block">{{ error }}</p>
+                                                                {% endif %}
+                                                        </div>
+                                                  </div>
+                                                  <div class="col-md-6">
+                                                        {{ form.price|as_crispy_field }}
+                                                        <div class="{% if form.price.errors %} invalid{% endif %}">
+                                                            {% if error in form.price.errors %}
+                                                                <p class="help-block">{{ error }}</p>
+                                                                {% endif %}
+                                                        </div>
+                                                  </div>
+                                            </div>
+                                      </div>
+                                      <div class="form-group col-md-12 mb-0">
+                                            <div class="form-row">
+                                                  <div class="col-md-6">
+                                                       <label class="col-form-label">{% trans unit2 %}</label>
+                                                       <INPUT id="id_unit_2" NAME="unit_2" placeholder="Unit2" class="form-control" value="12">
+                                                        <div class="{% if form.unit_2.errors %} invalid{% endif %}">
+                                                            {% if error in form.unit_2.errors %}
+                                                                <p class="help-block">{{ error }}</p>
+                                                                {% endif %}
+                                                        </div>
+                                                  </div>
+                                                  <div class="col-md-6">
+                                                        {{ form.price_2|as_crispy_field }}
+                                                        <div class="{% if form.price_2.errors %} invalid{% endif %}">
+                                                            {% if error in form.price_2.errors %}
+                                                                <p class="help-block">{{ error }}</p>
+                                                                {% endif %}
+                                                        </div>
+                                                  </div>
+                                            </div>
+                                            <div class="form-row" >
+                                                  <div class="form-group col-md-12 mb-0">
+                                                        <div class="form-row">
+                                                              <div class="form-group col-md-5 mb-0">
+                                                                    {{ form.weight|as_crispy_field }}
+                                                              </div>
+                                                              <div class="form-group col-md-7 mb-0">
+                                                                    {{ form.barcode|as_crispy_field }}
+                                                              </div>
+                                                        </div>
+                                                  </div>
+                                            </div>
+                                            <div class="form-row" >
+                                                  <div class="form-group col-md-6 mb-0">
+                                                        <div class="form-row">
+                                                              <div class="form-group col-md-12 mb-0">
+                                                                    {{ form.cost|as_crispy_field }}
+                                                              </div>
+                                                        </div>
+                                                  </div>
+                                                  <div class="form-group col-md-6 mb-0">
+                                                        <div class="form-row">
+                                                              <div class="form-group col-md-12 mb-0">
+                                                                    {{ form.monthly_safety_stock|as_crispy_field }}
+                                                              </div>
+                                                        </div>
+                                                  </div>
+                                            </div>
+                                      </div>
+                                </div>
+                            </div>
+                            <div class="form-group col-md-3 mb-0">
+                                <h5 class="" style="text-align: center;">---------</h5>
+                                <div   style="background: #f3f3f3;">
+                                      <div class="form-group col-md-12 mb-0">
+                                            <div class="form-row">
+                                                  <div class="form-group col-md-12 mb-0">
+                                                    <label class="col-form-label">{% trans "Product Image" %}</label>
+                                                    <input type="file" id="id_image" name="image" class="dropify" data-height="190"/>
+                                                  </div>
+                                            </div>
+                                      </div>
+                                      <div class="form-group col-md-12 mb-0">
+                                            <div class="form-row">
+                                                  <div class="form-group col-md-12 mb-0">
+                                                        {{ form.description|as_crispy_field }}
+                                                  </div>
+                                            </div>
+                                      </div>
+                                </div>
+                            </div>
+                            <div class="form-group col-md-3 mb-0">
+                                <h5 class="" style="text-align: center;">{% trans "Seasonality /Month %" %}</h5>
+                                <div   style="background: #f1f5f7;">
+                                      <div class="form-group col-md-12 mb-0">
+                                            <div class="form-row">
+                                                  <div class="form-group col-md-4 mb-0">
+                                                        {{ form.m1|as_crispy_field }}
+                                                  </div>
+                                                  <div class="form-group col-md-4 mb-0">
+                                                        {{ form.m2|as_crispy_field }}
+                                                  </div>
+                                                  <div class="form-group col-md-4 mb-0">
+                                                        {{ form.m3|as_crispy_field }}
+                                                  </div>
+                                            </div>
+                                      </div>
+                                      <div class="form-group col-md-12 mb-0">
+                                            <div class="form-row">
+                                                  <div class="form-group col-md-4 mb-0">
+                                                        {{ form.m4|as_crispy_field }}
+                                                  </div>
+                                                  <div class="form-group col-md-4 mb-0">
+                                                        {{ form.m5|as_crispy_field }}
+                                                  </div>
+                                                  <div class="form-group col-md-4 mb-0">
+                                                        {{ form.m6|as_crispy_field }}
+                                                  </div>
+                                            </div>
+                                      </div>
+                                      <div class="form-group col-md-12 mb-0">
+                                            <div class="form-row">
+                                                  <div class="form-group col-md-4 mb-0">
+                                                        {{ form.m7|as_crispy_field }}
+                                                  </div>
+                                                  <div class="form-group col-md-4 mb-0">
+                                                        {{ form.m8|as_crispy_field }}
+                                                  </div>
+                                                  <div class="form-group col-md-4 mb-0">
+                                                        {{ form.m9|as_crispy_field }}
+                                                  </div>
+                                            </div>
+                                      </div>
+                                      <div class="form-group col-md-12 mb-0">
+                                            <div class="form-row">
+                                                  <div class="form-group col-md-4 mb-0">
+                                                        {{ form.m10|as_crispy_field }}
+                                                  </div>
+                                                  <div class="form-group col-md-4 mb-0">
+                                                        {{ form.m11|as_crispy_field }}
+                                                  </div>
+                                                  <div class="form-group col-md-4 mb-0">
+                                                        {{ form.m12|as_crispy_field }}
+                                                  </div>
+                                            </div>
+                                      </div>
+                                </div>
+                                    <INPUT hidden TYPE="m_total" id="id_m_total" NAME="m_total" placeholder="total" class="form-control" data-value="{{form.m_total}}
+                                        <div class="{% if form.m_total.errors %} invalid{% endif %}">
+                                        {% if error in form.m_total.errors %}
+                                            <p class="help-block">{{ error }}</p>
+                                            {% endif %}
+                                    </div>
+                            </div>
+                      </div>
+                 </table>
+            </div>
+        </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary waves-effect" data-dismiss="modal">{% trans "Cancel" %}</button>
+                <button type="button" id="submitbtn" class="submit-btn btn-danger btn btn-primary">{% trans "Create" %}</button>
+            </div>
+
+</form>
+    <script src="/static/libs/select2/select2.min.js"></script>
+    <script src="/static/libs/dropify/dropify.min.js"></script>
+
+<script type="text/javascript">
+$( "#id_uom" ).prop( "disabled", true );
+$(function () {
+    $('#id_category').select2({
+        width: '100%',
+        templateSelection: function (data) {
+            if (data.id === '') {
+              return 'Select';
+            }
+        return data.text;
+        }
+    });
+    $('#id_brand').select2({
+        width: '100%',
+        templateSelection: function (data) {
+            if (data.id === '') {
+              return 'Select';
+            }
+        return data.text;
+        }
+    });
+});
+
+
+var subtotalval = 0;
+function get_total(){
+        var subtotalfield1 = $(this).attr('name');
+        var subtotalval =  parseInt(subtotalval) + parseInt($("#id_m" + subtotalfield1).val());
+        var total = 0;
+        for (i = 0; i <= 12; i++){
+            if($("input[name=m" + i + "]").val()){
+                total += parseFloat($("input[name=m" + i + "]").val());
+            }
+            else{
+                total += 0;
+            }
+        }
+        $("#id_m_total").val(parseInt(total));
+};
+    $("input[name*='m']").change(function () {
+        get_total()
+    });
+
+
+$(function() {
+   $('#submitbtn').click(function() {
+    if(parseInt($("#id_m_total").val()) < 100){
+        alert('Total of Product Seasonality has to be equal to 100%');
+    }if(parseInt($("#id_m_total").val()) > 100){
+        alert('Total of Product Seasonality has to be equal to 100%');
+    }
+   });
+});
+
+    $(document).ready(function(){
+        // Basic
+        $('.dropify').dropify();
+
+        $('.dropify-fr').dropify({
+            messages: {
+                default: 'Glissez-déposez un fichier ici ou cliquez',
+                replace: 'Glissez-déposez un fichier ou cliquez pour remplacer',
+                remove:  'Supprimer',
+                error:   'Désolé, le fichier trop volumineux'
+            }
+        });
+
+
+    });
+
+</script>
+
+{% endblock %}

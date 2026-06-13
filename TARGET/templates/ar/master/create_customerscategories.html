@@ -3,7 +3,7 @@
 {% load crispy_forms_tags %}
 {% block content %}
 
-    <form  align="left" id="CustomersCategoriesForm" method="post" action="#"  novalidate>
+    <form  id="loginForm"  align="left" id="CustomersCategoriesForm" method="post" action="#"  novalidate>
     {% if LANGUAGE_CODE == 'ar' %}
         <link href="/static/libs/select2/select2-rtl.min.css" rel="stylesheet" />
     {% else %}
@@ -72,10 +72,25 @@
         </div>
         <div class="modal-footer">
             <button type="button" class="btn btn-secondary waves-effect" data-dismiss="modal">{% trans "Cancel" %}</button>
-            <button type="button" class="submit-btn btn-danger btn btn-primary">{% trans "Create" %}</button>
+            <button id="myBtn" type="button" disabled="disabled" class="submit-btn btn-danger btn btn-primary">{% trans "Create" %}</button>
         </div>
 
     </form>
 
 
 {% endblock %}
+
+<script>
+    loginForm.addEventListener('input',() => {
+        if (id_code.value.length > 0 &&
+        id_engname.value.length > 0 &&
+            id_arbname.value.length > 0 
+        ) {
+            myBtn.removeAttribute('disabled');
+
+        } else {
+            myBtn.setAttribute('disabled','disabled');
+        }
+    }
+    );
+</script>

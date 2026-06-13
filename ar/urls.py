@@ -13,7 +13,7 @@ urlpatterns = [
     path("customerscategories/create/", views.CustomersCategoriesCreateView.as_view(), name="create_customerscategories"),
     path("customerscategories/update/<int:pk>", views.CustomersCategoriesUpdateView.as_view(), name="edit_customerscategories"),
     path("customerscategories/<int:pk>/delete/", views.CustomersCategoriesDeleteView.as_view(), name="delete_customerscategories"),
-
+    path('customerscategories/delete/',views.deletecustomerscategories, name="delete_customerscategories"),
 
 
 #Customers Classes
@@ -21,6 +21,7 @@ urlpatterns = [
     path("customersclasses/create/", views.CustomersClassesCreateView.as_view(), name="create_customersclasses"),
     path("customersclasses/update/<int:pk>", views.CustomersClassesUpdateView.as_view(), name="edit_customersclasses"),
     path("customersclasses/<int:pk>/delete/", views.CustomersClassesDeleteView.as_view(), name="delete_customersclasses"),
+    path('customersclasses/delete/',views.deletecustomersclasses, name="delete_customersclasses"),
 
 
 #Customer
@@ -28,7 +29,7 @@ urlpatterns = [
     path("customers/create/", views.CustomersCreateView.as_view(), name="create_customers"),
     path("customers/update/<int:pk>", views.CustomersUpdateView.as_view(),name="edit_customers"),
     path("customers/<int:pk>/delete/", views.CustomersDeleteView.as_view(),name="delete_customers"),
-
+    path('customers/delete/',views.deletecustomers, name="delete_customers"),
 
 #Customers journal
 
@@ -56,13 +57,13 @@ urlpatterns = [
     path("salesmansgroups/create/", views.SalesmansGroupsCreateView.as_view(), name="create_salesmansgroups"),
     path("salesmansgroups/update/<int:pk>", views.SalesmansGroupsUpdateView.as_view(), name="edit_salesmansgroups"),
     path("salesmansgroups/<int:pk>/delete/", views.SalesmansGroupsDeleteView.as_view(), name="delete_salesmansgroups"),
-
+    path('salesmansgroups/delete/',views.deletesalesmansgroups, name="delete_salesmansgroups"),
 
 #Salesmans
     path("salesmans/", views.SalesmansListView.as_view(), name="list-salesmans"),
     path("salesmans/create/", views.SalesmansCreateView.as_view(), name="create_salesmans"),
     path("salesmans/update/<int:pk>", views.SalesmansUpdateView.as_view(), name="edit_salesmans"),
     path("salesmans/<int:pk>/delete/", views.SalesmansDeleteView.as_view(), name="delete_salesmans"),
-
+    path('salesmans/delete/',views.deletesalesmans, name="delete_salesmans"),
 
 ]

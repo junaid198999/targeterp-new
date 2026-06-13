@@ -91,6 +91,17 @@ class ReportsGroupsDeleteView(LoginRequiredMixin, BSModalDeleteView):
     template_name = 'rp/setting/delete_reportsgroups.html'
     success_message = 'Success: Reports Groups was deleted.'
     success_url = reverse_lazy('rp:list-reportsgroups')
+
+def deletereportsgroups(request):
+    Lc= ReportsGroups.objects.all()
+    for l in Lc:
+       try:
+            print(l)
+            l.delete()
+       except:
+            print("not deleted connection somwhere")
+    return redirect("/rp/reportsgroups/")
+
 ######### End Reports Groups
 
 
@@ -177,6 +188,16 @@ class ReportsDeleteView(LoginRequiredMixin, BSModalDeleteView):
     template_name = 'rp/setting/delete_reports.html'
     success_message = 'Success: Reports was deleted.'
     success_url = reverse_lazy('rp:list-reports')
+
+def deletereports(request):
+    Lc= Reports.objects.all()
+    for l in Lc:
+       try:
+            print(l)
+            l.delete()
+       except:
+            print("not deleted connection somwhere")
+    return redirect("/rp/reports/")
 
 ######### End Reports
 
@@ -753,4 +774,3 @@ class DashboardViewerView(LoginRequiredMixin, ListView):
         context['datareport'] = totstr
 
         return context
-

@@ -1,0 +1,491 @@
+{% extends "auth_base.html" %}
+{% load humanize %}
+{% load widget_tweaks %}
+{% load widgets %}
+{% load django_tables2 %}
+{% block content %}
+{% load i18n %}
+{% csrf_token %}
+    {% if LANGUAGE_CODE == 'ar' %}
+        <link href="/static/libs/select2/select2-rtl.min.css" rel="stylesheet" />
+    {% else %}
+        <link href="/static/libs/select2/select2.min.css" rel="stylesheet" />
+    {% endif %}
+
+    <div class="container-fluid">
+        <!-- start page title -->
+        <div class="row">
+            <div class="col-12">
+                <div class="page-title-box">
+                    <div class="page-title-right">
+                        <ol class="breadcrumb m-0">
+                            <li class="breadcrumb-item"><a href="/">TARGET</a></li>
+                            <li class="breadcrumb-item active">{% trans "Commission Sales Report" %}</li>
+                        </ol>
+                    </div>
+                    <h4 class="page-title">{% trans "Commission Sales Report" %}</h4>
+                </div>
+            </div>
+        </div>
+        <!-- end page title -->
+        {% if perms.crm.view_salesrep %}
+        <div class="row">
+             <div class="col-xl-12">
+                <div class="card">
+                    <div class="card-body">
+                        <div class="card-widgets">
+                            <a data-toggle="collapse" href="#cardCollpase1" role="button" aria-expanded="false" aria-controls="cardCollpase1"><i class="mdi mdi-minus"></i></a>
+                        </div>
+                        <h4 class="header-title mb-0">{% trans "Report Filter" %}</h4>
+                            <div id="cardCollpase1" class="collapse pt-3 show">
+                                <div class="row">
+                                    <div class="col-2">
+                                       <div class="col-12" style="padding-right:0px; padding-left:0px">
+                                                <label class="col-form-label" >{% trans "Month" %}</label>
+                                        </div>
+                                        <select name="month" class="form-control" id="id_month" style="width:100%">
+                                            <option value="All">{% trans "All" %}</option>
+                                            <option value="1"  {% ifequal thismonth 1 %} selected {% endifequal %}>{% trans "January" %}</option>
+                                            <option value="2"  {% ifequal thismonth 2 %} selected {% endifequal %}>{% trans "February" %}</option>
+                                            <option value="3"  {% ifequal thismonth 3 %} selected {% endifequal %}>{% trans "March" %}</option>
+                                            <option value="4"  {% ifequal thismonth 4 %} selected {% endifequal %}>{% trans "April" %}</option>
+                                            <option value="5"  {% ifequal thismonth 5 %} selected {% endifequal %}>{% trans "May" %}</option>
+                                            <option value="6"  {% ifequal thismonth 6 %} selected {% endifequal %}>{% trans "June" %}</option>
+                                            <option value="7"  {% ifequal thismonth 7 %} selected {% endifequal %}>{% trans "July" %}</option>
+                                            <option value="8"  {% ifequal thismonth 8 %} selected {% endifequal %}>{% trans "August" %}</option>
+                                            <option value="9"  {% ifequal thismonth 9 %} selected {% endifequal %}>{% trans "September" %}</option>
+                                            <option value="10"  {% ifequal thismonth 10 %} selected {% endifequal %}>{% trans "October" %}</option>
+                                            <option value="11" {% ifequal thismonth 11 %} selected {% endifequal  %}>{% trans "November" %}</option>
+                                            <option value="12"  {% ifequal thismonth 12 %} selected {% endifequal %}>{% trans "December" %}</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-3">
+                                       <div class="col-12" style="padding-right:0px; padding-left:0px">
+                                                <label class="col-form-label" id="">{% trans "Channel" %}</label>
+                                        </div>
+                                        <select name="channel" class="form-control" id="id_channel" style="width:100%">
+                                            <option value="All">{% trans "All" %}</option>
+                                             {% for channel in channels %}
+                                                <option value="{{ channel.pk }}" {% if channel.pk == channels_id %} selected {% endif %}>{{ channel.name }}</option>
+                                            {% endfor %}
+                                        </select>
+                                    </div>
+                                    <div class="col-2">
+                                       <div class="col-12" style="padding-right:0px; padding-left:0px">
+                                                <label class="col-form-label" id=" ">{% trans "Area" %}</label>
+                                        </div>
+                                        <select name="area" class="form-control" id="id_area" style="">
+                                            <option value="All">{% trans "All" %}</option>
+                                            {% for area in areas %}
+                                                <option value="{{ area.pk }}" {% if area.pk == areas_id %} selected {% endif %}>{{ area.name }}</option>
+                                            {% endfor %}
+                                        </select>
+                                    </div>
+                                    <div class="col-2">
+                                       <div class="col-12" style="padding-right:0px; padding-left:0px">
+                                                <label class="col-form-label" >{% trans "City" %}</label>
+                                        </div>
+                                            <select name="city" class="form-control" id="id_city"  style="">
+                                                <option value="All">{% trans "All" %}</option>
+                                                {% for city in citiylist %}
+                                                    <option value="{{ city.pk }}" {% if city.pk == city_id %} selected {% endif %}>{{ city.name }}</option>
+                                                {% endfor %}
+                                            </select>
+                                    </div>
+                                    <div align="left" class="col-3">
+                                        <div class="col-2" style="padding-top:15px; padding-left:0px">
+                                            <br>
+                                        </div>
+                                        <button id="filter_id" class="btn btn-blue waves-effect waves-light mb-2" type="button" name="button" data-overlayColor="#38414a">
+                                            <i class="fas fa-play-circle"></i>  {% trans "Apply Filter" %}
+                                        </button>
+                                        <button id="clear_filter_id" class="btn btn-danger waves-effect waves-light mb-2" type="button" name="button" data-overlayColor="#38414a">
+                                            <i class="fas fa-times-circle"></i>  {% trans "Clear" %}
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                    </div> <!-- end collapse-->
+                </div> <!-- end card-body-->
+            </div>
+        </div>
+
+        <div class="row">
+             <div class="col-xl-12">
+                <div class="card">
+                    <div class="card-body" dir="ltr">
+                        <div class="card-widgets">
+                            <a data-toggle="collapse" href="#cardCollpase6" role="button" aria-expanded="false" aria-controls="cardCollpase6"><i class="mdi mdi-minus"></i></a>
+                        </div>
+                        <h4 class="header-title mb-0">{% trans "Yearly Sales vs Target" %}</h4>
+
+                            <div id="cardCollpase6" class="collapse pt-3 show">
+                                <div id="myChartSalesM" style="width: 95%; height: 400px"></div>
+                            </div>
+                    </div> <!-- end collapse-->
+                </div> <!-- end card-body-->
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-xl-12">
+                <div class="card">
+                    <div class="card-body">
+                         <form data-channels-url="{% url 'crm:salesrep' %}" data-areas-url="{% url 'crm:salesrep' %}" data-cities-url="{% url 'crm:ajax_load_cities_r' %}"  id="RepForm" action="" method="get" >
+
+                                <h4 class="header-title mb-0">{{channelname}}</h4>
+
+                                <table id="table_id" class="table table-hover table-bordered nowrap table-sm"  style="width:100%" >
+                                    <thead style="text-align:center" >
+                                        <tr >
+                                            <th rowspan="2" class="align-middle" style=" background-color:#323a46; color:#ffffff">{% trans "Month" %}</th>
+                                            <th style="text-align:center; background-color:#4a81d4; color:#ffffff" colspan="2">{% trans "Target" %}</th>
+                                            <th style="text-align:center; background-color:#1abc9c; color:#ffffff" colspan="2">{% trans "Achieved" %}</th>
+                                            <th style="text-align:center; background-color:#f7b84b; color:#ffffff" colspan="3">{% trans "Achieved %" %}</th>
+                                            <th style="text-align:center; background-color:#4fc6e1; color:#ffffff" colspan="3">{% trans "Achieved %/ This Year" %}</th>
+                                            <th style="text-align:center; background-color:#f1556c; color:#ffffff" colspan="3">{% trans "Achieved %/ Last Year" %}</th>
+                                            <th rowspan="2" class="align-middle" style="text-align:center; background-color:#323a46; color:#ffffff">{% trans "Collection" %}</th>
+                                        </tr>
+                                        <tr style="text-align:center">
+                                            <th style="text-align:center; background-color:#323a46; color:#ffffff">{% trans "Qty" %}</th>
+                                            <th style="text-align:center; background-color:#323a46; color:#ffffff">{% trans "Amount" %}</th>
+                                            <th style="text-align:center; background-color:#323a46; color:#ffffff">{% trans "Qty" %}</th>
+                                            <th style="text-align:center; background-color:#323a46; color:#ffffff ">{% trans "Amount" %}</th>
+                                            <th style="text-align:center; background-color:#323a46; color:#ffffff">{% trans "Qty" %}</th>
+                                            <th style="text-align:center; background-color:#323a46; color:#ffffff ">{% trans "Amount" %}</th>
+                                            <th style="width:20px; text-align:center; background-color:#323a46; color:#ffffff "></th>
+                                            <th style="text-align:center; background-color:#323a46; color:#ffffff">{% trans "Qty" %}</th>
+                                            <th style="text-align:center; background-color:#323a46; color:#ffffff ">{% trans "Amount" %}</th>
+                                            <th style="width:20px; text-align:center; background-color:#323a46; color:#ffffff "></th>
+                                            <th style="text-align:center; background-color:#323a46; color:#ffffff">{% trans "Qty" %}</th>
+                                            <th style="text-align:center; background-color:#323a46; color:#ffffff ">{% trans "Amount" %}</th>
+                                            <th style="width:20px; text-align:center; background-color:#323a46; color:#ffffff "></th>
+                                        </tr>
+                                    </thead>
+
+                                    <tbody>
+                                        {% for SalesMRep in tablear %}
+                                        <tr>
+                                                <td style=" background-color:#323a461c">
+                                                    <strong>{{ SalesMRep.month}}</strong>
+                                                </td>
+                                                <td style="text-align:center; background-color:#4e94ff14">
+                                                    {{ SalesMRep.targetqty|intcomma:False}}
+                                                </td>
+                                                <td style="text-align:right; padding-right: 20px; background-color:#4e94ff14">
+                                                    {{ SalesMRep.targettotal|intcomma:False|currency_no_symbol}}
+                                                </td>
+                                                <td style="text-align:center; background-color:#1abc9c0f; font-weight: 700;">
+                                                    {{ SalesMRep.salesqty|intcomma:False}}
+                                                </td>
+                                                <td style="text-align:right; padding-right: 20px; background-color:#1abc9c0f">
+                                                    {{ SalesMRep.salestotal|intcomma:False|currency_no_symbol}}
+                                                </td>
+                                                <td style="text-align:center; background-color:#f7b84b1a">
+                                                    {{ SalesMRep.achievedqtym}}
+                                                </td>
+                                                <td style="text-align:right; padding-right: 20px; background-color:#f7b84b1a">
+                                                    {{ SalesMRep.achievedpercm}}
+                                                </td>
+                                                <td style="text-align:center; background-color:#f7b84b1a; padding:0px">
+                                                    {% if SalesMRep.achievedpercm > 100%}<h4><i class="fe-arrow-up text-success mr-1"></i></h4> {% else %} <h4><i class="fe-arrow-down text-danger mr-1"></i></h4> {% endif %}
+                                                </td>
+                                                <td style="text-align:center; background-color:#4fc6e121">
+                                                    {{ SalesMRep.achievedqtythisy|intcomma:False}}
+                                                </td>
+                                                <td style="text-align:right; padding-right: 20px; background-color:#4fc6e121">
+                                                    {{ SalesMRep.achievedtotalthisy|intcomma:False}}
+                                                </td>
+                                                <td style="text-align:center; background-color:#4fc6e121; padding:0px">
+                                                    {% if SalesMRep.achievedtotalthisy > 100%}<h4><i class="fe-arrow-up text-success mr-1"></i></h4> {% else %} <h4><i class="fe-arrow-down text-danger mr-1"></i></h4> {% endif %}
+                                                </td>
+                                                <td style="text-align:center; background-color:#f1556c17">
+                                                    {{ SalesMRep.achievedqtylasty|intcomma:False}}
+                                                </td>
+                                                <td style="text-align:right; padding-right: 20px; background-color:#f1556c17">
+                                                    {{ SalesMRep.achievedtotallasty|intcomma:False}}
+                                                <td style="text-align:center; background-color:#f1556c17; padding:0px">
+                                                    {% if SalesMRep.achievedtotallasty > 100%}<h4><i class="fe-arrow-up text-success mr-1"></i></h4> {% else %} <h4><i class="fe-arrow-down text-danger mr-1"></i></h4> {% endif %}
+                                                </td>
+                                                <td style="text-align:right; padding-right: 20px;">
+                                                    {{ SalesMRep.collectamount|intcomma:False|currency_no_symbol}}
+                                                </td>
+
+                                        </tr>
+                                        {% endfor %}
+                                    </tbody>
+                                    <tfoot class="thead-dark">
+                                        <tr style="text-align:center">
+                                                <th style="text-align:center"></th>
+                                                <th style="text-align:center"></th>
+                                                <th style="text-align:right; padding-right: 20px;"></th>
+                                                <th style="text-align:center"></th>
+                                                <th style="text-align:right; padding-right: 20px;"></th>
+                                                <th colspan="9"></th>
+                                                <th style="text-align:right; padding-right: 20px;"></th>
+                                        </tr>
+                                    </tfoot>
+                                </table>
+                                <div class="row mb-4">
+                                    <div  align="center" class="col-sm-12">
+                                        <div id="controlPanel"></div>
+                                    </div>
+                                </div>
+                         </form>
+                    </div> <!-- end card-->
+                </div> <!-- end col -->
+
+            </div>
+        <!-- end row -->
+
+        </div> <!-- container -->
+        {% else %}
+        <div class="row" >
+            <div class="col-xl-12">
+                <div class="card">
+                    <div class="card-body">
+                            <STRONG> {% trans "You Don't have a permission to access this page." %} </STRONG>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endif %}
+
+    </div>
+{% endblock %}
+
+
+{% block extra_javascript %}
+    <script type="text/javascript" src="/static/charts/loader.js"></script>
+    <script src="/static/libs/select2/select2.min.js"></script>
+    <script type="text/javascript">
+
+        function addCommas(nStr)
+        {
+            nStr += '';
+            x = nStr.split('.');
+            x1 = x[0];
+            x2 = x.length > 1 ? '.' + x[1] : '';
+            var rgx = /(\d+)(\d{3})/;
+            while (rgx.test(x1)) {
+            x1 = x1.replace(rgx, '$1' + ',' + '$2');
+            }
+            return x1 + x2;
+        }
+      $(function () {
+            var selected = [];
+            var table = $('#table_id').DataTable( {
+                language: {
+                    buttons: {
+				        "copy": "{% trans "Copy" %}",
+				        "csv": "{% trans "CSV" %}",
+				        "pdf": "{% trans "PDF" %}",
+				        "print": "{% trans "Print" %}",
+                        copyTitle: '{% trans "Copy to clipboard" %}',
+                        copySuccess: {
+                            _: '{% trans "Copied %d rows to clipboard" %}',
+                            1: '{% trans "Copied one row to clipboard" %}'
+                        }
+                    },
+                    "sEmptyTable":     "{% trans "No data available in table" %}",
+                    "sInfo":           "{% trans "Showing _START_ to _END_ of _TOTAL_ entries" %}",
+                    "sInfoEmpty":      "{% trans "Showing 0 to 0 of 0 entries" %}",
+                    "sInfoFiltered":   "{% trans "(filtered from _MAX_ total entries)" %}",
+                    "sInfoPostFix":    "",
+                    "sInfoThousands":  ",",
+                    "sLengthMenu":     "{% trans "Show _MENU_ entries" %}",
+                    "sLoadingRecords": "{% trans "Loading..." %}",
+                    "sProcessing":     "{% trans "Processing..." %}",
+                    "sSearch":         "{% trans "Search:" %}",
+                    "sZeroRecords":    "{% trans "No matching records found" %}",
+                    "oPaginate": {
+                        "sFirst":    "{% trans "First" %}",
+                        "sLast":     "{% trans "Last" %}",
+                        "sNext":     "{% trans "Next" %}",
+                        "sPrevious": "{% trans "Previous" %}"
+                    },
+                    "oAria": {
+                        "sSortAscending":  "{% trans ": activate to sort column ascending" %}",
+                        "sSortDescending": "{% trans ": activate to sort column descending" %}"
+                    }
+                },
+                buttons: [
+                    {% if perms.crm.can_copy %}
+                        'copy',
+                    {% endif %}
+                    {% if perms.crm.can_csv %}
+                        'csv',
+                    {% endif %}
+                    {% if perms.crm.can_pdf %}
+                        'pdf',
+                    {% endif %}
+                    {% if perms.crm.can_print %}
+                        'print',
+                    {% endif %}
+                ],
+                "scrollX": true,
+                "paging": false,
+                "pagingType": "full_numbers",
+                "ordering": false,
+                responsive: true,
+
+                "footerCallback": function ( row, data, start, end, display ) {
+                    var api = this.api(), data;
+
+                    // converting to interger to find total
+                    var intVal = function ( i ) {
+                        return typeof i === 'string' ?
+                            i.replace(/[\$,]/g, '')*1 :
+                            typeof i === 'number' ?
+                                i : 0;
+                    };
+
+                    // computing column Total of the complete result
+                    var qty1Total = api
+                        .column( 1 )
+                        .data()
+                        .reduce( function (a, b) {
+                            return intVal(a) + intVal(b);
+                        }, 0 );
+                     var Amnt1Total = api
+                        .column( 2 )
+                        .data()
+                        .reduce( function (a, b) {
+                            return intVal(a) + intVal(b);
+                        }, 0 );
+                    var qty2Total = api
+                        .column( 3 )
+                        .data()
+                        .reduce( function (a, b) {
+                            return intVal(a) + intVal(b);
+                        }, 0 );
+                     var Amnt2Total = api
+                        .column( 4 )
+                        .data()
+                        .reduce( function (a, b) {
+                            return intVal(a) + intVal(b);
+                        }, 0 );
+                     var Amnt3Total = api
+                        .column( 14 )
+                        .data()
+                        .reduce( function (a, b) {
+                            return intVal(a) + intVal(b);
+                        }, 0 );
+
+                    // Update footer by showing the total with the reference of the column index
+                $( api.column( 0 ).footer() ).html('{% trans "Total" %}');
+                    $( api.column( 1 ).footer() ).html(addCommas(qty1Total));
+                    $( api.column( 2 ).footer() ).html(addCommas(Amnt1Total));
+                    $( api.column( 3 ).footer() ).html(addCommas(qty2Total));
+                    $( api.column( 4 ).footer() ).html(addCommas(Amnt2Total));
+                    $( api.column( 14 ).footer() ).html(addCommas(Amnt3Total));
+                },
+            } );
+            $('#table_id tbody').on('click', 'tr', function () {
+                var id = this.id;
+                var index = $.inArray(id, selected);
+
+                if ( index === -1 ) {
+                    selected.push( id );
+                } else {
+                    selected.splice( index, 1 );
+                }
+
+                $(this).toggleClass('selected');
+            } );
+
+            table
+                .buttons()
+                .container()
+                .appendTo( '#controlPanel' );
+        });
+
+    $("#filter_id").click(function(){
+          var ChannelId = $("#id_channel").val();
+          var ArealId = $("#id_area").val();
+          var CityId = $("#id_city").val();
+          var MonthId = $("#id_month").val();
+          var url = $("#RepForm").attr("data-channels-url");
+          window.location.href =url+"?channel="+ChannelId+"&area="+ArealId+"&city="+CityId&month="+MonthId
+    });
+    $("#clear_filter_id").click(function(){
+          var url = $("#RepForm").attr("data-channels-url");
+          window.location.href =url
+    });
+
+    $("#id_area").change(function () {
+          var url = $("#RepForm").attr("data-cities-url");
+          var areaId = $(this).val();  // get the selected country ID from the HTML input
+          {% if areaId == "" %} areaId = 9887745544 {% endif %}
+          $.ajax({                       // initialize an AJAX request
+            url: url,                    // set the url of the request (= localhost:8000/hr/ajax/load-cities/)
+            data: {
+              'area': areaId       // add the country id to the GET parameters
+            },
+            success: function (data) {   // `data` is the return of the `load_cities` view function
+              $("#id_city").html(data);  // replace the contents of the city input with the data that came from the server
+            }
+
+            });
+      });
+
+      google.charts.load('current', {'packages':['line']});
+      google.charts.setOnLoadCallback(drawChartSalesTarget);
+
+        function drawChartSalesTarget() {
+
+          var data = new google.visualization.DataTable();
+          data.addColumn('number', '{% trans "Month" %}');
+          data.addColumn('number', '{% trans "Total Sales" %}');
+          data.addColumn('number', '{% trans "Target" %}');
+
+        data.addRows([
+            {% for i in tablear %}
+                [
+                    {{ i.monthint }},
+                    {{ i.salestotal|currency_no_comma }},
+                    {{ i.targettotal|currency_no_comma }}
+                ],
+            {% endfor %}
+        ]);
+
+      var options = {
+                animation: {"startup": true,
+                    duration: 1000,
+                    easing: 'in'
+                },
+                {% if LANGUAGE_CODE == 'ar' %}
+                    fontName: 'Tajawal',
+                    annotations: { textStyle: { fontName: 'Tajawal', fontSize: 12 } },
+                    legend: {
+                        textStyle: {
+                            fontName: 'Tajawal',
+                        },
+                    },
+                    tooltip: {
+                        textStyle: {
+                            fontName: 'Tajawal',
+                        },
+                    },
+                    title: {
+                        textStyle: {
+                            fontName: 'Tajawal',
+                        },
+                    },
+
+                {% endif %}
+        chartArea:{left:200,top:200,right:200,bottom:200,width: 900, height: 300},
+        axes: {
+          x: {
+            0: {side: 'bottom'}
+          }
+        }
+      };
+
+      var chart = new google.charts.Line(document.getElementById('myChartSalesM'));
+
+      chart.draw(data, google.charts.Line.convertOptions(options));
+    }
+    </script>
+
+
+{% endblock %}

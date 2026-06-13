@@ -72,17 +72,28 @@ class CustomersCategoriesUpdateView(LoginRequiredMixin, BSModalUpdateView):
     form_class = CustomersCategoriesForm
     success_message = 'Success: customers Categories was updated.'
     success_url = reverse_lazy("ar:list-customerscategories")
+    
 
     def form_valid(self, form):
         CustomersCategories = form.save()
         CustomersCategories.save
         return super(CustomersCategoriesUpdateView, self).form_valid(form)
-
+ 
 class CustomersCategoriesDeleteView(LoginRequiredMixin, BSModalDeleteView):
     model = CustomersCategories
     template_name = 'ar/master/delete_customerscategories.html'
     success_message = 'Success: customers Categories was deleted.'
     success_url = reverse_lazy('ar:list-customerscategories')
+
+def deletecustomerscategories(request):
+    Lc= CustomersCategories.objects.all()
+    for l in Lc:
+       try:
+            print(l)
+            l.delete()
+       except:
+            print("not deleted connection somwhere")
+    return redirect("/ar/customerscategories/")
 
 
 ######### End Customers Categories
@@ -121,6 +132,16 @@ class CustomersClassesDeleteView(LoginRequiredMixin, BSModalDeleteView):
     template_name = 'ar/master/delete_customersclasses.html'
     success_message = 'Success: customers Classes was deleted.'
     success_url = reverse_lazy('ar:list-customersclasses')
+
+def deletecustomersclasses(request):
+    Lc= CustomersClasses.objects.all()
+    for l in Lc:
+       try:
+            print(l)
+            l.delete()
+       except:
+            print("not deleted connection somwhere")
+    return redirect("/ar/customersclasses/")
 
 
 ######### End Customers Categories
@@ -239,9 +260,25 @@ class CustomersDeleteView(LoginRequiredMixin, BSModalDeleteView):
     success_message = 'Success: Customers was deleted.'
     success_url = reverse_lazy('ar:list-customers')
 
+
+def deletecustomers(request):
+    Lc= Customers.objects.all()
+    for l in Lc:
+       try:
+            print(l)
+            l.delete()
+       except:
+            print("not deleted connection somwhere")
+    return redirect("/ar/customers/")
+
 ######### End Customers
 
 ######### Customers Journal
+
+class CustomersJourListView(LoginRequiredMixin, ListView):
+    model = CustomersJour
+    context_object_name = 'customersjour'
+    template_name = 'ar/trans/list-customersjour.html'
 
 class CustomersJourListView(LoginRequiredMixin, ListView):
     model = CustomersJour
@@ -255,7 +292,7 @@ class CustomersJourCreateView(LoginRequiredMixin,  CreateView):
     template_name = 'ar/trans/create_customersjour.html'
     success_message = 'Success: Customers Journal  was created.'
     success_url = reverse_lazy('ar:list-customersjour')
-
+    extra_context={'users': CustomersJourLine.objects.all()}
     def get_context_data(self, **kwargs):
         context = super(CustomersJourCreateView, self).get_context_data(**kwargs)
         try:
@@ -267,13 +304,30 @@ class CustomersJourCreateView(LoginRequiredMixin,  CreateView):
         context['customers'] = Customers.objects.all().filter(allowaccountentry=True)
         context['maxid'] = maxid
         context['transtypes'] = TransTypes.objects.all().filter(transkind__keyid= 51)
-        context['currentdate'] = datetime.now().date().strftime('%Y-%m-%d')
+        a=context['currentdate'] = datetime.now().date().strftime('%Y-%m-%d')
+        print("Date:",a)
 
 
 
         posperiod = FiscalYearsPeriodsModules.objects.filter(module__code='AR',closedate =None
                                      ).exclude(opendate=None).aggregate(Min('fiscalyearperiod__fromdate'),Max('fiscalyearperiod__todate'))
         if all([posperiod['fiscalyearperiod__fromdate__min'], posperiod['fiscalyearperiod__todate__max']]):
+
+            mindate= posperiod['fiscalyearperiod__fromdate__min'].strftime('%Y-%m-%d')
+
+            maxdate= posperiod['fiscalyearperiod__todate__max'].strftime('%Y-%m-%d')
+
+            context['mindate'] = mindate
+
+            context['maxdate'] = maxdate
+
+        else:
+
+            context['mindate'] = datetime.today()
+
+            context['maxdate'] = datetime.today()
+        if all([posperiod['fiscalyearperiod__fromdate__min'], posperiod['fiscalyearperiod__todate__max']]):
+        # if all([posperiod['fiscalyearperiod__formdate__min'],posperiod['fiscalyearperiod__todate__max']]):
             mindate= posperiod['fiscalyearperiod__fromdate__min'].strftime('%Y-%m-%d')
             maxdate= posperiod['fiscalyearperiod__todate__max'].strftime('%Y-%m-%d')
             context['mindate'] = mindate
@@ -281,16 +335,15 @@ class CustomersJourCreateView(LoginRequiredMixin,  CreateView):
         else:
             context['mindate'] = datetime.today()
             context['maxdate'] = datetime.today()
-
         companyprofile=CompanyProfile.objects.values('id','usecostcenter1','usecostcenter2','usecostcenter3','usecostcenter4').first()
-        context['comusecostcenter1'] = companyprofile['usecostcenter1']
-        context['comusecostcenter2'] = companyprofile['usecostcenter2']
-        context['comusecostcenter3'] = companyprofile['usecostcenter3']
-        context['comusecostcenter4'] = companyprofile['usecostcenter4']
-
-
-
-
+#add
+        try:
+            context['comusecostcenter1'] = companyprofile['usecostcenter1']
+            context['comusecostcenter2'] = companyprofile['usecostcenter2']
+            context['comusecostcenter3'] = companyprofile['usecostcenter3']
+            context['comusecostcenter4'] = companyprofile['usecostcenter4']
+        except:
+            return context
 
         if self.request.POST:
             context['maxid'] = maxid
@@ -300,38 +353,72 @@ class CustomersJourCreateView(LoginRequiredMixin,  CreateView):
             context['customersjourlines'] = CustomersJourLineFormSet(instance=self.object)
         return context
 
+#add 31-03-22
+    def get_context_data(self, **kwargs):
+        context = super(CustomersJourCreateView, self).get_context_data(**kwargs)
+        try:
+            maxid = int(CustomersJour.objects.latest('pk').pk) + 1
+        except:
+            maxid = 1
+
+        #context['customers'] = Vendors.objects.all().filter(allowaccountentry=True)
+        context['maxid'] = maxid
+        context['transtypes'] = TransTypes.objects.all().filter(transkind__keyid= 51)
+        context['maxdate'] = timezone.now().strftime('%Y-%m-%d')
+
+        if self.request.POST:
+            context['customersjourline'] = CustomersJourLineFormSet(self.request.POST, instance=self.object)
+            context['customersjourline'].full_clean()
+
+        else:
+            a=context['customersjourline'] = CustomersJourLineFormSet(instance=self.object)
+            print("a",a)
+        return context
+### 
+    
     def form_valid(self, form):
-        context = self.get_context_data(form=form)
+        context = super(CustomersJourCreateView, self).get_context_data
+        # customersjourline = super(CustomersJourLine, self).get_context_data
+        
 
         transtype = TransTypes.objects.all().filter(id=form.instance.transtype_id).values()
-        print(transtype)
+        # print("transtype",transtype)
         maxid = CustomersJour.objects.all().filter(transtype_id=form.instance.transtype_id).count()
         journum = transtype[0]['code'] + '-' + str(maxid + 1)
 
 
         print('form.instance.transtype_id')
         inistatus = LookUp.objects.filter(keyid=10001).values('id')
+        print("inistatus",inistatus)
         form.instance.status_id = inistatus[0]['id']  # initiated ID
         form.instance.statuschangedby=self.request.user
         form.instance.statusdate = timezone.now()
+        
         form.instance.journalnumber= journum
 
-        customersjourlines = context['customersjourlines']
+        customersjourlines = self.request.GET.get("customersjourline")
+        print("customersjourlines",customersjourlines)
+       
         print('validate')
         response = super().form_valid(form)
-        if customersjourlines.is_valid():
-            print('validate customersjourlines')
-            response = super().form_valid(form)
-            customersjourlines.instance = self.object
+        try:
+            if customersjourlines.is_valid():
+                print('validate customersjourlines')
+                response = super().form_valid(form)
+                customersjourlines.instance = self.object
+                form.save()
+
+                customersjourlines.save()
+            else:
+                context['customersjourlines'] = CustomersJourLineFormSet()
+                maxid = int(CustomersJour.objects.latest('pk').pk) + 1
+                context['maxid'] = maxid
+
+            return response
+            # return redirect("/ar/customersjour/")
+        except:
             form.save()
-
-            customersjourlines.save()
-        else:
-            context['customersjourlines'] = CustomersJourLineFormSet()
-            maxid = int(CustomersJour.objects.latest('pk').pk) + 1
-            context['maxid'] = maxid
-
-        return response
+            return redirect("/ar/customersjour/")
 
 class CustomersJourUpdateView(LoginRequiredMixin, UpdateView):
     model = CustomersJour
@@ -358,12 +445,19 @@ class CustomersJourUpdateView(LoginRequiredMixin, UpdateView):
         posperiod = FiscalYearsPeriodsModules.objects.filter(module__code='AR',closedate =None
                                      ).exclude(opendate=None).aggregate(Min('fiscalyearperiod__fromdate'),Max('fiscalyearperiod__todate'))
         if all([posperiod['fiscalyearperiod__fromdate__min'], posperiod['fiscalyearperiod__todate__max']]):
+
             mindate= posperiod['fiscalyearperiod__fromdate__min'].strftime('%Y-%m-%d')
+
             maxdate= posperiod['fiscalyearperiod__todate__max'].strftime('%Y-%m-%d')
+
             context['mindate'] = mindate
+
             context['maxdate'] = maxdate
+
         else:
+
             context['mindate'] = datetime.today()
+
             context['maxdate'] = datetime.today()
 
         companyprofile=CompanyProfile.objects.values('id','usecostcenter1','usecostcenter2','usecostcenter3','usecostcenter4').first()
@@ -376,13 +470,21 @@ class CustomersJourUpdateView(LoginRequiredMixin, UpdateView):
         model = apps.get_model('crm', 'UserBusinessRoles')
         transrole = model.objects.filter(user_id = self.request.user.pk ).values('id')
         if transrole:
-            userbusrole_id = transrole[0]['id']
-            model = apps.get_model('crm', 'UserBusinessRolesttline')
-            transrole = model.objects.filter(userbusinessrole_id = userbusrole_id , transtype_id = transtypeid ).values()
-        else:
-            model = apps.get_model('crm', 'UserBusinessRolesttline')
-            transrole = model.objects.filter(transtype_id = transtypeid ).values()
 
+            userbusrole_id = transrole[0]['id']
+
+            model = apps.get_model('crm', 'UserBusinessRolesttline')
+
+            transrole = model.objects.filter(userbusinessrole_id = userbusrole_id , transtype_id = transtypeid ).values()
+
+        else:
+
+            model = apps.get_model('crm', 'UserBusinessRolesttline')
+
+            transrole = model.objects.filter(transtype_id = transtypeid ).values()  
+
+        model = apps.get_model('crm', 'UserBusinessRolesttline')
+        transrole = model.objects.filter(userbusinessrole_id = userbusrole_id , transtype_id = transtypeid ).values()
 
         if transrole == None or transrole.count() ==  0 :
             context['cancreate'] = 'False'
@@ -548,7 +650,9 @@ class CollectionsCreateView(LoginRequiredMixin,  CreateView):
 
         if companyprofile == None :
             messages.error(self.request, 'Please Create Company')
-            return reverse('ar:list-collections')
+            success_url = reverse_lazy('ar:list-collections')
+
+            #return reverse('ar:list-collections')
 
         else:
             context['comusecostcenter1'] = companyprofile['usecostcenter1']
@@ -568,7 +672,12 @@ class CollectionsCreateView(LoginRequiredMixin,  CreateView):
         collector = Salesmans.objects.filter(user=self.request.user ).values('id','code','engname','arbname')
         if collector == None or collector.count() ==  0 :
             messages.error(self.request, "You are not a Collector")            
+
             return context
+
+
+
+
         context['collector'] = collector
         context['collector_id'] =  collector[0]['id']
 
@@ -904,6 +1013,13 @@ class SalesmansGroupsCreateView(LoginRequiredMixin,  BSModalCreateView):
     success_message = 'Success: salesmans groups was created.'
     success_url = reverse_lazy('ar:list-salesmansgroups')
 
+    #add
+    def form_invalid(self, form):
+        context = self.get_context_data(form=form)
+        # print("form is invalid")
+       
+        return redirect('SalesmansGroupsListView/')
+
 
 class SalesmansGroupsUpdateView(LoginRequiredMixin, BSModalUpdateView):
     model = SalesmansGroups
@@ -916,6 +1032,12 @@ class SalesmansGroupsUpdateView(LoginRequiredMixin, BSModalUpdateView):
         salesmansgroups = form.save()
         salesmansgroups.save
         return super(SalesmansGroupsUpdateView, self).form_valid(form)
+    
+    def form_invalid(self, form):
+        context = self.get_context_data(form=form)
+        # print("form is invalid")
+       
+        return redirect('SalesmansGroupsListView/')
 
 class SalesmansGroupsDeleteView(LoginRequiredMixin, BSModalDeleteView):
     model = SalesmansGroups
@@ -923,6 +1045,15 @@ class SalesmansGroupsDeleteView(LoginRequiredMixin, BSModalDeleteView):
     success_message = 'Success: salesmans groups was deleted.'
     success_url = reverse_lazy('ar:list-salesmansgroups')
 
+def deletesalesmansgroups(request):
+    Lc= SalesmansGroups.objects.all()
+    for l in Lc:
+       try:
+            print(l)
+            l.delete()
+       except:
+            print("not deleted connection somwhere")
+    return redirect("/ar/salesmansgroups/")
 
 ######### End Salesmans Groups
 
@@ -942,6 +1073,12 @@ class SalesmansCreateView(LoginRequiredMixin,  BSModalCreateView):
     template_name = 'ar/master/create_salesmans.html'
     success_message = 'Success: salesmans  was created.'
     success_url = reverse_lazy('ar:list-salesmans')
+#add
+    # def form_invalid(self, form):
+    #     # context = self.get_context_data(form=form)
+    #     print("form is invalid")
+       
+    #     return redirect('SalesmansListView/')
 
 
 class SalesmansUpdateView(LoginRequiredMixin, BSModalUpdateView):
@@ -955,6 +1092,11 @@ class SalesmansUpdateView(LoginRequiredMixin, BSModalUpdateView):
         salesmans = form.save()
         salesmans.save
         return super(SalesmansUpdateView, self).form_valid(form)
+    
+    #add
+    def form_invalid(self, form):
+        context = self.get_context_data(form=form)
+        return redirect('SalesmansListView/')
 
 class SalesmansDeleteView(LoginRequiredMixin, BSModalDeleteView):
     model = Salesmans
@@ -962,5 +1104,14 @@ class SalesmansDeleteView(LoginRequiredMixin, BSModalDeleteView):
     success_message = 'Success: salesmans was deleted.'
     success_url = reverse_lazy('ar:list-salesmans')
 
+def deletesalesmans(request):
+    Lc= Salesmans.objects.all()
+    for l in Lc:
+       try:
+            print(l)
+            l.delete()
+       except:
+            print("not deleted connection somwhere")
+    return redirect("/ar/salesmans/")
 
 ######### End Salesmans

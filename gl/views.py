@@ -74,6 +74,16 @@ class LedgersTypesDeleteView(LoginRequiredMixin, BSModalDeleteView):
     template_name = 'gl/delete_ledgerstypes.html'
     success_message = 'Success: ledgerstypes was deleted.'
     success_url = reverse_lazy('gl:list-ledgerstypes')
+
+def deletelt(request):
+    Lc= LedgersTypes.objects.all()
+    for l in Lc:
+       try:
+            print(l)
+            l.delete()
+       except:
+            print("not deleted connection somwhere")
+    return redirect("/gl/ledgerstypes/")
 ######### End Ledgers Types
 
 ######### Ledgers Categories
@@ -110,6 +120,15 @@ class LedgersCategoriesDeleteView(LoginRequiredMixin, BSModalDeleteView):
     success_message = 'Success: Ledgers Categories was deleted.'
     success_url = reverse_lazy('gl:list-ledgerscategories')
 
+def deleteledgerscategories(request):
+    Lc= LedgersCategories.objects.all()
+    for l in Lc:
+        try:
+            print(l)
+            l.delete()
+        except:
+            print("not deleted connection somwhere")
+    return redirect("/gl/ledgerscategories/")
 
 ######### End Ledgers Categories
 
@@ -147,6 +166,17 @@ class LedgerDeleteView(LoginRequiredMixin, BSModalDeleteView):
     success_message = 'Success: Ledgers was deleted.'
     success_url = reverse_lazy('gl:list-ledger')
 
+def deletel(request):
+    Lc= Ledger.objects.all()
+    for l in Lc:
+       try:
+            print(l)
+            l.delete()
+       except:
+            print("not deleted connection somwhere")
+    return redirect("/gl/ledger/")
+
+
 ######### End Ledgers
 
 ######### Cost Categories
@@ -183,6 +213,15 @@ class CostCategoriesDeleteView(LoginRequiredMixin, BSModalDeleteView):
     success_message = 'Success: Cost Categories was deleted.'
     success_url = reverse_lazy('gl:list-costcategories')
 
+def deletecostcategories(request):
+    Lc= CostCategories.objects.all()
+    for l in Lc:
+       try:
+            print(l)
+            l.delete()
+       except:
+            print("not deleted connection somwhere")
+    return redirect("/gl/costcategories/")
 
 ######### End Cost Categories
 
@@ -192,7 +231,7 @@ class CostCategoriesDeleteView(LoginRequiredMixin, BSModalDeleteView):
 class CostCentersLevelsListView(LoginRequiredMixin, generic.ListView):
     model = CostCentersLevels
     context_object_name = 'costcenterslevels'
-    template_name = 'gl/master/list-CostCentersLevels.html'
+    template_name = 'gl/master/list-costcenterslevels.html'
 
 
 class CostCentersLevelsCreateView(LoginRequiredMixin,  BSModalCreateView):
@@ -221,7 +260,15 @@ class CostCentersLevelsDeleteView(LoginRequiredMixin, BSModalDeleteView):
     success_message = 'Success: Cost Centers Levels was deleted.'
     success_url = reverse_lazy('gl:list-costcenterslevels')
 
-
+def deleteccl(request):
+    Lc= CostCentersLevels.objects.all()
+    for l in Lc:
+       try:
+            print(l)
+            l.delete()
+       except:
+            print("not deleted connection somwhere")
+    return redirect("/gl/costcenterslevels/")
 ######### End Cost Centers Levels
 
 ######### Cost Centers
@@ -258,6 +305,16 @@ class CostCentersDeleteView(LoginRequiredMixin, BSModalDeleteView):
     success_message = 'Success: Cost Centers  was deleted.'
     success_url = reverse_lazy('gl:list-costcenters')
 
+def deletecostcenters(request):
+    Lc= CostCenters.objects.all()
+    for l in Lc:
+       try:
+            print(l)
+            l.delete()
+       except:
+            print("not deleted connection somwhere")
+    return redirect("/gl/costcenters/")
+    
 
 ######### End Cost Centers
 
@@ -291,24 +348,41 @@ class TransTypesUpdateView(LoginRequiredMixin, BSModalUpdateView):
         return super(TransTypesUpdateView, self).form_valid(form)
     
     def form_invalid(self, form):
+
         context = self.get_context_data(form=form)
+
         return render(self.request, 'gl/master/list-transtypes.html', {"update_error": "code is requuired"})
+
 
 class TransTypesDeleteView(LoginRequiredMixin, BSModalDeleteView):
     model = TransTypes
-    template_name = 'gl/master/delete_transtypes.html'
+    template_name = 'gl/master/delete_listtranstypes.html'
     success_message = 'Success: Trans Types  was deleted.'
     success_url = reverse_lazy('gl:list-transtypes')    
 
+
+
     def post(self, request, *args, **kwargs):
+
         try:
+
             return self.delete(request, *args, **kwargs)
+
         except:
+
             # context = { "error" : "Can't delete this Trans Type Becasue it's releted somewhere" }
+
             return render(request, "gl/master/list-transtypes.html" , {"error": "Can't delete this Trans Type Becasue it's releted somewhere"})
 
-
-
+def deletetrans(request):
+    Lc= TransTypes.objects.all()
+    for l in Lc:
+    #    try:
+            print(l)
+            l.delete()
+    #    except:
+    #         print("not deleted connection somwhere")
+    return redirect("/gl/transtypes/")
 ######### End Trans Types
 
 
@@ -359,12 +433,12 @@ class LedgerJourCreateView(LoginRequiredMixin,  CreateView):
         context['maxdate'] = maxdate
 
 
-        companyprofile=CompanyProfile.objects.values('id','usecostcenter1','usecostcenter2','usecostcenter3','usecostcenter4').first()
+        # companyprofile=CompanyProfile.objects.values('id','usecostcenter1','usecostcenter2','usecostcenter3','usecostcenter4').first()
 
-        context['comusecostcenter1'] = companyprofile['usecostcenter1']
-        context['comusecostcenter2'] = companyprofile['usecostcenter2']
-        context['comusecostcenter3'] = companyprofile['usecostcenter3']
-        context['comusecostcenter4'] = companyprofile['usecostcenter4']
+        # context['comusecostcenter1'] = companyprofile['usecostcenter1']
+        # context['comusecostcenter2'] = companyprofile['usecostcenter2']
+        # context['comusecostcenter3'] = companyprofile['usecostcenter3']
+        # context['comusecostcenter4'] = companyprofile['usecostcenter4']
 
         if self.request.POST:
             context['maxid'] = maxid
@@ -444,11 +518,11 @@ class LedgerJourUpdateView(LoginRequiredMixin, UpdateView):
         context['mindate'] = mindate
         context['maxdate'] = maxdate
 
-        companyprofile=CompanyProfile.objects.values('id','usecostcenter1','usecostcenter2','usecostcenter3','usecostcenter4').first()
-        context['comusecostcenter1'] = companyprofile['usecostcenter1']
-        context['comusecostcenter2'] = companyprofile['usecostcenter2']
-        context['comusecostcenter3'] = companyprofile['usecostcenter3']
-        context['comusecostcenter4'] = companyprofile['usecostcenter4']
+        # companyprofile=CompanyProfile.objects.values('id','usecostcenter1','usecostcenter2','usecostcenter3','usecostcenter4').first()
+        # context['comusecostcenter1'] = companyprofile['usecostcenter1']
+        # context['comusecostcenter2'] = companyprofile['usecostcenter2']
+        # context['comusecostcenter3'] = companyprofile['usecostcenter3']
+        # context['comusecostcenter4'] = companyprofile['usecostcenter4']
 
         # model = apps.get_model('crm', 'UserBusinessRoles')
         # transrole = model.objects.filter(user_id = self.request.user.pk ).values('id')
@@ -508,10 +582,23 @@ class LedgerJourUpdateView(LoginRequiredMixin, UpdateView):
 
 
 class LedgerJourDeleteView(LoginRequiredMixin, BSModalDeleteView):
+    
     model = LedgerJour
     template_name = 'gl/trans/delete_ledgerjour.html'
     success_message = 'Success: Ledger Journal  was deleted.'
-    success_url = reverse_lazy('gl:list-LedgerJour')
+    success_url = reverse_lazy('gl:list-ledgerjour')
+
+
+def deleteledgerjour(request):
+    Lc= LedgerJour.objects.all()
+    for l in Lc:
+       try:
+            print(l)
+            l.delete()
+       except:
+            print("not deleted connection somwhere")
+    return redirect("/gl/ledgerjour/")
+    
 
 
 ######### End Ledger Journal
@@ -561,7 +648,15 @@ class TreasuriesDeleteView(LoginRequiredMixin, BSModalDeleteView):
     success_message = 'Success: Treasuries  was deleted.'
     success_url = reverse_lazy('gl:list-treasuries')
 
-
+def deletetreasuries(request):
+    Lc= Treasuries.objects.all()
+    for l in Lc:
+       try:
+            print(l)
+            l.delete()
+       except:
+            print("not deleted connection somwhere")
+    return redirect("/gl/treasuries/")
 ######### End Treasuries
 
 
@@ -580,14 +675,14 @@ class TreasuriesOrdersCreateView(LoginRequiredMixin,  BSModalCreateView):
     success_message = 'Success: Treasuries Orders  was created.'
     success_url = reverse_lazy('gl:list-treasuriesorders')
 
-    def get_context_data(self, **kwargs):
-        context = super(TreasuriesOrdersCreateView, self).get_context_data(**kwargs)
-        companyprofile=CompanyProfile.objects.values('id','usecostcenter1','usecostcenter2','usecostcenter3','usecostcenter4').first()
-        context['comusecostcenter1'] = companyprofile['usecostcenter1']
-        context['comusecostcenter2'] = companyprofile['usecostcenter2']
-        context['comusecostcenter3'] = companyprofile['usecostcenter3']
-        context['comusecostcenter4'] = companyprofile['usecostcenter4']
-        return context
+    # def get_context_data(self, **kwargs):
+    #     context = super(TreasuriesOrdersCreateView, self).get_context_data(**kwargs)
+    #     companyprofile=CompanyProfile.objects.values('id','usecostcenter1','usecostcenter2','usecostcenter3','usecostcenter4').first()
+    #     context['comusecostcenter1'] = companyprofile['usecostcenter1']
+    #     context['comusecostcenter2'] = companyprofile['usecostcenter2']
+    #     context['comusecostcenter3'] = companyprofile['usecostcenter3']
+    #     context['comusecostcenter4'] = companyprofile['usecostcenter4']
+    #     return context
 
 
     def form_valid(self, form):
@@ -654,6 +749,16 @@ class TreasuriesOrdersDeleteView(LoginRequiredMixin, BSModalDeleteView):
     success_message = 'Success: Treasuries Orders was deleted.'
     success_url = reverse_lazy('gl:list-treasuriesorders')
 
+def deletetreasuriesorders(request):
+    Lc= TreasuriesOrders.objects.all()
+    for l in Lc:
+       try:
+            print(l)
+            l.delete()
+       except:
+            print("not deleted connection somwhere")
+    return redirect("/gl/treasuriesorders/")
+
 
 ######### End Treasuries Orders
 
@@ -685,14 +790,18 @@ class TreasuriesOrdersApprovalUpdateView(LoginRequiredMixin, BSModalUpdateView):
         context['comusecostcenter2'] = companyprofile['usecostcenter2']
         context['comusecostcenter3'] = companyprofile['usecostcenter3']
         context['comusecostcenter4'] = companyprofile['usecostcenter4']
+        
         return context
 
     def post(self,request,*args, **kwargs):
         TreasuriesOrder = TreasuriesOrders.objects.get(pk=kwargs['pk'])
         TreasuriesOrder.save()
+
         cursor = connection.cursor()        
+
         cursor.execute("call gl_TreasuriesOrdersApproval(" + str(TreasuriesOrder.pk) + "," + str(self.request.user.pk) + ");")
         path = "gl:list-treasuriesordersapproval"
+
         return redirect(path)
 
 

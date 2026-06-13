@@ -147,7 +147,8 @@
 
                         <div class="tab" role="tabpanel" id="tabs">
                             <ul class="nav nav-tabs" role="tablist">
-                                <li  class="active"><a href="#lines"   role="tab" data-toggle="pill">Expenses</a></li>
+                                <li  ><a href="#lines"   role="tab" data-toggle="pill">Expenses</a></li>
+                                <li  ><a href="#info"  role="tab" data-toggle="tab">Info</a></li>
                             </ul>
                             <div class="tab-content">
                                 <div id="lines" class="tab-pane fade in active">
@@ -181,8 +182,67 @@
                                                     {% endfor %}
                                                 </tbody>
                                         </table>
+                                        
                                 </div>
+                                <div id="info" class="tab-pane fade in active">
+                                    <table class="table table-bordered ">
+                                        <div class="{% if form.non_field_errors %}invalid{% endif %} mb-2">
+                                          {% if form.non_field_errors %}
+                                            {{ error }}
+                                            {% endif %}
+                                        </div>
+                                        <tbody style="background-color: white;">
+    
+                                            <tr>
+                                                <td width="100%" colspan = "7">
+                                                    <div class="input-group" >
+    
+                                                            <div class="form-group col-md-2 mb-0">
+                                                                {{ form.taxgroupsales|as_crispy_field }}
+                                                                <div class="{% if form.taxgroupsales.errors %} invalid{% endif %}">
+                                                                    {% if error in form.taxgroupsales.errors %}
+                                                                    <p class="help-block">{{ error }}</p>
+                                                                    {% endif %}
+                                                                </div>
+                                                            </div>
+
+                                                            <div class="form-group col-md-2 mb-0">
+                                                                {{ form.taxgroupsalesincludedprice|as_crispy_field }}
+                                                                <div class="{% if form.taxgroupsalesincludedprice.errors %} invalid{% endif %}">
+                                                                    {% if error in form.taxgroupsalesincludedprice.errors %}
+                                                                    <p class="help-block">{{ error }}</p>
+                                                                    {% endif %}
+                                                                </div>
+                                                            </div>
+                                                          
+                                                                <div class="form-group col-md-2 mb-0">
+                                                                    {{ form.taxgrouppurchases|as_crispy_field }}
+                                                                    <div class="{% if form.taxgrouppurchases.errors %} invalid{% endif %}">
+                                                                        {% if error in form.taxgrouppurchases.errors %}
+                                                                        <p class="help-block">{{ error }}</p>
+                                                                        {% endif %}
+                                                                    </div>
+                                                                </div>
+                                                                
+                                                                <div class="form-group col-md-2 mb-0">
+                                                                    {{ form.taxgrouppurchasesincludedprice|as_crispy_field }}
+                                                                    <div class="{% if form.taxgrouppurchasesincludedprice.errors %} invalid{% endif %}">
+                                                                        {% if error in form.taxgrouppurchasesincludedprice.errors %}
+                                                                        <p class="help-block">{{ error }}</p>
+                                                                        {% endif %}
+                                                                    </div>
+                                                                </div>
+                                                  
+    
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
                             </div>
+                            </div>
+                           
+                            
                         </div>
                         <br><br>
 
@@ -208,6 +268,57 @@
 
 {{ event_formset.media }}
 <script type="text/javascript">
+    $(document).ready(function(){
+        type_value = $(this).children("option:selected").text();
+        console.log(type_value)
+        if(type_value.includes("Ledger")){
+            document.getElementById("id_ledger" ).disabled = false;
+           
+            document.getElementById("id_vendor" ).disabled = true;
+
+        
+        } else if(type_value.includes("Vendor")) {
+            document.getElementById("id_ledger" ).disabled = true;
+           
+            document.getElementById("id_vendor" ).disabled = false;
+
+        } else{
+            document.getElementById("id_ledger" ).disabled = true;
+           
+            document.getElementById("id_vendor" ).disabled = true;
+
+        }
+
+});
+
+
+
+$("select[name*='accounttype']").change(function () {
+        type_value = $(this).children("option:selected").text();
+        console.log(type_value)
+        if(type_value.includes("Ledger")){
+            document.getElementById("id_ledger" ).disabled = false;
+            document.getElementById("id_vendor" ).disabled = true;
+
+        } else if(type_value.includes("Vendor")) {
+            document.getElementById("id_ledger" ).disabled = true;
+         
+            document.getElementById("id_vendor" ).disabled = false;
+
+        } else{
+            document.getElementById("id_ledger" ).disabled = true;
+        
+            document.getElementById("id_vendor" ).disabled = true;
+
+
+        }
+
+
+});
+    $("[name*=ledger]").select2();
+    
+     $("[name*=vendor]").select2();
+
 
 
 $(document).ready(function(){

@@ -1,0 +1,147 @@
+{% extends "auth_base.html" %}
+{% load i18n %}
+{% load django_tables2 %}
+{% load widget_tweaks %}
+{% load crispy_forms_tags %}
+{% block content %}
+    <link href="/static/libs/select2/select2.min.css" rel="stylesheet" />
+<div class="container-fluid">
+    <!-- start page title -->
+    <div class="row">
+        <div class="col-12">
+            <div class="page-title-box">
+                <h4 class="page-title">{% trans "Update Transfer Order" %}</h4>
+            </div>
+        </div>
+    </div>
+    <head>
+        <meta charset="utf-8" />
+        <title>transferorder_form</title>
+    </head>
+    <div class="row">
+        <div class="col-xl-12">
+            <div class="card">
+                <div class="card-body">
+                    <form id="TOForm" action="" method="post" >
+                        {{ transferproducts.management_form }}
+                        {% csrf_token %}
+                        <div class="row">
+                            <div class="col-12">
+                                <div class="sub-header">
+                                    <h5 class="page-title">{% trans "Transfer Order Details" %}</h5>
+                                </div>
+                            </div>
+                        </div>
+
+                        <table class="table table-bordered ">
+                            <div class="{% if form.non_field_errors %}invalid{% endif %} mb-2">
+                              {% if form.non_field_errors %}
+                                {{ error }}
+                                {% endif %}
+                            </div>
+                            <tbody style="background-color: white;">
+                                <tr>
+                                    <td  width="70%" colspan = "7">
+                                        <div class="input-group">
+                                           <div class="input-group-prepend">
+                                                <span class="input-group-text" id="basic-addon1">{% trans "Subject" %}</span>
+                                            </div>
+                                            <span class="form-control" >{{form.instance.subject}}</span>
+                                            <div hidden>{{form.subject}}</div>
+                                        </div>
+                                    </td>
+                                    <td colspan = "3">
+                                        <div class="input-group">
+                                            <div class="input-group-prepend">
+                                                <span class="input-group-text" id="basic-addon2">{% trans "TO No" %}</span>
+                                            </div>
+                                                <span class="form-control">{{form.instance.transferorder_number}}</span>
+                                                <div hidden>{{form.transferorder_number}}</div>
+                                        </div>
+                                   </td>
+                                </tr>
+
+                            </tbody>
+
+                        </table>
+                        <div class="row">
+                            <div class="col-12">
+                                <div class="sub-header">
+                                    <h5 class="page-title">{% trans "Product Details" %}</h5>
+                                    <a style="float:right" class="buttonHolder" id="add-row"></a>
+                               </div>
+                            </div>
+                        </div>
+                        <table id="table_id" class="table table-bordered table-hover table-sm mb-0">
+                                <thead class="thead-light">
+                                    <tr>
+                                        <th>{% trans "Product" %}</th>
+                                        <th>{% trans "Qty" %}</th>
+                                        <th>{% trans "From Warehouse" %}</th>
+                                        <th>{% trans "To Warehouse" %}</th>
+                                        <th>{% trans "Actions" %}</th>
+                                    </tr>
+                                </thead>
+                                    <tbody class="formset_row">
+                                        {% for form in transferproducts %}
+                                            {{ form.id }}
+                                        <tr style="padding: 0px !important;" class="rowclass">
+                                                <td style="padding: 0rem !important;width:300px;" >{{ form.product }}</td>
+                                                <td style="padding: 0rem !important;width:100px;">{{ form.qty|as_crispy_field }}</td>
+                                                <td style="padding: 0rem !important;width:70px;">{{ form.from_warehouse }}</td>
+                                                <td style="padding: 0rem !important;width:70px;">{{ form.to_warehouse }}</td>
+                                                <td style="padding: 0rem !important;width:10px; text-align: center;"></td>
+                                        </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+
+                        <br><br>
+                        <div class="modal-footer">
+                            <a class="btn btn-secondary waves-effect" href="{% url 'crm:transferorder' %}">{% trans "Cancel" %}</a>
+                            <input type="submit" class="submit-btn btn-danger btn btn-primary" value="{% trans "Save" %}"/>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_javascript %}
+
+<script src="/static/dynamic_formsets/jquery.formset.js"></script>
+<script src="/static/libs/select2/select2.min.js"></script>
+<script src="/static/django_select2/django_select2.js"></script>
+
+<script type="text/javascript">
+    $('.formset_row').formset({
+        animateForms: true,
+        uiText: {
+            addPrompt: 'Add Product',         // Text used on the 'add a new form' control.
+            removePrompt: '',        // Text used on the 'delete this existing form' control.
+        },
+        addButtonHolder:'.buttonHolder',
+        addCssClass: "add-row btn btn-primary waves-effect waves-light",
+        deleteCssClass: "delete-row btn btn-danger waves-effect mdi mdi-close",
+        prefix: '{{ transferproducts.prefix }}',
+        callbacks: {
+            onAdd: function () {
+                 $("[name*=-product]").select2();
+                 $("[name*=-from_warehouse]").select2();
+                 $("[name*=-to_warehouse]").select2();
+            }
+        },
+    });
+ $("[name*=-product]").select2();
+ $("[name*=-from_warehouse]").select2();
+ $("[name*=-to_warehouse]").select2();
+
+</script>
+
+{% endblock %}
+.rowclass {
+  padding-top: 0px !important;
+  padding-bottom: 0px !important;
+};

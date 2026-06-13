@@ -13,12 +13,14 @@ urlpatterns = [
     path("reportsgroups/create/", views.ReportsGroupsCreateView.as_view(),name="create_reportsgroups"),
     path("reportsgroups/update/<int:pk>", views.ReportsGroupsUpdateView.as_view(),name="edit_reportsgroups"),
     path("reportsgroups/<int:pk>/delete/", views.ReportsGroupsDeleteView.as_view(),name="delete_reportsgroups"),
+    path('reportsgroups/delete/',views.deletereportsgroups, name="delete_reportsgroups"),
 
 # Reports
     path("reports/", views.ReportsListView.as_view(), name="list-reports"),
     path("reports/create/", views.ReportsCreateView.as_view(), name="create_reports"),
     path("reports/update/<int:pk>", views.ReportsUpdateView.as_view(), name="edit_reports"),
     path("reports/<int:pk>/delete/", views.ReportsDeleteView.as_view(), name="delete_reports"),
+    path('reports/delete/',views.deletereports, name="delete_reports"),
 
 # Reports Viewer
     path("reportsrun/<int:pk>", views.ReportsRunView.as_view(), name="reportsrun"),

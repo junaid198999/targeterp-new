@@ -1,0 +1,232 @@
+{% extends "auth_base.html" %}
+{% load i18n %}
+{% load widget_tweaks %}
+{% load crispy_forms_tags %}
+{% block content %}
+<link href="/static/libs/select2/select2.min.css" rel="stylesheet" />
+{% comment %}
+<link href="/static/libs/bootstrap-datepicker/bootstrap-datepicker.min.css" rel="stylesheet" type="text/css" />
+{% endcomment %}
+
+<div class="container-fluid">
+    <!-- start page title -->
+    <div class="row">
+        <div class="col-12">
+            <div class="page-title-box">
+                <h4 class="page-title">{% trans "Update Actual Visit" %}</h4>
+            </div>
+        </div>
+    </div>
+    <head>
+        <meta charset="utf-8" />
+        <title>opportunity_form</title>
+    </head>
+    <form id="OpportunityForm" action="" method="post" data-customers-url="{% url 'crm:ajax_load_customers' %}" data-days-url="{% url 'crm:ajax_load_days' %}" data-unitprice-url="{% url 'crm:ajax_load_unitprice' %}" data-duedate-url="{% url 'crm:ajax_load_duedate' %}" data-salesman-url="{% url 'crm:ajax_load_saleman' %}" data-uom-url="{% url 'crm:ajax_load_uom' %}">
+        {% csrf_token %}
+        <div class="{% if form.non_field_errors %}invalid{% endif %} ">
+          {% if form.non_field_errors %}
+            {{ error }}
+            {% endif %}
+        </div>
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="card">
+                    <div class="card-header bg-warning py-3 text-white" data-toggle="collapse" href="#cardCollpase1" role="button" aria-expanded="false" aria-controls="cardCollpase1">
+                            <div class="card-widgets">
+                                <a data-toggle="collapse" href="#cardCollpase1" role="button" aria-expanded="false" aria-controls="cardCollpase1"><i class="mdi mdi-minus"></i></a>
+                            </div>
+                            <div class="card-title mb-0 text-white" style="font-size:13, font-weight:500;line-height: 0px !important">{% trans "BASIC" %}</div>
+                    </div>
+                    <div class="card-body">
+                        <div id="cardCollpase1" class="collapse pt-3 show">
+
+                            <div class="row">
+                                <div class="form-group col-md-6 mb-0">
+                                    <div class="row">
+                                        <label class="col-3 col-form-label" style="padding-left: 30px; font-weight: 700;">{% trans "Source" %}:</label>
+                                            <div class="form-group col-md-3 mb-0">
+                                                <div id="customer_type_div">
+                                                    {{ form.source|as_crispy_field }}
+                                                </div>
+                                            </div>
+                                            <div class="form-group col-md-5 mb-0">
+                                                <div hidden id="customer_select">
+                                                    <select name="customer" id="id_customer" class="form-control">
+                                                        <option value="">---------</option>
+                                                            {% for Customer in customers %}
+                                                                <option {% if form.instance.customer.id == Customer.id %} selected {% endif %} value="{{ Customer.id }}">{{ Customer.name }}</option>
+                                                            {% endfor %}
+                                                    </select>
+                                                </div>
+                                                <div hidden id="doctor_select">
+                                                    <select name="doctor" id="id_doctor" class="form-control">
+                                                        <option value="">---------</option>
+                                                            {% for doctor in doctors %}
+                                                                <option {% if form.instance.doctor.id == doctor.id %} selected {% endif %} value="{{ doctor.id }}">{{ doctor.name }}</option>
+                                                            {% endfor %}
+                                                    </select>
+                                                </div>
+                                            </div>
+                                    </div>
+                                </div>
+                                <div class="form-group col-md-6 mb-0">
+                                    <div class="row">
+                                        <label class="col-3 col-form-label" style="font-weight: 700;">{% trans "Date" %}:</label>
+                                        <div class="col-8">
+                                            <label class="col-form-label"> {{ form.instance.created_date }}</label>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="form-group col-md-6 mb-0">
+                                    <div class="row">
+                                        <label class="col-3 col-form-label" style="padding-left: 30px; font-weight: 700;">{{form.feedback.label}}:</label>
+                                        <div class="col-8">
+                                            {{ form.feedback|as_crispy_field }}
+                                            <div class="{% if form.feedback.errors %} invalid{% endif %}">
+                                                {% if error in form.feedback.errors %}
+                                                    <p class="help-block">{{ error }}</p>
+                                                    {% endif %}
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="card">
+                    <div class="card-header bg-warning py-3 text-white" data-toggle="collapse" href="#cardCollpase3" role="button" aria-expanded="false" aria-controls="cardCollpase3">
+                            <div class="card-widgets">
+                                <a data-toggle="collapse" href="#cardCollpase3" role="button" aria-expanded="false" aria-controls="cardCollpase3"><i class="mdi mdi-minus"></i></a>
+                            </div>
+                            <div class="card-title mb-0 text-white" style="font-size:13, font-weight:500;line-height: 0px !important">{% trans "OTHER" %}</div>
+                    </div>
+                    <div class="card-body">
+                        <div id="cardCollpase3" class="collapse pt-3 show">
+                            <div class="row">
+                                <div class="form-group col-md-6 mb-0">
+                                    <div class="row">
+                                        <label class="col-3 col-form-label" style="padding-left: 30px; font-weight: 700;">{{form.salesman.label}}:</label>
+                                        <div class="col-8">
+                                            {{ form.salesman|as_crispy_field }}
+                                            <div class="{% if form.salesman.errors %} invalid{% endif %}">
+                                                {% if error in form.salesman.errors %}
+                                                    <p class="help-block">{{ error }}</p>
+                                                    {% endif %}
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
+            <div class="modal-footer">
+                <a class="btn btn-secondary waves-effect" href="{% url 'crm:actualvisits' %}">{% trans "Cancel" %}</a>
+                <input type="submit" class="submit-btn btn-danger btn btn-primary" value="{% trans "Save" %}"/>
+            </div>
+
+    </form>
+
+</div>
+
+{% endblock %}
+
+{% block extra_javascript %}
+{% comment %}
+<script src="/static/libs/moment/moment.min.js"></script>
+<script src="/static/libs/bootstrap-datepicker/bootstrap-datepicker.min.js"></script>
+{% endcomment %}
+<script src="/static/libs/select2/select2.min.js"></script>
+<script src="/static/dynamic_formsets/jquery.formset.js"></script>
+<script src="/static/django_select2/django_select2.js"></script>
+
+
+<script type="text/javascript">
+
+        {% if request.user.is_superuser %}
+
+        {% else %}
+            $(`select[name="salesman"]`).html(
+            `<option selected value="{{salesmanid}}">{{salesmanname}}</option>`
+            );
+        {% endif %}
+
+        $('#id_customer').select2();
+        $('#id_salesman').select2();
+        $('#id_doctor').select2();
+
+        $("#id_source").change(function () {
+            if ($("#id_source").val() == 2) {
+                $("#id_doctor_Source").val(2)
+                $("#customer_select").attr('hidden',false)
+                $("#doctor_select").attr('hidden',true)
+                $("#id_doctor").val('').trigger('change');
+            } else if ($("#id_source").val() == 1) {
+                $("#id_doctor_Source").val(0)
+                $("#doctor_select").attr('hidden',false)
+                $("#customer_select").attr('hidden',true)
+                $("#id_customer").val('').trigger('change');
+            } else {
+                $("#id_doctor_Source").val(0)
+                $("#doctor_select").attr('hidden',true)
+                $("#customer_select").attr('hidden',true)
+                $("#id_doctor").val('').trigger('change');
+                $("#id_customer").val('').trigger('change');
+
+            }
+
+        });
+
+document.addEventListener("DOMContentLoaded", function(){
+    var subtotalfield = 'id_actualvisitproduct_set-0-subtotal';
+    var taxfield = 'id_actualvisitproduct_set-0-tax';
+    get_total(subtotalfield, taxfield)
+
+    if ($("#id_source").val() == 2) {
+        $("#customer_select").attr('hidden',false)
+    } else if ($("#id_source").val() == 1) {
+        $("#doctor_select").attr('hidden',false)
+    }
+});
+
+
+{% comment %}
+      $(function () {
+        $("#datetimepicker1").datepicker({
+            format: 'yyyy/mm/dd',
+        });
+      });
+{% endcomment %}
+
+</script>
+
+<style>
+.card-header:first-child {
+    height: 28px !important;
+}
+h5.card-title.mb-0.text-white {
+    line-height: 0 !important;
+}
+.card-widgets {
+    line-height: 0 !important;
+}
+.card-widgets>a {
+    line-height: 0px !important;
+}
+</style>
+{% endblock %}

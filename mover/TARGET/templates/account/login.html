@@ -1,0 +1,55 @@
+{% extends "account/base.html" %}
+
+{% load i18n static %}
+{% load account socialaccount %}
+{% load crispy_forms_tags %}
+
+{% block head_title %}{% trans "Sign In" %}{% endblock %}
+
+{% block content %}
+
+<div class="account-pages mt-5 mb-5">
+  <div class="container">
+    <div class="row justify-content-center">
+      <div class="col-md-8 col-lg-6 col-xl-5">
+        <div class="card bg-pattern">
+
+          <div class="card-body p-4">
+            <div class="text-center w-75 m-auto">
+              <a href="/">
+                <span><img src="{% static 'images/logo-light.png' %}" alt="" height="44"></span>
+              </a>
+              <p class="text-muted mb-4 mt-3">Enter your email address and password to access admin panel.</p>
+            </div>
+
+            <form class="login" method="POST" action="{% url 'account_login' %}" novalidate>
+              {% csrf_token %}
+              {{ form|crispy }}
+              {% if redirect_field_value %}
+              <input type="hidden" name="{{ redirect_field_name }}" value="{{ redirect_field_value }}" />
+              {% endif %}
+
+              <div class="form-group mb-0 mt-4">
+                <button class="primaryAction btn btn-primary btn-block" type="submit">{% trans "Sign In" %}</button>
+              </div>
+            </form>
+
+          </div>
+        </div>
+
+        <div class="row mt-3">
+          <div class="col-12 text-center">
+            <p> <a class="text-white-50" href="{% url 'account_reset_password' %}">{% trans "Forgot Password?" %}</a>
+            {% comment %}
+            <p class="text-white-50">
+              {% blocktrans %}If you have not created an account yet, then please
+              <a href="{{ signup_url }}" class="text-white"><b>Sign Up</b></a> first.{% endblocktrans %}
+            </p>
+            {% endcomment %}
+          </div> <!-- end col -->
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

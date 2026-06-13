@@ -1,0 +1,7 @@
+{% for so in salesorders %}
+{% if so.id != None  %}
+<option value="{{ so.warehouse_id }}">{{ so.warehouse }}</option>
+{% else  %}
+<option value="">Select</option>
+{% endif  %}
+{% endfor %}

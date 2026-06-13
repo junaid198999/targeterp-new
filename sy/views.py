@@ -47,6 +47,17 @@ class ModulesDeleteView(LoginRequiredMixin, BSModalDeleteView):
     template_name = 'sy/setting/delete_modules.html'
     success_message = 'Success: Modules was deleted.'
     success_url = reverse_lazy('sy:list-modules')
+
+def deletemodules(request):
+    Lc= Modules.objects.all()
+    for l in Lc:
+       try:
+            print(l)
+            l.delete()
+       except:
+            print("not deleted connection somwhere")
+    return redirect("/sy/modules/")
+    
 ######### End Modules
 
 ######### LookUp
@@ -80,6 +91,17 @@ class LookUpDeleteView(LoginRequiredMixin, BSModalDeleteView):
     template_name = 'sy/setting/delete_lookup.html'
     success_message = 'Success: LookUp was deleted.'
     success_url = reverse_lazy('sy:list-lookup')
+
+
+def deletelookup(request):
+    Lc= LookUp.objects.all()
+    for l in Lc:
+       try:
+            print(l)
+            l.delete()
+       except:
+            print("not deleted connection somwhere")
+    return redirect("/sy/lookup/")
 ######### End LookUp
 
 ######### Fiscal Years
@@ -99,51 +121,43 @@ class FiscalYearsCreateView(LoginRequiredMixin,  CreateView):
 
     maxid = 0
 
-
     def get_context_data(self, **kwargs):
         context = super(FiscalYearsCreateView, self).get_context_data(**kwargs)
 
-        try:
-            maxid = int(FiscalYears.objects.latest('pk').pk) + 1
-        except:
-            maxid = 1
 
-        # context['maxid'] = maxid
-        # context['mindate'] = '2020-12-05'
+        context['mindate'] = '2020-12-05'
+        context['maxdate'] = '2020-12-25'
 
-        # trant_id = 'none'
-        # context['trant_id'] = trant_id
 
-        # context['maxdate'] = '2020-12-25'
-        # if self.request.POST:
-        #     context['fiscalyearsperiods'] = FiscalYearsPeriodsFormSet(self.request.POST, instance=self.object)
-        #     context['fiscalyearsperiods'].full_clean()
-        # else:
-        #     context['fiscalyearsperiods'] = FiscalYearsPeriodsFormSet(instance=self.object)
-        # print(context)
+        if self.request.POST:
+            context['fiscalyearsperiods'] = FiscalYearsPeriodsFormSet(self.request.POST, instance=self.object)
+            context['fiscalyearsperiods'].full_clean()
+        else:
+            context['fiscalyearsperiods'] = FiscalYearsPeriodsFormSet(instance=self.object)
         return context
+        print("context------",context)
 
-    # def form_valid(self, form):
-    #     context = self.get_context_data(form=form)
-    #     fiscalyearsperiods = context['fiscalyearsperiods']
+    def form_valid(self, form):
+        context = self.get_context_data(form=form)
+        fiscalyearsperiods = context['fiscalyearsperiods']
 
-    #     print(fiscalyearsperiods)       
+        print(fiscalyearsperiods)       
 
-    #     # response = None
-    #     if fiscalyearsperiods.is_valid():
-    #         print("valid")
-    #         response = super().form_valid(form)
-    #         fiscalyearsperiods.instance = self.object
-    #         print(fiscalyearsperiods.instance)
-    #         form.save()
-    #         fiscalyearsperiods.save()
-    #         return response
-    #     else:
-    #         print("invalid")
-    #         context['fiscalyearsperiods'] = FiscalYearsPeriodsFormSet()
-    #         maxid = int(FiscalYears.objects.latest('pk').pk) + 1
-    #         context['maxid'] = maxid
-    #         return super().form_invalid(form)
+        # response = None
+        if fiscalyearsperiods.is_valid():
+            print("valid")
+            response = super().form_valid(form)
+            fiscalyearsperiods.instance = self.object
+            print(fiscalyearsperiods.instance)
+            form.save()
+            fiscalyearsperiods.save()
+            return response
+        else:
+            print("invalid")
+            context['fiscalyearsperiods'] = FiscalYearsPeriodsFormSet()
+            maxid = int(FiscalYears.objects.latest('pk').pk) + 1
+            context['maxid'] = maxid
+            return super().form_invalid(form)
 
 
 
@@ -191,7 +205,18 @@ class FiscalYearsDeleteView(LoginRequiredMixin, BSModalDeleteView):
     model = FiscalYears
     template_name = 'sy/master/delete_fiscalyears.html'
     success_message = 'Success: FiscalYears  was deleted.'
-    success_url = reverse_lazy('gl:list-fiscalyears')
+    success_url = reverse_lazy('sy:list-fiscalyears')
+
+def deletefiscalyears(request):
+    Lc= FiscalYears.objects.all()
+    for l in Lc:
+       try:
+            print(l)
+            l.delete()
+       except:
+            print("not deleted connection somwhere")
+    return redirect("/sy/fiscalyears/")
+
 
 
 ######### End Fiscal Years
@@ -248,6 +273,17 @@ class PaymentsMethodsDeleteView(LoginRequiredMixin, BSModalDeleteView):
     template_name = 'sy/master/delete_paymentsmethods.html'
     success_message = 'Success: paymentsmethods was deleted.'
     success_url = reverse_lazy('sy:list-paymentsmethods')
+
+
+def deletepaymentsmethods(request):
+    Lc= PaymentsMethods.objects.all()
+    for l in Lc:
+       try:
+            print(l)
+            l.delete()
+       except:
+            print("not deleted connection somwhere")
+    return redirect("/sy/paymentsmethods/")
 ######### End  Payments Methods
 
 
@@ -283,6 +319,16 @@ class CreditCardsTypesDeleteView(LoginRequiredMixin, BSModalDeleteView):
     template_name = 'sy/master/delete_creditcardstypes.html'
     success_message = 'Success: creditcardstypes was deleted.'
     success_url = reverse_lazy('sy:list-creditcardstypes')
+
+def deletecreditcardstypes(request):
+    Lc= CreditCardsTypes.objects.all()
+    for l in Lc:
+       try:
+            print(l)
+            l.delete()
+       except:
+            print("not deleted connection somwhere")
+    return redirect("/sy/creditcardstypes/")
 ######### End Ledgers Types
 
 
@@ -317,6 +363,16 @@ class LanguagesDeleteView(LoginRequiredMixin, BSModalDeleteView):
     template_name = 'sy/setting/delete_languages.html'
     success_message = 'Success: languages was deleted.'
     success_url = reverse_lazy('sy:list-languages')
+
+def deletelanguages(request):
+    Lc= Languages.objects.all()
+    for l in Lc:
+       try:
+            print(l)
+            l.delete()
+       except:
+            print("not deleted connection somwhere")
+    return redirect("/sy/languages/")
 ######### End Languages
 
 
@@ -351,6 +407,17 @@ class NationalitiesDeleteView(LoginRequiredMixin, BSModalDeleteView):
     template_name = 'sy/master/delete_nationalities.html'
     success_message = 'Success: nationalities was deleted.'
     success_url = reverse_lazy('sy:list-nationalities')
+
+
+def deletenationalities(request):
+    Lc= Nationalities.objects.all()
+    for l in Lc:
+       try:
+            print(l)
+            l.delete()
+       except:
+            print("not deleted connection somwhere")
+    return redirect("/sy/nationalities/")
 ######### End Nationalities
 
 
@@ -385,6 +452,16 @@ class RegionsDeleteView(LoginRequiredMixin, BSModalDeleteView):
     template_name = 'sy/master/delete_regions.html'
     success_message = 'Success: Regions was deleted.'
     success_url = reverse_lazy('sy:list-regions')
+
+def deleteregions(request):
+    Lc= Regions.objects.all()
+    for l in Lc:
+       try:
+            print(l)
+            l.delete()
+       except:
+            print("not deleted connection somwhere")
+    return redirect("/sy/regions/")
 ######### End Regions
 
 
@@ -419,6 +496,16 @@ class CountriesDeleteView(LoginRequiredMixin, BSModalDeleteView):
     template_name = 'sy/master/delete_countries.html'
     success_message = 'Success: Regions was deleted.'
     success_url = reverse_lazy('sy:list-countries')
+
+def deletecountries(request):
+    Lc= Countries.objects.all()
+    for l in Lc:
+       try:
+            print(l)
+            l.delete()
+       except:
+            print("not deleted connection somwhere")
+    return redirect("/sy/countries/")
 ######### End Countries
 
 
@@ -453,6 +540,16 @@ class AreasDeleteView(LoginRequiredMixin, BSModalDeleteView):
     template_name = 'sy/master/delete_areas.html'
     success_message = 'Success: Areas was deleted.'
     success_url = reverse_lazy('sy:list-areas')
+
+def deleteareas(request):
+    Lc= Areas.objects.all()
+    for l in Lc:
+       try:
+            print(l)
+            l.delete()
+       except:
+            print("not deleted connection somwhere")
+    return redirect("/sy/areas/")
 ######### End Areas
 
 
@@ -487,6 +584,17 @@ class CitiesDeleteView(LoginRequiredMixin, BSModalDeleteView):
     template_name = 'sy/master/delete_cities.html'
     success_message = 'Success: Cities was deleted.'
     success_url = reverse_lazy('sy:list-cities')
+
+
+def deletecities(request):
+    Lc= Cities.objects.all()
+    for l in Lc:
+       try:
+            print(l)
+            l.delete()
+       except:
+            print("not deleted connection somwhere")
+    return redirect("/sy/cities")
 ######### End Cities
 
 
@@ -522,6 +630,16 @@ class DistrictsDeleteView(LoginRequiredMixin, BSModalDeleteView):
     template_name = 'sy/master/delete_districts.html'
     success_message = 'Success: Districts was deleted.'
     success_url = reverse_lazy('sy:list-districts')
+
+def deletedistricts(request):
+    Lc= Districts.objects.all()
+    for l in Lc:
+       try:
+            print(l)
+            l.delete()
+       except:
+            print("not deleted connection somwhere")
+    return redirect("/sy/districts")
 ######### End Districts
 
 
@@ -556,6 +674,16 @@ class AddressesTypesDeleteView(LoginRequiredMixin, BSModalDeleteView):
     template_name = 'sy/master/delete_addressestypes.html'
     success_message = 'Success: AddressesTypes was deleted.'
     success_url = reverse_lazy('sy:list-addressestypes')
+
+def deleteaddressestypes(request):
+    Lc= AddressesTypes.objects.all()
+    for l in Lc:
+       try:
+            print(l)
+            l.delete()
+       except:
+            print("not deleted connection somwhere")
+    return redirect("/sy/addressestypes")
 ######### End AddressesTypes
 
 
@@ -590,6 +718,16 @@ class ContactsTypesDeleteView(LoginRequiredMixin, BSModalDeleteView):
     template_name = 'sy/master/delete_contactstypes.html'
     success_message = 'Success: Contacts Types was deleted.'
     success_url = reverse_lazy('sy:list-contactstypes')
+
+def deletecontactstypes(request):
+    Lc= ContactsTypes.objects.all()
+    for l in Lc:
+       try:
+            print(l)
+            l.delete()
+       except:
+            print("not deleted connection somwhere")
+    return redirect("/sy/contactstypes")
 ######### End ContactsTypes
 
 
@@ -624,6 +762,16 @@ class BusinessActivitiesTypesDeleteView(LoginRequiredMixin, BSModalDeleteView):
     template_name = 'sy/master/delete_businessactivitiestypes.html'
     success_message = 'Success: Business Activities Types was deleted.'
     success_url = reverse_lazy('sy:list-businessactivitiestypes')
+
+def deletebusinessactivitiestypes(request):
+    Lc=BusinessActivitiesTypes.objects.all()
+    for l in Lc:
+       try:
+            print(l)
+            l.delete()
+       except:
+            print("not deleted connection somwhere")
+    return redirect("/sy/businessactivitiestypes")
 ######### End BusinessActivitiesTypes
 
 
@@ -719,6 +867,16 @@ class TaxesDeleteView(LoginRequiredMixin, BSModalDeleteView):
     template_name = 'sy/master/delete_taxes.html'
     success_message = 'Success: Taxes was deleted.'
     success_url = reverse_lazy('sy:list-taxes')
+
+def deletetaxes(request):
+    Lc=Taxes.objects.all()
+    for l in Lc:
+       try:
+            print(l)
+            l.delete()
+       except:
+            print("not deleted connection somwhere")
+    return redirect("/sy/taxes")
 
 ######### End Taxes
 
@@ -816,6 +974,18 @@ class TaxesGroupsDeleteView(LoginRequiredMixin, BSModalDeleteView):
     template_name = 'sy/master/delete_taxesgroups.html'
     success_message = 'Success: Taxes Groups was deleted.'
     success_url = reverse_lazy('sy:list-taxesgroups')
+
+
+def deletetaxesgroups(request):
+    Lc=TaxesGroups.objects.all()
+    for l in Lc:
+       try:
+            print(l)
+            l.delete()
+       except:
+            print("not deleted connection somwhere")
+    return redirect("/sy/taxesgroups")
+
 
 ######### End Taxes Groups
 
@@ -940,6 +1110,16 @@ class CompanyProfileDeleteView(LoginRequiredMixin, BSModalDeleteView):
     success_message = 'Success: company profile was deleted.'
     success_url = reverse_lazy('sy:list-companyprofile')
 
+def deletecompanyprofile(request):
+    Lc= CompanyProfile.objects.all()
+    for l in Lc:
+       try:
+            print(l)
+            l.delete()
+       except:
+            print("not deleted connection somwhere")
+    return redirect("/sy/companyprofile/")
+
 
 ######### End company Profile
 
@@ -978,6 +1158,16 @@ class PriceLevelsDeleteView(LoginRequiredMixin, BSModalDeleteView):
     template_name = 'sy/master/delete_pricelevels.html'
     success_message = 'Success: prices levels was deleted.'
     success_url = reverse_lazy('sy:list-pricelevels')
+
+def deletepricelevels(request):
+    Lc= PriceLevels.objects.all()
+    for l in Lc:
+       try:
+            print(l)
+            l.delete()
+       except:
+            print("not deleted connection somwhere")
+    return redirect("/sy/pricelevels/")
 
 
 ######### End Prices levels
@@ -1018,6 +1208,17 @@ class PaymentsTearmsDeleteView(LoginRequiredMixin, BSModalDeleteView):
     template_name = 'sy/master/delete_paymentstearms.html'
     success_message = 'Success: Payment Tearm was deleted.'
     success_url = reverse_lazy('sy:list-paymentstearms')
+
+
+def deletepaymentstearms(request):
+    Lc= PaymentsTearms.objects.all()
+    for l in Lc:
+       try:
+            print(l)
+            l.delete()
+       except:
+            print("not deleted connection somwhere")
+    return redirect("/sy/paymentstearms/")
 
 
 ######### End Payments Tearms
@@ -1115,6 +1316,16 @@ class CashDiscountsRolesDeleteView(LoginRequiredMixin, BSModalDeleteView):
     template_name = 'sy/master/delete_cashdiscountsroles.html'
     success_message = 'Success: Cash Discounts Roles  was Deleted.'
     success_url = reverse_lazy('sy:list-cashdiscountsroles')
+
+def deletecashdiscountsroles(request):
+    Lc= CashDiscountsRoles.objects.all()
+    for l in Lc:
+       try:
+            print(l)
+            l.delete()
+       except:
+            print("not deleted connection somwhere")
+    return redirect("/sy/cashdiscountsroles/")
 
 
 ######### End Cash Discount Roles

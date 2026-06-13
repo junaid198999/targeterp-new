@@ -1,0 +1,4 @@
+<option value="">Select</option>
+{% for channel in channels %}
+<option value="{{ channel.pk }}">{{ channel.name }}</option>
+{% endfor %}

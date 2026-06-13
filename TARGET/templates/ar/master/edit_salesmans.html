@@ -3,7 +3,7 @@
 {% load crispy_forms_tags %}
 {% block content %}
 
-<form align="left" id="salesmanForm" method="post" action=""  >
+<form id="loginForm" align="left" id="salesmanForm" method="post" action=""  >
 
     {% if LANGUAGE_CODE == 'ar' %}
         <link href="/static/libs/select2/select2-rtl.min.css" rel="stylesheet" />
@@ -195,7 +195,7 @@
 
   <div class="modal-footer">
     <button type="button" class="btn btn-secondary waves-effect" data-dismiss="modal">{% trans "Cancel" %}</button>
-    <button type="button" class="submit-btn btn-danger btn btn-primary">{% trans "Save" %}</button>
+    <button id="myBtn" disabled="disabled" type="button" class="submit-btn btn-danger btn btn-primary">{% trans "Save" %}</button>
   </div>
 
 
@@ -206,3 +206,18 @@
 
   </script>
 {% endblock %}
+<script>
+    loginForm.addEventListener('input',() => {
+        if (id_code.value.length > 0 ||
+        id_engname.value.length > 0 ||
+            id_arbname.value.length > 0 
+      
+        ) {
+            myBtn.removeAttribute('disabled');
+
+        } else {
+            myBtn.setAttribute('disabled','disabled');
+        }
+    }
+    );
+</script>

@@ -30,6 +30,11 @@
                             </div>
                             {% if perms.gl.add_transtypes %}
                             <div {% if LANGUAGE_CODE == 'ar' %} align="left" {% else %} align="right" {% endif %} class="col-sm-6">
+                                <a href="delete/">
+                                    <button class="delete-transtypes btn btn-danger waves-effect waves-light mb-2" type="button">
+                                      DeleteAll 
+                                    </button>  
+                                    </a>  
                                     <button id="demo-create-row" class="create-modules btn btn-blue waves-effect waves-light mb-2" type="button" name="button" data-overlayColor="#38414a">
                                         <i class="mdi mdi-plus-circle mr-1"></i>  {% trans "Add" %}
                                     </button>
@@ -83,8 +88,8 @@
                                                 {% if perms.sy.change_modules %}
                                                 <button type="button" class="edit-modules btn btn-outline-warning effect waves-light btn-xs" data-id="{% url 'sy:edit_modules' mod.pk %}" title="{% trans "Edit" %}"><i class="mdi mdi-square-edit-outline"></i></button>
                                                 {% endif %}
-                                                {% if perms.sy.delete_modules %}
-                                                <button  hidden="True" type="button" class="delete-modules btn btn-outline-danger effect waves-light btn-xs" data-id="{% url 'sy:delete_modules'  mod.pk %}" title="{% trans "Delete" %}"><i class="mdi mdi-delete"></i></button>
+                                                {% if perms.sy.delete_modules%}
+                                                <button type="button" class="delete-modules btn btn-outline-danger effect waves-light btn-xs" data-id="{% url 'sy:delete_modules'  mod.pk %}" title="{% trans "Delete" %}"><i class="mdi mdi-delete"></i></button>
                                                 {% endif %}
                                             </td>
 

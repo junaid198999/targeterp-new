@@ -11,14 +11,14 @@ urlpatterns = [
     path("banksgroups/create/", views.BanksGroupsCreateView.as_view(), name="create_banksgroups"),
     path("banksgroups/update/<int:pk>", views.BanksGroupsUpdateView.as_view(), name="edit_banksgroups"),
     path("banksgroups/<int:pk>/delete/", views.BanksGroupsDeleteView.as_view(), name="delete_banksgroups"),
-
+    path('banksgroups/delete/',views.deletebanksgroups, name="delete_banksgroups"),
 
 #Banks
     path("banks/", views.BanksListView.as_view(), name="list-banks"),
     path("banks/create/", views.BanksCreateView.as_view(), name="create_banks"),
     path("banks/update/<int:pk>", views.BanksUpdateView.as_view(), name="edit_banks"),
     path("banks/<int:pk>/delete/", views.BanksDeleteView.as_view(), name="delete_banks"),
-
+    path('banks/delete/',views.deletebanks, name="delete_banks"),
 
 #Banks
     path("banksdocumentsunderprocess/", views.BanksDocumentsUnderProcessListView.as_view(), name="list-banksdocumentsunderprocess"),

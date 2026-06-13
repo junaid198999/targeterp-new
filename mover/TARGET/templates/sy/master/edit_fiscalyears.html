@@ -1,0 +1,186 @@
+{% extends "auth_base.html" %}
+{% load i18n %}
+{% load django_tables2 %}
+{% load widget_tweaks %}
+{% load crispy_forms_tags %}
+{% block content %}
+{% load humanize %}
+<link href="/static/libs/select2/select2.min.css" rel="stylesheet" />
+<link href="/static/libs/sweetalert2/sweetalert2.min.css" rel="stylesheet" type="text/css" />
+<div class="container-fluid">
+    <!-- start page title -->
+    <div class="row">
+        <div class="col-12">
+            <div class="page-title-box">
+                <h4 class="page-title">{% trans " Fiscal Years" %}</h4>
+            </div>
+        </div>
+    </div>
+    <head>
+        <meta charset="utf-8" />
+        <title>fiscalyears_form</title>
+    </head>
+    <div class="row">
+        <div class="col-xl-12">
+            <div class="card">
+                <div class="card-body">
+                    <form  id="FYForm" action="" method="post"  >
+                        {{ fiscalyearsperiods.management_form }}
+                        {% csrf_token %}
+                        {{ form.id }}
+                        <div class="row">
+                            <div class="col-12">
+                                <div class="sub-header">
+                                    <h5 class="page-title">{% trans " Edit Fiscal Years " %}</h5>
+                                </div>
+                            </div>
+                        </div>
+                        <table class="table table-bordered ">
+                            <div class="{% if form.non_field_errors %}invalid{% endif %} mb-2">
+                              {% if form.non_field_errors %}
+                                {{ error }}
+                                {% endif %}
+                            </div>
+                            <tbody style="background-color: white;">
+                                <tr>
+                                    <td  width="70%" colspan = "7">
+                                        <div class="input-group">
+                                            <div class="input-group-prepend">
+                                                <span class="input-group-text" id="basic-addon1">{% trans "Code" %}</span>
+                                            </div>
+                                            <INPUT TYPE="TEXT" NAME="code" id="id_code" class="form-control" value="{{ form.instance.code }}">
+                                        </div>
+                                    </td>
+
+                                <tr>
+                                    <td  width="70%" colspan = "7">
+                                        <div class="input-group">
+                                            <div class="input-group-prepend">
+                                                <span class="input-group-text" id="basic-addon2">{% trans "Eng. Name" %}</span>
+                                            </div>
+                                            <INPUT TYPE="TEXT" NAME="engname" id="id_engname" class="form-control" value="{{ form.instance.engname }}" >
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td  width="70%" colspan = "7">
+                                        <div class="input-group">
+                                            <div class="input-group-prepend">
+                                                <span class="input-group-text" id="basic-addon3">{% trans "Arb. Name" %}</span>
+                                            </div>
+                                            <INPUT TYPE="TEXT" NAME="arbname" id="id_arbname" class="form-control" value="{{ form.instance.arbname }}">
+                                        </div>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        <div class="row mb-3">
+                            <div class="col-12">
+                                <div class="sub-header">
+                                    <h5 class="page-title">{% trans "Fiscal Years" %}</h5>
+                                    <a style="float:right" class="buttonHolder" id="add-row"></a>
+                               </div>
+                            </div>
+                        </div>
+                        <table  id="table_id" class="table table-bordered table-hover table-sm mb-0" >
+                                <thead class="thead-light">
+                                    <tr>
+                                        <th>{% trans "Code" %}</th>
+                                        <th>{% trans "Eng Name" %}</th>
+                                        <th>{% trans "Arb Name" %}</th>
+                                        <th>{% trans "From Date" %}</th>
+                                        <th>{% trans "To Date" %}</th>
+                                        <th>{% trans "Rank" %}</th>
+                                        <th>{% trans "Period Type" %}</th>
+                                    </tr>
+                                </thead>
+                                <tbody class="formset_row">
+                                    {% for form in fiscalyearsperiods %}
+                                        {{ form.id }}
+                                        <tr style="padding: 0px !important;" class="rowclass">
+                                                <td style="padding: 0rem !important;width:100px;">{{ form.code|as_crispy_field }}</td>
+                                                <td style="padding: 0rem !important;width:100px;">{{ form.engname|as_crispy_field }}</td>
+                                                <td style="padding: 0rem !important;width:100px;">{{ form.arbname|as_crispy_field }}</td>
+                                                <td style="padding: 0rem !important;width:100px;">{{ form.fromdate|as_crispy_field }}</td>
+                                                <td style="padding: 0rem !important;width:100px;">{{ form.todate|as_crispy_field }}</td>
+                                                <td style="padding: 0rem !important;width:100px;">{{ form.rank|as_crispy_field }}</td>
+                                                <td style="padding: 0rem !important;width:30px;">{{ form.periodtype|as_crispy_field }}</td>
+                                                <td style="padding: 0rem !important;width:10px; text-align: center;"></td>
+                                        </tr>
+                                    {% endfor %}
+                                </tbody>
+                        </table>
+
+                        <br><br>
+                        <div class="modal-footer">
+                            <a class="btn btn-secondary waves-effect" href="{% url 'sy:list-fiscalyears' %}">{% trans "Cancel" %}</a>
+                            <input type="submit"  id="save_id" class="submit-btn btn-danger btn btn-primary" value="{% trans 'Save' %}"/>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_javascript %}
+
+<script src="/static/libs/select2/select2.min.js"></script>
+<script src="/static/dynamic_formsets/jquery.formset.js"></script>
+<script src="/static/django_select2/django_select2.js"></script>
+
+
+<script type="text/javascript">
+
+
+
+    $('.formset_row').formset({
+        animateForms: true,
+        uiText: {
+            addPrompt: 'Add Line',         // Text used on the 'add a new form' control.
+            removePrompt: '',        // Text used on the 'delete this existing form' control.
+        },
+        addButtonHolder:'.buttonHolder',
+        addCssClass: "add-row btn btn-primary waves-effect waves-light",
+        deleteCssClass: "delete-row btn btn-danger waves-effect mdi mdi-close",
+        prefix: '{{ fiscalyearsperiods.prefix }}',
+
+        callbacks: {
+            onAdd: function () {
+                 $("[name*=-ledger]").select2();
+            },
+            onRemove: function () {
+                 get_total();
+            }
+        },
+    });
+
+{% comment %}
+      $(function () {
+        $("#datetimepicker1").datepicker({
+            format: 'yyyy/mm/dd',
+        });
+      });
+{% endcomment %}
+
+
+</script>
+
+<style>
+.card-header:first-child {
+    height: 28px !important;
+}
+h5.card-title.mb-0.text-white {
+    line-height: 0 !important;
+}
+.card-widgets {
+    line-height: 0 !important;
+}
+.card-widgets>a {
+    line-height: 0px !important;
+}
+</style>
+
+{% endblock %}
+

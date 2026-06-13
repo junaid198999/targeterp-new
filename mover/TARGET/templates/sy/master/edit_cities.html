@@ -1,0 +1,95 @@
+{% load i18n %}
+{% load widget_tweaks %}
+{% load crispy_forms_tags %}
+{% block content %}
+
+<form align="left" id="TransTypesForm" method="post" action=""  >
+
+    {% if LANGUAGE_CODE == 'ar' %}
+        <link href="/static/libs/select2/select2-rtl.min.css" rel="stylesheet" />
+    {% else %}
+        <link href="/static/libs/select2/select2.min.css" rel="stylesheet" />
+    {% endif %}
+  {% csrf_token %}
+
+    <div class="modal-header" style="background: #f7b84b;">
+      <h3 class="modal-title" style="color: white;">{% trans "Update Cities" %}</h3>
+      <button style="color:white; font-size: 2rem;" type="button" class="close" data-dismiss="modal" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+
+        <div class="modal-body">
+            <table>
+                <div class="{% if form.non_field_errors %}invalid{% endif %} mb-2">
+                          {% if form.non_field_errors %}
+                            {{ error }}
+                            {% endif %}
+                    </div>
+                <div class="form-row">
+                    <div class="form-group col-md-12 mb-0">
+                        <div class="form-row">
+                              <div class="form-group col-md-12 mb-0">
+                                  {{ form.code|as_crispy_field }}
+                                    <div class="{% if form.name.errors %} invalid{% endif %}">
+                                        {% if error in form.code.errors %}
+                                            <p class="help-block">{{ error }}</p>
+                                            {% endif %}
+                                    </div>
+                              </div>
+                             <div class="form-group col-md-6 mb-0">
+                                  {{ form.engname|as_crispy_field }}
+                                    <div class="{% if form.dgree.errors %} invalid{% endif %}">
+                                        {% if error in form.engname.errors %}
+                                            <p class="help-block">{{ error }}</p>
+                                            {% endif %}
+                                    </div>
+                              </div>
+                              <div class="form-group col-md-6 mb-0">
+                                    {{ form.arbname|as_crispy_field }}
+                                    <div class="{% if form.specialty.errors %} invalid{% endif %}">
+                                        {% if error in form.arbname.errors %}
+                                            <p class="help-block">{{ error }}</p>
+                                            {% endif %}
+                                    </div>
+                              </div>
+
+                              <div class="form-group col-md-6 mb-0">
+                                    {{ form.area|as_crispy_field }}
+                                    <div class="{% if form.area.errors %} invalid{% endif %}">
+                                        {% if error in form.area.errors %}
+                                            <p class="help-block">{{ error }}</p>
+                                            {% endif %}
+                                    </div>
+                              </div>
+
+                              <div class="form-group col-md-6 mb-0">
+                                    {{ form.country|as_crispy_field }}
+                                    <div class="{% if form.country.errors %} invalid{% endif %}">
+                                        {% if error in form.country.errors %}
+                                            <p class="help-block">{{ error }}</p>
+                                            {% endif %}
+                                    </div>
+                              </div>
+
+
+                        </div>
+                    </div>
+                </div>
+
+            </table>
+        </div>
+
+  <div class="modal-footer">
+    <button type="button" class="btn btn-secondary waves-effect" data-dismiss="modal">{% trans "Cancel" %}</button>
+    <button type="button" class="submit-btn btn-danger btn btn-primary">{% trans "Save" %}</button>
+  </div>
+
+
+</form>
+    <script src="/static/libs/select2/select2.min.js"></script>
+<script type="text/javascript">
+
+
+  </script>
+{% endblock %}

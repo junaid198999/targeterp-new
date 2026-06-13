@@ -1,0 +1,39 @@
+{% load widgets %}
+
+<script>
+    var p_id = "";
+
+    var p_name = "";
+    var num = 0;
+</script>
+{% for so in salesorders %}
+console.log({{so.price|currency_no_comma});
+<script>
+    p_id = {{so.product_id}} + ""
+    u_id = {{so.uom_id}} + ""
+    p_name = "{{so.product_name  }}";
+    u_name = "{{so.uom_name  }}";
+    $(`select[name="salesreturnproduct_set-${num}-product"]`).html(
+    `<option selected value="${p_id}">${p_name}</option>`
+    );
+    $(`input[name="salesreturnproduct_set-${num}-qty"]`).val({{so.qty}});
+    $(`input[name="salesreturnproduct_set-${num}-qty"]`).prop('max',{{so.qty}});
+    $(`input[name="salesreturnproduct_set-${num}-price"]`).val({{so.price|currency_no_comma}});
+    $(`input[name="salesreturnproduct_set-${num}-discount"]`).val("{{so.discount|currency_no_comma}}");
+    $(`input[name="salesreturnproduct_set-${num}-tax"]`).val("{{so.tax|currency_no_comma}}");
+    $(`input[name="salesreturnproduct_set-${num}-bt_total"]`).val("{{so.bt_total|currency_no_comma}}");
+    $(`input[name="salesreturnproduct_set-${num}-subtotal"]`).val("{{so.subtotal|currency_no_comma}}");
+
+    $(`#id_salesreturnproduct_set-${num}-uoom`).html(
+    `<option selected value="${u_id}">${u_name}</option>`
+    );
+    $(`#id_salesreturnproduct_set-${num}-uom`).html(
+    `<option selected value="${u_id}">${u_name}</option>`
+    );
+
+    num = num + 1;
+
+</script>
+
+
+{% endfor %}

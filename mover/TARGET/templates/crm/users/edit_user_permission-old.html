@@ -1,0 +1,239 @@
+{% load i18n %}
+
+{% load widget_tweaks %}
+{% load crispy_forms_tags %}
+{% block content %}
+
+    <form  align="left" method="POST" action="#" >
+        <link href="/static/libs/multiselect/multi-select.css" media="screen" rel="stylesheet" type="text/css">
+        {% if LANGUAGE_CODE == 'ar' %}
+            <link href="/static/libs/select2/select2-rtl.min.css" rel="stylesheet" />
+        {% else %}
+            <link href="/static/libs/select2/select2.min.css" rel="stylesheet" />
+        {% endif %}
+        {% csrf_token %}
+
+        <div class="modal-header" style="background: #f7b84b;">
+          <h3 class="modal-title" style="color: white;">{% trans "Edit User" %}</h3>
+          <button style="color:white; font-size: 2rem;" type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+
+        <div class="modal-body">
+            <table>
+                <div class="{% if form.non_field_errors %}invalid{% endif %} mb-2">
+                  {% if form.non_field_errors %}
+                    {{ error }}
+                    {% endif %}
+                </div>
+
+                <div class="form-row">
+                      <div class="form-group col-md-12 mb-0">
+                          {{ form.username|as_crispy_field }}
+                                <div class="{% if form.username.errors %} invalid{% endif %}">
+                                    {% if error in form.username.errors %}
+                                        <p class="help-block">{{ error }}</p>
+                                        {% endif %}
+                                </div>
+                        </div>
+                </div>
+            </table>
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="subject-info-box-1">
+                        {{form.user_permissions }}
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="subject-info-box-1">
+                        {{form.groups }}
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-5">
+                    <div class="subject-info-box-1">
+                        <label>{% trans "All Groups" %}</label>
+                        <select multiple class="form-control" id="id_allgroup" style="height: 200px;">
+                        {% for AllGroup in group_all %}
+                                <option value="{{AllGroup.id}}" >{{ AllGroup.name }}</option>
+                        {% endfor %}
+                        </select>
+                    </div>
+                </div>
+                <div class="col-md-2">
+                    <div class="subject-info-arrows text-center">
+                        <br /><br />
+                        <input type='button' id='btnAllRight2' value='>>' class="btn btn-light" style="width:80px; margin-bottom: 5px;"/><br />
+                        <input type='button' id='btnRight2' value='>' class="btn btn-light" style="width:80px; margin-bottom: 5px;" /><br />
+                        <input type='button' id='btnLeft2' value='<' class="btn btn-light" style="width:80px; margin-bottom: 5px;" /><br />
+                        <input type="button" id='btnAllLeft2' value='<<' class="btn btn-light" style="width:80px; margin-bottom: 5px;"></i></input>
+                    </div>
+                </div>
+
+                <div class="col-md-5">
+                    <div class="subject-info-box-2">
+                        <label>{% trans "Group Permissions" %}</label>
+                        <select name="groups" id="id_groups" multiple="" class="form-control" style="height: 200px;">
+                        {% for Permission in selected_groups %}
+                                <option selected value="{{Permission.id}}" >{{ Permission.name }}</option>
+                        {% endfor %}
+                        </select>
+                    </div>
+                </div>
+                    <div class="clearfix"></div>
+            </div>
+        </div>
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-secondary waves-effect" data-dismiss="modal">{% trans "Cancel" %}</button>
+            <button type="button" id="create-btn" class="submit-btn btn-danger btn btn-primary">{% trans "Update" %}</button>
+        </div>
+
+
+    </form>
+
+<script src="/static/libs/multiselect/jquery.selectlistactions.js" type="text/javascript"></script>
+<script src="/static/libs/select2/select2.min.js"></script>
+<script src="/static/libs/multiselect/jquery.multi-select.js"></script>
+
+<script type="text/javascript">
+
+    $(function () {
+
+        $('#id_user_permissions').multiSelect({
+            width: '100%',
+            templateSelection: function (data) {
+                if (data.id === '') {
+                  return 'Select';
+                }
+            return data.text;
+            }
+        });
+        $('#id_groups').multiSelect({
+            width: '100%',
+            templateSelection: function (data) {
+                if (data.id === '') {
+                  return 'Select';
+                }
+            return data.text;
+            }
+        });
+
+    });
+
+        $('#btnAvenger').click(function (e) {
+            $('select').moveToList('#StaffList', '#PresenterList');
+            e.preventDefault();
+        });
+
+        $('#btnRemoveAvenger').click(function (e) {
+            $('select').removeSelected('#PresenterList');
+            e.preventDefault();
+        });
+
+        $('#btnAvengerUp').click(function (e) {
+            $('select').moveUpDown('#PresenterList', true, false);
+            e.preventDefault();
+        });
+
+        $('#btnAvengerDown').click(function (e) {
+            $('select').moveUpDown('#PresenterList', false, true);
+            e.preventDefault();
+        });
+
+        $('#btnShield').click(function (e) {
+            $('select').moveToList('#StaffList', '#ContactList');
+            e.preventDefault();
+        });
+
+        $('#btnRemoveShield').click(function (e) {
+            $('select').removeSelected('#ContactList');
+            e.preventDefault();
+        });
+
+        $('#btnShieldUp').click(function (e) {
+            $('select').moveUpDown('#ContactList', true, false);
+            e.preventDefault();
+        });
+
+        $('#btnShieldDown').click(function (e) {
+            $('select').moveUpDown('#ContactList', false, true);
+            e.preventDefault();
+        });
+
+        $('#btnJusticeLeague').click(function (e) {
+            $('select').moveToList('#StaffList', '#FacilitatorList');
+            e.preventDefault();
+        });
+
+        $('#btnRemoveJusticeLeague').click(function (e) {
+            $('select').removeSelected('#FacilitatorList');
+            e.preventDefault();
+        });
+
+        $('#btnJusticeLeagueUp').click(function (e) {
+            $('select').moveUpDown('#FacilitatorList', true, false);
+            e.preventDefault();
+        });
+
+        $('#btnJusticeLeagueDown').click(function (e) {
+            $('select').moveUpDown('#FacilitatorList', false, true);
+            e.preventDefault();
+        });
+
+        $('#btnRight').click(function (e) {
+            $('select').moveToListAndDelete('#lstBox1', '#id_user_permissions1');
+            e.preventDefault();
+            $('#id_user_permissions1 option').each(function(){
+                $(this).attr('selected', 'true')
+            })
+
+        });
+
+        $('#btnAllRight').click(function (e) {
+            $('select').moveAllToListAndDelete('#lstBox1', '#id_user_permissions1');
+            e.preventDefault();
+            $('#id_user_permissions1 option').each(function(){
+                $(this).attr('selected', 'true')
+            })
+        });
+
+        $('#btnLeft').click(function (e) {
+            $('select').moveToListAndDelete('#id_user_permissions1', '#lstBox1');
+            e.preventDefault();
+        });
+
+        $('#btnAllLeft').click(function (e) {
+            $('select').moveAllToListAndDelete('#id_user_permissions1', '#lstBox1');
+            e.preventDefault();
+        });
+
+
+
+        $('#btnRight2').click(function (e) {
+            $('select').moveToListAndDelete('#id_allgroup', '#id_groups');
+            e.preventDefault();
+        });
+
+        $('#btnAllRight2').click(function (e) {
+            $('select').moveAllToListAndDelete('#id_allgroup', '#id_groups');
+            e.preventDefault();
+        });
+
+        $('#btnLeft2').click(function (e) {
+            $('select').moveToListAndDelete('#id_groups', '#id_allgroup');
+            e.preventDefault();
+        });
+
+        $('#btnAllLeft2').click(function (e) {
+            $('select').moveAllToListAndDelete('#id_groups', '#id_allgroup');
+            e.preventDefault();
+        });
+
+</script>
+{% endblock %}

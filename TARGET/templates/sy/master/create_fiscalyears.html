@@ -72,15 +72,15 @@
                                 </tr>
                             </tbody>
                         </table>
-                        <!-- <div class="row">
+                        <div class="row">
                             <div class="col-12">
                                 <div class="sub-header">
                                     <h5 class="page-title">{% trans "Fiscal Years Period" %}</h5>
                                     <a style="float:right" class="buttonHolder" id="add-row"></a>
                                </div>
                             </div>
-                        </div> -->
-                        <!-- <table id="table_id" class="table table-bordered table-hover table-sm mb-0">
+                        </div>
+                        <table id="table_id" class="table table-bordered table-hover table-sm mb-0">
                                 <thead class="thead-light">
                                     <tr>
                                         <th>{% trans "Code" %}</th>
@@ -107,7 +107,7 @@
                                         </tr>
                                     {% endfor %}
                                 </tbody>
-                        </table> -->
+                        </table>
 
                         <br><br>
                         <div class="modal-footer">
@@ -133,34 +133,34 @@
 
 <script type="text/javascript">
 
-    // $('.formset_row').formset({
-    //     animateForms: true,
-    //     uiText: {
-    //         addPrompt: 'Add Line',         // Text used on the 'add a new form' control.
-    //         removePrompt: '',        // Text used on the 'delete this existing form' control.
-    //     },
-    //     addButtonHolder:'.buttonHolder',
-    //     addCssClass: "add-row btn btn-primary waves-effect waves-light",
-    //     deleteCssClass: "delete-row btn btn-danger waves-effect mdi mdi-close",
-    //     prefix: '{{ fiscalyearsperiods.prefix }}',
+    $('.formset_row').formset({
+        animateForms: true,
+        uiText: {
+            addPrompt: 'Add Line',         // Text used on the 'add a new form' control.
+            removePrompt: '',        // Text used on the 'delete this existing form' control.
+        },
+        addButtonHolder:'.buttonHolder',
+        addCssClass: "add-row btn btn-primary waves-effect waves-light",
+        deleteCssClass: "delete-row btn btn-danger waves-effect mdi mdi-close",
+        prefix: '{{ fiscalyearsperiods.prefix }}',
 
-    //     callbacks: {
-    //         onAdd: function () {
-    //              $("[name*=-ledger]").select2();
-    //         },
-    //         onRemove: function () {
-    //              get_total();
-    //         }
-    //     },
-    // });
+        callbacks: {
+            onAdd: function () {
+                 $("[name*=-ledger]").select2();
+            },
+            onRemove: function () {
+                 get_total();
+            }
+        },
+    });
 
-// {% comment %}
-//       $(function () {
-//         $("#datetimepicker1").datepicker({
-//             format: 'yyyy/mm/dd',
-//         });
-//       });
-// {% endcomment %}
+{% comment %}
+      $(function () {
+        $("#datetimepicker1").datepicker({
+            format: 'yyyy/mm/dd',
+        });
+      });
+{% endcomment %}
 
 </script>
 

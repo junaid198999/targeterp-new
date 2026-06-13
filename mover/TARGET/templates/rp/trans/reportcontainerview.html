@@ -1,0 +1,124 @@
+{% extends "auth_base.html" %}
+{% load i18n %}
+{% load humanize %}
+{% load widgets %}
+{% load widget_tweaks %}
+{% load django_tables2 %}
+
+{% block content %}
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+
+{% csrf_token %}
+
+<script type="text/javascript">
+    var formjson = [];
+
+var userData = {
+ storeUserDataInSession: function(userData) {
+     var userObjectString = JSON.stringify(userData);
+     window.sessionStorage.setItem('userObject',userObjectString)
+ },
+ getUserDataFromSession: function() {
+     var userData = window.sessionStorage.getItem('userObject')
+     return JSON.parse(userData);
+
+ }
+}
+
+
+
+//var link = document.getElementById('urlchng_id');
+//if(link){
+//link.addEventListener('click', urlChange,false);
+//    console.log('site');
+//}
+
+//$(document).on('click', '#urlchng_id', urlChange);
+
+
+function urlChange() {
+
+    console.log( "{{ rep_id }}");
+    var site = "{% url 'rp:view_reportview'   %}  ";
+    console.log(site);
+    parent.document.getElementById('prev_id').src = site;
+
+
+    //formjson =window.localStorage.getItem("formjson");
+    formjson = userData.getUserDataFromSession()
+//    console.log(formjson);
+
+
+    var csrftoken = $("[name=csrfmiddlewaretoken]").val();
+  //  console.log(csrftoken);
+    $.ajax({
+        url: "{% url 'rp:view_reportview'   %}",
+        type: "POST",
+        headers:{ "X-CSRFToken": csrftoken },
+        cache: true,
+
+        data:formjson,
+        //dataType:"json",
+
+        success:function(response){},
+        complete:function(){},
+        error:function (xhr, textStatus, thrownError){
+             }
+    });
+
+
+}
+
+
+
+</script>
+
+
+<div class="container-fluid" >
+<!--
+
+        <div class="page-title" style=" background: #14c6c9;height:45px;text-align: left;padding-top: 1px;padding-left: 5px;">
+            <h4 class="page-title" style="margin:4px; font-size: 2rem;color: white;">{% trans "" %} {{ reportname }}  </h4>
+        </div>
+-->
+    <div class="row" style="position: fixed;top:70px;z-index:2; overflow: hidden;width: 100%; ">
+        <div class="col-8" >
+            <div class="page-title" style="background: #14c6c9;height:45px;text-align: left;padding-top: 1px;padding-left: 5px;">
+                <h4 class="page-title" style="margin:4px; font-size: 2rem;color: white;">{% trans ""  %} {{ reportname }}  </h4>
+            </div>
+        </div>
+        <div class="col-4" >
+            <div type="submit" class="buttons" style="margin-top:8px;float: left; ">
+                <a style="width: 220px;margin-left: 20px;"  class="btn btn-danger btn-lg btn-sm"  href="javascript:void(0);" onclick="urlChange();"   >{% trans "Perview" %}</a>
+
+           </div>
+        </div>
+
+    </div>
+
+
+        <div class="box" style="height=820px;top:10px;">
+            <iframe id="param_id" name="param_name" src="{% url 'rp:view-reportparam' rep_id %}" frameborder="0"   width="260px" height="820px" align="left" ></iframe>
+        </div>
+        <br></br>
+        <div class="box" style="height=800px;top:100px;">
+<!--    <iframe src="{% url 'rp:view_reportview' %}" frameborder="0" scrolling="no" height="869px" width="900px" align="left" ></iframe>-->
+            <iframe  id="prev_id" name="prev_name" src="" frameborder="0"  data-background-color="rgb(245 246 248)"  height="820px" width="1150px" align="left" ></iframe>
+        </div>
+</div>
+<!--
+    <div class="row" style="position: fixed;top:70px;z-index:2; overflow: hidden;width: 100%; ">
+
+            <div class="buttons" style="margin-top:8px;float: left; ">
+                <a style="width: 220px;margin-left: 20px;" class="btn btn-secondary btn-lg btn-sm"  href={% url "rp:view_reportview"    %}   >{% trans "Perview" %}</a>
+
+           </div>
+
+    </div>
+-->
+
+
+{% endblock %}
+
+

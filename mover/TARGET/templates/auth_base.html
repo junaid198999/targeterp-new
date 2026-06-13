@@ -1,0 +1,101 @@
+{% extends "base.html" %}
+{% load static i18n common %}
+
+{% block body_extra %}{% endblock %}
+
+{% block page_content %}
+
+<!-- Begin page -->
+<div id="wrapper">
+
+  {% block topbar %}
+  {% include 'partials/topbar.html' %}
+  {% endblock %}
+
+{% include 'crm/pages/message.html' %}
+{% if messages %}
+  <script>
+      {% for message in messages %}
+          $(document).ready(function () {
+              $('.toast').toast('show');
+          });
+      {% endfor %}
+  </script>
+{% endif %}
+
+
+
+  {% block sidebar %}
+          <!-- Pre-loader -->
+        <div id="preloader">
+            <div id="status">
+                <div class="spinner">Loading...</div>
+            </div>
+        </div>
+        <!-- End Preloader-->
+    {% load notifications_tags %}
+    {% rightsidbar_function as settings%}
+    {% for UserS in settings %}
+        {% if UserS.darktheme == 1 %}
+        <body class="left-side-menu-dark"></body>
+        {% endif %}
+    {% endfor %}
+  {% include 'partials/sidebar.html' %}
+
+  <style>
+    {% if request.user.color != '' %}
+        .left-side-menu-dark .navbar-custom {
+            background-color: {{request.user.color}} !important;
+        }
+        .spinner, .spinner:after {
+            border-left: 5px solid {{request.user.color}} !important;
+        }
+    {% else %}
+        .spinner, .spinner:after {
+            border-left: 5px solid #0088cc !important;
+        }
+    {% endif %}
+    #preloader {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background-color: #2727276e;
+        z-index: 9999;
+    }
+    button.btn.btn-secondary.buttons-collection.dropdown-toggle {
+        background: #cc0202 !important;
+    }
+</style>
+
+{% if LANGUAGE_CODE == 'ar' %}
+<style>
+    div.dt-buttons {
+        float: right;
+    }
+    div.dt-buttons.btn-group {
+        direction: rtl;
+    }
+</style>
+{% endif %}
+
+  {% endblock %}
+
+  <div class="content-page">
+    <div class="content">
+      {% block content %}{% endblock %}
+    </div>
+
+    {% block footer %}
+    {% include 'partials/footer.html' %}
+    {% endblock %}
+  </div>
+</div>
+<!-- END wrapper -->
+
+    {% block right_sidebar %}
+    {% include 'partials/right-sidebar.html' %}
+    {% endblock %}
+
+{% endblock %}

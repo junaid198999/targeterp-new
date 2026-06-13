@@ -1,0 +1,139 @@
+{% load i18n %}
+{% load widget_tweaks %}
+{% load crispy_forms_tags %}
+{% block content %}
+
+<form align="left" id="inventoriesbinlocationsForm" method="post" action=""  >
+
+    {% if LANGUAGE_CODE == 'ar' %}
+        <link href="/static/libs/select2/select2-rtl.min.css" rel="stylesheet" />
+    {% else %}
+        <link href="/static/libs/select2/select2.min.css" rel="stylesheet" />
+    {% endif %}
+  {% csrf_token %}
+
+    <div class="modal-header" style="background: #f7b84b;">
+      <h3 class="modal-title" style="color: white;">{% trans "Update Inventories Bin Location" %}</h3>
+      <button style="color:white; font-size: 2rem;" type="button" class="close" data-dismiss="modal" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+
+        <div class="modal-body">
+            <table>
+                <div class="{% if form.non_field_errors %}invalid{% endif %} mb-2">
+                          {% if form.non_field_errors %}
+                            {{ error }}
+                            {% endif %}
+                    </div>
+                <div class="form-row">
+                    <div class="form-group col-md-12 mb-0">
+                        <div class="form-row">
+                              <div class="form-group col-md-6 mb-0">
+                                  {{ form.code|as_crispy_field }}
+                                    <div class="{% if form.name.errors %} invalid{% endif %}">
+                                        {% if error in form.code.errors %}
+                                            <p class="help-block">{{ error }}</p>
+                                            {% endif %}
+                                    </div>
+                              </div>
+
+
+
+                              <div class="form-group col-md-6 mb-0">
+                                  {{ form.inventlocation|as_crispy_field }}
+                                    <div class="{% if form.inventlocation.errors %} invalid{% endif %}">
+                                        {% if error in form.inventlocation.errors %}
+                                            <p class="help-block">{{ error }}</p>
+                                            {% endif %}
+                                    </div>
+                              </div>
+                              <div class="form-group col-md-6 mb-0">
+                                    {{ form.barcode|as_crispy_field }}
+                                    <div class="{% if form.barcode.errors %} invalid{% endif %}">
+                                        {% if error in form.barcode.errors %}
+                                            <p class="help-block">{{ error }}</p>
+                                            {% endif %}
+                                    </div>
+                              </div>
+
+                              <div class="form-group col-md-6 mb-0">
+                                    {{ form.floor|as_crispy_field }}
+                                    <div class="{% if form.floor.errors %} invalid{% endif %}">
+                                        {% if error in form.floor.errors %}
+                                            <p class="help-block">{{ error }}</p>
+                                            {% endif %}
+                                    </div>
+                              </div>
+                              <div class="form-group col-md-6 mb-0">
+                                    {{ form.zone|as_crispy_field }}
+                                    <div class="{% if form.zone.errors %} invalid{% endif %}">
+                                        {% if error in form.zone.errors %}
+                                            <p class="help-block">{{ error }}</p>
+                                            {% endif %}
+                                    </div>
+                              </div>
+                              <div class="form-group col-md-6 mb-0">
+                                    {{ form.track|as_crispy_field }}
+                                    <div class="{% if form.track.errors %} invalid{% endif %}">
+                                        {% if error in form.track.errors %}
+                                            <p class="help-block">{{ error }}</p>
+                                            {% endif %}
+                                    </div>
+                              </div>
+                              <div class="form-group col-md-6 mb-0">
+                                    {{ form.shelf|as_crispy_field }}
+                                    <div class="{% if form.shelf.errors %} invalid{% endif %}">
+                                        {% if error in form.shelf.errors %}
+                                            <p class="help-block">{{ error }}</p>
+                                            {% endif %}
+                                    </div>
+                              </div>
+                              <div class="form-group col-md-6 mb-0">
+                                    {{ form.bin|as_crispy_field }}
+                                    <div class="{% if form.bin.errors %} invalid{% endif %}">
+                                        {% if error in form.bin.errors %}
+                                            <p class="help-block">{{ error }}</p>
+                                            {% endif %}
+                                    </div>
+                              </div>
+                              <div class="form-group col-md-6 mb-0">
+                                    {{ form.storagemethod|as_crispy_field }}
+                                    <div class="{% if form.storagemethod.errors %} invalid{% endif %}">
+                                        {% if error in form.storagemethod.errors %}
+                                            <p class="help-block">{{ error }}</p>
+                                            {% endif %}
+                                    </div>
+                              </div>
+
+                              <div class="form-group col-md-12 mb-0">
+                                    {{ form.remarks|as_crispy_field }}
+                                    <div class="{% if form.specialty.errors %} invalid{% endif %}">
+                                        {% if error in form.remarks.errors %}
+                                            <p class="help-block">{{ error }}</p>
+                                            {% endif %}
+                                    </div>
+                              </div>
+
+
+                        </div>
+                    </div>
+                </div>
+            </table>
+        </div>
+
+  <div class="modal-footer">
+    <button type="button" class="btn btn-secondary waves-effect" data-dismiss="modal">{% trans "Cancel" %}</button>
+    <button type="button" class="submit-btn btn-danger btn btn-primary">{% trans "Save" %}</button>
+  </div>
+
+
+</form>
+    <script src="/static/libs/select2/select2.min.js"></script>
+<script type="text/javascript">
+
+
+  </script>
+{% endblock %}
+
+

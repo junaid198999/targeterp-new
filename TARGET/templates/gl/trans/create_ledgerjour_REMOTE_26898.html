@@ -1,0 +1,390 @@
+{% extends "auth_base.html" %}
+{% load i18n %}
+{% load django_tables2 %}
+{% load widget_tweaks %}
+{% load crispy_forms_tags %}
+{% block content %}
+{% load humanize %}
+<link href="/static/libs/select2/select2.min.css" rel="stylesheet" />
+<link href="/static/libs/sweetalert2/sweetalert2.min.css" rel="stylesheet" type="text/css" />
+<link href="/static/libs/dropify/dropify.min.css" rel="stylesheet">
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+
+<div class="container-fluid">
+
+    <div class="row" style="position: fixed;top:70px;z-index:2; overflow: hidden;width: 100%; ">
+        <div class="col-7" >
+            <div class="page-title" style="background: #60b4fd;height:45px;text-align: left;padding-top: 1px;padding-left: 5px;">
+                <h4 class="page-title" style="margin:4px; font-size: 2rem;color: white;">{% trans "Create Ledger Journal "  %} </h4>
+            </div>
+        </div>
+        <div class="col-5" >
+            <div class="buttons" style="margin-top:8px;float: left; ">
+                <input type="submit" id="create_id" form="LJForm" style="width: 105px;" class="submit-btn btn-danger btn btn-sm" value="{% trans 'Save' %}"/>
+
+                <a style="width: 105px;" class="btn btn-secondary btn-lg btn-sm"  href="{% url 'gl:list-ledgerjour'  %} "   >{% trans "Cancel" %}</a>
+            </div>
+        </div>
+
+    </div>
+
+
+
+    <head>
+        <meta charset="utf-8" />
+        <title>Ledger Journal_form</title>
+    </head>
+    <div class="row">
+        <div class="col-xl-12">
+            <div class="card" style="top: 46px; ">
+                <div class="card-body" style="padding:0.5rem;padding-bottom: 0px;">
+                    <form  id="LJForm" action="#" method="post"  data-transtypes-url="{% url 'gl:ajax_load_transtypes' %}" >
+                        {{ ledgerjourlines.management_form }}
+                        {% csrf_token %}
+                        {{ form.id }}
+                        <table class="table table-bordered ">
+                            <div class="{% if form.non_field_errors %}invalid{% endif %} mb-2">
+                              {% if form.non_field_errors %}
+                                {{ error }}
+                                {% endif %}
+                            </div>
+                            <tbody style="background-color: white;">
+                                <tr>
+                                    <td  width="70%" colspan = "7">
+                                            <div class="input-group">                                            
+                                                <input type="text" id="id_transtype" NAME="transtype" class="form-control" hidden  />
+                                                <div class="form-group col-md-6 mb-0">
+                                                    {{ form.transtype|as_crispy_field }}
+                                                    <div class="{% if form.transtype.errors %} invalid{% endif %}">
+                                                        {% if error in form.transtype.errors %}
+                                                        <p class="help-block">{{ error }}</p>
+                                                        {% endif %}
+                                                    </div>
+                                                </div>
+                                                <div class="form-group col-md-3 mb-0">
+                                                    {{ form.status|as_crispy_field }}
+                                                    <div class="{% if form.status.errors %} invalid{% endif %}">
+                                                        {% if error in form.status.errors %}
+                                                        <p class="help-block">{{ error }}</p>
+                                                        {% endif %}
+                                                    </div>
+                                                </div>
+                                                <div class="form-group col-md-3 mb-0">
+                                                    {{ form.statusdate|as_crispy_field }}
+                                                    <div class="{% if form.statusdate.errors %} invalid{% endif %}">
+                                                        {% if error in form.statusdate.errors %}
+                                                        <p class="help-block">{{ error }}</p>
+                                                        {% endif %}
+                                                    </div>
+                                                </div>
+                                            </div>
+                                    </td>
+                                    <td colspan = "6">
+                                        <div class="input-group">
+                                            <div class="input-group-prepend">
+                                                <span class="input-group-text" id="basic-addon1">{% trans "Journal No." %}</span>
+                                            </div>
+                                            <INPUT TYPE="TEXT" NAME="journalnumber" id="id_journalnumber" class="form-control" value="{{ maxid }}"  READONLY  >
+                                        </div>
+
+                                        <div class="input-group" style="margin-top: 2%">
+                                            <div class="input-group-prepend">
+                                                <span class="input-group-text" >{% trans "Journal Date" %}</span>
+                                            </div>
+                                            <INPUT id="id_journaldate" type="date" NAME="journaldate" class="form-control" {% if journaldate != ''  %} value="{{currentdate}}" {% endif %} >
+                                        </div>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        <table class="table table-bordered ">
+                            <div class="{% if form.non_field_errors %}invalid{% endif %} mb-2">
+                              {% if form.non_field_errors %}
+                                {{ error }}
+                                {% endif %}
+                            </div>
+                            <tbody style="background-color: white;">
+                                    <td colspan = "2" style="vertical-align: middle">
+                                        <div class="input-group">
+
+
+                                        <div class="form-group col-md-4 mb-0">
+                                            {{ form.reference|as_crispy_field }}
+                                            <div class="{% if form.reference.errors %} invalid{% endif %}">
+                                                {% if error in form.reference.errors %}
+                                                <p class="help-block">{{ error }}</p>
+                                                {% endif %}
+                                            </div>
+                                        </div>
+
+                                        <div class="form-group col-md-4 mb-0">
+                                            {{ form.reference1|as_crispy_field }}
+                                            <div class="{% if form.reference1.errors %} invalid{% endif %}">
+                                                {% if error in form.reference1.errors %}
+                                                <p class="help-block">{{ error }}</p>
+                                                {% endif %}
+                                            </div>
+                                        </div>
+
+                                        <div class="form-group col-md-4 mb-0">
+                                            {{ form.reference2|as_crispy_field }}
+                                            <div class="{% if form.reference2.errors %} invalid{% endif %}">
+                                                {% if error in form.reference2.errors %}
+                                                <p class="help-block">{{ error }}</p>
+                                                {% endif %}
+                                            </div>
+                                        </div>
+
+                                        <div class="form-group col-md-12 mb-0">
+                                            {{ form.remarks|as_crispy_field }}
+                                            <div class="{% if form.remarks.errors %} invalid{% endif %}">
+                                                {% if error in form.remarks.errors %}
+                                                <p class="help-block">{{ error }}</p>
+                                                {% endif %}
+                                            </div>
+                                        </div>
+
+                                    </div>
+                                    </td>
+                            </tbody>
+                        </table>
+
+                        <div class="row mb-3">
+                            <div class="col-12">
+                                <div class="sub-header">
+                                    <a style="float:right" class="buttonHolder" id="add-row"></a>
+                               </div>
+                            </div>
+                        </div>
+
+                        <table id="table_id" class="table table-bordered table-hover table-sm mb-0">
+                                <thead class="thead-light">
+                                    <tr>
+                                        <th>{% trans "Ledger " %}</th>
+                                        
+                                        {% if usecostcenter1 == True  %}
+                                            <th>{% trans "Cost C 1" %}</th>
+                                        {% endif %}
+
+                                        {% if usecostcenter1 == True and comusecostcenter1 == True %}
+                                            <th>{% trans "Cost C 2" %}</th>
+                                        {% endif %}
+
+                                        <th>{% trans "Eng. Desc" %}</th>
+                                        <th>{% trans "Debit" %}</th>
+                                        <th>{% trans "Credit" %}</th>
+                                        <th>{% trans "Actions" %}</th>
+                                    </tr>
+                                </thead>
+                                <tbody class="formset_row">
+                                    {% for form in ledgerjourlines %}
+                                        {{ form.id }}
+                                        <tr style="padding: 0px !important;" class="rowclass">
+                                            <td style="padding: 0rem !important;width:100px;">{{ form.ledger|as_crispy_field }}</td>
+
+                                            {% if usecostcenter1 == True  %}
+                                                <td style="padding: 0rem !important;width:100px;">{{ form.costcenter1|as_crispy_field }}</td>
+                                            {% endif %}
+
+                                            {% if usecostcenter1 == True and comusecostcenter1 == True %}
+                                                <td style="padding: 0rem !important;width:100px;">{{ form.costcenter2|as_crispy_field }}</td>
+                                            {% endif %}
+
+                                            <td style="padding: 0rem !important;width:100px;">{{ form.engdesc|as_crispy_field }}</td>
+                                            <td style="padding: 0rem !important;width:70px;">{{ form.debitamount|as_crispy_field }}</td>
+                                            <td style="padding: 0rem !important;width:70px;">{{ form.creditamount|as_crispy_field }}</td>
+                                            <td style="padding: 0rem !important;width:10px; text-align: center;"></td>
+                                        </tr>
+                                    {% endfor %}
+                                </tbody>
+
+                        </table>
+                        <table id="table_idfoot" class="table table-bordered table-hover table-sm mb-3 pb-3">
+                            <tr>
+                                <td colspan="5" width="45%"><b class="float-right" > </b></td>
+                                <td colspan="5"><b class="float-right" >{% trans "Total Debit : " %} </b></td>
+                                <td class="float-right" style="padding: 0rem" colspan="1"><INPUT style="text-align:right" TYPE="number" id="id_totaldebit" NAME="totaldebit" placeholder="Total Debit"  class="form-control" readonly="true"></td>
+                                <td colspan="5"><b class="float-right" >{% trans "Total Credit : " %} </b></td>
+                                <td class="float-right" style="padding: 0rem" colspan="1">
+                                    <INPUT style="text-align:right" TYPE="number" id="id_totalcredit" NAME="totalcredit" placeholder="Total Credit" class="form-control" readonly="true" ></td>
+                                    <input type="number" hidden="true" id="id_totalamount" name="totalamount">
+                                <td style="padding: 0rem !important;width:260px; text-align: center;"></td>
+                            </tr>
+                        </table>                        
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    <button hidden type="button" class="btn btn-info btn-xs" id="sa-error">Click me</button>
+
+</div>
+{% endblock %}
+
+{% block extra_javascript %}
+
+<script src="/static/libs/select2/select2.min.js"></script>
+<script src="/static/dynamic_formsets/jquery.formset.js"></script>
+<script src="/static/django_select2/django_select2.js"></script>
+<script src="/static/libs/sweetalert2/sweetalert2.min.js"></script>
+
+<script src="/static/libs/dropify/dropify.min.js"></script>
+
+<script type="text/javascript">
+
+
+$('#id_journaldate').prop( "min", '{{ mindate }}' );
+$('#id_journaldate').prop( "max", '{{ maxdate }}' );
+$('#id_total').attr('readonly', true);
+
+
+var grand_total = null;
+
+
+
+function get_total(){
+        var id = parseInt($('#id_ledgerjourline_set-TOTAL_FORMS').val());
+
+        var dbttot = 0;
+        var crttot = 0;
+        console.log(id);
+        for (i = 0; i <= parseInt(id); i++){
+
+            if($("input[name=ledgerjourline_set-" + i + "-debitamount]").val() ){
+                dbttot += parseFloat($("input[name=ledgerjourline_set-" + i + "-debitamount]").val(),1);
+            }
+            else{
+                dbttot += 0;
+            }
+            if($("input[name=ledgerjourline_set-" + i + "-creditamount]").val() ){
+                crttot += parseFloat($("input[name=ledgerjourline_set-" + i + "-creditamount]").val(),1);
+            }
+            else{
+                crttot += 0;
+            }
+        }
+        $("#id_totaldebit").val(dbttot.toFixed(1));
+        $("#id_totalcredit").val(crttot.toFixed(1));
+
+        if ( crttot == dbttot ) {
+            document.getElementById("create_id").disabled = false;
+        }
+
+        if ( crttot != dbttot ) {
+            document.getElementById("create_id").disabled = true;
+        }
+
+        var total_amount = $('#id_totaldebit').val();
+
+        $('#id_totalamount').val(total_amount);
+};
+
+
+
+    $("input[name*='debitamount']").change(function () {
+        get_total()
+
+    });
+
+    $("input[name*='creditamount']").change(function () {
+        get_total()
+    });
+
+// document.addEventListener('DOMContentLoaded', function() {
+//     get_total();
+// }, false);
+
+
+
+
+
+
+
+   $('.delete-row').on("click", function(){
+        get_total()
+    });
+
+    $('.formset_row').formset({
+        animateForms: true,
+        uiText: {
+            addPrompt: 'Add Line',         // Text used on the 'add a new form' control.
+            removePrompt: '',        // Text used on the 'delete this existing form' control.
+        },
+        addButtonHolder:'.buttonHolder',
+        addCssClass: "add-row btn btn-primary waves-effect waves-light",
+        deleteCssClass: "delete-row btn btn-danger waves-effect mdi mdi-close",
+        prefix: '{{ ledgerjourlines.prefix }}',
+
+        callbacks: {
+            onAdd: function () {
+                 $("[name*=-ledger]").select2();
+
+            },
+            onChange: function () {
+            },
+            Select: function () {
+            },
+
+            onRemove: function () {
+                 get_total();
+            }
+        },
+    });
+
+
+
+
+
+{% comment %}
+      $(function () {
+        $("#datetimepicker1").datepicker({
+            format: 'yyyy/mm/dd',
+        });
+      });
+{% endcomment %}
+
+
+$(document).ready(function(){
+     $("[name*=-ledger]").select2();
+
+    get_total();
+});
+
+
+
+
+</script>
+
+<style>
+.card-header:first-child {
+    height: 28px !important;
+}
+h5.card-title.mb-0.text-white {
+    line-height: 0 !important;
+}
+.card-widgets {
+    line-height: 0 !important;
+}
+.card-widgets>a {
+    line-height: 0px !important;
+}
+
+
+
+.form-group {
+    margin-bottom: 0.1rem !important;
+}
+
+.delete-row{
+width: 30px;
+    height: 30px;
+    padding-left: 7px;
+    top: 4px;
+    padding-top: 4px;
+}
+
+
+</style>
+
+{% endblock %}
+

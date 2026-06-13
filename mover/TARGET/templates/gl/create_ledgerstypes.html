@@ -1,0 +1,99 @@
+{% load i18n %}
+{% load widget_tweaks %}
+{% load crispy_forms_tags %}
+{% block content %}
+
+    <form  align="left" id="LedgersTypesForm" method="post" action="#"  novalidate>
+    {% if LANGUAGE_CODE == 'ar' %}
+        <link href="/static/libs/select2/select2-rtl.min.css" rel="stylesheet" />
+    {% else %}
+        <link href="/static/libs/select2/select2.min.css" rel="stylesheet" />
+    {% endif %}
+
+        {% csrf_token %}
+
+        <div class="modal-header" style="background: #4a81d4;">
+          <h3 class="modal-title" style="color: white;">{% trans "Add Ledger Type" %}</h3>
+          <button style="color:white; font-size: 2rem;" type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+
+        <div class="modal-body">
+            <table>
+                <div class="{% if form.non_field_errors %}invalid{% endif %} mb-2">
+                          {% if form.non_field_errors %}
+                            {{ error }}
+                            {% endif %}
+                    </div>
+                <div class="form-row">
+                    <div class="form-group col-md-12 mb-0">
+                        <div class="form-row">
+                              <div class="form-group col-md-12 mb-0">
+                                  {{ form.code|as_crispy_field }}
+                                    <div class="{% if form.name.errors %} invalid{% endif %}">
+                                        {% if error in form.code.errors %}
+                                            <p class="help-block">{{ error }}</p>
+                                            {% endif %}
+                                    </div>
+                                </div>
+                              <div class="form-group col-md-6 mb-0">
+                                    {{ form.engname|as_crispy_field }}
+                                    <div class="{% if form.dgree.errors %} invalid{% endif %}">
+                                        {% if error in form.engname.errors %}
+                                            <p class="help-block">{{ error }}</p>
+                                            {% endif %}
+                                    </div>
+                              </div>
+                              <div class="form-group col-md-6 mb-0">
+                                    {{ form.arbname|as_crispy_field }}
+                                    
+                                    <div class="{% if form.specialty.errors %} invalid{% endif %}">
+                                        {% if error in form.arbname.errors %}
+                                            <p class="help-block">{{ error }}</p>
+                                            {% endif %}
+                                    </div>
+                              </div>
+                        </div>
+                    </div>
+                </div>
+            </table>
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-secondary waves-effect" data-dismiss="modal">{% trans "Cancel" %}</button>
+            <button type="button" class="submit-btn btn-danger btn btn-primary">{% trans "Create" %}</button>
+        </div>
+
+    </form>
+
+
+{% endblock %}
+<script>
+    $(".submit-btn.btn-danger.btn.btn-primary").prop("disabled", true);
+    function check_validation(control) {
+        if($(control).val().length < 1) {
+            $(control).css("border", "1px solid red");
+            $(control).focus();            
+        } else {
+            $(control).css("border", "1px solid black");
+        }
+        if(($("#id_code").val().length < 1) || ($("#id_engname").val().length < 1) || ($("#id_arbname").val().length < 1)) {
+            $(".submit-btn.btn-danger.btn.btn-primary").prop("disabled", true);            
+        } else {
+                $(".submit-btn.btn-danger.btn.btn-primary").prop("disabled", false);
+        }
+    }
+
+    $("#id_code").on('keyup keypress change blur', function(){
+        check_validation(this);
+    });
+
+    $("#id_engname").on('keyup keypress change blur', function(){
+        check_validation(this);
+    });
+
+    $("#id_arbname").on('keyup keypress change blur', function(){
+        check_validation(this);
+    });
+
+</script>

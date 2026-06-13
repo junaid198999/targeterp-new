@@ -3,12 +3,15 @@
 {% load widget_tweaks %}
 {% load django_tables2 %}
 {% block content %}
-{% if protected_error %}
-    <script>
-        alert("Couldn't be deleted Inventory Bin Loacation because it's already aligned with others");
-        location.href= "/inv/inventoriesbinlocations/";
-    </script>
+{% comment %}
+{% if messages %}}
+    {% for message in messages %}
+        <div>
+            <strong>{{message|safe}}</strong>
+        </div>
+    {% endfor %}
 {% endif %}
+{% endcomment %}
     <div class="container-fluid">
         <!-- start page title -->
         <div class="row">
@@ -36,6 +39,11 @@
                             </div>
                             {% if perms.inv.add_inventoriesbinlocations %}
                             <div {% if LANGUAGE_CODE == 'ar' %} align="left" {% else %} align="right" {% endif %} class="col-sm-6">
+                                <a href="delete/">
+                                    <button class="delete-transtypes btn btn-danger waves-effect waves-light mb-2" type="button">
+                                      DeleteAll 
+                                    </button>  
+                                    </a> 
                                     <button id="demo-create-row" class="create-inventoriesbinlocations btn btn-blue waves-effect waves-light mb-2" type="button" name="button" data-overlayColor="#38414a">
                                         <i class="mdi mdi-plus-circle mr-1"></i>  {% trans "Add" %}
                                     </button>
@@ -220,3 +228,4 @@
     </script>
 
 {% endblock %}
+

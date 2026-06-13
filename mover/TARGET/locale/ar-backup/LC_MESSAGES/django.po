@@ -1,0 +1,1739 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2019-12-04 17:27+0300\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=6; plural=n==0 ? 0 : n==1 ? 1 : n==2 ? 2 : n%100>=3 "
+"&& n%100<=10 ? 3 : n%100>=11 && n%100<=99 ? 4 : 5;\n"
+
+#: .\TARGET\crm\models.py:17 .\TARGET\crm\models.py:29
+#: .\TARGET\crm\models.py:59 .\TARGET\crm\models.py:70
+#: .\TARGET\crm\models.py:84 .\TARGET\crm\models.py:94
+#: .\TARGET\crm\models.py:104 .\TARGET\crm\models.py:122
+#: .\TARGET\crm\models.py:153 .\TARGET\crm\models.py:196
+#: .\TARGET\crm\models.py:214 .\TARGET\crm\models.py:226
+#: .\TARGET\crm\models.py:266 .\TARGET\crm\models.py:450
+#: .\TARGET\templates\crm\accounts\list-accounts.html:61
+#: .\TARGET\templates\crm\branches\list-branches.html:62
+#: .\TARGET\templates\crm\categories\list-categories.html:61
+#: .\TARGET\templates\crm\channels\list-channels.html:61
+#: .\TARGET\templates\crm\customers\crm-customers.html:62
+#: .\TARGET\templates\crm\products\list-products.html:62
+#: .\TARGET\templates\crm\salesmans\list-salesmans.html:62
+#: .\TARGET\templates\crm\setting\list-areas.html:62
+#: .\TARGET\templates\crm\setting\list-cities.html:63
+#: .\TARGET\templates\crm\setting\list-countries.html:62
+#: .\TARGET\templates\crm\setting\list-uoms.html:62
+#: .\TARGET\templates\crm\setting\list-warehouses.html:64
+#: .\TARGET\templates\crm\setting\list-warehousetypes.html:63
+#: .\TARGET\templates\crm\target\list-targetbuildingblocksaccounts.html:61
+#: .\TARGET\templates\crm\target\list-targetbuildingblockschannels.html:61
+#: .\TARGET\templates\crm\vendors\list-vendors.html:61
+msgid "Name"
+msgstr "الاسم"
+
+#: .\TARGET\crm\models.py:18 .\TARGET\crm\models.py:271
+#: .\TARGET\templates\crm\salesmans\list-salesmans.html:64
+#: .\TARGET\templates\crm\vendors\list-vendors.html:65
+msgid "Email"
+msgstr "البريد الالكتروني"
+
+#: .\TARGET\crm\models.py:19
+#: .\TARGET\templates\crm\salesmans\list-salesmans.html:63
+msgid "Report To"
+msgstr "لمدير المباشر"
+
+#: .\TARGET\crm\models.py:20 .\TARGET\crm\models.py:32
+#: .\TARGET\crm\models.py:43 .\TARGET\crm\models.py:50
+#: .\TARGET\crm\models.py:60 .\TARGET\crm\models.py:72
+#: .\TARGET\crm\models.py:85 .\TARGET\crm\models.py:95
+#: .\TARGET\crm\models.py:113 .\TARGET\crm\models.py:126
+#: .\TARGET\crm\models.py:170 .\TARGET\crm\models.py:205
+#: .\TARGET\crm\models.py:217 .\TARGET\crm\models.py:257
+#: .\TARGET\crm\models.py:275 .\TARGET\crm\models.py:287
+#: .\TARGET\crm\models.py:309 .\TARGET\crm\models.py:321
+#: .\TARGET\crm\models.py:342 .\TARGET\crm\models.py:360
+#: .\TARGET\crm\models.py:384 .\TARGET\crm\models.py:395
+#: .\TARGET\crm\models.py:417 .\TARGET\crm\models.py:427
+#: .\TARGET\crm\models.py:441 .\TARGET\crm\models.py:454
+#: .\TARGET\crm\models.py:471 .\TARGET\crm\models.py:482
+#: .\TARGET\crm\models.py:505 .\TARGET\crm\models.py:518
+#: .\TARGET\crm\models.py:541 .\TARGET\crm\models.py:554
+#: .\TARGET\crm\models.py:582 .\TARGET\crm\models.py:631
+#: .\TARGET\crm\models.py:698
+msgid "Created Date"
+msgstr "تاريخ الانشاء"
+
+#: .\TARGET\crm\models.py:30 .\TARGET\crm\models.py:105
+#: .\TARGET\crm\models.py:125 .\TARGET\crm\models.py:154
+#: .\TARGET\crm\models.py:197 .\TARGET\crm\models.py:215
+#: .\TARGET\crm\models.py:228 .\TARGET\crm\models.py:267
+#: .\TARGET\crm\models.py:697
+#: .\TARGET\templates\crm\accounts\list-accounts.html:64
+#: .\TARGET\templates\crm\categories\list-categories.html:63
+#: .\TARGET\templates\crm\channels\list-channels.html:63
+#: .\TARGET\templates\crm\collections\list-collections.html:66
+msgid "Description"
+msgstr "الوصف"
+
+#: .\TARGET\crm\models.py:31
+#: .\TARGET\templates\crm\channels\list-channels.html:62
+msgid "Parent Channel"
+msgstr "قناة البيع التابع لها"
+
+#: .\TARGET\crm\models.py:41 .\TARGET\crm\models.py:233
+msgid "Unit 1"
+msgstr "الوحدة 1"
+
+#: .\TARGET\crm\models.py:42 .\TARGET\crm\models.py:234
+msgid "Unit 2"
+msgstr "الوحدة 2"
+
+#: .\TARGET\crm\models.py:49 .\TARGET\crm\models.py:303
+#: .\TARGET\crm\models.py:336 .\TARGET\crm\models.py:378
+#: .\TARGET\crm\models.py:411
+#: .\TARGET\templates\crm\purchaseorder\create_purchaseorder.html:113
+#: .\TARGET\templates\crm\purchaseorder\create_purchasereturnorder.html:115
+#: .\TARGET\templates\crm\purchaseorder\edit_purchaseorder.html:113
+#: .\TARGET\templates\crm\purchaseorder\edit_purchasereturnorder.html:115
+#: .\TARGET\templates\crm\salesorder\create_salesorder.html:140
+#: .\TARGET\templates\crm\salesorder\create_salesreturnorder.html:114
+#: .\TARGET\templates\crm\salesorder\edit_salesorder.html:135
+#: .\TARGET\templates\crm\salesorder\edit_salesreturnorder.html:109
+msgid "Unit"
+msgstr "الوحدة"
+
+#: .\TARGET\crm\models.py:71 .\TARGET\crm\models.py:83
+#: .\TARGET\crm\models.py:106 .\TARGET\crm\models.py:160
+#: .\TARGET\crm\models.py:201 .\TARGET\crm\models.py:272
+#: .\TARGET\templates\crm\branches\list-branches.html:65
+#: .\TARGET\templates\crm\setting\list-areas.html:63
+#: .\TARGET\templates\crm\setting\list-cities.html:64
+#: .\TARGET\templates\crm\vendors\list-vendors.html:66
+msgid "Country"
+msgstr "البلد"
+
+#: .\TARGET\crm\models.py:82 .\TARGET\crm\models.py:108
+#: .\TARGET\crm\models.py:161 .\TARGET\crm\models.py:202
+#: .\TARGET\templates\crm\branches\list-branches.html:66
+#: .\TARGET\templates\crm\customers\crm-customers.html:67
+#: .\TARGET\templates\crm\setting\list-cities.html:65
+#: .\TARGET\templates\crm\setting\list-warehouses.html:65
+msgid "Area"
+msgstr "المنطقة"
+
+#: .\TARGET\crm\models.py:107
+#: .\TARGET\templates\crm\setting\list-warehouses.html:67
+msgid "Warehouse Type"
+msgstr "نوع المستودع"
+
+#: .\TARGET\crm\models.py:109 .\TARGET\crm\models.py:162
+#: .\TARGET\crm\models.py:203 .\TARGET\crm\models.py:273
+#: .\TARGET\templates\crm\branches\list-branches.html:67
+#: .\TARGET\templates\crm\customers\crm-customers.html:68
+#: .\TARGET\templates\crm\setting\list-warehouses.html:66
+#: .\TARGET\templates\crm\vendors\list-vendors.html:67
+msgid "City"
+msgstr "المدينة"
+
+#: .\TARGET\crm\models.py:110
+#: .\TARGET\templates\crm\setting\list-warehouses.html:68
+msgid "Size"
+msgstr "الحجم"
+
+#: .\TARGET\crm\models.py:111
+#: .\TARGET\templates\crm\setting\list-warehouses.html:69
+msgid "Capacity"
+msgstr "السعة"
+
+#: .\TARGET\crm\models.py:112
+#: .\TARGET\templates\crm\setting\list-warehouses.html:70
+msgid "Shelves"
+msgstr "عدد الرفوف"
+
+#: .\TARGET\crm\models.py:123 .\TARGET\crm\models.py:157
+#: .\TARGET\crm\models.py:199 .\TARGET\crm\models.py:362
+#: .\TARGET\crm\models.py:397
+#: .\TARGET\templates\crm\accounts\list-accounts.html:63
+#: .\TARGET\templates\crm\branches\list-branches.html:64
+#: .\TARGET\templates\crm\customers\crm-customers.html:65
+#: .\TARGET\templates\crm\purchaseorder\list-purchaseorders.html:65
+#: .\TARGET\templates\crm\purchaseorder\list-purchasereturnorders.html:65
+#: .\TARGET\templates\crm\salesorder\create_salesorder.html:57
+#: .\TARGET\templates\crm\salesorder\create_salesreturnorder.html:58
+#: .\TARGET\templates\crm\salesorder\edit_salesorder.html:57
+#: .\TARGET\templates\crm\salesorder\edit_salesreturnorder.html:57
+#: .\TARGET\templates\crm\salesorder\list-salesorders.html:67
+#: .\TARGET\templates\crm\salesorder\list-salesreturnorders.html:65
+msgid "Salesman"
+msgstr "البائع"
+
+#: .\TARGET\crm\models.py:124 .\TARGET\crm\models.py:155
+#: .\TARGET\crm\models.py:463 .\TARGET\crm\models.py:502
+#: .\TARGET\crm\models.py:539
+#: .\TARGET\templates\crm\accounts\list-accounts.html:62
+#: .\TARGET\templates\crm\customers\crm-customers.html:63
+#: .\TARGET\templates\crm\target\create_targetbuildingblocks.html:98
+#: .\TARGET\templates\crm\target\create_targetbuildingblocksaccounts.html:60
+#: .\TARGET\templates\crm\target\create_targetbuildingblockschannels.html:60
+#: .\TARGET\templates\crm\target\edit_targetbuildingblocks.html:102
+#: .\TARGET\templates\crm\target\edit_targetbuildingblocksaccounts.html:60
+#: .\TARGET\templates\crm\target\edit_targetbuildingblockschannels.html:60
+#: .\TARGET\templates\crm\target\list-targetbuildingblocksaccounts.html:62
+#: .\TARGET\templates\crm\target\list-targetbuildingblockschannels.html:62
+msgid "Channel"
+msgstr "قناة البيع"
+
+#: .\TARGET\crm\models.py:156 .\TARGET\crm\models.py:480
+#: .\TARGET\crm\models.py:503
+#: .\TARGET\templates\crm\customers\crm-customers.html:64
+#: .\TARGET\templates\crm\target\create_targetbuildingblocks.html:148
+#: .\TARGET\templates\crm\target\create_targetbuildingblocksaccounts.html:71
+#: .\TARGET\templates\crm\target\edit_targetbuildingblocks.html:152
+#: .\TARGET\templates\crm\target\edit_targetbuildingblocksaccounts.html:71
+#: .\TARGET\templates\crm\target\list-targetbuildingblocksaccounts.html:63
+msgid "Account"
+msgstr "الحساب"
+
+#: .\TARGET\crm\models.py:158 .\TARGET\crm\models.py:504
+#: .\TARGET\crm\models.py:540
+#: .\TARGET\templates\crm\customers\crm-customers.html:66
+#: .\TARGET\templates\crm\target\create_targetbuildingblocksaccounts.html:82
+#: .\TARGET\templates\crm\target\create_targetbuildingblockschannels.html:71
+#: .\TARGET\templates\crm\target\edit_targetbuildingblocksaccounts.html:82
+#: .\TARGET\templates\crm\target\edit_targetbuildingblockschannels.html:71
+#: .\TARGET\templates\crm\target\list-targetbuildingblocksaccounts.html:64
+#: .\TARGET\templates\crm\target\list-targetbuildingblockschannels.html:63
+msgid "Customer Size"
+msgstr "حجم العميل"
+
+#: .\TARGET\crm\models.py:159
+#: .\TARGET\templates\crm\branches\list-branches.html:18
+msgid "Branches"
+msgstr "الفروع"
+
+#: .\TARGET\crm\models.py:163 .\TARGET\crm\models.py:204
+#: .\TARGET\crm\models.py:274
+msgid "Address"
+msgstr "العنوان"
+
+#: .\TARGET\crm\models.py:164
+msgid "Credit Limit"
+msgstr "الحد الائتماني"
+
+#: .\TARGET\crm\models.py:165 .\TARGET\crm\models.py:290
+#: .\TARGET\crm\models.py:324 .\TARGET\crm\models.py:364
+#: .\TARGET\crm\models.py:399
+#: .\TARGET\templates\crm\purchaseorder\create_purchaseorder.html:74
+#: .\TARGET\templates\crm\purchaseorder\create_purchasereturnorder.html:76
+#: .\TARGET\templates\crm\purchaseorder\edit_purchaseorder.html:74
+#: .\TARGET\templates\crm\purchaseorder\edit_purchasereturnorder.html:76
+#: .\TARGET\templates\crm\salesorder\create_salesorder.html:77
+#: .\TARGET\templates\crm\salesorder\edit_salesorder.html:73
+msgid "Payment Terms"
+msgstr "شروط الدفع"
+
+#: .\TARGET\crm\models.py:166 .\TARGET\crm\models.py:365
+msgid "Due Days"
+msgstr "يستحق خلال / يوم"
+
+#: .\TARGET\crm\models.py:167 .\TARGET\crm\models.py:286
+#: .\TARGET\crm\models.py:320 .\TARGET\crm\models.py:359
+#: .\TARGET\crm\models.py:394
+#: .\TARGET\templates\crm\purchaseorder\create_purchaseorder.html:80
+#: .\TARGET\templates\crm\purchaseorder\create_purchasereturnorder.html:82
+#: .\TARGET\templates\crm\purchaseorder\edit_purchaseorder.html:80
+#: .\TARGET\templates\crm\purchaseorder\edit_purchasereturnorder.html:82
+#: .\TARGET\templates\crm\salesorder\create_salesorder.html:106
+#: .\TARGET\templates\crm\salesorder\edit_salesorder.html:102
+msgid "Due Date"
+msgstr "تاريخ الاستحقاق"
+
+#: .\TARGET\crm\models.py:168
+msgid "Libility"
+msgstr "المديونية"
+
+#: .\TARGET\crm\models.py:198 .\TARGET\crm\models.py:361
+#: .\TARGET\crm\models.py:396 .\TARGET\crm\models.py:694
+#: .\TARGET\templates\crm\branches\list-branches.html:63
+#: .\TARGET\templates\crm\collections\list-collections.html:63
+#: .\TARGET\templates\crm\salesorder\create_salesorder.html:48
+#: .\TARGET\templates\crm\salesorder\create_salesreturnorder.html:49
+#: .\TARGET\templates\crm\salesorder\edit_salesorder.html:48
+#: .\TARGET\templates\crm\salesorder\edit_salesreturnorder.html:48
+#: .\TARGET\templates\crm\salesorder\edit_salesreturnorder.html:98
+#: .\TARGET\templates\crm\salesorder\list-salesorders.html:65
+#: .\TARGET\templates\crm\salesorder\list-salesreturnorders.html:63
+msgid "Customer"
+msgstr "العميل"
+
+#: .\TARGET\crm\models.py:200
+msgid "Branch Size"
+msgstr "حجم الفرع"
+
+#: .\TARGET\crm\models.py:216
+#: .\TARGET\templates\crm\categories\list-categories.html:62
+msgid "Parent Category"
+msgstr ""
+
+#: .\TARGET\crm\models.py:227
+#: .\TARGET\templates\crm\products\list-products.html:63
+msgid "SKU"
+msgstr "رقم المنتج"
+
+#: .\TARGET\crm\models.py:229
+#: .\TARGET\templates\crm\products\list-products.html:64
+msgid "Category"
+msgstr "تصنيف المنتج"
+
+#: .\TARGET\crm\models.py:230
+msgid "Price 1"
+msgstr "السعر 1"
+
+#: .\TARGET\crm\models.py:231
+msgid "Barcode"
+msgstr "الباركود"
+
+#: .\TARGET\crm\models.py:232
+msgid "Product Type"
+msgstr "نوع المنتج"
+
+#: .\TARGET\crm\models.py:235
+msgid "Price 2"
+msgstr "السعر 2"
+
+#: .\TARGET\crm\models.py:238
+msgid "Packing"
+msgstr "التعبئة"
+
+#: .\TARGET\crm\models.py:239
+#: .\TARGET\templates\crm\products\list-products.html:66
+msgid "Weight"
+msgstr "الوزن"
+
+#: .\TARGET\crm\models.py:240
+msgid "Safety Stock / M"
+msgstr "المخزون الاحتياطي / اشهر"
+
+#: .\TARGET\crm\models.py:241
+#: .\TARGET\templates\crm\products\list-products.html:68
+msgid "TI"
+msgstr "TI"
+
+#: .\TARGET\crm\models.py:242
+#: .\TARGET\templates\crm\products\list-products.html:69
+msgid "HI"
+msgstr "HI"
+
+#: .\TARGET\crm\models.py:243
+#: .\TARGET\templates\crm\setting\list-financialyears.html:44
+#: .\TARGET\templates\crm\setting\list-financialyears.html:56
+msgid "M1"
+msgstr "M1"
+
+#: .\TARGET\crm\models.py:244
+#: .\TARGET\templates\crm\setting\list-financialyears.html:45
+msgid "M2"
+msgstr "M2"
+
+#: .\TARGET\crm\models.py:245
+#: .\TARGET\templates\crm\setting\list-financialyears.html:46
+msgid "M3"
+msgstr "M3"
+
+#: .\TARGET\crm\models.py:246
+#: .\TARGET\templates\crm\setting\list-financialyears.html:47
+msgid "M4"
+msgstr "M4"
+
+#: .\TARGET\crm\models.py:247
+#: .\TARGET\templates\crm\setting\list-financialyears.html:48
+msgid "M5"
+msgstr "M5"
+
+#: .\TARGET\crm\models.py:248
+#: .\TARGET\templates\crm\setting\list-financialyears.html:49
+msgid "M6"
+msgstr "M6"
+
+#: .\TARGET\crm\models.py:249
+#: .\TARGET\templates\crm\setting\list-financialyears.html:50
+msgid "M7"
+msgstr "M7"
+
+#: .\TARGET\crm\models.py:250
+#: .\TARGET\templates\crm\setting\list-financialyears.html:51
+msgid "M8"
+msgstr "M8"
+
+#: .\TARGET\crm\models.py:251
+#: .\TARGET\templates\crm\setting\list-financialyears.html:52
+msgid "M9"
+msgstr "M9"
+
+#: .\TARGET\crm\models.py:252
+#: .\TARGET\templates\crm\setting\list-financialyears.html:53
+msgid "M10"
+msgstr "M10"
+
+#: .\TARGET\crm\models.py:253
+#: .\TARGET\templates\crm\setting\list-financialyears.html:54
+msgid "M11"
+msgstr "M11"
+
+#: .\TARGET\crm\models.py:254
+#: .\TARGET\templates\crm\setting\list-financialyears.html:55
+msgid "M12"
+msgstr "M12"
+
+#: .\TARGET\crm\models.py:255 .\TARGET\crm\models.py:291
+#: .\TARGET\crm\models.py:325 .\TARGET\crm\models.py:366
+#: .\TARGET\crm\models.py:400
+#: .\TARGET\templates\crm\purchaseorder\list-purchaseorders.html:66
+#: .\TARGET\templates\crm\purchaseorder\list-purchasereturnorders.html:66
+#: .\TARGET\templates\crm\salesorder\list-salesorders.html:68
+#: .\TARGET\templates\crm\salesorder\list-salesreturnorders.html:66
+msgid "Total"
+msgstr "الاجمالي"
+
+#: .\TARGET\crm\models.py:268
+#: .\TARGET\templates\crm\vendors\list-vendors.html:62
+msgid "Contact Person"
+msgstr "الشخص المسئول"
+
+#: .\TARGET\crm\models.py:269
+#: .\TARGET\templates\crm\vendors\list-vendors.html:63
+msgid "Mobile"
+msgstr "الموبايل"
+
+#: .\TARGET\crm\models.py:270
+#: .\TARGET\templates\crm\vendors\list-vendors.html:64
+msgid "Office Phone"
+msgstr "هاتف العمل"
+
+#: .\TARGET\crm\models.py:285 .\TARGET\crm\models.py:319
+#: .\TARGET\crm\models.py:358 .\TARGET\crm\models.py:393
+#: .\TARGET\crm\models.py:426
+#: .\TARGET\templates\crm\purchaseorder\create_purchaseorder.html:91
+#: .\TARGET\templates\crm\purchaseorder\create_purchasereturnorder.html:93
+#: .\TARGET\templates\crm\purchaseorder\edit_purchaseorder.html:91
+#: .\TARGET\templates\crm\purchaseorder\edit_purchasereturnorder.html:93
+#: .\TARGET\templates\crm\salesorder\create_salesorder.html:118
+#: .\TARGET\templates\crm\salesorder\create_salesreturnorder.html:92
+#: .\TARGET\templates\crm\salesorder\edit_salesorder.html:113
+#: .\TARGET\templates\crm\salesorder\edit_salesreturnorder.html:87
+#: .\TARGET\templates\crm\transferorder\list-transferorders.html:62
+msgid "Subject"
+msgstr "الموضوع"
+
+#: .\TARGET\crm\models.py:288 .\TARGET\crm\models.py:322
+#: .\TARGET\templates\crm\purchaseorder\create_purchaseorder.html:47
+#: .\TARGET\templates\crm\purchaseorder\create_purchasereturnorder.html:49
+#: .\TARGET\templates\crm\purchaseorder\edit_purchaseorder.html:47
+#: .\TARGET\templates\crm\purchaseorder\edit_purchasereturnorder.html:49
+#: .\TARGET\templates\crm\purchaseorder\list-purchaseorders.html:63
+#: .\TARGET\templates\crm\purchaseorder\list-purchasereturnorders.html:63
+msgid "Vendor"
+msgstr "المورد"
+
+#: .\TARGET\crm\models.py:289 .\TARGET\crm\models.py:323
+#: .\TARGET\crm\models.py:363 .\TARGET\crm\models.py:398
+#: .\TARGET\templates\crm\purchaseorder\create_purchaseorder.html:56
+#: .\TARGET\templates\crm\purchaseorder\create_purchasereturnorder.html:58
+#: .\TARGET\templates\crm\purchaseorder\edit_purchaseorder.html:56
+#: .\TARGET\templates\crm\purchaseorder\edit_purchasereturnorder.html:58
+#: .\TARGET\templates\crm\salesorder\create_salesorder.html:64
+#: .\TARGET\templates\crm\salesorder\create_salesreturnorder.html:69
+#: .\TARGET\templates\crm\salesorder\edit_salesorder.html:64
+#: .\TARGET\templates\crm\salesorder\edit_salesreturnorder.html:64
+msgid "Warehouse"
+msgstr "المستودع"
+
+#: .\TARGET\crm\models.py:301 .\TARGET\crm\models.py:334
+#: .\TARGET\crm\models.py:376 .\TARGET\crm\models.py:409
+#: .\TARGET\crm\models.py:436 .\TARGET\crm\models.py:451
+#: .\TARGET\crm\models.py:515 .\TARGET\crm\models.py:551
+#: .\TARGET\crm\models.py:576 .\TARGET\crm\models.py:616
+#: .\TARGET\templates\crm\purchaseorder\create_purchaseorder.html:110
+#: .\TARGET\templates\crm\purchaseorder\create_purchasereturnorder.html:112
+#: .\TARGET\templates\crm\purchaseorder\edit_purchaseorder.html:110
+#: .\TARGET\templates\crm\purchaseorder\edit_purchasereturnorder.html:112
+#: .\TARGET\templates\crm\salesorder\create_salesorder.html:137
+#: .\TARGET\templates\crm\salesorder\create_salesreturnorder.html:111
+#: .\TARGET\templates\crm\salesorder\edit_salesorder.html:132
+#: .\TARGET\templates\crm\salesorder\edit_salesreturnorder.html:106
+#: .\TARGET\templates\crm\target\create_targetbuildingblocks.html:61
+#: .\TARGET\templates\crm\target\create_targetbuildingblocksaccounts.html:105
+#: .\TARGET\templates\crm\target\create_targetbuildingblocksaccounts.html:106
+#: .\TARGET\templates\crm\target\create_targetbuildingblocksaccounts.html:107
+#: .\TARGET\templates\crm\target\create_targetbuildingblockschannels.html:94
+#: .\TARGET\templates\crm\target\edit_targetbuildingblocks.html:61
+#: .\TARGET\templates\crm\target\edit_targetbuildingblocksaccounts.html:105
+#: .\TARGET\templates\crm\target\edit_targetbuildingblockschannels.html:94
+#: .\TARGET\templates\crm\target\list-targetbuildingblocks.html:62
+#: .\TARGET\templates\crm\transferorder\create_transferorder.html:60
+#: .\TARGET\templates\crm\transferorder\edit_transferorder.html:60
+msgid "Product"
+msgstr "المنتج"
+
+#: .\TARGET\crm\models.py:302 .\TARGET\crm\models.py:335
+#: .\TARGET\crm\models.py:377 .\TARGET\crm\models.py:410
+#: .\TARGET\crm\models.py:437
+#: .\TARGET\templates\crm\purchaseorder\create_purchaseorder.html:111
+#: .\TARGET\templates\crm\purchaseorder\create_purchasereturnorder.html:113
+#: .\TARGET\templates\crm\purchaseorder\edit_purchaseorder.html:111
+#: .\TARGET\templates\crm\purchaseorder\edit_purchasereturnorder.html:113
+#: .\TARGET\templates\crm\salesorder\create_salesorder.html:138
+#: .\TARGET\templates\crm\salesorder\create_salesreturnorder.html:112
+#: .\TARGET\templates\crm\salesorder\edit_salesorder.html:133
+#: .\TARGET\templates\crm\salesorder\edit_salesreturnorder.html:107
+#: .\TARGET\templates\crm\transferorder\create_transferorder.html:61
+#: .\TARGET\templates\crm\transferorder\edit_transferorder.html:61
+msgid "Qty"
+msgstr "الكمية"
+
+#: .\TARGET\crm\models.py:304 .\TARGET\crm\models.py:337
+#: .\TARGET\crm\models.py:379 .\TARGET\crm\models.py:412
+#: .\TARGET\templates\crm\products\list-products.html:65
+#: .\TARGET\templates\crm\purchaseorder\create_purchaseorder.html:112
+#: .\TARGET\templates\crm\purchaseorder\create_purchasereturnorder.html:114
+#: .\TARGET\templates\crm\purchaseorder\edit_purchaseorder.html:112
+#: .\TARGET\templates\crm\purchaseorder\edit_purchasereturnorder.html:114
+#: .\TARGET\templates\crm\salesorder\create_salesorder.html:139
+#: .\TARGET\templates\crm\salesorder\create_salesreturnorder.html:113
+#: .\TARGET\templates\crm\salesorder\edit_salesorder.html:134
+#: .\TARGET\templates\crm\salesorder\edit_salesreturnorder.html:108
+msgid "Price"
+msgstr "السعر"
+
+#: .\TARGET\crm\models.py:305 .\TARGET\crm\models.py:338
+#: .\TARGET\crm\models.py:380 .\TARGET\crm\models.py:413
+#: .\TARGET\templates\crm\purchaseorder\create_purchaseorder.html:114
+#: .\TARGET\templates\crm\purchaseorder\create_purchasereturnorder.html:116
+#: .\TARGET\templates\crm\purchaseorder\edit_purchaseorder.html:114
+#: .\TARGET\templates\crm\purchaseorder\edit_purchasereturnorder.html:116
+#: .\TARGET\templates\crm\salesorder\create_salesorder.html:142
+#: .\TARGET\templates\crm\salesorder\create_salesreturnorder.html:115
+#: .\TARGET\templates\crm\salesorder\edit_salesorder.html:136
+#: .\TARGET\templates\crm\salesorder\edit_salesreturnorder.html:110
+msgid "Discount"
+msgstr "الخصم"
+
+#: .\TARGET\crm\models.py:306 .\TARGET\crm\models.py:339
+#: .\TARGET\crm\models.py:381 .\TARGET\crm\models.py:414
+msgid "Tax"
+msgstr "الضريبة"
+
+#: .\TARGET\crm\models.py:307 .\TARGET\crm\models.py:340
+#: .\TARGET\crm\models.py:382 .\TARGET\crm\models.py:415
+#: .\TARGET\templates\crm\purchaseorder\create_purchaseorder.html:115
+#: .\TARGET\templates\crm\purchaseorder\create_purchasereturnorder.html:117
+#: .\TARGET\templates\crm\purchaseorder\edit_purchaseorder.html:115
+#: .\TARGET\templates\crm\purchaseorder\edit_purchasereturnorder.html:117
+#: .\TARGET\templates\crm\salesorder\create_salesorder.html:143
+#: .\TARGET\templates\crm\salesorder\create_salesreturnorder.html:116
+#: .\TARGET\templates\crm\salesorder\edit_salesorder.html:137
+#: .\TARGET\templates\crm\salesorder\edit_salesreturnorder.html:111
+msgid "Subtotal"
+msgstr "المجموع"
+
+#: .\TARGET\crm\models.py:438
+#: .\TARGET\templates\crm\transferorder\create_transferorder.html:62
+#: .\TARGET\templates\crm\transferorder\edit_transferorder.html:62
+msgid "From Warehouse"
+msgstr "من المستودع"
+
+#: .\TARGET\crm\models.py:439
+#: .\TARGET\templates\crm\transferorder\create_transferorder.html:63
+#: .\TARGET\templates\crm\transferorder\edit_transferorder.html:63
+msgid "To Warehouse"
+msgstr "الى المستودع"
+
+#: .\TARGET\crm\models.py:464
+#: .\TARGET\templates\crm\target\create_targetbuildingblocks.html:99
+#: .\TARGET\templates\crm\target\edit_targetbuildingblocks.html:103
+msgid "Contribution"
+msgstr "الحصة"
+
+#: .\TARGET\crm\models.py:465
+#: .\TARGET\templates\crm\target\create_targetbuildingblocks.html:100
+#: .\TARGET\templates\crm\target\edit_targetbuildingblocks.html:104
+msgid "Small"
+msgstr "حساب صغير"
+
+#: .\TARGET\crm\models.py:466
+#: .\TARGET\templates\crm\target\create_targetbuildingblocks.html:101
+#: .\TARGET\templates\crm\target\edit_targetbuildingblocks.html:105
+msgid "Medium"
+msgstr "حساب متوسط"
+
+#: .\TARGET\crm\models.py:467
+#: .\TARGET\templates\crm\target\create_targetbuildingblocks.html:102
+#: .\TARGET\templates\crm\target\edit_targetbuildingblocks.html:106
+msgid "Large"
+msgstr "حساب كبير"
+
+#: .\TARGET\crm\models.py:468
+msgid "Total %"
+msgstr "المجموع %"
+
+#: .\TARGET\crm\models.py:516 .\TARGET\crm\models.py:552
+msgid "Monthly Target"
+msgstr "الهدف الشهري"
+
+#: .\TARGET\crm\models.py:695
+#: .\TARGET\templates\crm\collections\list-collections.html:64
+#: .\TARGET\templates\crm\salesorder\list-salesorders.html:21
+msgid "Sales Order"
+msgstr "فاتورة مبيعات"
+
+#: .\TARGET\crm\models.py:696
+#: .\TARGET\templates\crm\collections\list-collections.html:65
+msgid "Amount"
+msgstr "المبلغ"
+
+#: .\TARGET\templates\account\email_confirm.html:7
+msgid "Confirm E-mail Address"
+msgstr "تأكيد البريد الالكتروني"
+
+#: .\TARGET\templates\account\email_confirm.html:30
+#, python-format
+msgid ""
+"Please\n"
+"                confirm that\n"
+"                <a href=\"mailto:%(email)s\">%(email)s</a> is an e-mail "
+"address for user %(user_display)s\n"
+"                ."
+msgstr ""
+
+#: .\TARGET\templates\account\email_confirm.html:37
+msgid "Confirm"
+msgstr "تأكيد"
+
+#: .\TARGET\templates\account\email_confirm.html:42
+#, python-format
+msgid ""
+"This e-mail confirmation link expired or is invalid. Please\n"
+"                <a href=\"%(email_url)s\">issue a new e-mail confirmation "
+"request</a>."
+msgstr ""
+
+#: .\TARGET\templates\account\login.html:7
+#: .\TARGET\templates\account\login.html:33
+msgid "Sign In"
+msgstr "انشاء حساب"
+
+#: .\TARGET\templates\account\login.html:42
+msgid "Forgot Password?"
+msgstr "نسيت كلمة المرور؟"
+
+#: .\TARGET\templates\account\login.html:45
+#, python-format
+msgid ""
+"If you have not created an account yet, then please\n"
+"              <a href=\"%(signup_url)s\" class=\"text-white\"><b>Sign Up</"
+"b></a> first."
+msgstr ""
+
+#: .\TARGET\templates\account\logout.html:7
+#: .\TARGET\templates\account\logout.html:27
+#: .\TARGET\templates\account\logout.html:36
+msgid "Sign Out"
+msgstr "تسجيل الخروج"
+
+#: .\TARGET\templates\account\logout.html:28
+msgid "Are you sure you want to sign out?"
+msgstr "هل أنت متأكد من تسجيل الخروج؟"
+
+#: .\TARGET\templates\account\password_change.html:6
+#: .\TARGET\templates\account\password_change.html:9
+#: .\TARGET\templates\account\password_change.html:14
+#: .\TARGET\templates\account\password_reset_from_key.html:7
+#: .\TARGET\templates\account\password_reset_from_key.html:37
+#: .\TARGET\templates\account\password_reset_from_key_done.html:7
+#: .\TARGET\templates\account\password_reset_from_key_done.html:26
+msgid "Change Password"
+msgstr "تغيير كلمة المرور"
+
+#: .\TARGET\templates\account\password_reset.html:7
+#: .\TARGET\templates\account\password_reset_done.html:7
+#: .\TARGET\templates\account\password_reset_done.html:24
+msgid "Password Reset"
+msgstr "اعادة تعيين كلمة المرور"
+
+#: .\TARGET\templates\account\password_reset.html:23
+msgid ""
+"Forgotten your password? Enter your e-mail address below, and we'll send you "
+"an e-mail allowing you to reset it."
+msgstr ""
+
+#: .\TARGET\templates\account\password_reset.html:38
+msgid "Reset Password"
+msgstr ""
+
+#: .\TARGET\templates\account\password_reset_done.html:31
+msgid ""
+"We have sent you an e-mail. Please contact us if you do not receive it "
+"within a few\n"
+"                minutes."
+msgstr ""
+
+#: .\TARGET\templates\account\password_reset_from_key.html:27
+#, python-format
+msgid ""
+"The password reset link was invalid, possibly because it has already been "
+"used.\n"
+"              Please request a <a href=\"%(passwd_reset_url)s\">new password "
+"reset</a>."
+msgstr ""
+
+#: .\TARGET\templates\account\password_reset_from_key.html:42
+#: .\TARGET\templates\account\password_reset_from_key_done.html:28
+msgid "Your password is now changed."
+msgstr "تم تغيير كلمة المرور بنجاح"
+
+#: .\TARGET\templates\account\password_set.html:7
+#: .\TARGET\templates\account\password_set.html:26
+#: .\TARGET\templates\account\password_set.html:35
+msgid "Set Password"
+msgstr "تعيين كلمة المرور"
+
+#: .\TARGET\templates\account\signup.html:7
+#: .\TARGET\templates\account\signup_closed.html:7
+msgid "Signup"
+msgstr "انشاء حساب"
+
+#: .\TARGET\templates\account\signup.html:23
+msgid "Don't have an account? Create your account, it takes less than a minute"
+msgstr ""
+
+#: .\TARGET\templates\account\signup.html:32
+msgid "Sign Up"
+msgstr ""
+
+#: .\TARGET\templates\account\signup.html:41
+#, python-format
+msgid ""
+"Already have account?\n"
+"              <a href=\"%(login_url)s\" class=\"text-white ml-1\"><b>Log In</"
+"b></a>"
+msgstr ""
+
+#: .\TARGET\templates\account\signup_closed.html:26
+msgid "We are sorry, but the sign up is currently closed."
+msgstr ""
+
+#: .\TARGET\templates\account\verification_sent.html:7
+#: .\TARGET\templates\account\verification_sent.html:78
+#: .\TARGET\templates\account\verified_email_required.html:7
+#: .\TARGET\templates\account\verified_email_required.html:26
+msgid "Verify Your E-mail Address"
+msgstr ""
+
+#: .\TARGET\templates\account\verified_email_required.html:31
+msgid ""
+"This part of the site requires us to verify that\n"
+"                  you are who you claim to be. For this purpose, we require "
+"that you\n"
+"                  verify ownership of your e-mail address. "
+msgstr ""
+
+#: .\TARGET\templates\account\verified_email_required.html:35
+msgid ""
+"We have sent an e-mail to you for\n"
+"                  verification. Please click on the link inside this e-mail. "
+"Please\n"
+"                  contact us if you do not receive it within a few minutes."
+msgstr ""
+
+#: .\TARGET\templates\account\verified_email_required.html:39
+#, python-format
+msgid ""
+"<strong>Note:</strong> you can still\n"
+"                  <a href=\"%(email_url)s\">change your e-mail address</a>."
+msgstr ""
+
+#: .\TARGET\templates\crm\accounts\create_account.html:16
+msgid "Add Account"
+msgstr "انشاء حساب"
+
+#: .\TARGET\templates\crm\accounts\create_account.html:64
+#: .\TARGET\templates\crm\accounts\edit_account.html:66
+#: .\TARGET\templates\crm\branches\create_branch.html:101
+#: .\TARGET\templates\crm\branches\edit_branch.html:102
+#: .\TARGET\templates\crm\categories\create_category.html:56
+#: .\TARGET\templates\crm\channels\create_channel.html:56
+#: .\TARGET\templates\crm\channels\edit_channel.html:58
+#: .\TARGET\templates\crm\collections\create_collection.html:80
+#: .\TARGET\templates\crm\collections\edit_collection.html:76
+#: .\TARGET\templates\crm\customers\create_customer.html:127
+#: .\TARGET\templates\crm\customers\edit_customer.html:129
+#: .\TARGET\templates\crm\products\create_product.html:213
+#: .\TARGET\templates\crm\products\edit_product.html:213
+#: .\TARGET\templates\crm\purchaseorder\create_purchaseorder.html:148
+#: .\TARGET\templates\crm\purchaseorder\create_purchasereturnorder.html:149
+#: .\TARGET\templates\crm\salesmans\create_salesman.html:60
+#: .\TARGET\templates\crm\salesmans\edit_salesman.html:58
+#: .\TARGET\templates\crm\salesorder\create_salesorder.html:177
+#: .\TARGET\templates\crm\salesorder\create_salesreturnorder.html:148
+#: .\TARGET\templates\crm\setting\create_area.html:53
+#: .\TARGET\templates\crm\setting\create_city.html:60
+#: .\TARGET\templates\crm\setting\create_country.html:43
+#: .\TARGET\templates\crm\setting\create_uom.html:43
+#: .\TARGET\templates\crm\setting\create_warehouse.html:114
+#: .\TARGET\templates\crm\setting\create_warehousetype.html:43
+#: .\TARGET\templates\crm\setting\edit_area.html:54
+#: .\TARGET\templates\crm\setting\edit_city.html:62
+#: .\TARGET\templates\crm\setting\edit_country.html:45
+#: .\TARGET\templates\crm\setting\edit_financialyears.html:84
+#: .\TARGET\templates\crm\setting\edit_productunits.html:36
+#: .\TARGET\templates\crm\setting\edit_uom.html:45
+#: .\TARGET\templates\crm\setting\edit_warehouse.html:114
+#: .\TARGET\templates\crm\setting\edit_warehousetype.html:43
+#: .\TARGET\templates\crm\target\create_targetbuildingblocks.html:165
+#: .\TARGET\templates\crm\target\create_targetbuildingblocksaccounts.html:126
+#: .\TARGET\templates\crm\target\create_targetbuildingblockschannels.html:115
+#: .\TARGET\templates\crm\target\edit_targetbuildingblocks.html:169
+#: .\TARGET\templates\crm\target\edit_targetbuildingblocksaccounts.html:126
+#: .\TARGET\templates\crm\target\edit_targetbuildingblockschannels.html:115
+#: .\TARGET\templates\crm\transferorder\create_transferorder.html:83
+#: .\TARGET\templates\crm\transferorder\edit_transferorder.html:83
+#: .\TARGET\templates\crm\vendors\create_vendor.html:103
+#: .\TARGET\templates\crm\vendors\edit_vendor.html:104
+msgid "Cancel"
+msgstr "تجاهل"
+
+#: .\TARGET\templates\crm\accounts\create_account.html:65
+#: .\TARGET\templates\crm\branches\create_branch.html:102
+#: .\TARGET\templates\crm\categories\create_category.html:57
+#: .\TARGET\templates\crm\channels\create_channel.html:57
+#: .\TARGET\templates\crm\collections\create_collection.html:81
+#: .\TARGET\templates\crm\customers\create_customer.html:128
+#: .\TARGET\templates\crm\purchaseorder\create_purchaseorder.html:149
+#: .\TARGET\templates\crm\purchaseorder\create_purchasereturnorder.html:150
+#: .\TARGET\templates\crm\salesmans\create_salesman.html:61
+#: .\TARGET\templates\crm\salesorder\create_salesorder.html:178
+#: .\TARGET\templates\crm\salesorder\create_salesreturnorder.html:149
+#: .\TARGET\templates\crm\setting\create_area.html:54
+#: .\TARGET\templates\crm\setting\create_city.html:61
+#: .\TARGET\templates\crm\setting\create_country.html:44
+#: .\TARGET\templates\crm\setting\create_uom.html:44
+#: .\TARGET\templates\crm\setting\create_warehouse.html:115
+#: .\TARGET\templates\crm\setting\create_warehousetype.html:44
+#: .\TARGET\templates\crm\target\create_targetbuildingblocks.html:166
+#: .\TARGET\templates\crm\target\create_targetbuildingblocksaccounts.html:127
+#: .\TARGET\templates\crm\target\create_targetbuildingblockschannels.html:116
+#: .\TARGET\templates\crm\transferorder\create_transferorder.html:84
+#: .\TARGET\templates\crm\vendors\create_vendor.html:104
+msgid "Create"
+msgstr "انشاء"
+
+#: .\TARGET\templates\crm\accounts\delete_account.html:9
+msgid "Delete Account"
+msgstr "حذف الحساب"
+
+#: .\TARGET\templates\crm\accounts\delete_account.html:21
+msgid "Are you sure you want to delete this account"
+msgstr "هل انت متاكد من حذف الحساب"
+
+#: .\TARGET\templates\crm\accounts\delete_account.html:24
+#: .\TARGET\templates\crm\branches\delete_branch.html:22
+#: .\TARGET\templates\crm\categories\delete_category.html:24
+#: .\TARGET\templates\crm\channels\delete_channel.html:24
+#: .\TARGET\templates\crm\collections\delete_collection.html:24
+#: .\TARGET\templates\crm\customers\delete_customer.html:22
+#: .\TARGET\templates\crm\customers\detail_customer.html:81
+#: .\TARGET\templates\crm\products\delete_product.html:24
+#: .\TARGET\templates\crm\purchaseorder\edit_purchaseorder.html:140
+#: .\TARGET\templates\crm\purchaseorder\edit_purchasereturnorder.html:141
+#: .\TARGET\templates\crm\salesmans\delete_salesman.html:24
+#: .\TARGET\templates\crm\salesorder\edit_salesorder.html:161
+#: .\TARGET\templates\crm\salesorder\edit_salesreturnorder.html:135
+#: .\TARGET\templates\crm\setting\delete_area.html:22
+#: .\TARGET\templates\crm\setting\delete_city.html:22
+#: .\TARGET\templates\crm\setting\delete_country.html:22
+#: .\TARGET\templates\crm\setting\delete_uom.html:22
+#: .\TARGET\templates\crm\setting\delete_warehouse.html:22
+#: .\TARGET\templates\crm\setting\delete_warehousetype.html:22
+#: .\TARGET\templates\crm\vendors\delete_vendor.html:22
+msgid "Close"
+msgstr "اغلاق"
+
+#: .\TARGET\templates\crm\accounts\delete_account.html:25
+#: .\TARGET\templates\crm\accounts\list-accounts.html:87
+#: .\TARGET\templates\crm\branches\delete_branch.html:23
+#: .\TARGET\templates\crm\branches\list-branches.html:96
+#: .\TARGET\templates\crm\categories\delete_category.html:25
+#: .\TARGET\templates\crm\categories\list-categories.html:83
+#: .\TARGET\templates\crm\channels\delete_channel.html:25
+#: .\TARGET\templates\crm\channels\list-channels.html:83
+#: .\TARGET\templates\crm\collections\delete_collection.html:25
+#: .\TARGET\templates\crm\collections\list-collections.html:96
+#: .\TARGET\templates\crm\customers\crm-customers.html:100
+#: .\TARGET\templates\crm\customers\delete_customer.html:23
+#: .\TARGET\templates\crm\products\delete_product.html:25
+#: .\TARGET\templates\crm\products\list-products.html:104
+#: .\TARGET\templates\crm\salesmans\delete_salesman.html:25
+#: .\TARGET\templates\crm\salesmans\list-salesmans.html:84
+#: .\TARGET\templates\crm\setting\delete_area.html:23
+#: .\TARGET\templates\crm\setting\delete_city.html:23
+#: .\TARGET\templates\crm\setting\delete_country.html:23
+#: .\TARGET\templates\crm\setting\delete_uom.html:23
+#: .\TARGET\templates\crm\setting\delete_warehouse.html:23
+#: .\TARGET\templates\crm\setting\delete_warehousetype.html:23
+#: .\TARGET\templates\crm\setting\list-areas.html:79
+#: .\TARGET\templates\crm\setting\list-cities.html:84
+#: .\TARGET\templates\crm\setting\list-countries.html:75
+#: .\TARGET\templates\crm\setting\list-uoms.html:75
+#: .\TARGET\templates\crm\setting\list-warehouses.html:101
+#: .\TARGET\templates\crm\setting\list-warehousetypes.html:76
+#: .\TARGET\templates\crm\vendors\delete_vendor.html:23
+#: .\TARGET\templates\crm\vendors\list-vendors.html:99
+msgid "Delete"
+msgstr "حذف"
+
+#: .\TARGET\templates\crm\accounts\edit_account.html:15
+msgid "Update Account"
+msgstr "تحديث الحساب"
+
+#: .\TARGET\templates\crm\accounts\edit_account.html:67
+#: .\TARGET\templates\crm\branches\edit_branch.html:103
+#: .\TARGET\templates\crm\channels\edit_channel.html:59
+#: .\TARGET\templates\crm\collections\edit_collection.html:77
+#: .\TARGET\templates\crm\customers\edit_customer.html:130
+#: .\TARGET\templates\crm\products\edit_product.html:214
+#: .\TARGET\templates\crm\salesmans\edit_salesman.html:59
+#: .\TARGET\templates\crm\setting\edit_area.html:55
+#: .\TARGET\templates\crm\setting\edit_city.html:63
+#: .\TARGET\templates\crm\setting\edit_country.html:46
+#: .\TARGET\templates\crm\setting\edit_financialyears.html:85
+#: .\TARGET\templates\crm\setting\edit_productunits.html:37
+#: .\TARGET\templates\crm\setting\edit_uom.html:46
+#: .\TARGET\templates\crm\setting\edit_warehouse.html:115
+#: .\TARGET\templates\crm\setting\edit_warehousetype.html:44
+#: .\TARGET\templates\crm\target\edit_targetbuildingblocks.html:170
+#: .\TARGET\templates\crm\target\edit_targetbuildingblocksaccounts.html:127
+#: .\TARGET\templates\crm\target\edit_targetbuildingblockschannels.html:116
+#: .\TARGET\templates\crm\transferorder\edit_transferorder.html:84
+#: .\TARGET\templates\crm\vendors\edit_vendor.html:105
+msgid "Save"
+msgstr "تخزين"
+
+#: .\TARGET\templates\crm\accounts\list-accounts.html:18
+#: .\TARGET\templates\partials\sidebar.html:29
+msgid "Accounts"
+msgstr "الحسابات"
+
+#: .\TARGET\templates\crm\accounts\list-accounts.html:34
+#: .\TARGET\templates\crm\branches\list-branches.html:33
+#: .\TARGET\templates\crm\categories\list-categories.html:33
+#: .\TARGET\templates\crm\channels\list-channels.html:33
+#: .\TARGET\templates\crm\collections\list-collections.html:34
+#: .\TARGET\templates\crm\customers\crm-customers.html:33
+#: .\TARGET\templates\crm\products\list-products.html:35
+#: .\TARGET\templates\crm\purchaseorder\list-purchaseorders.html:34
+#: .\TARGET\templates\crm\purchaseorder\list-purchasereturnorders.html:34
+#: .\TARGET\templates\crm\salesmans\list-salesmans.html:33
+#: .\TARGET\templates\crm\salesorder\list-salesorders.html:36
+#: .\TARGET\templates\crm\salesorder\list-salesreturnorders.html:34
+#: .\TARGET\templates\crm\setting\list-areas.html:33
+#: .\TARGET\templates\crm\setting\list-cities.html:33
+#: .\TARGET\templates\crm\setting\list-countries.html:33
+#: .\TARGET\templates\crm\setting\list-uoms.html:33
+#: .\TARGET\templates\crm\setting\list-warehouses.html:34
+#: .\TARGET\templates\crm\setting\list-warehousetypes.html:34
+#: .\TARGET\templates\crm\target\list-targetbuildingblocks.html:34
+#: .\TARGET\templates\crm\target\list-targetbuildingblocksaccounts.html:33
+#: .\TARGET\templates\crm\target\list-targetbuildingblockschannels.html:33
+#: .\TARGET\templates\crm\transferorder\list-transferorders.html:33
+#: .\TARGET\templates\crm\vendors\list-vendors.html:33
+msgid "Add"
+msgstr "انشاء"
+
+#: .\TARGET\templates\crm\accounts\list-accounts.html:65
+#: .\TARGET\templates\crm\branches\list-branches.html:68
+#: .\TARGET\templates\crm\categories\list-categories.html:64
+#: .\TARGET\templates\crm\channels\list-channels.html:64
+#: .\TARGET\templates\crm\collections\list-collections.html:68
+#: .\TARGET\templates\crm\customers\crm-customers.html:69
+#: .\TARGET\templates\crm\products\list-products.html:70
+#: .\TARGET\templates\crm\purchaseorder\list-purchaseorders.html:68
+#: .\TARGET\templates\crm\purchaseorder\list-purchasereturnorders.html:67
+#: .\TARGET\templates\crm\salesmans\list-salesmans.html:65
+#: .\TARGET\templates\crm\salesorder\list-salesorders.html:69
+#: .\TARGET\templates\crm\salesorder\list-salesreturnorders.html:67
+#: .\TARGET\templates\crm\setting\list-areas.html:64
+#: .\TARGET\templates\crm\setting\list-cities.html:66
+#: .\TARGET\templates\crm\setting\list-countries.html:63
+#: .\TARGET\templates\crm\setting\list-productunits.html:46
+#: .\TARGET\templates\crm\setting\list-uoms.html:63
+#: .\TARGET\templates\crm\setting\list-warehouses.html:71
+#: .\TARGET\templates\crm\setting\list-warehousetypes.html:64
+#: .\TARGET\templates\crm\target\list-targetbuildingblocks.html:64
+#: .\TARGET\templates\crm\target\list-targetbuildingblocksaccounts.html:65
+#: .\TARGET\templates\crm\target\list-targetbuildingblockschannels.html:64
+#: .\TARGET\templates\crm\transferorder\list-transferorders.html:64
+#: .\TARGET\templates\crm\vendors\list-vendors.html:68
+msgid "Action"
+msgstr "الاجراء"
+
+#: .\TARGET\templates\crm\accounts\list-accounts.html:86
+#: .\TARGET\templates\crm\branches\list-branches.html:95
+#: .\TARGET\templates\crm\categories\list-categories.html:82
+#: .\TARGET\templates\crm\channels\list-channels.html:82
+#: .\TARGET\templates\crm\collections\list-collections.html:95
+#: .\TARGET\templates\crm\customers\crm-customers.html:99
+#: .\TARGET\templates\crm\products\list-products.html:103
+#: .\TARGET\templates\crm\salesmans\list-salesmans.html:83
+#: .\TARGET\templates\crm\setting\list-areas.html:78
+#: .\TARGET\templates\crm\setting\list-cities.html:83
+#: .\TARGET\templates\crm\setting\list-countries.html:74
+#: .\TARGET\templates\crm\setting\list-financialyears.html:101
+#: .\TARGET\templates\crm\setting\list-productunits.html:61
+#: .\TARGET\templates\crm\setting\list-uoms.html:74
+#: .\TARGET\templates\crm\setting\list-warehouses.html:100
+#: .\TARGET\templates\crm\setting\list-warehousetypes.html:75
+#: .\TARGET\templates\crm\vendors\list-vendors.html:98
+msgid "Edit"
+msgstr "تحديث"
+
+#: .\TARGET\templates\crm\branches\create_branch.html:16
+msgid "Add Branch"
+msgstr ""
+
+#: .\TARGET\templates\crm\branches\delete_branch.html:9
+msgid "Delete Branch"
+msgstr "حذف الفرع"
+
+#: .\TARGET\templates\crm\branches\delete_branch.html:19
+msgid "Are you sure you want to delete this branch"
+msgstr "هل انت متاكد من حذف الفرع"
+
+#: .\TARGET\templates\crm\branches\edit_branch.html:15
+msgid "Update Branch"
+msgstr "تحديث الفرع"
+
+#: .\TARGET\templates\crm\categories\create_category.html:16
+msgid "Add Category"
+msgstr "انشاء تصنيف للمواد"
+
+#: .\TARGET\templates\crm\categories\delete_category.html:9
+msgid "Delete Category"
+msgstr "حذف التصنيف"
+
+#: .\TARGET\templates\crm\categories\delete_category.html:21
+msgid "Are you sure you want to delete this category"
+msgstr "هل انت متاكد من حذف التصنيف"
+
+#: .\TARGET\templates\crm\categories\list-categories.html:18
+msgid "Categories"
+msgstr "تصنيفات المواد"
+
+#: .\TARGET\templates\crm\channels\create_channel.html:16
+msgid "Add Channel"
+msgstr "انشاء قناة بيعية"
+
+#: .\TARGET\templates\crm\channels\delete_channel.html:9
+msgid "Delete Channel"
+msgstr "حذف القناة"
+
+#: .\TARGET\templates\crm\channels\delete_channel.html:21
+msgid "Are you sure you want to delete this Channel"
+msgstr "هل انت متاكد من حذف القناة"
+
+#: .\TARGET\templates\crm\channels\edit_channel.html:15
+msgid "Update Channel"
+msgstr "تحديث قناة البيع"
+
+#: .\TARGET\templates\crm\channels\list-channels.html:18
+#: .\TARGET\templates\partials\sidebar.html:35
+msgid "Channels"
+msgstr "قنوات البيع"
+
+#: .\TARGET\templates\crm\collections\create_collection.html:13
+#: .\TARGET\templates\crm\collections\edit_collection.html:13
+msgid "Add Collection"
+msgstr "انشاء تحصيل"
+
+#: .\TARGET\templates\crm\collections\delete_collection.html:9
+msgid "Delete Collection"
+msgstr "حذف تحصيل"
+
+#: .\TARGET\templates\crm\collections\delete_collection.html:21
+msgid "Are you sure you want to delete collection for customer"
+msgstr "هل انت متاكد من حذف التحصيل للعميل"
+
+#: .\TARGET\templates\crm\collections\list-collections.html:19
+#: .\TARGET\templates\partials\sidebar.html:92
+#: .\TARGET\templates\partials\sidebar.html:160
+msgid "Collections"
+msgstr "التحصيلات"
+
+#: .\TARGET\templates\crm\collections\list-collections.html:62
+msgid "CNO"
+msgstr "رقم التحصيل"
+
+#: .\TARGET\templates\crm\collections\list-collections.html:67
+#: .\TARGET\templates\crm\purchaseorder\list-purchaseorders.html:64
+#: .\TARGET\templates\crm\purchaseorder\list-purchasereturnorders.html:64
+#: .\TARGET\templates\crm\salesorder\list-salesorders.html:66
+#: .\TARGET\templates\crm\salesorder\list-salesreturnorders.html:64
+#: .\TARGET\templates\crm\transferorder\list-transferorders.html:63
+msgid "Date"
+msgstr "التاريخ"
+
+#: .\TARGET\templates\crm\customers\create_customer.html:15
+msgid "Add Customer"
+msgstr "انشاء عميل"
+
+#: .\TARGET\templates\crm\customers\crm-customers.html:18
+#: .\TARGET\templates\partials\sidebar.html:32
+msgid "Customers"
+msgstr "العملاء"
+
+#: .\TARGET\templates\crm\customers\delete_customer.html:9
+msgid "Delete Customer"
+msgstr "حذف عميل"
+
+#: .\TARGET\templates\crm\customers\delete_customer.html:19
+msgid "Are you sure you want to delete this customer"
+msgstr "هل انت متاكد من حذف العميل"
+
+#: .\TARGET\templates\crm\customers\detail_customer.html:8
+msgid "Customer Details"
+msgstr "تفاصيل العميل"
+
+#: .\TARGET\templates\crm\customers\edit_customer.html:15
+msgid "Update Customer"
+msgstr "تحديث العميل"
+
+#: .\TARGET\templates\crm\products\create_product.html:13
+msgid "Add Product"
+msgstr "انشاء منتج"
+
+#: .\TARGET\templates\crm\products\create_product.html:58
+#: .\TARGET\templates\crm\products\edit_product.html:58
+#: .\TARGET\templates\crm\purchaseorder\create_purchaseorder.html:102
+#: .\TARGET\templates\crm\purchaseorder\edit_purchaseorder.html:102
+#: .\TARGET\templates\crm\purchaseorder\edit_purchasereturnorder.html:104
+#: .\TARGET\templates\crm\salesorder\create_salesorder.html:129
+#: .\TARGET\templates\crm\salesorder\create_salesreturnorder.html:103
+#: .\TARGET\templates\crm\salesorder\edit_salesorder.html:124
+#: .\TARGET\templates\crm\target\create_targetbuildingblocks.html:89
+#: .\TARGET\templates\crm\target\create_targetbuildingblocksaccounts.html:97
+#: .\TARGET\templates\crm\target\create_targetbuildingblockschannels.html:86
+#: .\TARGET\templates\crm\target\edit_targetbuildingblocks.html:93
+#: .\TARGET\templates\crm\target\edit_targetbuildingblocksaccounts.html:97
+#: .\TARGET\templates\crm\target\edit_targetbuildingblockschannels.html:86
+#: .\TARGET\templates\crm\transferorder\create_transferorder.html:52
+#: .\TARGET\templates\crm\transferorder\edit_transferorder.html:52
+msgid "Product Details"
+msgstr "تفاصيل المنتج"
+
+#: .\TARGET\templates\crm\products\create_product.html:146
+#: .\TARGET\templates\crm\products\edit_product.html:146
+#, python-format
+msgid "Seasonality /Month %%"
+msgstr "المواسم / شهر %%"
+
+#: .\TARGET\templates\crm\products\create_product.html:214
+msgid "Create Customer"
+msgstr "انشاء عميل"
+
+#: .\TARGET\templates\crm\products\delete_product.html:9
+msgid "Delete Product"
+msgstr "حذف منتج"
+
+#: .\TARGET\templates\crm\products\delete_product.html:21
+msgid "Are you sure you want to delete this product"
+msgstr "هل انت متاكد من حذف المنتج"
+
+#: .\TARGET\templates\crm\products\edit_product.html:13
+msgid "Update Product"
+msgstr "تحديث المنتج"
+
+#: .\TARGET\templates\crm\products\list-products.html:19
+#: .\TARGET\templates\partials\sidebar.html:65
+msgid "Products"
+msgstr "المنتجات"
+
+#: .\TARGET\templates\crm\products\list-products.html:67
+msgid "Monthly Safety Stock"
+msgstr "المخزون الاحتياطي الشهري"
+
+#: .\TARGET\templates\crm\purchaseorder\create_purchaseorder.html:13
+msgid "Creating Purchase Order"
+msgstr "انشاء فاتورة مشتريات"
+
+#: .\TARGET\templates\crm\purchaseorder\create_purchaseorder.html:30
+#: .\TARGET\templates\crm\purchaseorder\edit_purchaseorder.html:30
+msgid "Purchase Order Details"
+msgstr "تفاصيل فاتورة المشتريات"
+
+#: .\TARGET\templates\crm\purchaseorder\create_purchaseorder.html:68
+#: .\TARGET\templates\crm\purchaseorder\edit_purchaseorder.html:68
+msgid "PO No"
+msgstr "رقم الفاتورة"
+
+#: .\TARGET\templates\crm\purchaseorder\create_purchaseorder.html:116
+#: .\TARGET\templates\crm\purchaseorder\create_purchasereturnorder.html:118
+#: .\TARGET\templates\crm\purchaseorder\edit_purchaseorder.html:116
+#: .\TARGET\templates\crm\purchaseorder\edit_purchasereturnorder.html:118
+#: .\TARGET\templates\crm\salesorder\create_salesorder.html:144
+#: .\TARGET\templates\crm\salesorder\create_salesreturnorder.html:117
+#: .\TARGET\templates\crm\target\create_targetbuildingblocks.html:105
+#: .\TARGET\templates\crm\target\create_targetbuildingblocks.html:149
+#: .\TARGET\templates\crm\target\create_targetbuildingblockschannels.html:96
+#: .\TARGET\templates\crm\target\edit_targetbuildingblocks.html:109
+#: .\TARGET\templates\crm\target\edit_targetbuildingblocks.html:153
+#: .\TARGET\templates\crm\target\edit_targetbuildingblocksaccounts.html:107
+#: .\TARGET\templates\crm\target\edit_targetbuildingblockschannels.html:96
+#: .\TARGET\templates\crm\transferorder\create_transferorder.html:64
+#: .\TARGET\templates\crm\transferorder\edit_transferorder.html:64
+msgid "Actions"
+msgstr "الاجراء"
+
+#: .\TARGET\templates\crm\purchaseorder\create_purchaseorder.html:142
+#: .\TARGET\templates\crm\purchaseorder\create_purchasereturnorder.html:143
+#: .\TARGET\templates\crm\purchaseorder\edit_purchaseorder.html:134
+#: .\TARGET\templates\crm\purchaseorder\edit_purchasereturnorder.html:135
+#: .\TARGET\templates\crm\salesorder\create_salesorder.html:170
+#: .\TARGET\templates\crm\salesorder\create_salesreturnorder.html:142
+#: .\TARGET\templates\crm\salesorder\edit_salesorder.html:154
+#: .\TARGET\templates\crm\salesorder\edit_salesreturnorder.html:128
+msgid "Total:"
+msgstr "المجموع:"
+
+#: .\TARGET\templates\crm\purchaseorder\create_purchasereturnorder.html:13
+msgid "Creating Purchase Return Order"
+msgstr "انشاء فاتورة مرتجع مشتريات"
+
+#: .\TARGET\templates\crm\purchaseorder\create_purchasereturnorder.html:33
+#: .\TARGET\templates\crm\purchaseorder\edit_purchasereturnorder.html:33
+msgid "Purchase Return Order Details"
+msgstr "تفاصيل فاتورة مرتجع المشتريات"
+
+#: .\TARGET\templates\crm\purchaseorder\create_purchasereturnorder.html:70
+#: .\TARGET\templates\crm\purchaseorder\edit_purchasereturnorder.html:70
+#: .\TARGET\templates\crm\salesorder\edit_salesreturnorder.html:76
+msgid "PRO No"
+msgstr "رقم الفاتورة"
+
+#: .\TARGET\templates\crm\purchaseorder\edit_purchaseorder.html:13
+msgid "View Purchase Order"
+msgstr "معاينة فاتورة المشتريات"
+
+#: .\TARGET\templates\crm\purchaseorder\edit_purchasereturnorder.html:13
+msgid "View Purchase Return Order"
+msgstr "معاينة فاتورة مرتجع المشتريات"
+
+#: .\TARGET\templates\crm\purchaseorder\list-purchaseorders.html:19
+#: .\TARGET\templates\partials\sidebar.html:104
+msgid "Purchase Order"
+msgstr "فاتورة مشتريات"
+
+#: .\TARGET\templates\crm\purchaseorder\list-purchaseorders.html:62
+msgid "PO Number"
+msgstr "رقم الفاتورة"
+
+#: .\TARGET\templates\crm\purchaseorder\list-purchasereturnorders.html:19
+msgid "Purchase Return Order"
+msgstr "فاتورة مرتجع مشتريات"
+
+#: .\TARGET\templates\crm\purchaseorder\list-purchasereturnorders.html:62
+msgid "PRO Number"
+msgstr "رقم الفاتورة"
+
+#: .\TARGET\templates\crm\salesmans\create_salesman.html:15
+msgid "Add Salesman"
+msgstr "انشاء بائع"
+
+#: .\TARGET\templates\crm\salesmans\delete_salesman.html:9
+msgid "Delete Salesman"
+msgstr "حذف البائع"
+
+#: .\TARGET\templates\crm\salesmans\delete_salesman.html:21
+msgid "Are you sure you want to delete this Salesman"
+msgstr "هل انت متاكد من حذف البائع"
+
+#: .\TARGET\templates\crm\salesmans\edit_salesman.html:15
+msgid "Update Salesman"
+msgstr "تحديث البائع"
+
+#: .\TARGET\templates\crm\salesmans\list-salesmans.html:18
+#: .\TARGET\templates\partials\sidebar.html:38
+msgid "Salesmen"
+msgstr "البائع"
+
+#: .\TARGET\templates\crm\salesorder\create_salesorder.html:13
+msgid "Create Sales Order"
+msgstr "انشاء فاتورة مبيعات"
+
+#: .\TARGET\templates\crm\salesorder\create_salesorder.html:32
+#: .\TARGET\templates\crm\salesorder\edit_salesorder.html:32
+#: .\TARGET\templates\crm\salesorder\edit_salesreturnorder.html:32
+msgid "Sales Order Details"
+msgstr "تفاصيل فاتورة المبيعات"
+
+#: .\TARGET\templates\crm\salesorder\create_salesorder.html:88
+#: .\TARGET\templates\crm\salesorder\edit_salesorder.html:84
+msgid "Payment Days"
+msgstr "الدفع خلال/ يوم"
+
+#: .\TARGET\templates\crm\salesorder\create_salesorder.html:100
+#: .\TARGET\templates\crm\salesorder\edit_salesorder.html:96
+msgid "SO No"
+msgstr "رقم الفاتورة"
+
+#: .\TARGET\templates\crm\salesorder\create_salesreturnorder.html:13
+msgid "Creating Sales Return Order"
+msgstr "انشاء فاتورة مرتجع مبيعات"
+
+#: .\TARGET\templates\crm\salesorder\create_salesreturnorder.html:33
+msgid "Sales Return Order Details"
+msgstr "تفاصيل فاتورة مرتجع المبيعات"
+
+#: .\TARGET\templates\crm\salesorder\create_salesreturnorder.html:81
+msgid "SRO No"
+msgstr "رقم الفاتورة"
+
+#: .\TARGET\templates\crm\salesorder\edit_salesorder.html:13
+msgid "View Sales Order"
+msgstr "معاينة فاتورة المبيعات"
+
+#: .\TARGET\templates\crm\salesorder\edit_salesreturnorder.html:13
+msgid "View Sales Return Order"
+msgstr "معاينة فاتورة مرتجع المبيعات"
+
+#: .\TARGET\templates\crm\salesorder\list-salesorders.html:64
+msgid "SO Number"
+msgstr "رقم الفاتورة"
+
+#: .\TARGET\templates\crm\salesorder\list-salesreturnorders.html:19
+msgid "Sales Return Order"
+msgstr "فاتورة مرتجع مبيعات"
+
+#: .\TARGET\templates\crm\salesorder\list-salesreturnorders.html:62
+msgid "SRO Number"
+msgstr "رقم الفاتورة"
+
+#: .\TARGET\templates\crm\setting\create_area.html:16
+msgid "Add Areas"
+msgstr "انشاء منطقة"
+
+#: .\TARGET\templates\crm\setting\create_city.html:16
+msgid "Add City"
+msgstr "انشاء مدينة"
+
+#: .\TARGET\templates\crm\setting\create_country.html:16
+msgid "Add Country"
+msgstr "انشاء بلد"
+
+#: .\TARGET\templates\crm\setting\create_uom.html:16
+msgid "Add Unit"
+msgstr "انشاء وحدو"
+
+#: .\TARGET\templates\crm\setting\create_warehouse.html:16
+msgid "Add Warehouse"
+msgstr "انشاء مستودع"
+
+#: .\TARGET\templates\crm\setting\create_warehousetype.html:16
+msgid "Add Warehouse Type"
+msgstr "انشاء نوع المستودع"
+
+#: .\TARGET\templates\crm\setting\delete_area.html:9
+msgid "Delete Area"
+msgstr "حذف المنطقة"
+
+#: .\TARGET\templates\crm\setting\delete_city.html:9
+msgid "Delete City"
+msgstr "حذف المدينة"
+
+#: .\TARGET\templates\crm\setting\delete_country.html:9
+msgid "Delete Country"
+msgstr "حذف البلد"
+
+#: .\TARGET\templates\crm\setting\delete_uom.html:9
+msgid "Delete Unit"
+msgstr "حذف الوحدة"
+
+#: .\TARGET\templates\crm\setting\delete_warehousetype.html:9
+msgid "Delete Warehouse Type"
+msgstr "حذف نوع المستودع"
+
+#: .\TARGET\templates\crm\setting\edit_area.html:15
+msgid "Update Area"
+msgstr "تحديث المنطقة"
+
+#: .\TARGET\templates\crm\setting\edit_city.html:15
+msgid "Update City"
+msgstr "تحديث المدينة"
+
+#: .\TARGET\templates\crm\setting\edit_country.html:15
+msgid "Update Country"
+msgstr "تحديث البلد"
+
+#: .\TARGET\templates\crm\setting\edit_financialyears.html:14
+msgid "Update Financial Year"
+msgstr "تحديث نوع المستودع"
+
+#: .\TARGET\templates\crm\setting\edit_productunits.html:14
+msgid "Update Product Units Name"
+msgstr "تحديث اسماء وحدات المواد"
+
+#: .\TARGET\templates\crm\setting\edit_uom.html:15
+msgid "Update Unit"
+msgstr "تحديث الوحدة"
+
+#: .\TARGET\templates\crm\setting\edit_warehouse.html:15
+msgid "Update Warehouse"
+msgstr "تحديث المستودع"
+
+#: .\TARGET\templates\crm\setting\edit_warehousetype.html:15
+msgid "Update Warehouse Type"
+msgstr "تحديث نوع المستودع"
+
+#: .\TARGET\templates\crm\setting\list-areas.html:18
+#: .\TARGET\templates\crm\setting\list-currencies.html:18
+#: .\TARGET\templates\partials\sidebar.html:212
+msgid "Areas"
+msgstr "المناطق"
+
+#: .\TARGET\templates\crm\setting\list-cities.html:18
+#: .\TARGET\templates\partials\sidebar.html:215
+msgid "Cities"
+msgstr "المدن"
+
+#: .\TARGET\templates\crm\setting\list-countries.html:18
+#: .\TARGET\templates\partials\sidebar.html:209
+msgid "Countries"
+msgstr "البلدان"
+
+#: .\TARGET\templates\crm\setting\list-currencies.html:51
+msgid "Set"
+msgstr "تعيين"
+
+#: .\TARGET\templates\crm\setting\list-financialyears.html:18
+#: .\TARGET\templates\partials\sidebar.html:203
+msgid "Financial Year"
+msgstr "السنة المالية"
+
+#: .\TARGET\templates\crm\setting\list-productunits.html:18
+msgid "Product Units Name"
+msgstr "اسماء وحدات المواد"
+
+#: .\TARGET\templates\crm\setting\list-productunits.html:44
+msgid "Unit 1 Name"
+msgstr "اسم الوحدة رقم 1"
+
+#: .\TARGET\templates\crm\setting\list-productunits.html:45
+msgid "Unit 2 Name"
+msgstr "اسم الوحدة رقم 2"
+
+#: .\TARGET\templates\crm\setting\list-uoms.html:18
+msgid "Units"
+msgstr "الوحدات"
+
+#: .\TARGET\templates\crm\setting\list-warehouses.html:19
+#: .\TARGET\templates\partials\sidebar.html:71
+msgid "Warehouses"
+msgstr "المستودعات"
+
+#: .\TARGET\templates\crm\setting\list-warehousetypes.html:18
+#: .\TARGET\templates\partials\sidebar.html:68
+msgid "Warehouse Types"
+msgstr "انواع المستودع"
+
+#: .\TARGET\templates\crm\target\create_targetbuildingblocks.html:13
+msgid "Create Up/Down Target"
+msgstr "انشاء هدف بيعي - هرمي"
+
+#: .\TARGET\templates\crm\target\create_targetbuildingblocks.html:33
+#: .\TARGET\templates\crm\target\edit_targetbuildingblocks.html:33
+msgid "Product Target Details"
+msgstr "تفاصيل اهداف المادة"
+
+#: .\TARGET\templates\crm\target\create_targetbuildingblocks.html:72
+#: .\TARGET\templates\crm\target\edit_targetbuildingblocks.html:76
+#: .\TARGET\templates\crm\target\list-targetbuildingblocks.html:63
+msgid "Yearly Qty"
+msgstr "الكمية السنوية"
+
+#: .\TARGET\templates\crm\target\create_targetbuildingblocks.html:103
+#: .\TARGET\templates\crm\target\edit_targetbuildingblocks.html:107
+#, python-format
+msgid "S+M+L = 100%%"
+msgstr "ص + م + ك = 100%%"
+
+#: .\TARGET\templates\crm\target\create_targetbuildingblocks.html:140
+#: .\TARGET\templates\crm\target\edit_targetbuildingblocks.html:144
+msgid "Exceptions"
+msgstr "الاستثناءات"
+
+#: .\TARGET\templates\crm\target\create_targetbuildingblocksaccounts.html:13
+msgid "Create Building Blocks for Accounts"
+msgstr "انشاء هدف بيعي - بناء البلوكات للحساب"
+
+#: .\TARGET\templates\crm\target\create_targetbuildingblocksaccounts.html:32
+#: .\TARGET\templates\crm\target\edit_targetbuildingblocksaccounts.html:32
+msgid "Account Target Details"
+msgstr "تفاصيل اهداف الحساب"
+
+#: .\TARGET\templates\crm\target\create_targetbuildingblockschannels.html:13
+msgid "Create Building Blocks for Channels"
+msgstr "انشاء هدف بيعي - بناء البلوكات لقناة البيع"
+
+#: .\TARGET\templates\crm\target\create_targetbuildingblockschannels.html:32
+#: .\TARGET\templates\crm\target\edit_targetbuildingblockschannels.html:32
+msgid "Channel Target Details"
+msgstr "تفاصيل اهداف القناة"
+
+#: .\TARGET\templates\crm\target\create_targetbuildingblockschannels.html:95
+#: .\TARGET\templates\crm\target\edit_targetbuildingblocksaccounts.html:106
+#: .\TARGET\templates\crm\target\edit_targetbuildingblockschannels.html:95
+msgid "Yearly Target / BOX"
+msgstr "الهدف السنوي / بالكرتون"
+
+#: .\TARGET\templates\crm\target\edit_targetbuildingblocks.html:13
+msgid "Update Up/Down Target"
+msgstr "تحديث الهدف البيعي - الهرمي"
+
+#: .\TARGET\templates\crm\target\edit_targetbuildingblocksaccounts.html:13
+msgid "Update Building Blocks for Accounts"
+msgstr "تحديث الهدف البيعي - بناء البلوكات للحساب"
+
+#: .\TARGET\templates\crm\target\edit_targetbuildingblockschannels.html:13
+msgid "Update Building Blocks for Channels"
+msgstr "تحديث الهدف البيعي - بناء البلوكات لقناة البيع"
+
+#: .\TARGET\templates\crm\target\list-targetbuildingblocks.html:19
+msgid "Building Blocks"
+msgstr "بناء البلوكات"
+
+#: .\TARGET\templates\crm\target\list-targetbuildingblocksaccounts.html:18
+msgid "Building Blocks for Account"
+msgstr "بناء البلوكات للحساب"
+
+#: .\TARGET\templates\crm\target\list-targetbuildingblocksaccounts.html:82
+#: .\TARGET\templates\crm\target\list-targetbuildingblockschannels.html:78
+msgid "None"
+msgstr "غير محدد"
+
+#: .\TARGET\templates\crm\target\list-targetbuildingblocksaccounts.html:82
+#: .\TARGET\templates\crm\target\list-targetbuildingblockschannels.html:78
+msgid "Small Business"
+msgstr "الأعمال الصغيرة"
+
+#: .\TARGET\templates\crm\target\list-targetbuildingblocksaccounts.html:82
+#: .\TARGET\templates\crm\target\list-targetbuildingblockschannels.html:78
+msgid "Medium Business"
+msgstr "الأعمال المتوسطة"
+
+#: .\TARGET\templates\crm\target\list-targetbuildingblocksaccounts.html:82
+#: .\TARGET\templates\crm\target\list-targetbuildingblockschannels.html:78
+msgid "Larg Business"
+msgstr "الأعمال الكبيرة"
+
+#: .\TARGET\templates\crm\target\list-targetbuildingblockschannels.html:18
+msgid "Building Blocks for Channel"
+msgstr "بناء البلوكات للقناة"
+
+#: .\TARGET\templates\crm\transferorder\create_transferorder.html:13
+msgid "Create Transfer Order"
+msgstr "انشاء فاتورة مناقلة"
+
+#: .\TARGET\templates\crm\transferorder\create_transferorder.html:32
+#: .\TARGET\templates\crm\transferorder\edit_transferorder.html:32
+msgid "Transfer Order Details"
+msgstr "تفاصيل فاتورة المناقلة"
+
+#: .\TARGET\templates\crm\transferorder\edit_transferorder.html:13
+msgid "Update Transfer Order"
+msgstr "تحديث فاتورة المناقلة"
+
+#: .\TARGET\templates\crm\transferorder\list-transferorders.html:18
+msgid "Transfer Order"
+msgstr "فاتورة مناقلة بضاعة"
+
+#: .\TARGET\templates\crm\transferorder\list-transferorders.html:61
+msgid "TO Number"
+msgstr "رقم الفاتورة"
+
+#: .\TARGET\templates\crm\vendors\create_vendor.html:16
+msgid "Add Vendor"
+msgstr "انشاء مورة"
+
+#: .\TARGET\templates\crm\vendors\delete_vendor.html:9
+msgid "Delete Vendor"
+msgstr "ح>ف مورد"
+
+#: .\TARGET\templates\crm\vendors\delete_vendor.html:19
+msgid "Are you sure you want to delete this vendor"
+msgstr "هل انت متأكد من حذف المورد"
+
+#: .\TARGET\templates\crm\vendors\edit_vendor.html:15
+msgid "Update Vendor"
+msgstr "تحديث المورد"
+
+#: .\TARGET\templates\crm\vendors\list-vendors.html:18
+#: .\TARGET\templates\partials\sidebar.html:50
+msgid "Vendors"
+msgstr "الموردين"
+
+#: .\TARGET\templates\partials\sidebar.html:12
+msgid "Navigation"
+msgstr "القائمة الرئيسية"
+
+#: .\TARGET\templates\partials\sidebar.html:18
+msgid "Dashboards"
+msgstr "اللوحة الرئيسية"
+
+#: .\TARGET\templates\partials\sidebar.html:24
+msgid "CUSTOMER"
+msgstr "العميل"
+
+#: .\TARGET\templates\partials\sidebar.html:45
+msgid "VENDOR"
+msgstr "المورد"
+
+#: .\TARGET\templates\partials\sidebar.html:57
+msgid "INVENTORY"
+msgstr "المخزون"
+
+#: .\TARGET\templates\partials\sidebar.html:62
+msgid "Product Categories"
+msgstr "تصنيفات المنتجات"
+
+#: .\TARGET\templates\partials\sidebar.html:74
+msgid "Stock Transfer"
+msgstr "مناقلة بضاعة"
+
+#: .\TARGET\templates\partials\sidebar.html:81
+#: .\TARGET\templates\partials\sidebar.html:137
+msgid "SALES"
+msgstr "المبيعات"
+
+#: .\TARGET\templates\partials\sidebar.html:86
+msgid "Sales"
+msgstr "فاتورة مبيعات"
+
+#: .\TARGET\templates\partials\sidebar.html:89
+msgid "Sales Return"
+msgstr "فاتورة مرتجع مبيعات"
+
+#: .\TARGET\templates\partials\sidebar.html:99
+msgid "PURCHASE"
+msgstr "المشتريات"
+
+#: .\TARGET\templates\partials\sidebar.html:107
+msgid "Purchase Return"
+msgstr "فاتورة مرتجع مشتريات"
+
+#: .\TARGET\templates\partials\sidebar.html:114
+msgid "TARGETS"
+msgstr "الأهداف البيعية"
+
+#: .\TARGET\templates\partials\sidebar.html:119
+msgid "Top/Down Target"
+msgstr "الأهداف الهرمية"
+
+#: .\TARGET\templates\partials\sidebar.html:122
+msgid "B. Blocks Accounts"
+msgstr "بناء البلوكات للحسابات"
+
+#: .\TARGET\templates\partials\sidebar.html:125
+msgid "B. Blocks Channels"
+msgstr "بناء البلوكات للقنوات"
+
+#: .\TARGET\templates\partials\sidebar.html:132
+msgid "REPORTS"
+msgstr "التقارير"
+
+#: .\TARGET\templates\partials\sidebar.html:142
+msgid "Montly Sales"
+msgstr "المبيعات الشهرية"
+
+#: .\TARGET\templates\partials\sidebar.html:145
+msgid "Channel Sales"
+msgstr "مبيعات القنوات"
+
+#: .\TARGET\templates\partials\sidebar.html:148
+msgid "Area Sales"
+msgstr "مبيعات المناطق"
+
+#: .\TARGET\templates\partials\sidebar.html:151
+msgid "Customer Sales"
+msgstr "مبيعات العملاء"
+
+#: .\TARGET\templates\partials\sidebar.html:154
+msgid "Salesman Sales"
+msgstr "مبيعات البائعين"
+
+#: .\TARGET\templates\partials\sidebar.html:157
+msgid "Product Sales"
+msgstr "مبيعات المنتجات"
+
+#: .\TARGET\templates\partials\sidebar.html:165
+msgid "TARGET"
+msgstr "الأهداف البيعية"
+
+#: .\TARGET\templates\partials\sidebar.html:170
+msgid "Category Target"
+msgstr "اهداف تصنيفات المواد"
+
+#: .\TARGET\templates\partials\sidebar.html:173
+msgid "Channel Target"
+msgstr "اهداف القنوات"
+
+#: .\TARGET\templates\partials\sidebar.html:176
+msgid "Area Target"
+msgstr "اهداف المناطق"
+
+#: .\TARGET\templates\partials\sidebar.html:179
+msgid "Customer Target"
+msgstr "اهداف العملاء"
+
+#: .\TARGET\templates\partials\sidebar.html:182
+msgid "Salesman Target"
+msgstr "اهداف البائعين"
+
+#: .\TARGET\templates\partials\sidebar.html:185
+msgid "Product Target"
+msgstr "اهداف المنتجات"
+
+#: .\TARGET\templates\partials\sidebar.html:190
+msgid "STORAGE"
+msgstr "المخزون"
+
+#: .\TARGET\templates\partials\sidebar.html:198
+msgid "SETTINGS"
+msgstr "الاعدادات"
+
+#: .\TARGET\templates\partials\sidebar.html:206
+msgid "Units Name"
+msgstr "اسماء الوحدات"
+
+#: .\TARGET\templates\partials\sidebar.html:218
+msgid "UOM"
+msgstr "الوحدات"
+
+#: .\TARGET\users\forms.py:17
+msgid "This username has already been taken."
+msgstr ""
+
+#: .\TARGET\users\models.py:11
+msgid "Name of User"
+msgstr ""

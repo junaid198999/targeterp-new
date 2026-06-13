@@ -1,0 +1,7 @@
+{% for customer in customers %}
+{% if customer.payment_days  >= 0  %}
+{{ customer.payment_days }}
+{% else  %}
+0
+{% endif  %}
+{% endfor %}

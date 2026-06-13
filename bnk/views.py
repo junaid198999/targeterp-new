@@ -55,6 +55,15 @@ class BanksGroupsDeleteView(LoginRequiredMixin, BSModalDeleteView):
     success_message = 'Success: banksgroups was deleted.'
     success_url = reverse_lazy('bnk:list-banksgroups')
 
+def deletebanksgroups(request):
+    Lc= BanksGroups.objects.all()
+    for l in Lc:
+       try:
+            print(l)
+            l.delete()
+       except:
+            print("not deleted connection somwhere")
+    return redirect("/bnk/banksgroups/")
 
 ######### End Banks Groups
 
@@ -197,10 +206,21 @@ class BanksUpdateView(LoginRequiredMixin,  UpdateView):
         return response
 
 class BanksDeleteView(LoginRequiredMixin, BSModalDeleteView):
-    model = Customers
+    model = Banks
     template_name = 'bnk/master/delete_banks.html'
     success_message = 'Success: Banks was deleted.'
     success_url = reverse_lazy('bnk:list-banks')
+
+def deletebanks(request):
+    Lc= Banks.objects.all()
+    for l in Lc:
+       try:
+            print(l)
+            l.delete()
+       except:
+            print("not deleted connection somwhere")
+    return redirect("/bnk/banks/")
+
 
 ######### End Banks
 

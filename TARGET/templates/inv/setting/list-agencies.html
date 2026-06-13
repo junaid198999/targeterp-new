@@ -34,7 +34,11 @@
 
                                     {% if perms.inv.add_agencies %}
                                     <div {% if LANGUAGE_CODE == 'ar' %} align="left" {% else %} align="right" {% endif %} class="col-sm-6">
-
+                                        <a href="delete/">
+                                            <button class="delete-transtypes btn btn-danger waves-effect waves-light mb-2" type="button">
+                                              DeleteAll 
+                                            </button>  
+                                            </a> 
                                             <button class="btn btn-blue waves-effect waves-light mb-2"  onclick="location.href='{% url 'inv:create_agencies' %}'" type="button" name="button" data-overlayColor="#38414a">
                                                 <i class="mdi mdi-plus-circle mr-1"></i>  {% trans "Add" %}
                                             </button>
@@ -95,7 +99,9 @@
                                                 <a href={% url "inv:edit_agencies" Type.pk %} class="btn btn-outline-danger effect waves-light btn-xs" title="{% trans "Edit" %}"><i class="mdi mdi-square-edit-outline"></i></a>
                                                 <a href={% url "inv:edit_agencies" Type.pk %} class="btn btn-outline-warning effect waves-light btn-xs" title="{% trans "View" %}"><i class="far fa-eye"></i></a>
                                                 {% endif %}
-
+                                                {% if perms.inv.delete_agencies %}
+                                                <button type="button" class="delete-agencies btn btn-outline-danger effect waves-light btn-xs" data-id="{% url 'inv:delete_agencies'  Type.pk %}" title="{% trans "Delete" %}"><i class="mdi mdi-delete"></i></button>
+                                                {% endif %}
                                             </td>
 
                                     </tr>

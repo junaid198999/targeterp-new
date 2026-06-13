@@ -1,0 +1,84 @@
+{% load i18n %}
+{% load widget_tweaks %}
+{% load crispy_forms_tags %}
+{% block content %}
+
+<form align="left" method="post" action="">
+    {% if LANGUAGE_CODE == 'ar' %}
+        <link href="/static/libs/select2/select2-rtl.min.css" rel="stylesheet" />
+    {% else %}
+        <link href="/static/libs/select2/select2.min.css" rel="stylesheet" />
+    {% endif %}
+  {% csrf_token %}
+
+    <div class="modal-header" style="background: #4a81d4;">
+      <h3 class="modal-title" style="color: white;">{% trans "Create Account" %}</h3>
+      <button style="color:white; font-size: 2rem;" type="button" class="close" data-dismiss="modal" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+
+    <div class="modal-body">
+            <div class="form-group row mb-2">
+                <label class="col-3 col-form-label" style="text-align: end;" for="name">{% trans "Account Type" %}</label>
+                <div class="col-sm-4">
+                    <select required name="parent" id="id_parent" class="form-control" style="">
+                        <option value="">---------</option>
+                            {% for AccountsTypeList in prot %}
+                            <optgroup label="{{ AccountsTypeList.name }}">
+                                {% for AccountsList in AccountsTypeList.accounting_parent.all %}
+                                    <option {% if AccountsList.id ==  parent_id %} selected {% endif %} value="{{ AccountsList.id }}">{{ AccountsList.name }}</option>
+                                {% endfor %}
+                            </optgroup>
+                        {% endfor %}
+                    </select>
+                </div>
+            </div>
+                <div class="form-group row mb-2">
+                    <label class="col-3 col-form-label" style="text-align: end;" for="number">{% trans "Account Number" %}</label>
+                    <div class="col-sm-4">
+                        {{ form.number|as_crispy_field }}
+                    </div>
+                </div>
+                <div class="form-group row mb-2">
+                    <label class="col-3 col-form-label" style="text-align: end;" for="name">{% trans "Account Name" %}</label>
+                    <div class="col-sm-8">
+                        {{ form.name|as_crispy_field }}
+                    </div>
+                </div>
+                <div class="form-group row mb-2">
+                    <label class="col-3 col-form-label" style="text-align: end;" for="name">{% trans "Description" %}</label>
+                    <div class="col-sm-8">
+                        {{ form.description|as_crispy_field }}
+                    </div>
+                </div>
+                <div class="form-group row mb-2">
+                    <label class="col-3 col-form-label" style="text-align: end;" for="name">{% trans "Archive Account" %}</label>
+                    <div class="col-sm-1">
+                        <input style="width: 50%;" type="checkbox" class="form-control" id="id_active" name="active" >
+                    </div>
+                    <div class="col-sm-7">
+                        <label class="col-form-label">{% trans "Prevent further usage of this account." %}</label>
+                        <div>
+                            <span>{% trans "You will still be able to generate reports for this account, and all previously categorized transactions will remain unchanged." %}</span>
+                        </div>
+                        <input type="hidden" name="user" id="id_user" value="{{ request.user.id }}">
+                    </div>
+                </div>
+
+    </div>
+
+  <div class="modal-footer">
+    <button type="button" class="btn btn-secondary waves-effect" data-dismiss="modal">{% trans "Cancel" %}</button>
+    <button type="button" class="submit-btn btn-danger btn btn-primary">{% trans "Create" %}</button>
+  </div>
+
+</form>
+{% endblock %}
+    <script src="/static/libs/select2/select2.min.js"></script>
+
+<script type="text/javascript">
+    $(function () {
+     $('#id_parent').select2();
+    });
+</script>

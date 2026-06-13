@@ -1,0 +1,154 @@
+{% extends "auth_base.html" %}
+{% load i18n %}
+{% load widget_tweaks %}
+{% load django_tables2 %}
+{% block content %}
+    <div class="container-fluid">
+        <!-- start page title -->
+        <div class="row">
+            <div class="col-12">
+                <div class="page-title-box">
+                    <div class="page-title-right">
+                        <ol class="breadcrumb m-0">
+                            <li class="breadcrumb-item"><a href="/">TARGET</a></li>
+                            <li class="breadcrumb-item active">Branches</li>
+                        </ol>
+                    </div>
+                    <h4 class="page-title">{% trans "Branches" %}</h4>
+                </div>
+            </div>
+        </div>
+        <!-- end page title -->
+        <div class="row" >
+            <div class="col-xl-12">
+                <div class="card">
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-sm-6">
+                                <div id="controlPanel" {% if LANGUAGE_CODE == 'ar' %} align="right" {% else %} align="left" {% endif %}></div>
+                            </div>
+                            <div {% if LANGUAGE_CODE == 'ar' %} align="left" {% else %} align="right" {% endif %} class="col-sm-6">
+                                    <button id="demo-create-row" class="create-branch btn btn-blue waves-effect waves-light mb-2" type="button" name="button" data-overlayColor="#38414a">
+                                        <i class="mdi mdi-plus-circle mr-1"></i>  {% trans "Add" %}
+                                    </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+        <div class="row">
+            <div class="col-xl-12">
+                <div class="card">
+                    <div class="card-body">
+                        <div class="row mb-2">
+                            <div class="col-sm-12">
+                                <div class="text-sm-right">
+                                    <div class="modal fade" tabindex="-1" role="dialog" id="modal">
+                                          <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
+                                                <div class="modal-content"></div>
+                                          </div>
+                                    </div>
+                                    <!-- Create Branch button -->
+                                </div><!-- end col-->
+                            </div>
+                        </div>
+
+
+                            <table id="table_id" class="table activate-select nowrap" style="width:100%">
+
+                                <thead>
+                                    <tr>
+                                        <th>{% trans "Name" %}</th>
+                                        <th>{% trans "Customer" %}</th>
+                                        <th>{% trans "Salesman" %}</th>
+                                        <th>{% trans "Country" %}</th>
+                                        <th>{% trans "Area" %}</th>
+                                        <th>{% trans "City" %}</th>
+                                        <th>{% trans "Action" %}</th>
+                                    </tr>
+                                </thead>
+
+                                <tbody>
+                                    {% for Branch in branches %}
+                                    <tr>
+                                            <td>
+                                                {{ Branch.name}}
+                                            </td>
+                                            <td>
+                                                <a href="/crm/customers/read/{{ Branch.customer_id }}">{{ Branch.customer }}</a>
+                                            </td>
+                                            <td>
+                                                {{ Branch.salesman }}
+                                            </td>
+                                            <td>
+                                                {{ Branch.country }}
+                                            </td>
+                                            <td>
+                                                {{ Branch.area }}
+                                            </td>
+                                            <td>
+                                                {{ Branch.city }}
+                                            </td>
+
+                                            <td>
+                                                <button type="button" class="edit-branch btn btn-outline-warning effect waves-light btn-xs" data-id="{% url 'crm:edit_branch' Branch.pk %}" title="{% trans "Edit" %}"><i class="mdi mdi-square-edit-outline"></i></button>
+                                                <button type="button" class="delete-branch btn btn-outline-danger effect waves-light btn-xs" data-id="{% url 'crm:delete_branch' Branch.pk %}" title="{% trans "Delete" %}"><i class="mdi mdi-delete"></i></button>
+                                            </td>
+
+                                    </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+
+                    </div> <!-- end card-->
+                </div> <!-- end col -->
+
+            </div>
+        <!-- end row -->
+
+        </div> <!-- container -->
+
+    </div>
+{% endblock %}
+
+
+{% block extra_javascript %}
+    <script type="text/javascript">
+      $(function () {
+        // Create Branch button
+        $(".create-branch").modalForm({formURL: "{% url 'crm:create_branch' %}"});
+            // Update branch buttons
+            $(".edit-branch").each(function () {
+              $(this).modalForm({formURL: $(this).data('id')});
+            });
+                // Delete branch button
+            $(".delete-branch").each(function () {
+              $(this).modalForm({formURL: $(this).data('id')});
+            });
+
+            var table = $('#table_id').DataTable( {
+                buttons: true,
+                stateSave: true,
+                "pagingType": "full_numbers",
+                responsive: true,
+                columnDefs: [
+                    { responsivePriority: 1, targets: 0 },
+                    { responsivePriority: 2, targets: 6 },
+
+                ]
+            } );
+
+            table
+                .buttons()
+                .container()
+                .appendTo( '#controlPanel' );
+
+            $(".read-customer").each(function () {
+              $(this).modalForm({formURL: $(this).data('id')});
+            });
+
+        });
+
+    </script>
+
+{% endblock %}

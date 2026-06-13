@@ -1,0 +1,72 @@
+[
+  {
+    "rowno": 1,
+    "vendcode": "1000",
+    "vendarbname": "Test Vendor",
+    "ttarbname": "„‘ —Ì«  ‰ﬁœÌ…",
+    "arbdesc": "Ref = Invoice Number = CP-4",
+    "engdesc": "Ref = Invoice Number = CP-4",
+    "transdate": "2021-04-21",
+    "docnumber": "CP\\CP-1",
+    "tdramount": 0,
+    "tcramount": 36,
+    "rowtot": -36,
+    "obamount": 0
+  },
+  {
+    "rowno": 2,
+    "vendcode": "1000",
+    "vendarbname": "Test Vendor",
+    "ttarbname": "„‘ —Ì«  ‰ﬁœÌ…",
+    "arbdesc": "Ref = Invoice Number = CP-5",
+    "engdesc": "Ref = Invoice Number = CP-5",
+    "transdate": "2021-04-21",
+    "docnumber": "CP\\CP-2",
+    "tdramount": 0,
+    "tcramount": 30,
+    "rowtot": -66,
+    "obamount": 0
+  },
+  {
+    "rowno": 3,
+    "vendcode": "1000",
+    "vendarbname": "Test Vendor",
+    "ttarbname": "„‘ —Ì«  ‰ﬁœÌ…",
+    "arbdesc": "Expenses Ref = CP-10",
+    "engdesc": "Expenses Ref = CP-10",
+    "transdate": "2021-04-22",
+    "docnumber": "CP\\CP-9",
+    "tdramount": 0,
+    "tcramount": 345,
+    "rowtot": -411,
+    "obamount": 0
+  },
+  {
+    "rowno": 4,
+    "vendcode": "1000",
+    "vendarbname": "Test Vendor",
+    "ttarbname": "„‘ —Ì«  ‰ﬁœÌ…",
+    "arbdesc": "Expenses Ref = CP-11",
+    "engdesc": "Expenses Ref = CP-11",
+    "transdate": "2021-04-22",
+    "docnumber": "CP\\CP-10",
+    "tdramount": 0,
+    "tcramount": 230,
+    "rowtot": -641,
+    "obamount": 0
+  },
+  {
+    "rowno": 5,
+    "vendcode": "1000",
+    "vendarbname": "Test Vendor",
+    "ttarbname": "„‘ —Ì«  ‰ﬁœÌ…",
+    "arbdesc": "Expenses Ref = CP-12",
+    "engdesc": "Expenses Ref = CP-12",
+    "transdate": "2021-04-22",
+    "docnumber": "CP\\CP-11",
+    "tdramount": 0,
+    "tcramount": 115,
+    "rowtot": -756,
+    "obamount": 0
+  }
+]

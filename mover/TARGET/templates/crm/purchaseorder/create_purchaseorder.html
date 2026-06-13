@@ -1,0 +1,320 @@
+{% extends "auth_base.html" %}
+{% load i18n %}
+{% load django_tables2 %}
+{% load widget_tweaks %}
+{% load crispy_forms_tags %}
+{% block content %}
+    <link href="/static/libs/select2/select2.min.css" rel="stylesheet" />
+<div class="container-fluid">
+    <!-- start page title -->
+    <div class="row">
+        <div class="col-12">
+            <div class="page-title-box">
+                <h4 class="page-title">{% trans "Creating Purchase Order" %}</h4>
+            </div>
+        </div>
+    </div>
+    <head>
+        <meta charset="utf-8" />
+        <title>purchaseorder_form</title>
+    </head>
+    <div class="row">
+        <div class="col-xl-12">
+            <div class="card">
+                <div class="card-body">
+                    <form id="POForm" data-unitprice-url="{% url 'crm:ajax_load_unitprice' %}" action="" method="post" >
+
+                        <div class="row">
+                            <div class="col-12">
+                                <div class="sub-header">
+                                    <h5 class="page-title">{% trans "Purchase Order Details" %}</h5>
+                                </div>
+                            </div>
+                        </div>
+
+                        <table class="table table-bordered ">
+                            <div class="{% if form.non_field_errors %}invalid{% endif %} mb-2">
+                              {% if form.non_field_errors %}
+                                {{ error }}
+                                {% endif %}
+                            </div>
+                            <tbody style="background-color: white;">
+                                {% csrf_token %}
+                                <tr>
+                                    <td  width="70%" colspan = "7">
+                                        <div class="input-group">
+                                            <div class="col-2" style="padding-right:0px; padding-left:0px">
+                                                    <label class="col-form-label" id="">{% trans "Vendor" %}</label>
+                                            </div>
+                                            <div class="col-10">
+                                                <select name="vendor" id="id_vendor" class="form-control" style="" value="{{ form.vendor }}
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div class="input-group" style="margin-top: 4%">
+                                            <div class="col-2" style="padding-right:0px; padding-left:0px">
+                                                    <label class="col-form-label" id="">{% trans "Warehouse" %}</label>
+                                            </div>
+                                            <div class="col-10">
+                                                <select name="warehouse" id="warehouse_id" class="form-control" value="{{ form.warehouse }}
+                                                </select>
+                                            </div>
+                                        </div>
+
+                                    </td>
+                                    <td colspan = "3">
+                                        <div class="input-group">
+                                            <div class="input-group-prepend">
+                                                <span class="input-group-text" id="basic-addon1">{% trans "PO No" %}</span>
+                                            </div>
+                                            <INPUT TYPE="TEXT" NAME="purchaseorder_number" id="id_purchaseorder_number" class="form-control" value="{{purchaseorder_prefix}}{{ maxpoid }}" READONLY >
+                                        </div>
+                                        <div class="input-group" style="margin-top: 2%">
+                                            <div class="input-group-prepend">
+                                                <span class="input-group-text" id="basic-addon1">{% trans "Payment Terms" %}</span>
+                                            </div>
+                                            <INPUT TYPE="TEXT" id="id_payment_terms" NAME="payment_terms" class="form-control">
+                                        </div>
+                                         <div class="input-group" style="margin-top: 2%">
+                                            <div class="input-group-prepend">
+                                                <span class="input-group-text" >{% trans "Due Date" %}</span>
+                                            </div>
+                                            <INPUT id="id_dueddate" TYPE="date" NAME="duedate" class="form-control" >
+                                        </div>
+                                   </td>
+                                </tr>
+
+                                <tr>
+                                    <td colspan = "10" style="vertical-align: middle">
+                                        <div class="input-group">
+                                            <div class="input-group-prepend">
+                                                <span class="input-group-text" id="basic-addon1">{% trans "Subject" %}</span>
+                                            </div>
+                                            <INPUT TYPE="TEXT" id="id_subject" NAME="subject" class="form-control">
+                                        </div>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        <div class="row">
+                            <div class="col-12">
+                                <div class="sub-header">
+                                    <h5 class="page-title">{% trans "Product Details" %}</h5>
+                                    <a style="float:right" class="buttonHolder" id="add-row"></a>
+                               </div>
+                            </div>
+                        </div>
+                        <table id="table_id" class="table table-bordered table-hover table-sm mb-0">
+                                <thead class="thead-light">
+                                    <tr>
+                                        <th>{% trans "Product" %}</th>
+                                        <th>{% trans "Qty" %}</th>
+                                        <th>{% trans "Price" %}</th>
+                                        <th>{% trans "Unit" %}</th>
+                                        <th>{% trans "Discount" %}</th>
+                                        <th>{% trans "Subtotal" %}</th>
+                                        <th>{% trans "Actions" %}</th>
+                                    </tr>
+                                </thead>
+                                        {{ purchaseproducts.management_form }}
+                                    <tbody class="formset_row">
+                                        {% for form in purchaseproducts.forms %}
+                                        <tr style="padding: 0px !important;" class="rowclass">
+                                                <td style="padding: 0rem !important;width:300px;" >{{ form.product }}</td>
+                                                <td style="padding: 0rem !important;width:100px;">{{ form.qty|as_crispy_field }}</td>
+                                                <td style="padding: 0rem !important;width:100px;">{{ form.price|as_crispy_field }}</td>
+                                                <td style="padding: 0rem !important;width:70px;">
+
+                                                <select name="uoom" class="form-control" id="id_purchaseproduct_set-0-uoom" style="width:100%">
+                                                     {% for unit in unitslist %}
+                                                        <option value="{{unit.id}}">{{ unit.unit }} </option>
+                                                    {% endfor %}
+                                                </select>
+                                                </td>
+                                                <td hidden style="padding: 0rem !important;width:100px;">{{ form.uom|as_crispy_field }}</td>
+                                                <td style="padding: 0rem !important;width:70px;">{{ form.discount|as_crispy_field }}</td>
+                                                <td style="padding: 0rem !important;width:100px;">{{ form.subtotal|as_crispy_field }}</td>
+                                                <td style="padding: 0rem !important;width:10px; text-align: center;"></td>
+                                        </tr>
+                                    {% endfor %}
+                                </tbody>
+                                <tr>
+                                    <td colspan="5"><b class="float-right">{% trans "Total:" %} </b></td>
+                                    <td style="padding: 0rem" colspan="1"><INPUT TYPE="number" id="id_total" NAME="total" placeholder="total" class="form-control" data-value="{{form.total}}</td>
+                                </tr>
+                            </table>
+                        <br><br>
+                        <div class="modal-footer">
+                            <a class="btn btn-secondary waves-effect" href="{% url 'crm:purchaseorder' %}">{% trans "Cancel" %}</a>
+                            <input type="submit" class="submit-btn btn-danger btn btn-primary" value="{% trans "Create" %}"/>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_javascript %}
+
+<script src="/static/dynamic_formsets/jquery.formset.js"></script>
+    <script src="/static/libs/select2/select2.min.js"></script>
+<script src="/static/django_select2/django_select2.js"></script>
+
+<script type="text/javascript">
+$('#id_total').attr('readonly', true);
+
+var subtotalval = 0;
+function get_total(){
+        var subtotalfield1 = $(this).attr('name').replace('-qty', '-subtotal');
+        subtotalval = parseInt(subtotalval) + parseInt($("#id_"+subtotalfield1).val());
+
+        var id = parseInt($('#id_purchaseproduct_set-TOTAL_FORMS').val());
+        var total = 0;
+        for (i = 0; i <= parseInt(id); i++){
+            if($("input[name=purchaseproduct_set-" + i + "-subtotal]").val()){
+                total += parseFloat($("input[name=purchaseproduct_set-" + i + "-subtotal]").val());
+            }
+            else{
+                total += 0;
+            }
+        }
+        $("#id_total").val(parseInt(total));
+
+};
+
+    $("input[name*='qty']").change(function () {
+        var newElement = $('formset_row').clone(true);
+        var subtotalfield = $(this).attr('name').replace('-qty', '-subtotal');
+        var pricefield = $(this).attr('name').replace('-qty', '-price');
+        var discountfield = $(this).attr('name').replace('-qty', '-discount');
+        var uom1field = $(this).attr('name').replace('-qty', '-uoom');
+        var uomfield = $(this).attr('name').replace('-qty', '-uom');
+        $("#id_"+uomfield).val($("#id_"+uom1field).val());
+        var subtotalsum = 0;
+            subtotalsum = subtotalsum + parseInt($(this).val() * $("#id_"+pricefield).val() - $("#id_"+discountfield).val());
+
+        $("#id_"+subtotalfield).val(subtotalsum);
+        get_total()
+    });
+    $("input[name*='price']").change(function () {
+        var newElement = $('formset_row').clone(true);
+        var subtotalfield = $(this).attr('name').replace('-price', '-subtotal');
+        var discountfield = $(this).attr('name').replace('-price', '-discount');
+        var qtyfield = $(this).attr('name').replace('-price', '-qty');
+        var subtotalsum = 0;
+            subtotalsum = subtotalsum + parseInt($(this).val() * $("#id_"+qtyfield).val() - $("#id_"+ discountfield).val());
+        $("#id_"+subtotalfield).val(subtotalsum);
+        get_total()
+    });
+    $("input[name*='discount']").change(function () {
+        var newElement = $('formset_row').clone(true);
+        var subtotalfield = $(this).attr('name').replace('-discount', '-subtotal');
+        var pricefield = $(this).attr('name').replace('-discount', '-price');
+        var qtyfield = $(this).attr('name').replace('-discount', '-qty');
+        var subtotalsum = 0;
+            subtotalsum = subtotalsum + parseInt( $("#id_"+pricefield).val() * $("#id_"+qtyfield).val() - $(this).val());
+        $("#id_"+subtotalfield).val(subtotalsum);
+        get_total()
+    });
+    $("select[name*='-product']").change(function () {
+        var name = $(this).attr('name').replace('-product', '-price');
+        var id = $(this).attr('id');
+        price_value = $(this).val();
+        $("#id_"+subtotalfield).val(subtotalsum);
+
+        var pricefield = $(this).attr('name').replace('-product', '-price');
+        var uomfield = $(this).attr('name').replace('-product', '-uom');
+        var uoomfield = $(this).attr('id').replace('-product', '-uoom');
+        uom_value = $("#"+uoomfield).val();
+          var productId = $(this).val();
+          var urlup = $("#POForm").attr("data-unitprice-url");
+          $.ajax({
+                url: urlup,
+                async: false,
+                data: {
+                    'product': productId,
+                    'unit': uom_value,
+                    },
+                    success: function (data) {
+                        $("#id_"+pricefield).val(parseInt(data));
+               }
+          });
+        var subtotalfield = $(this).attr('name').replace('-product', '-subtotal');
+        var pricefield = $(this).attr('name').replace('-product', '-price');
+        var discountfield = $(this).attr('name').replace('-product', '-discount');
+        var qtyfield = $(this).attr('name').replace('-product', '-qty');
+        var subtotalsum = 0;
+            subtotalsum = subtotalsum + parseInt( $("#id_"+pricefield).val() * $("#id_"+qtyfield).val() - $("#id_"+discountfield).val());
+        $("#id_"+subtotalfield).val(subtotalsum);
+        get_total()
+    });
+    $("[id*=-uoom]").change(function () {
+        var uomfield = $(this).attr('id').replace('-uoom', '-uom');
+        var productfield = $(this).attr('id').replace('-uoom', '-product');
+        var pricefield = $(this).attr('id').replace('-uoom', '-price');
+
+        var id = $(this).attr('id');
+        uom_value = $(this).val();
+        product_value = $("#"+productfield).val();
+        $("#"+uomfield).val(uom_value);
+          var urlup = $("#POForm").attr("data-unitprice-url");
+          var productId = $(this).val();
+          $.ajax({
+                async: false,
+                url: urlup,
+                data: {
+                    'product': product_value,
+                    'unit': uom_value,
+                    },
+                    success: function (data) {
+                        $("#"+pricefield).val(parseInt(data));
+                }
+          });
+
+        var subtotalfield = $(this).attr('id').replace('-uoom', '-subtotal');
+        var discountfield = $(this).attr('id').replace('-uoom', '-discount');
+        var qtyfield = $(this).attr('id').replace('-uoom', '-qty');
+        var subtotalsum = 0;
+            subtotalsum = subtotalsum + parseInt( $("#"+pricefield).val() * $("#"+qtyfield).val() - $("#"+discountfield).val());
+        $("#"+subtotalfield).val(parseInt(subtotalsum));
+        get_total()
+
+    });
+   $('.delete-row').on("click", function(){
+        get_total()
+    });
+
+    $('.formset_row').formset({
+       animateForms: true,
+        uiText: {
+            addPrompt: 'Add Product',         // Text used on the 'add a new form' control.
+            removePrompt: '',        // Text used on the 'delete this existing form' control.
+        },
+        addButtonHolder:'.buttonHolder',
+        addCssClass: "add-row btn btn-primary waves-effect waves-light",
+        deleteCssClass: "delete-row btn btn-danger waves-effect mdi mdi-close",
+        prefix: '{{ purchaseproducts.prefix }}',
+        callbacks: {
+            onAdd: function () {
+                 $("[name*=-product]").select2();
+                 $("[name*=uoom]").select2();
+            },
+            onRemove: function () {
+                 get_total();
+            }
+        },
+    });
+ $('#id_vendor').select2();
+ $('#warehouse_id').select2();
+ $("[name*=-product]").select2();
+ $("[name*=uoom]").select2();
+
+</script>
+
+{% endblock %}
+.rowclass {
+  padding-top: 0px !important;
+  padding-bottom: 0px !important;
+};

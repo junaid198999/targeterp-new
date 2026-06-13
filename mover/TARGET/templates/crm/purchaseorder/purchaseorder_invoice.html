@@ -1,0 +1,160 @@
+{% extends "auth_base.html" %}
+{% load widgets %}
+{% load i18n %}
+{% load humanize %}
+{% block content %}
+
+                <div class="content">
+
+                    <!-- Start Content-->
+                    <div class="container-fluid">
+                        
+                        <!-- start page title -->
+                        <div class="row">
+                            <div class="col-12">
+                                <div class="page-title-box">
+                                    <div class="page-title-right">
+                                        <ol class="breadcrumb m-0">
+                                            <li class="breadcrumb-item"><a href="/">TARGET</a></li>
+                                            <li class="breadcrumb-item"><a href="javascript: void(0);">{% trans "Purchase Order" %}</a></li>
+                                            <li class="breadcrumb-item active">{% trans "Invoice" %}</li>
+                                        </ol>
+                                    </div>
+                                    <h4 class="page-title">{% trans "Purchase Order" %}</h4>
+                                </div>
+                            </div>
+                        </div>     
+                        <!-- end page title --> 
+
+                        {% for Company in logo %}
+                        <div class="row">
+                            <div class="col-12">
+                                <div class="card-box">
+                                    <!-- Logo & title -->
+                                    <div class="clearfix">
+                                        <div class="float-left">
+                                                {% if  Company.logo %}
+                                                    <img src="{{ Company.logo.url }}" alt="" height="40">
+                                                {% else %}
+                                                    <img src="/static/images/logo-light.png" alt="" height="40">
+                                                {% endif %}
+                                        </div>
+                                        <div class="float-right">
+                                            <h4 class="m-0 ">{% trans "Purchase Order" %}</h4>
+                                        </div>
+                                    </div>
+        
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <div class="mt-3">
+                                                <p><b>{% trans "Hello," %} {{form.instance.vendor}}</b></p>
+                                                <p class="text-muted">{{Company.purchase_header}} </p>
+                                            </div>
+        
+                                        </div><!-- end col -->
+                                        <div class="col-md-4 offset-md-2">
+                                            <div class="mt-3 float-right">
+                                                <p class="m-b-10"><strong>{% trans "Order Date :" %} </strong> <span class="float-right"> &nbsp;&nbsp;&nbsp;&nbsp; {{form.instance.created_date|date:"Y-m-d"}}</span></p>
+                                                <p class="m-b-10"><strong>{% trans "Due Date :" %} </strong> <span class="float-right">{{form.instance.duedate}}</span></p>
+                                                <p class="m-b-10"><strong>{% trans "Order No. :" %} </strong> <span class="float-right">{{form.instance.purchaseorder_number}} </span></p>
+                                            </div>
+                                        </div><!-- end col -->
+                                    </div>
+                                    <!-- end row -->
+        
+                                    <div class="row mt-3">
+                                        <div class="col-sm-6">
+                                            <h6>{% trans "Billing Address" %}</h6>
+                                            <address>
+                                                {% for Vendor in vendors %}
+                                                {{Vendor.office_phone}}<br>
+                                                {{Vendor.city}}<br>
+                                                {{Vendor.country}}
+                                                {% endfor %}
+                                            </address>
+                                        </div> <!-- end col -->
+        
+                                        <div class="col-sm-6">
+                                            <h6>{% trans "Shipping Address" %}</h6>
+                                            <address>
+                                                Bahçeşehir 1. Kısım Mahallesi,<br>
+                                                34488 Istanbul, Turkey<br>
+                                                <abbr title="Phone">P:</abbr> +905398926163
+                                            </address>
+                                        </div> <!-- end col -->
+                                    </div> 
+                                    <!-- end row -->
+        
+                                    <div class="row">
+                                        <div class="col-12">
+                                            <div class="table-responsive">
+                                                <table class="table mt-4 table-centered">
+                                                    <thead>
+                                                    <tr><th>{% trans "Product" %}</th>
+                                                        <th>{% trans "Quantity" %}</th>
+                                                        <th style="width: 10%">{% trans "Price" %}</th>
+                                                        <th style="width: 10%">{% trans "Unit" %}</th>
+                                                        <th style="width: 10%">{% trans "Discount" %}</th>
+                                                        <th style="width: 10%" class="text-right">{% trans "Total" %}</th>
+                                                    </tr></thead>
+                                                    <tbody>
+                                                        {% for PurchaseOrder in purchaseproducts %}
+                                                            <tr>
+                                                                <td>{{ PurchaseOrder.instance.product }}</td>
+                                                                <td>{{ PurchaseOrder.instance.qty|intcomma:False  }}</td>
+                                                                <td>{{ PurchaseOrder.instance.price|currency }}</td>
+                                                                <td>{{ PurchaseOrder.instance.uom }}</td>
+                                                                <td>{{ PurchaseOrder.instance.discount }}</td>
+                                                                <td class="text-right">{{ PurchaseOrder.instance.subtotal|currency }}</td>
+                                                            </tr>
+                                                        {% endfor %}
+                                                   </tbody>
+                                                </table>
+                                            </div> <!-- end table-responsive -->
+                                        </div> <!-- end col -->
+                                    </div>
+                                    <!-- end row -->
+        
+                                    <div class="row">
+                                        <div class="col-sm-6">
+                                            <div class="clearfix pt-5">
+                                                <h6 class="text-muted">{% trans "Notes:" %}</h6>
+        
+                                                <small class="text-muted">
+                                                    {{Company.purchase_footer}}
+                                                </small>
+                                            </div>
+                                        </div> <!-- end col -->
+                                        <div class="col-sm-6">
+                                            <div class="float-right">
+                                                <h3>{{ form.instance.total|currency  }}</h3>
+                                            </div>
+                                            <div class="clearfix"></div>
+                                        </div> <!-- end col -->
+                                    </div>
+                                    <!-- end row -->
+        
+                                    <div class="mt-4 mb-1">
+                                        <div class="text-right d-print-none">
+                                            <a href="javascript:window.print()" class="btn btn-blue waves-effect waves-light"><i class="mdi mdi-printer mr-1"></i> {% trans "Print" %}</a>
+                                            <a class="btn btn-secondary waves-effect" href="{% url 'crm:purchaseorder' %}">{% trans "Close" %}</a>
+                                        </div>
+                                    </div>
+                                </div> <!-- end card-box -->
+                            </div> <!-- end col -->
+                        </div>
+                        {% endfor %}
+                        <!-- end row -->
+                        
+                    </div> <!-- container -->
+
+                </div> <!-- content -->
+
+
+
+
+{% endblock %}
+
+
+{% block extra_javascript %}
+{% endblock %}
